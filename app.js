@@ -25,7 +25,8 @@ app.use('/tienda/pinturas',express.static(path.resolve(__dirname,'views','shop',
 
 app.use('/tienda/Log-In',express.static(path.resolve(__dirname, 'views','account', 'login')));
 app.use('/tienda/Registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
-app.use('/tienda/cuenta',express.static(path.resolve(__dirname, 'views','account', 'cuenta')));
+app.use('/tienda/cuenta',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'admin')));
+app.use('/tienda/cuenta',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente')));
 
 //SUPER IMPORTANTE
 app.use(express.json())
