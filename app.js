@@ -3,8 +3,6 @@ const app = express()
 const mongoose = require('mongoose')
 const path = require('path')
 
-const port = process.env.PORT || 4000
-
 //conexion a la bd
 try {
     mongoose.connect('mongodb+srv://keithdyltm:1234@toolbox.3z2lbu7.mongodb.net/?retryWrites=true&w=majority&appName=ToolBox')
@@ -36,8 +34,3 @@ app.use(express.json())
 //app.use('/api/users',userRouter)
 
 module.exports = app
-
-//Iniciar Servidor
-app.listen(port, '0.0.0.0', ()=>{
-    console.log(`Servidor conectado (escuchando) al puerto ${port}`)
-})
