@@ -8,11 +8,11 @@
   "name": "proyecto-toolbox",
   "description": "Proyecto Full Stack llamada ToolBox",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
