@@ -4,6 +4,6 @@ const app = require('./app');
 const PORT = process.env.PORT || 4000;
 
 // Iniciar el servidor
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '44.226.122.3', () => {
     console.log(`Servidor conectado (escuchando) al puerto ${PORT}`);
 });
