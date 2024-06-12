@@ -5,7 +5,7 @@ const path = require('path')
 
 //conexion a la bd
 try {
-    mongoose.connect('mongodb+srv://keithdyltm:1234@toolbox.3z2lbu7.mongodb.net/?retryWrites=true&w=majority&appName=ToolBox')
+    mongoose.connect('mongodb+srv://keithdyltm:1234@toolbox.medus5t.mongodb.net/?retryWrites=true&w=majority&appName=ToolBox')
     console.log('Base de Datos conectada!')
 } catch (error){
     console.log(error)
