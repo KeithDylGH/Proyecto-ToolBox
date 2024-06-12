@@ -12,10 +12,30 @@ try {
 }
 
 //RUTAS DE FRONTEND
-app.use('/',express.static(path.resolve('views','home')))
+app.use('/',express.static(path.resolve('views','home')));
+app.use('/tienda/cabeza',express.static(path.resolve('views','shop', 'Cabeza')));
+app.use('/tienda/candados',express.static(path.resolve('views','shop', 'Candados')));
+app.use('/tienda/cuerpo',express.static(path.resolve('views','shop', 'Cuerpo')));
+app.use('/tienda/candados',express.static(path.resolve('views','shop', 'Escaleras')));
+app.use('/tienda/herramientas',express.static(path.resolve('views','shop', 'Herramientas')));
+app.use('/tienda/luces',express.static(path.resolve('views','shop', 'Luces')));
+app.use('/tienda/maquinas',express.static(path.resolve('views','shop', 'Maquinas')));
+app.use('/tienda/pinturas',express.static(path.resolve('views','shop', 'Pinturas')));
 
+
+app.use('/tienda/Log-In',express.static(path.resolve('views','account', 'login')));
+app.use('/tienda/Registrar',express.static(path.resolve('views','account', 'register')));
+app.use('/tienda/cuenta',express.static(path.resolve('views','account', 'cuenta')));
 
 //SUPER IMPORTANTE
 app.use(express.json())
 
+//RUTAS DE BACKEND
+//app.use('/api/users',userRouter)
+
 module.exports = app
+
+//Iniciar Servidor
+app.listen(port, '0.0.0.0', ()=>{
+    console.log(`Servidor conectado (escuchando) al puerto ${port}`)
+})
