@@ -3,6 +3,8 @@ const app = express()
 const mongoose = require('mongoose')
 const path = require('path')
 
+const port = process.env.PORT || 8000
+
 //conexion a la bd
 try {
     mongoose.connect('mongodb+srv://keithdyltm:1234@toolbox.3z2lbu7.mongodb.net/?retryWrites=true&w=majority&appName=ToolBox')
