@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const path = require('path')
+const userRouter = require('./controllers/usuarios');
 
 //conexion a la bd
 try {
@@ -32,6 +33,6 @@ app.use('/cuenta',express.static(path.resolve(__dirname, 'views','account', 'cue
 app.use(express.json())
 
 //RUTAS DE BACKEND
-//app.use('/api/users',userRouter)
+app.use('/api/users',userRouter)
 
 module.exports = app
