@@ -1,5 +1,4 @@
 const express = require('express')
-
 const mongoose = require('mongoose')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
@@ -17,7 +16,7 @@ try {
 }
 
 //Servir archivos estaticos
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')));
 
 //RUTAS DE FRONTEND
 app.use('/',express.static(path.resolve(__dirname, 'views','home')));
