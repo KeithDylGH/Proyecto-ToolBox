@@ -17,7 +17,7 @@ try {
 }
 
 //Servir archivos estaticos
-app.use(express.static(path.join(__dirname, 'img')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 //RUTAS DE FRONTEND
 app.use('/',express.static(path.resolve(__dirname, 'views','home')));
