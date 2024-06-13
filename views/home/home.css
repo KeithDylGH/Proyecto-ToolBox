@@ -359,12 +359,12 @@ footer a:hover {
   padding: 10px;
   margin: 10px;
   background: #f1f1f1;
-  color: #666;
+  color: #bababa;
 }
 .MultiCarousel .leftLst,
 .MultiCarousel .rightLst {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 10%;
   top: calc(50% - 20px);
 }
 .MultiCarousel .leftLst {
@@ -377,5 +377,5 @@ footer a:hover {
 .MultiCarousel .leftLst.over,
 .MultiCarousel .rightLst.over {
   pointer-events: none;
-  background: #ccc;
+  background: #bababa;
 }
