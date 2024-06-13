@@ -1,42 +1,39 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 // Definir el esquema del usuario
 const usuarioSchema = new mongoose.Schema({
-    nombre: {
-        type: String,
-        required: true
-    },
-    correo: {
-        type: String,
-        required: true,
-        unique: true // Garantiza que no haya usuarios duplicados con el mismo correo electrónico
-    },
-    contraseña: {
-        type: String,
-        required: true
-    },
-    direccion: {
-        type: String,
-        required: true
-    },
-    ciudad: {
-        type: String,
-        required: true
-    },
-    // Otros campos que puedas necesitar
+  nombre: {
+    type: String,
+    required: true,
+  },
+  user: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  correo: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
 });
 
-// Opcional: configurar opciones adicionales del esquema
-usuarioSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
-        delete returnedObject._id;
-        delete returnedObject.__v; // Elimina el campo __v si lo deseas
-    }
+usuarioSchema.pre("save", async function (next) {
+  if (this.isModified("password") || this.isNew) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
 });
 
-// Crear el modelo de usuario a partir del esquema
-const Usuario = mongoose.model('Usuario', usuarioSchema);
+usuarioSchema.methods.comparePassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
-// Exportar el modelo para poder usarlo en otras partes de la aplicación
+const Usuario = mongoose.model("Usuario", usuarioSchema);
+
 module.exports = Usuario;

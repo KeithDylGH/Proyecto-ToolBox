@@ -4,12 +4,14 @@
             "id":1,
             "nombre":"Kenneth",
             "user":"KeithDyl",
+            "correo":"keithdyltm@gmail.com",
             "password":"Test12"
         },
         {
             "id":2,
             "nombre":"Daniel",
             "user":"DaniVrd",
+            "correo":"kennethdanielverdecchia@gmail.com",
             "password":"prueba34"
         }
     ]
