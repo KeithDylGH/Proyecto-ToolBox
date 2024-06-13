@@ -16,6 +16,9 @@ try {
     console.log(error)
 }
 
+//Servir archivos estaticos
+app.use(express.static(path.join(__dirname, 'img')))
+
 //RUTAS DE FRONTEND
 app.use('/',express.static(path.resolve(__dirname, 'views','home')));
 app.use('/tienda/cabeza',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
@@ -28,7 +31,7 @@ app.use('/tienda/maquinas',express.static(path.resolve(__dirname, 'views','shop'
 app.use('/tienda/pinturas',express.static(path.resolve(__dirname,'views','shop', 'Pinturas')));
 
 
-app.use('/Log-In',express.static(path.resolve(__dirname, 'views','account', 'login')));
+app.use('/Log-In',express.static(path.resolve(__dirname, 'views','account', 'login', 'index.html')));
 app.use('/Registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
 app.use('/admin',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'admin')));
 app.use('/cuenta',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente')));
