@@ -30,8 +30,8 @@ app.use('/tienda/maquinas',express.static(path.resolve(__dirname, 'views','shop'
 app.use('/tienda/pinturas',express.static(path.resolve(__dirname,'views','shop', 'Pinturas')));
 
 
-app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login', 'index.html')));
-app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register', 'index.html')));
+app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
+app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
 app.use('/admin',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'admin')));
 app.use('/cuenta',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente')));
 

@@ -105,15 +105,6 @@ nav ul li {
   text-decoration: none;
   transition: 0.5s ease-in-out;
 }
-.Log-In a {
-  color: #fff;
-  text-decoration: none;
-}
-.Log-In a:hover {
-  color: #fff;
-  text-decoration: none;
-  transition: 0.2s ease-in-out;
-}
 
 .product img {
   width: 200px;
