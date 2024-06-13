@@ -1,8 +1,12 @@
 const express = require('express')
-const app = express()
+
 const mongoose = require('mongoose')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
+
+// Definir el puerto desde las variables de entorno o usar 4000 por defecto
+const app = express()
+const PORT = process.env.PORT || 4000;
 
 //conexion a la bd
 try {
@@ -36,3 +40,8 @@ app.use(express.json())
 app.use('/api/users',userRouter)
 
 module.exports = app
+
+// Iniciar el servidor
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor conectado (escuchando) al puerto ${PORT}`);
+});
