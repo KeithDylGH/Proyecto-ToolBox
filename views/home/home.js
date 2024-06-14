@@ -1,7 +1,10 @@
-const loginBtn = document.querySelector('#login');
+//Entrar a la pagina Log-in
+document.addEventListener('DOMContentLoaded', function() {
 
-loginBtn.addEventListener('click', e=>{
-    if(e==true){
-        window.location.href='../account/login/index.html'
-    }
+    const botonIniciarSesion = document.getElementById('login');
+
+    botonIniciarSesion.addEventListener('click', function() {
+
+        window.location.href = '/views/account/login/index.html';
+    });
 });
