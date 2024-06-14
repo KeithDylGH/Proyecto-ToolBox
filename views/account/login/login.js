@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const usuario = document.getElementById('usuario').value;
         const password = document.getElementById('password').value;
 
-        axios.post('http://localhost:4000/api/usuarios/login', { usuario, password })
+        axios.post('http://localhost:3000/usuarios', { usuario, password })
             .then(response => {
                 const { token } = response.data;
                 // Almacenar el token en localStorage o sessionStorage para su uso posterior
