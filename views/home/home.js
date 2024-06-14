@@ -5,6 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     botonIniciarSesion.addEventListener('click', function() {
 
-        window.location.href = '/views/account/login/index.html';
+        window.location.href = '../account/login/index.html';
     });
 });
