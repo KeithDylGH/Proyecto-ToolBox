@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const botonIniciarSesion = document.getElementById('login');
 
     botonIniciarSesion.addEventListener('click', function() {
-
-        window.location.href = '../account/login/index.html';
+        window.location.href = '../account/login/';
     });
 });
