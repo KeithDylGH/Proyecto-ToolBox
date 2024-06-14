@@ -21,14 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //RUTAS DE FRONTEND
 app.use('/',express.static(path.resolve(__dirname, 'views','home')));
 app.use('/tienda/cabeza',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
-app.use('/tienda/candados',express.static(path.resolve(__dirname, 'views','shop', 'Candados')));
-app.use('/tienda/cuerpo',express.static(path.resolve(__dirname, 'views','shop', 'Cuerpo')));
-app.use('/tienda/escaleras', express.static(path.resolve(__dirname, 'views', 'shop', 'Escaleras')));
-app.use('/tienda/herramientas', express.static(path.resolve(__dirname, 'views', 'shop', 'Herramientas')));
-app.use('/tienda/luces',express.static(path.resolve(__dirname, 'views','shop', 'Luces')));
-app.use('/tienda/maquinas',express.static(path.resolve(__dirname, 'views','shop', 'Maquinas')));
-app.use('/tienda/pinturas',express.static(path.resolve(__dirname,'views','shop', 'Pinturas')));
-
 
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
 app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
