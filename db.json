@@ -3,14 +3,14 @@
         {
             "id":1,
             "nombre":"Kenneth",
-            "user":"KeithDyl",
+            "usuario":"KeithDyl",
             "correo":"keithdyltm@gmail.com",
             "password":"Test12"
         },
         {
             "id":2,
             "nombre":"Daniel",
-            "user":"DaniVrd",
+            "usuario":"DaniVrd",
             "correo":"kennethdanielverdecchia@gmail.com",
             "password":"prueba34"
         }

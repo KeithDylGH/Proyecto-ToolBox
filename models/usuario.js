@@ -4,6 +4,7 @@ const userRouter = require('../controllers/usuarios')
 //definir el esquema para el usuario
 const usuarioSchema = new mongoose.Schema({
     nombre: String,
+    usuario: String,
     correo: String,
     password: String
 });
@@ -19,7 +20,7 @@ usuarioSchema.set('toJSON', {
 });
 
 //registrar el modelo
-const user = mongoose.model('user',usuarioSchema)
+const User = mongoose.model('User',usuarioSchema)
 
 //exportar
-module.exports = user
+module.exports = User

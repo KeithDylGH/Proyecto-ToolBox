@@ -1,45 +1,54 @@
 //1 Definir el router... CRUD
 //router: POST,GET,DELETE,UPDATE
 
-const userRouter = require('express').Router()
-//conectar al modelo (pero primero debemos crearlo)
-//esto esta pendiente
-const user = require('../models/usuario')
+const express = require('express');
+const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
+const jwt = require('jsonwebtoken'); // Importar jsonwebtoken para la generación de tokens JWT
+const User = require('../models/usuario'); // Importar el modelo de usuario
+
+const userRouter = express.Router();
 
 //2. registro del nombre que el usuario ingreso en el formulario
-userRouter.post('/',(request,response)=>{
+userRouter.post('/login', async (req, res) => {
+    const { usuario, password } = req.body;
     //cuando ingrese a este metodo es porque lo estoy llamando desde el js del front, relacionado al formulario
     //donde quiero realizar el registro
-    const {nombre} = request.body;
-    //console.log(nombre) //este console log va a aparecer en la terminal, no en el navegador
-    //console.log(!nombre)
-    //validaciones a nivel de backend
-    if(!nombre){
-        //al realizar esta validacion retorno al frontend que hay un error
-        console.log('Campos vacios')
-        return response.status(400).json({error:'todos los campos son obligatorios'})
-    }else{
-        //caso en que esta correcto el dato a registrar
-        //luego nos toca enviarlos a la BD
-        console.log(nombre)
-        //enviar los datos a la BD
-        let usuario = new user()
-        usuario.nombre = nombre
-
-        async function guardarUsuario(){
-            await usuario.save(); //Guardo en la bd
-            const usuarioConsulta = await user.find()
-            console.log('test ', usuarioConsulta)
-        }
-        guardarUsuario().catch(console.error)
-
-        return response.status(200).json({mensaje: 'Se ha creado el usuario'})
+    
+    // Verificar si el usuario y la contraseña están presentes
+    if (!usuario || !password) {
+        return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
     }
 
-})
+    try {
+        // Buscar al usuario por su nombre de usuario
+        const usuarioEncontrado = await User.findOne({ usuario });
 
-//userRouter.get()
+        // Si no se encuentra el usuario
+        if (!usuarioEncontrado) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
 
-//userRouter.delete()
+        // Comparar la contraseña ingresada con la contraseña en la base de datos
+        const contraseñaValida = await bcrypt.compare(password, usuarioEncontrado.password);
+
+        // Si las contraseñas no coinciden
+        if (!contraseñaValida) {
+            return res.status(401).json({ error: 'Credenciales inválidas.' });
+        }
+
+        // Generar un token JWT
+        const token = jwt.sign(
+            { id: usuarioEncontrado._id, usuario: usuarioEncontrado.usuario },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' } // El token expira en 1 hora
+        );
+
+        // Devolver el token como respuesta
+        res.status(200).json({ token });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+});
 
 module.exports = userRouter;
