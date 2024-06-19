@@ -252,11 +252,11 @@ h2 {
   border-radius: 4px;
 }
 
-.bestProducts {
+/* .bestProducts {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-}
+} */
 
 .card {
   margin: 0.6rem 0;
@@ -317,14 +317,21 @@ footer {
   background-color: #2d1c1c;
   color: #fff;
 }
-footer a {
-  color: #bababa;
+footer li a {
+  color: #fff;
+  text-decoration: none;
 }
 footer a:hover {
   color: #e57368;
   text-decoration: none;
   transition: 0.2s ease-in;
 }
+
+footer p a{
+  color: #fff;
+  text-decoration: none;
+}
+
 .row {
   justify-content: center;
 }
