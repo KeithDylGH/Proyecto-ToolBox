@@ -27,44 +27,53 @@
   </head>
   <body>
     <header>
-      <div class="d-flex justify-content-center">
-        <a href="/views/home/index.html" class="logo">
-          <img src="/img/logo/Logo Letra trazo.png" alt="logo" />
-        </a>
+      
+      <nav class="navbar navbar-expand-lg ">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#"><img src="/img/logo/Logo trazo 180.png" alt="" class="w-25"></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+              <li class="nav-item">
+                <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link link-light" href="#">Cuenta</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle link-light " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Categoria
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                
+                <div class="carro">
+                  <a href="#" class="carrito">
+                    <img src="/img/icono/carrito de compras.png" alt="carrito" />
+                  </a>
+                  <div class="carro-dropdown">
+                    <button>Vaciar Carrito</button>
+                  </div>
+                </div>
 
-        <nav>
-          <ul>
-            <li class="inicio"><a href="#">Inicio</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropbtn">Catálogo</a>
-              <div class="dropdown-content">
-                <a href="/views/shop/Cabeza/index.html">Cabeza</a>
-                <a href="/views/shop/Candados/index.html">Candados</a>
-                <a href="/views/shop/Cuerpo/index.html">Cuerpo</a>
-                <a href="/views/shop/Escaleras/index.html">Escaleras</a>
-                <a href="/views/shop/Herramientas/index.html">Herramientas</a>
-                <a href="/views/shop/Luces/index.html">Luces</a>
-                <a href="/views/shop/Maquinas/index.html">Maquinas</a>
-                <a href="/views/shop/Pinturas/index.html">Pinturas</a>
-              </div>
-            </li>
-          </ul>
-        </nav>
-
-        <form class="buscador">
-          <input type="search" id="buscador" placeholder="" />
-        </form>
-
-        <div class="carro">
-          <a href="#" class="carrito">
-            <img src="/img/icono/carrito de compras.png" alt="carrito" />
-          </a>
-          <div class="carro-dropdown">
-            <button>Vaciar Carrito</button>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
           </div>
         </div>
-          <button class="Log-In" id="login">Iniciar Sesion</button>
-      </div>
+      </nav>
+
     </header>
 
     <div class="container">

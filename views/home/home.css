@@ -25,6 +25,13 @@ header {
   width: 8rem;
 }
 
+.buscar-Icono{
+    padding-left: 30px; /* Adjust according to your needs */
+    background: url('') no-repeat left center;
+    background-size: 16px; /* Adjust according to your needs */
+
+}
+
 header nav ul {
   display: flex;
   gap: 10px;
