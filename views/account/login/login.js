@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const botonACasa = document.getElementById('homeBtn');
 
     botonACasa.addEventListener('click', function() {
-        window.location.href = '../home/index.html';
+        window.location.href = '../../home/index.html';
     });
 });
 
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Almacenar el token en localStorage o sessionStorage para su uso posterior
                 localStorage.setItem('token', token);
                 // Redirigir a la página principal o realizar otra acción
-                window.location.href = '../register/index.html'; // Cambiar a la página que desees después del login
+                window.location.href = '../../register/index.html'; // Cambiar a la página que desees después del login
             })
             .catch(error => {
                 console.error('Error de inicio de sesión:', error.response.data.error);
