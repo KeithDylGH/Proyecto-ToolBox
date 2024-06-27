@@ -20,50 +20,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-
-        <div class="d-flex justify-content-center">
-            <a href="/views/home/index.html" class="logo">
-                <img src="/img/logo/Logo Letra trazo.png" alt="logo">
-            </a>
-
-            <nav>
-                <ul>
-                    <li class="inicio"><a href="/views/home/index.html">Inicio</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropbtn">Productos</a>
-                        <div class="dropdown-content">
-                            <a href="/views/shop/Cabeza/index.html">Cabeza</a>
-                            <a href="/views/shop/Candados/index.html">Candados</a>
-                            <a href="/views/shop/Cuerpo/index.html">Cuerpo</a>
-                            <a href="/views/shop/Escaleras/index.html">Escaleras</a>
-                            <a href="/views/shop/Herramientas/index.html">Herramientas</a>
-                            <a href="/views/shop/Luces/index.html">Luces</a>
-                            <a href="/views/shop/Maquinas/index.html">Maquinas</a>
-                            <a href="/views/shop/Pinturas/index.html">Pinturas</a>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-
-            <form class="buscador">
-                <input type="search" id="buscador" placeholder="">
-            </form>
-
-            <div class="carro">
+  <header>
+      
+    <nav class="navbar navbar-expand-lg ">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
+        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon bg-light"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+            <li class="nav-item">
+              <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link-light" href="#">Cuenta</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle link-light " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Categoria
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Cabeza</a></li>
+                <li><a class="dropdown-item" href="#">Candados</a></li>
+                <li><a class="dropdown-item" href="#">Cuerpo</a></li>
+                <li><a class="dropdown-item" href="#">Escaleras</a></li>
+                <li><a class="dropdown-item" href="#">Herramientas</a></li>
+                <li><a class="dropdown-item" href="#">Luces</a></li>
+                <li><a class="dropdown-item" href="#">Maquinas</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Pinturas</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              
+              <div class="carro">
                 <a href="#" class="carrito">
-                    <img src="/img/icono/carrito de compras.png" alt="carrito">
+                  <img src="/img/icono/carrito de compras.png" alt="carrito" />
                 </a>
                 <div class="carro-dropdown">
-                    <p>Producto 1</p>
-                    <p>Producto 2</p>
-                    <button>Vaciar Carrito</button>
+                  <button>Vaciar Carrito</button>
                 </div>
-            </div> 
+              </div>
 
-            <button class="Log-In"><a href="/views/account/login/index.html">Iniciar Sesion</a></button>
+            </li>
+          </ul>
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+          </form>
         </div>
-    </header>
+      </div>
+    </nav>
+
+  </header>
 
 
 <div class="mainContainer">
