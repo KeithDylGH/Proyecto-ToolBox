@@ -7,3 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '../login/index.html';
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const botonIniciarSesion = document.getElementById('categoria');
+
+    botonIniciarSesion.addEventListener('click', function() {
+        window.location.href = '../../shop/Catalogo/index.html';
+    });
+});
