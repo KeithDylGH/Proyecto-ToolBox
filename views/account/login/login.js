@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const botonACasa = document.getElementById('homeBtn');
 
     botonACasa.addEventListener('click', function() {
-        window.location.href = '../home/index.html';
+        window.location.href = '/';
     });
 });
 
