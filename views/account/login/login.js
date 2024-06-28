@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const botonCrearCuenta = document.getElementById('create');
 
     botonCrearCuenta.addEventListener('click', function() {
-        window.location.href = '../views/register/index.html';
+        window.location.href = '/registrar/';
     });
 });
 
