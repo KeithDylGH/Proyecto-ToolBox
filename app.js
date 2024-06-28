@@ -12,7 +12,6 @@ const mongoUrl = process.env.mongoURL;
 
 //conexion a la bd
 mongoose.connect(mongoUrl, {
-    useNewUrlParser: true,
     useUnifiedTopology: true,
 });
 
