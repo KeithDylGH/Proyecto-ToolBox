@@ -3,6 +3,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
+const loginRouter = require('./controllers/log-in');
 
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const app = express()
