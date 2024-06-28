@@ -18,6 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+const loginBtn = document.querySelector('#loginBtn');
+
+loginBtn.addEventListener('submit', async e=>{
+    e.preventDefault();
+
+    console.log('CLick')
+})
 
 
 

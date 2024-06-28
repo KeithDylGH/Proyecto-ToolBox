@@ -43,7 +43,7 @@ userRouter.post('/login', async (req, res) => {
 //obtener los usuario
 userRouter.get('/', async (req, res) => {
     try {
-        // Aquí va la lógica para obtener los usuarios
+        const users = await User.find();
     } catch (error) {
         console.log('Error al buscar usuarios', error);
         res.status(500).json({ error: 'Error interno en el servidor' });

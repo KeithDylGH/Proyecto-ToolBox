@@ -8,20 +8,33 @@ const loginRouter = require('./controllers/log-in');
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const app = express()
 const PORT = process.env.PORT || 4000;
+const mongoUrl = process.env.mongoURL;
 
 //conexion a la bd
-try {
-    mongoose.connect('mongodb+srv://keithdyltm:1234@toolbox.medus5t.mongodb.net/?retryWrites=true&w=majority&appName=ToolBox',{
+mongoose.connect(mongoUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+
+mongoose.connection.on('error', (err) => {
+    console.error('Error al conectar con MongoDB:', err);
+});
+
+mongoose.connection.once('open', () => {
+    console.log('Base de Datos conectada!');
+});
+
+
+/* try {
+    mongoose.connect(mongoUrl,{
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify: false,
-        useCreateIndex: true,
     })
 
     .then(() => console.log('Base de Datos conectada!'))
 } catch (error){
     console.log(error)
-}
+} */
 
 //Servir archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
