@@ -2,8 +2,8 @@
 //router: POST,GET,DELETE,UPDATE
 
 const express = require('express');
-const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
-const jwt = require('jsonwebtoken'); // Importar jsonwebtoken para la generación de tokens JWT
+//const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
+//const jwt = require('jsonwebtoken'); // Importar jsonwebtoken para la generación de tokens JWT
 const User = require('../models/usuario'); // Importar el modelo de usuario
 
 const userRouter = express.Router();
@@ -41,16 +41,17 @@ userRouter.post('/login', async (req, res) => {
 });
 
 //obtener los usuario
-router.get('/', async (req,res)=>{
+userRouter.get('/', async (req, res) => {
     try {
-        
+        // Aquí va la lógica para obtener los usuarios
     } catch (error) {
-        console.log('Error al buscar usuarios' ,error)
-        res.status(500).json({error: 'Error interno en el servidor'})
+        console.log('Error al buscar usuarios', error);
+        res.status(500).json({ error: 'Error interno en el servidor' });
     }
-})
+});
 
 module.exports = userRouter;
+
 
 
 
