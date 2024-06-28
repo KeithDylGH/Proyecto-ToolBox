@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const botonCrearCuenta = document.getElementById('create');
 
     botonCrearCuenta.addEventListener('click', function() {
-        window.location.href = '..views/register/index.html';
+        window.location.href = '../views/register/index.html';
     });
 });
 
@@ -14,34 +14,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const botonACasa = document.getElementById('homeBtn');
 
     botonACasa.addEventListener('click', function() {
-        window.location.href = '../../home/index.html';
+        window.location.href = '../home/index.html';
     });
 });
 
 
 //formulario Login
+//SELECTORES
 
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginForm');
+/* const formL = document.querySelector('#loginForm');
+const inputLogin = document.querySelector('#usuario');
+const notificacion = document.querySelector('.notification');
+//const inputClave = document.querySelector('#password');
 
-    loginForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+formL.addEventListener('submit', async e=>{
+    e.preventDefault();
 
-        const usuario = document.getElementById('usuario').value;
-        const password = document.getElementById('password').value;
-
-        axios.post('http://localhost:3000/usuarios', { usuario, password })
-            .then(response => {
-                const { token } = response.data;
-                // Almacenar el token en localStorage o sessionStorage para su uso posterior
-                localStorage.setItem('token', token);
-                // Redirigir a la página principal o realizar otra acción
-                window.location.href = '../../register/index.html'; // Cambiar a la página que desees después del login
-            })
-            .catch(error => {
-                console.error('Error de inicio de sesión:', error.response.data.error);
-                // Mostrar mensaje de error al usuario, por ejemplo:
-                alert('Error de inicio de sesión. Verifica tus credenciales.');
-            });
+    const respuesta = await fetch('http://localhost:3000/usuarios',{
+        method: 'GET'
     });
-});
+
+    const administrador = await respuesta.json();
+
+    const admin = administrador.find(i=>i.usuario === inputLogin.value);
+
+    if(!admin){
+        notificacion.innerHTML = 'El usuario no existe';
+        notificacion.classList.add('show-notification');
+        setTimeout(()=>{
+            notificacion.classList.remove('show-notification');
+        },3000);
+    }else{
+        //si existe, debe tomar el valor y guardarlo en el localstorage
+        localStorage.setItem('user', JSON.stringify(admin))
+        window.location.href = '../admin/index.html';
+    }
+}) */

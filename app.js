@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
@@ -9,8 +10,14 @@ const PORT = process.env.PORT || 4000;
 
 //conexion a la bd
 try {
-    mongoose.connect('mongodb+srv://keithdyltm:1234@toolbox.medus5t.mongodb.net/?retryWrites=true&w=majority&appName=ToolBox')
-    console.log('Base de Datos conectada!')
+    mongoose.connect('mongodb+srv://keithdyltm:1234@toolbox.medus5t.mongodb.net/?retryWrites=true&w=majority&appName=ToolBox',{
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true,
+    })
+
+    .then(() => console.log('Base de Datos conectada!'))
 } catch (error){
     console.log(error)
 }
@@ -32,6 +39,7 @@ app.use(express.json())
 
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter)
+app.use('/api/login', loginRouter)
 
 module.exports = app
 

@@ -2,17 +2,19 @@
     "usuarios":[
         {
             "id":1,
-            "nombre":"Kenneth",
-            "usuario":"KeithDyl",
-            "correo":"keithdyltm@gmail.com",
-            "password":"Test12"
+            "nombre":"Test1",
+            "usuario":"UTest1",
+            "correo":"test@gmail.com",
+            "password":"test1",
+            "numero":"01234"
         },
         {
             "id":2,
-            "nombre":"Daniel",
-            "usuario":"DaniVrd",
-            "correo":"kennethdanielverdecchia@gmail.com",
-            "password":"prueba34"
+            "nombre":"Test2",
+            "usuario":"UTest2",
+            "correo":"test2@gmail.com",
+            "password":"test2",
+            "numero":"12345"
         }
     ]
 }

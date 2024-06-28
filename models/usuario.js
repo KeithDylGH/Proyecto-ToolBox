@@ -18,6 +18,10 @@ const usuarioSchema = new mongoose.Schema({
     usuario: {
         type: String,
         required: true
+    },
+    numero: {
+        type: String,
+        required: true
     }
     // Otros campos que puedas necesitar
 });

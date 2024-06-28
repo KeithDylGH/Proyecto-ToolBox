@@ -10,16 +10,51 @@ const userRouter = express.Router();
 
 //2. registro del nombre que el usuario ingreso en el formulario
 userRouter.post('/login', async (req, res) => {
-    const { usuario, password } = req.body;
+    const { usuario, password, nombre, correo, numero } = req.body;
     //cuando ingrese a este metodo es porque lo estoy llamando desde el js del front, relacionado al formulario
     //donde quiero realizar el registro
     
-    // Verificar si el usuario y la contraseña están presentes
-    if (!usuario || !password) {
-        return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
-    }
-
     try {
+        // Verificar si el usuario y la contraseña están presentes
+        if (!usuario || !password || !nombre || !correo || !numero) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+        }
+
+        const newUser = new User({
+            nombre,
+            correo,
+            usuario,
+            password,
+            numero
+        });
+
+        //guardar Usuario
+        await newUser.save()
+
+        res.status(201).json({ mensaje: 'Usuario creador correctamente'})
+
+    } catch (error){
+        console.log('Error al crear usuario' ,error)
+
+        res.status(500).json({error: 'Error en el servidor'})
+    }
+});
+
+//obtener los usuario
+router.get('/', async (req,res)=>{
+    try {
+        
+    } catch (error) {
+        console.log('Error al buscar usuarios' ,error)
+        res.status(500).json({error: 'Error interno en el servidor'})
+    }
+})
+
+module.exports = userRouter;
+
+
+
+/* try {
         // Buscar al usuario por su nombre de usuario
         const usuarioEncontrado = await User.findOne({ usuario });
 
@@ -48,7 +83,4 @@ userRouter.post('/login', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-});
-
-module.exports = userRouter;
+    } */
