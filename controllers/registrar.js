@@ -1,4 +1,4 @@
-const formulario = document.querySelector('#formulario');
+/* const formulario = document.querySelector('#formulario');
 
 formulario.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -39,4 +39,4 @@ formulario.addEventListener('submit', async (e) => {
     } else {
         alert(result.error);
     }
-});
+}); */
