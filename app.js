@@ -1,9 +1,13 @@
 require('dotenv').config();
 const express = require('express')
 const mongoose = require('mongoose')
+const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
+
+const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
+const Usuario = require('./models/usuario');
 
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const app = express()
@@ -12,28 +16,40 @@ const mongoUrl = process.env.mongoURL;
 
 //conexion a la bd
 mongoose.connect(mongoUrl, {
-    useUnifiedTopology: true,
+    //useUnifiedTopology: true,
 });
 
 mongoose.connection.on('error', (err) => {
     console.error('Error al conectar con MongoDB:', err);
 });
 
-mongoose.connection.once('open', () => {
+mongoose.connection.once('open', async () => {
     console.log('Base de Datos conectada!');
+
+    try {
+        //leer datos del db.sjon
+        const data = fs.readFileSync(path.join(__dirname, 'db.json'), 'utf-8');
+        const parsedData = JSON.parse(data)
+
+        if(!Array.isArray(parsedData.usuarios)){
+            throw new Error('El formato del archivo db es incorrecto')
+        }
+
+        const users = parsedData.usuarios
+
+        //hashing password
+        for (let user of users){
+            user.password = await bcrypt.hash(user.password, 10);
+        }
+
+        await Usuario.insertMany(users);
+        console.log('Datos importador correctamente');
+    } catch (error){
+        console.log('Error al importar' ,error)
+    } finally {
+        mongoose.connection.close();
+    }
 });
-
-
-/* try {
-    mongoose.connect(mongoUrl,{
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-
-    .then(() => console.log('Base de Datos conectada!'))
-} catch (error){
-    console.log(error)
-} */
 
 //Servir archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));

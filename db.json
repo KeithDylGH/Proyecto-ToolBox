@@ -15,6 +15,14 @@
             "correo":"test2@gmail.com",
             "password":"test2",
             "numero":"12345"
+        },
+        {
+            "id":3,
+            "nombre":"User",
+            "usuario":"User3",
+            "correo":"user@gmail.com",
+            "password":"user",
+            "numero":"23456"
         }
     ]
 }
