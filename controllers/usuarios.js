@@ -1,17 +1,17 @@
 // usuarios.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+//const jwt = require('jsonwebtoken');
 const User = require('../models/usuario'); // Importar el modelo de usuario
 
 const userRouter = express.Router();
 
-const generateToken = (usuario, userId) => {
+/* const generateToken = (usuario, userId) => {
     return jwt.sign({
         usuario,
         userId
     }, process.env.JWT_SECRET, { expiresIn: '1h' });
-};
+}; */
 
 // Endpoint para registrar un nuevo usuario
 userRouter.post('/registrar', async (req, res) => {

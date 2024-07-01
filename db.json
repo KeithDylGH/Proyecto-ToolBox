@@ -3,6 +3,7 @@
         {
             "id":1,
             "nombre":"Test",
+            "apellido":"testest",
             "usuario":"UTest",
             "correo":"test@gmail.com",
             "password":"test",
@@ -12,6 +13,7 @@
         {
             "id":2,
             "nombre":"TestDos",
+            "apellido":"Dosdos",
             "usuario":"testingDos",
             "correo":"testing@gmail.com",
             "password":"testingDos",
@@ -21,6 +23,7 @@
         {
             "id":3,
             "nombre":"User",
+            "apellido":"useruser",
             "usuario":"UserTres",
             "correo":"user@gmail.com",
             "password":"user",
@@ -30,6 +33,7 @@
         {
             "id":4,
             "nombre":"admin",
+            "apellido":"adminapellido",
             "usuario":"adminDos",
             "correo":"admin@gmail.com",
             "password":"admin",

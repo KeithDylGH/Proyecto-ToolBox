@@ -1,11 +1,14 @@
 document.querySelector('form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const nombre = document.getElementById('name').value;
+    const apellido = document.getElementById('lName').value;
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const phoneNumber = document.getElementById('phoneNumber').value;
+    const cedula = document.getElementById('cedula').value;
 
     if (password !== confirmPassword) {
         alert('Las contraseñas no coinciden');
@@ -16,11 +19,13 @@ document.querySelector('form').addEventListener('submit', async (e) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            nombre: username,
+            nombre: nombre,
+            apellido: apellido,
             usuario: username,
             correo: email,
-            password,
+            password: password,
             numero: phoneNumber,
+            cedula: cedula
         }),
     });
 
@@ -28,7 +33,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
     if (response.ok) {
         alert(result.mensaje);
-        window.location.href = '/views/account/login/index.html'; // Redirige al inicio de sesión
+        window.location.href = '/login/'; // Redirige al inicio de sesión
     } else {
         alert(result.error);
     }
