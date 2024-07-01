@@ -15,7 +15,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
         return;
     }
 
-    const response = await fetch('/api/users/registrar', {
+    const response = await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
