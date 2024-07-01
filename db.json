@@ -8,6 +8,7 @@
             "correo":"test@gmail.com",
             "password":"test",
             "numero":"01234",
+            "cedula":"30999999",
             "rol":"admin"
         },
         {
@@ -18,6 +19,7 @@
             "correo":"testing@gmail.com",
             "password":"testingDos",
             "numero":"12345",
+            "cedula":"30888888",
             "rol":"client"
         },
         {
@@ -28,6 +30,7 @@
             "correo":"user@gmail.com",
             "password":"user",
             "numero":"23456",
+            "cedula":"10888888",
             "rol":"client"
         },
         {
@@ -38,6 +41,7 @@
             "correo":"admin@gmail.com",
             "password":"admin",
             "numero":"45678",
+            "cedula":"4999999",
             "rol":"admin"
         }
     ]

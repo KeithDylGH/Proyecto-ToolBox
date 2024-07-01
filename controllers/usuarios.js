@@ -19,7 +19,7 @@ userRouter.post('/registrar', async (req, res) => {
 
     try {
         // Verificar si todos los campos obligatorios están presentes
-        if (!nombre || !usuario || !correo || !password || !numero) {
+        if (!nombre || !apellido || !usuario || !correo || !password || !numero || !cedula) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
@@ -35,10 +35,12 @@ userRouter.post('/registrar', async (req, res) => {
         // Crear nuevo usuario
         const newUser = new User({
             nombre,
+            apellido,
             usuario,
             correo,
             password: hashedPassword,
             numero,
+            cedula,
             rol: 'user'
         });
 
@@ -46,7 +48,7 @@ userRouter.post('/registrar', async (req, res) => {
         await newUser.save();
 
         // Generar token JWT para el nuevo usuario
-        const token = generateToken(newUser.usuario, newUser._id);
+        //const token = generateToken(newUser.usuario, newUser._id);
 
         res.status(201).json({ token, mensaje: 'Usuario creado correctamente' });
 
@@ -79,9 +81,9 @@ userRouter.post('/login', async (req, res) => {
         }
 
         // Generar token JWT para el usuario autenticado
-        const token = generateToken(user.usuario, user._id);
+        //const token = generateToken(user.usuario, user._id);
 
-        res.json({ token });
+        //res.json({ token });
 
     } catch (error) {
         console.error('Error en el login:', error);

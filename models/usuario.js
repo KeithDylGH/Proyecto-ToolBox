@@ -6,6 +6,10 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    apellido: {
+        type: String,
+        required: true,
+    },
     usuario: {
         type: String,
         required: true,
@@ -21,8 +25,13 @@ const usuarioSchema = new mongoose.Schema({
         required: true
     },
     numero: {
-        type: String,
+        type: Number,
         required: true
+    },
+    cedula:{
+        type: String,
+        required: true,
+        unique: true
     },
     rol: {
         type: String,
