@@ -49,12 +49,11 @@ loginForm.addEventListener('submit', async (e) => {
         const data = await response.json();
 
         if (response.ok) {
-            // Redirigir a la página de cuenta adecuada según el tipo de usuario
-            if (data.isAdmin) {
-                window.location.href = '/admin';
-            } else {
-                window.location.href = '/cuenta';
-            }
+            // Guardar el token en localStorage
+            localStorage.setItem('token', data.token);
+
+            // Redirigir a la página de cuentas
+            window.location.href = '/cuenta';
         } else {
             // Mostrar alerta de error en el formulario
             alert(data.error);
