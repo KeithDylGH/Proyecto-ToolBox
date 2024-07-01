@@ -5,6 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
+const registerRouter = require('./views/')
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const Usuario = require('./models/usuario');
@@ -86,6 +87,7 @@ app.use(express.json())
 
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter)
+app.use('/api/users', registerRouter)
 app.use('/api/login', loginRouter)
 
 module.exports = app
