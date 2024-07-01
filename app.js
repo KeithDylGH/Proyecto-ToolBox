@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
-const registerRouter = require('./views/')
+const registerRouter = require('./controllers/registrar')
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const Usuario = require('./models/usuario');
