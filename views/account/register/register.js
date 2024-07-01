@@ -1,3 +1,5 @@
+//const { response } = require("../../../app");
+
 const formulario = document.querySelector('#formulario');
 
 formulario.addEventListener('submit', async (e) => {
@@ -40,6 +42,8 @@ formulario.addEventListener('submit', async (e) => {
         alert(result.error);
     }
 });
+
+console.log('La respuesta del servidor: ', response)
 
 
 
