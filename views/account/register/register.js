@@ -1,8 +1,6 @@
 //const { response } = require("../../../app");
 
-const formulario = document.querySelector('#formulario');
-
-formulario.addEventListener('submit', async (e) => {
+document.querySelector('form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const nombre = document.getElementById('name').value;
