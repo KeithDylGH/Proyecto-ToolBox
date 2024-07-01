@@ -35,10 +35,11 @@ userRouter.post('/registrar', async (req, res) => {
         // Crear nuevo usuario
         const newUser = new User({
             nombre,
-            correo,
             usuario,
+            correo,
             password: hashedPassword,
-            numero
+            numero,
+            rol: 'user'
         });
 
         // Guardar el nuevo usuario en la base de datos
