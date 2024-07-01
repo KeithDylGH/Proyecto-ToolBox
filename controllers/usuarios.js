@@ -26,7 +26,9 @@ userRouter.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
-        const user = await User.findOne({ usuario })
+        const usuarios = cargarUsuarios();
+
+        const user = await usuarios.find(u => u.usuario === usuario);
         if (!user) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
