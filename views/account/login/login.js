@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+
 //Entrar a la pagina Home
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -26,6 +27,43 @@ loginBtn.addEventListener('submit', async e=>{
     console.log('CLick')
 })
 
+
+//form login
+const loginForm = document.querySelector('#loginForm');
+
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const usuario = document.querySelector('#usuario').value;
+    const password = document.querySelector('#password').value;
+
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ usuario, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Redirigir a la página de cuenta adecuada según el tipo de usuario
+            if (data.isAdmin) {
+                window.location.href = '/admin';
+            } else {
+                window.location.href = '/cuenta';
+            }
+        } else {
+            // Mostrar alerta de error en el formulario
+            alert(data.error);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error en el servidor');
+    }
+});
 
 
 

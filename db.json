@@ -6,15 +6,17 @@
             "usuario":"UTest1",
             "correo":"test@gmail.com",
             "password":"test1",
-            "numero":"01234"
+            "numero":"01234",
+            "type":"admin"
         },
         {
             "id":2,
             "nombre":"Test2",
             "usuario":"UTest2",
-            "correo":"test2@gmail.com",
+            "correo":"testing@gmail.com",
             "password":"test2",
-            "numero":"12345"
+            "numero":"12345",
+            "type":"client"
         },
         {
             "id":3,
@@ -22,7 +24,17 @@
             "usuario":"User3",
             "correo":"user@gmail.com",
             "password":"user",
-            "numero":"23456"
+            "numero":"23456",
+            "type":"client"
+        },
+        {
+            "id":4,
+            "nombre":"admin",
+            "usuario":"adminDos",
+            "correo":"admin@gmail.com",
+            "password":"admin",
+            "numero":"45678",
+            "type":"admin"
         }
     ]
 }
