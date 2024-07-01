@@ -12,7 +12,7 @@ async function buscarUsuarioPorCorreo(correo) {
 
 async function buscarUsuarioPorNombre(nombreUsuario) {
     try {
-        const usuario = await Usuario.findOne({ nombreUsuario });
+        const usuario = await Usuario.findOne({ usuario: nombreUsuario });
         return usuario;
     } catch (error) {
         throw new Error('Error al buscar usuario por nombre de usuario');
@@ -23,3 +23,4 @@ module.exports = {
     buscarUsuarioPorCorreo,
     buscarUsuarioPorNombre
 };
+

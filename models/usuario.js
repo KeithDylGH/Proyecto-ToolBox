@@ -6,34 +6,39 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    usuario: {
+        type: String,
+        required: true,
+        unique: true
+    },
     correo: {
         type: String,
         required: true,
-        unique: true // Garantiza que no haya usuarios duplicados con el mismo correo electrónico
+        unique: true
     },
     password: {
-        type: String,
-        required: true
-    },
-    usuario: {
         type: String,
         required: true
     },
     numero: {
         type: String,
         required: true
+    },
+    rol: {
+        type: String,
+        required: true
     }
-    // Otros campos que puedas necesitar
 });
 
+
 // Opcional: configurar opciones adicionales del esquema
-/* usuarioSchema.set('toJSON', {
+usuarioSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;
         delete returnedObject.__v; // Elimina el campo __v si lo deseas
     }
-}); */
+});
 
 // Crear el modelo de usuario a partir del esquema
 const Usuario = mongoose.model('Usuario', usuarioSchema);

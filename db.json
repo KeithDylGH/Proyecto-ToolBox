@@ -2,30 +2,30 @@
     "usuarios":[
         {
             "id":1,
-            "nombre":"Test1",
-            "usuario":"UTest1",
+            "nombre":"Test",
+            "usuario":"UTest",
             "correo":"test@gmail.com",
-            "password":"test1",
+            "password":"test",
             "numero":"01234",
-            "type":"admin"
+            "rol":"admin"
         },
         {
             "id":2,
-            "nombre":"Test2",
-            "usuario":"UTest2",
+            "nombre":"TestDos",
+            "usuario":"testingDos",
             "correo":"testing@gmail.com",
-            "password":"test2",
+            "password":"testingDos",
             "numero":"12345",
-            "type":"client"
+            "rol":"client"
         },
         {
             "id":3,
             "nombre":"User",
-            "usuario":"User3",
+            "usuario":"UserTres",
             "correo":"user@gmail.com",
             "password":"user",
             "numero":"23456",
-            "type":"client"
+            "rol":"client"
         },
         {
             "id":4,
@@ -34,7 +34,7 @@
             "correo":"admin@gmail.com",
             "password":"admin",
             "numero":"45678",
-            "type":"admin"
+            "rol":"admin"
         }
     ]
 }

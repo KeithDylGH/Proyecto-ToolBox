@@ -1,80 +1,100 @@
-//1 Definir el router... CRUD
-//router: POST,GET,DELETE,UPDATE
-
+// usuarios.js
 const express = require('express');
-const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
-const jwt = require('jsonwebtoken'); // Importar jsonwebtoken para la generación de tokens JWT
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/usuario'); // Importar el modelo de usuario
 
 const userRouter = express.Router();
 
-
-const cargarUsuarios = () => {
-    const filePath = path.join(__dirname, '..', 'db.json');
-    const data = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(data).usuarios;
+const generateToken = (usuario, userId) => {
+    return jwt.sign({
+        usuario,
+        userId
+    }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
+// Endpoint para registrar un nuevo usuario
+userRouter.post('/registrar', async (req, res) => {
+    const { nombre, usuario, correo, password, numero } = req.body;
+
+    try {
+        // Verificar si todos los campos obligatorios están presentes
+        if (!nombre || !usuario || !correo || !password || !numero) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+        }
+
+        // Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
+        const existingUser = await User.findOne({ $or: [{ usuario }, { correo }] });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Usuario o correo electrónico ya registrado.' });
+        }
+
+        // Hash de la contraseña antes de guardar el usuario
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Crear nuevo usuario
+        const newUser = new User({
+            nombre,
+            correo,
+            usuario,
+            password: hashedPassword,
+            numero
+        });
+
+        // Guardar el nuevo usuario en la base de datos
+        await newUser.save();
+
+        // Generar token JWT para el nuevo usuario
+        const token = generateToken(newUser.usuario, newUser._id);
+
+        res.status(201).json({ token, mensaje: 'Usuario creado correctamente' });
+
+    } catch (error) {
+        console.error('Error al crear usuario:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
+
+// Endpoint para realizar login
 userRouter.post('/login', async (req, res) => {
     const { usuario, password } = req.body;
-    //cuando ingrese a este metodo es porque lo estoy llamando desde el js del front, relacionado al formulario
-    //donde quiero realizar el registro
-    
+
     try {
         // Verificar si el usuario y la contraseña están presentes
         if (!usuario || !password) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
-        const usuarios = cargarUsuarios();
-
-        const user = await usuarios.find(u => u.usuario === usuario);
+        // Buscar usuario por nombre de usuario
+        const user = await User.findOne({ usuario });
         if (!user) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
-        
+
         // Comparar la contraseña ingresada con la almacenada en la base de datos
         const passwordCorrecto = await bcrypt.compare(password, user.password);
-
         if (!passwordCorrecto) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
 
-        // Generar token JWT
-        const token = jwt.sign({
-            usuario: user.usuario,
-            userId: user.id // Suponiendo que tu objeto de usuario tiene un campo id
-        }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Generar token JWT para el usuario autenticado
+        const token = generateToken(user.usuario, user._id);
 
         res.json({ token });
 
-
-        const newUser = new User({
-            nombre,
-            correo,
-            usuario,
-            password,
-            numero
-        });
-
-        //guardar Usuario
-        await newUser.save()
-
-        res.status(201).json({ mensaje: 'Usuario creador correctamente'})
-
-    } catch (error){
-        console.log('Error al crear usuario' ,error)
-
-        res.status(500).json({error: 'Error en el servidor'})
+    } catch (error) {
+        console.error('Error en el login:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
     }
 });
 
-//obtener los usuario
+// Endpoint para obtener todos los usuarios
 userRouter.get('/', async (req, res) => {
     try {
-        const Users = await User.find();
+        const users = await User.find();
+        res.json(users);
     } catch (error) {
-        console.log('Error al buscar usuarios', error);
+        console.error('Error al buscar usuarios:', error);
         res.status(500).json({ error: 'Error interno en el servidor' });
     }
 });

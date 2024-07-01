@@ -16,6 +16,7 @@ const mongoUrl = process.env.mongoURL;
 
 //conexion a la bd
 mongoose.connect(mongoUrl, {
+    //useNewUrlParser: true,
     //useUnifiedTopology: true,
 });
 
@@ -27,25 +28,42 @@ mongoose.connection.once('open', async () => {
     console.log('Base de Datos conectada!');
 
     try {
-        //leer datos del db.sjon
-        const data = fs.readFileSync(path.join(__dirname, 'db.json'), 'utf-8');
-        const parsedData = JSON.parse(data)
+        // Eliminar todos los documentos existentes en la colección usuarios
+        await Usuario.deleteMany({});
+        console.log('Colección usuarios limpia.');
 
-        if(!Array.isArray(parsedData.usuarios)){
-            throw new Error('El formato del archivo db es incorrecto')
+        // Leer datos del archivo db.json
+        const filePath = path.join(__dirname, 'db.json');
+        const data = fs.readFileSync(filePath, 'utf-8');
+        const parsedData = JSON.parse(data);
+
+        if (!Array.isArray(parsedData.usuarios)) {
+            throw new Error('El formato del archivo db.json es incorrecto');
         }
 
-        const users = parsedData.usuarios
+        const users = parsedData.usuarios;
 
-        //hashing password
-        for (let user of users){
+        // Hash de contraseñas
+        for (let user of users) {
+            const existingUser = await Usuario.findOne({ correo: user.correo });
             user.password = await bcrypt.hash(user.password, 10);
+            if (existingUser) {
+                // Si el usuario ya existe, omitir la inserción
+                console.log(`Usuario ${user.correo} ya existe, omitiendo inserción.`);
+            } else {
+                // Hashing de la contraseña antes de guardar
+                user.password = await bcrypt.hash(user.password, 10);
+                await Usuario.create(user);
+                console.log(`Usuario ${user.correo} insertado correctamente.`);
+            }
         }
 
+        // Insertar usuarios en la base de datos
         await Usuario.insertMany(users);
-        console.log('Datos importador correctamente');
-    } catch (error){
-        console.log('Error al importar' ,error)
+        console.log('Datos importados correctamente.');
+
+    } catch (error) {
+        console.error('Error al importar datos:', error);
     } finally {
         mongoose.connection.close();
     }
