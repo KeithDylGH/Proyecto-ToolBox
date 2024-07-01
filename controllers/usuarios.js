@@ -9,7 +9,12 @@ const User = require('../models/usuario'); // Importar el modelo de usuario
 const userRouter = express.Router();
 
 
-//2. registro del nombre que el usuario ingreso en el formulario
+const cargarUsuarios = () => {
+    const filePath = path.join(__dirname, '..', 'db.json');
+    const data = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(data).usuarios;
+};
+
 userRouter.post('/login', async (req, res) => {
     const { usuario, password } = req.body;
     //cuando ingrese a este metodo es porque lo estoy llamando desde el js del front, relacionado al formulario
