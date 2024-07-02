@@ -52,7 +52,7 @@ mongoose.connection.once('open', async () => {
             } else {
                 // Hashing de la contraseña antes de guardar
                 user.password = await bcrypt.hash(user.password, 10);
-                await CUsuario.create(user);
+                //await CUsuario.create(user);
                 console.log(`Usuario ${user.correo} insertado correctamente.`);
             }
         }
