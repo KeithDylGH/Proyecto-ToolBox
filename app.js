@@ -16,14 +16,9 @@ const PORT = process.env.PORT || 4000;
 const uri = process.env.mongoURL;
 
 //conexion a la bd
-const config = {
-    autoIndex: false,
-    useNewUrlParser: true,
-  };
- mongoose.connect(uri, config);
 
-/* mongoose.connect(uri, {
-  }); */
+mongoose.connect(uri, {
+  });
 
 mongoose.connection.on('error', (err) => {
     console.error('Error al conectar con MongoDB:', err);
@@ -58,13 +53,13 @@ mongoose.connection.once('open', async () => {
             } else {
                 // Hashing de la contraseña antes de guardar
                 user.password = await bcrypt.hash(user.password, 10);
-                //await CUsuario.create(user);
+                await CUsuario.create(user);
                 console.log(`Usuario ${user.correo} insertado correctamente.`);
             }
         }
 
         // Insertar usuarios en la base de datos
-        await CUsuario.insertMany(users);
+        //await CUsuario.insertMany(users);
         console.log('Datos importados correctamente.');
 
     } catch (error) {
