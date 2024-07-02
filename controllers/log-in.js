@@ -9,30 +9,31 @@ async function iniciarSesion(usuario, contraseña) {
 
         if (!user) {
             console.log("No existe el usuario.");
-            return null;
+            return { success: false, message: 'Usuario no encontrado' };
         }
 
-        if (user.contraseña !== contraseña) {
+        const passwordCorrecta = await bcrypt.compare(contraseña, user.password);
+        if (!passwordCorrecta) {
             console.log("Contraseña incorrecta.");
-            return null;
+            return { success: false, message: 'Contraseña incorrecta' };
         }
 
         console.log("Usuario encontrado exitosamente.");
-        return user;
+        return { success: true, user };
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
-        return null;
+        return { success: false, message: 'Error en el servidor' };
     }
 }
 
 router.post('/', async (req, res) => {
     const { usuario, contraseña } = req.body;
-    const user = await iniciarSesion(usuario, contraseña);
+    const result = await iniciarSesion(usuario, contraseña);
 
-    if (user) {
-        res.json({ success: true, user });
+    if (result.success) {
+        res.json({ success: true, user: result.user });
     } else {
-        res.json({ success: false, message: 'Usuario o contraseña incorrectos' });
+        res.status(400).json({ success: false, message: result.message });
     }
 });
 
