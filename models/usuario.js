@@ -50,7 +50,7 @@ usuarioSchema.set('toJSON', {
 });
 
 // Crear el modelo de usuario a partir del esquema
-const Usuario = mongoose.model('Usuario', usuarioSchema);
+const CUsuario = mongoose.model('CUsuario', usuarioSchema);
 
 // Exportar el modelo para poder usarlo en otras partes de la aplicación
-module.exports = Usuario;
+module.exports = CUsuario;

@@ -8,7 +8,7 @@ const loginRouter = require('./controllers/log-in');
 //const registerRouter = require('./views/account/register/register')
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
-const Usuario = require('./models/usuario');
+const CUsuario = require('./models/usuario');
 
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const app = express()
@@ -28,7 +28,7 @@ mongoose.connection.once('open', async () => {
 
     try {
         // Eliminar todos los documentos existentes en la colección usuarios
-        await Usuario.deleteMany({});
+        await CUsuario.deleteMany({});
         console.log('Colección usuarios limpia.');
 
         // Leer datos del archivo db.json
@@ -44,7 +44,7 @@ mongoose.connection.once('open', async () => {
 
         // Hash de contraseñas
         for (let user of users) {
-            const existingUser = await Usuario.findOne({ correo: user.correo });
+            const existingUser = await CUsuario.findOne({ correo: user.correo });
             user.password = await bcrypt.hash(user.password, 10);
             if (existingUser) {
                 // Si el usuario ya existe, omitir la inserción
@@ -52,13 +52,13 @@ mongoose.connection.once('open', async () => {
             } else {
                 // Hashing de la contraseña antes de guardar
                 user.password = await bcrypt.hash(user.password, 10);
-                await Usuario.create(user);
+                await CUsuario.create(user);
                 console.log(`Usuario ${user.correo} insertado correctamente.`);
             }
         }
 
         // Insertar usuarios en la base de datos
-        await Usuario.insertMany(users);
+        await CUsuario.insertMany(users);
         console.log('Datos importados correctamente.');
 
     } catch (error) {
