@@ -13,12 +13,11 @@ const CUsuario = require('./models/usuario');
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const app = express()
 const PORT = process.env.PORT || 4000;
-const uri = process.env.mongoURL;
+const mongoUri = process.env.mongoURL;
 
 //conexion a la bd
 
-mongoose.connect(uri, {
-  });
+mongoose.connect(mongoUri);
 
 mongoose.connection.on('error', (err) => {
     console.error('Error al conectar con MongoDB:', err);
