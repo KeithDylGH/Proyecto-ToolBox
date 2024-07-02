@@ -1,4 +1,3 @@
-// controllers/login.js
 const express = require('express');
 const router = express.Router();
 const { buscarUsuarioPorNombre } = require('./buscarUsuario'); // Asegúrate de usar la función correcta
