@@ -16,14 +16,14 @@ const PORT = process.env.PORT || 4000;
 const uri = process.env.mongoURL;
 
 //conexion a la bd
-/* const config = {
+const config = {
     autoIndex: false,
     useNewUrlParser: true,
   };
-  return mongoose.connect(uri, {config}); */
+  return mongoose.connect(uri, {config});
 
-mongoose.connect(uri, {
-  });
+/* mongoose.connect(uri, {
+  }); */
 
 mongoose.connection.on('error', (err) => {
     console.error('Error al conectar con MongoDB:', err);
