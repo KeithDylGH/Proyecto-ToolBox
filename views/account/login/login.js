@@ -1,6 +1,5 @@
-//Entrar a la pagina Registrar
+// Entrar a la página Registrar
 document.addEventListener('DOMContentLoaded', function() {
-
     const botonCrearCuenta = document.getElementById('create');
 
     botonCrearCuenta.addEventListener('click', function() {
@@ -8,10 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
-//Entrar a la pagina Home
+// Entrar a la página Home
 document.addEventListener('DOMContentLoaded', function() {
-
     const botonACasa = document.getElementById('homeBtn');
 
     botonACasa.addEventListener('click', function() {
@@ -21,14 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const loginBtn = document.querySelector('#loginBtn');
 
-loginBtn.addEventListener('submit', async e=>{
+loginBtn.addEventListener('submit', async e => {
     e.preventDefault();
 
-    console.log('CLick')
-})
+    console.log('Click');
+});
 
-
-//form login
+// Form login
 const loginForm = document.querySelector('#loginForm');
 
 loginForm.addEventListener('submit', async (e) => {
@@ -43,10 +39,12 @@ loginForm.addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ usuario, password })
+            body: JSON.stringify({ usuario, contraseña: password })
         });
 
         const data = await response.json();
+
+        const notification = document.querySelector('.notification');
 
         if (response.ok) {
             // Guardar el token en localStorage
@@ -56,7 +54,6 @@ loginForm.addEventListener('submit', async (e) => {
             window.location.href = '/cuenta';
         } else {
             // Mostrar alerta de error en el formulario
-            const notification = document.querySelector('.notification');
             notification.textContent = data.message;
             notification.classList.add('alert', 'alert-danger');
 
