@@ -20,7 +20,7 @@ const config = {
     autoIndex: false,
     useNewUrlParser: true,
   };
-  return mongoose.connect(uri, {config});
+ mongoose.connect(uri, config);
 
 /* mongoose.connect(uri, {
   }); */
