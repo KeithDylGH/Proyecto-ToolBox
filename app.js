@@ -17,62 +17,58 @@ const mongoUri = process.env.mongoURL;
 
 //conexion a la bd
 
-mongoose.connect(mongoUri);
-
-mongoose.connection.on('error', (err) => {
-    console.error('Error al conectar con MongoDB:', err);
-});
-
-mongoose.connection.once('open', async () => {
+mongoose.connect(mongoUri).then(() => {
     console.log('Base de Datos conectada!');
 
-    try {
-        // Eliminar todos los documentos existentes en la colección usuarios
-        await CUsuario.deleteMany({});
-        console.log('Colección usuarios limpia.');
+    // Operaciones adicionales después de conectar con éxito
+    mongoose.connection.once('open', async () => {
+        try {
+            // Eliminar todos los documentos existentes en la colección usuarios
+            await CUsuario.deleteMany({});
+            console.log('Colección usuarios limpia.');
 
-        // Leer datos del archivo db.json
-        const filePath = path.join(__dirname, 'db.json');
-        const data = fs.readFileSync(filePath, 'utf-8');
-        const parsedData = JSON.parse(data);
+            // Leer datos del archivo db.json
+            const filePath = path.join(__dirname, 'db.json');
+            const data = fs.readFileSync(filePath, 'utf-8');
+            const parsedData = JSON.parse(data);
 
-        if (!Array.isArray(parsedData.usuarios)) {
-            throw new Error('El formato del archivo db.json es incorrecto');
-        }
-
-        const users = parsedData.usuarios;
-
-        // Hash de contraseñas
-        // Hash de contraseñas y creación de usuarios
-        for (let user of users) {
-            const existingUser = await CUsuario.findOne({ correo: user.correo });
-            user.password = await bcrypt.hash(user.password, 10);
-            if (existingUser) {
-            console.log(`Usuario ${user.correo} ya existe, omitiendo inserción.`);
-            } else {
-            await CUsuario.create(user);
-            console.log(`Usuario ${user.correo} insertado correctamente.`);
+            if (!Array.isArray(parsedData.usuarios)) {
+                throw new Error('El formato del archivo db.json es incorrecto');
             }
+
+            const users = parsedData.usuarios;
+
+            // Hash de contraseñas y creación de usuarios
+            for (let user of users) {
+                const existingUser = await CUsuario.findOne({ correo: user.correo });
+                user.password = await bcrypt.hash(user.password, 10);
+                if (existingUser) {
+                    console.log(`Usuario ${user.correo} ya existe, omitiendo inserción.`);
+                } else {
+                    await CUsuario.create(user);
+                    console.log(`Usuario ${user.correo} insertado correctamente.`);
+                }
+            }
+
+            // Insertar usuarios en la base de datos
+            //await CUsuario.insertMany(users);
+            console.log('Datos importados correctamente.');
+
+        } catch (error) {
+            console.error('Error al importar datos:', error);
+        } finally {
+            mongoose.connection.close();
         }
+    });
 
-        // Insertar usuarios en la base de datos
-        //await CUsuario.insertMany(users);
-        console.log('Datos importados correctamente.');
-
-    } catch (error) {
-        console.error('Error al importar datos:', error);
-    } finally {
-        mongoose.connection.close();
-    }
-});
-
-/* mongoose.connection.once('open', () => {
-    console.log('Conexión establecida con MongoDB');
-    // Aquí puedes realizar operaciones adicionales, como iniciar el servidor
+    // Iniciar el servidor solo cuando la conexión a la base de datos es exitosa
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Servidor conectado y escuchando en el puerto ${PORT}`);
     });
-}); */
+
+}).catch((err) => {
+    console.error('Error al conectar con MongoDB:', err);
+});
 
 //Servir archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
@@ -96,6 +92,6 @@ app.use('/api/login',loginRouter)
 module.exports = app
 
 // Iniciar el servidor
-app.listen(PORT, '0.0.0.0', () => {
+/* app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor conectado (escuchando) al puerto ${PORT}`);
-});
+}); */
