@@ -4,8 +4,7 @@ const mongoose = require('mongoose')
 const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
-const loginRouter = require('./views/account/login/log-in');
-//const registerRouter = require('./views/account/register/register')
+const loginRouter = require('./controllers/log-in');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
