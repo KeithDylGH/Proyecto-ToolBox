@@ -17,13 +17,7 @@ const mongoUri = process.env.mongoURL;
 
 //conexion a la bd
 
-mongoose.connect(mongoUri,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true, // Esta línea debes cambiarla por la siguiente:
-    // useCreateIndex: true, // Quedaría como esta
-    useFindAndModify: false
-});
+mongoose.connect(mongoUri);
 
 mongoose.connection.on('error', (err) => {
     console.error('Error al conectar con MongoDB:', err);
