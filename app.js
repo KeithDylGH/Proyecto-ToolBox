@@ -13,10 +13,11 @@ const CUsuario = require('./models/usuario');
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const app = express()
 const PORT = process.env.PORT || 4000;
-//const mongoUrl = process.env.mongoURL;
+const mongoUrl = process.env.mongoURL;
 
 //conexion a la bd
-mongoose.connect('mongodb+srv://keithdyltm:kd2003@toolbox.medus5t.mongodb.net/?retryWrites=true&w=majority&appName=ToolBox', {
+mongoose.connect(mongoUrl, {
+    useNewUrlParser: true
 });
 
 mongoose.connection.on('error', (err) => {
