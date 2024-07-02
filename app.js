@@ -66,13 +66,13 @@ mongoose.connection.once('open', async () => {
     }
 });
 
-mongoose.connection.once('open', () => {
+/* mongoose.connection.once('open', () => {
     console.log('Conexión establecida con MongoDB');
     // Aquí puedes realizar operaciones adicionales, como iniciar el servidor
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Servidor conectado y escuchando en el puerto ${PORT}`);
     });
-});
+}); */
 
 //Servir archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
