@@ -41,9 +41,9 @@ formulario.addEventListener('submit', async (e) => {
     } else {
         alert(result.error);
     }
+    console.log('La respuesta del servidor: ', response)
 });
 
-console.log('La respuesta del servidor: ', response)
 
 
 
