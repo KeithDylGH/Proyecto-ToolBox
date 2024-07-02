@@ -51,7 +51,7 @@ loginForm.addEventListener('submit', async (e) => {
             localStorage.setItem('token', data.token);
 
             // Redirigir a la página de cuentas
-            window.location.href = '/cuenta';
+            window.location.href = '/cuenta/inicio/';
         } else {
             // Mostrar alerta de error en el formulario
             notification.textContent = data.message;
