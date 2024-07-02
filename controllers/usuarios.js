@@ -15,7 +15,7 @@ const userRouter = express.Router();
 
 // Endpoint para registrar un nuevo usuario
 userRouter.post('/registrar', async (req, res) => {
-    const { nombre, usuario, correo, password, numero } = req.body;
+    const { nombre, apellido, usuario, correo, password, numero } = req.body;
 
     try {
         // Verificar si todos los campos obligatorios están presentes
@@ -50,7 +50,7 @@ userRouter.post('/registrar', async (req, res) => {
         // Generar token JWT para el nuevo usuario
         //const token = generateToken(newUser.usuario, newUser._id);
 
-        res.status(201).json({ token, mensaje: 'Usuario creado correctamente' });
+        res.status(201).json({ mensaje: 'Usuario creado correctamente' });
 
     } catch (error) {
         console.error('Error al crear usuario:', error);

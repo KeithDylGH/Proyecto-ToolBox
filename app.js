@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
-const registerRouter = require('./views/account/register/register')
+//const registerRouter = require('./views/account/register/register')
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const Usuario = require('./models/usuario');
@@ -17,8 +17,6 @@ const mongoUrl = process.env.mongoURL;
 
 //conexion a la bd
 mongoose.connect(mongoUrl, {
-    //useNewUrlParser: true,
-    //useUnifiedTopology: true,
 });
 
 mongoose.connection.on('error', (err) => {
@@ -87,7 +85,6 @@ app.use(express.json())
 
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter)
-app.use('/api/users', registerRouter)
 app.use('/api/login', loginRouter)
 
 module.exports = app
