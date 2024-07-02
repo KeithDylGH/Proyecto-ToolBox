@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { buscarUsuarioPorNombre } = require('./buscarUsuario'); // Asegúrate de usar la función correcta
+const { buscarUsuarioPorNombre } = require('../../controllers/buscarUsuario'); // Asegúrate de usar la función correcta
 
 async function iniciarSesion(usuario, contraseña) {
     try {
