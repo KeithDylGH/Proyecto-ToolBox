@@ -1,8 +1,8 @@
 //const { response } = require("../../../app");
 
-const formulario = document.querySelector('#formulario');
-
 document.addEventListener('DOMContentLoaded', function(){
+
+    const formulario = document.querySelector('#formulario');
 
     formulario.addEventListener('submit', async (e) => {
         e.preventDefault();
