@@ -15,7 +15,7 @@ const userRouter = express.Router();
 
 // Endpoint para registrar un nuevo usuario
 userRouter.post('/registrar', async (req, res) => {
-    const { nombre, apellido, usuario, correo, password, numero } = req.body;
+    const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
 
     try {
         // Verificar si todos los campos obligatorios están presentes
