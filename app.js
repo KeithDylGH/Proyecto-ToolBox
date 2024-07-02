@@ -17,8 +17,10 @@ const mongoUrl = process.env.mongoURL;
 
 //conexion a la bd
 mongoose.connect(mongoUrl, {
-    useNewUrlParser: true
-});
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  });
 
 mongoose.connection.on('error', (err) => {
     console.error('Error al conectar con MongoDB:', err);
