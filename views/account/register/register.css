@@ -1,61 +1,68 @@
-.vh-100{
-    background-color: #f3f3f3;
+.vh-100 {
+  background-color: #f3f3f3;
 }
 
-.text-body{
-    color: #bababa;
+.text-body {
+  color: #bababa;
 }
-.text-body:hover{
-    color: #E57368;
-    transition: ease-in-out .2s;
-}
-
-.form-check{
-    display: flex;
-    flex-direction: column;
+.text-body:hover {
+  color: #e57368;
+  transition: ease-in-out 0.2s;
 }
 
-.mask{
-    padding: 2rem;
+.form-check {
+  display: flex;
+  flex-direction: column;
 }
 
-.claveOlvidada a{
-    color: #bababa;
-}
-.claveOlvidada a:hover{
-    color: #E57368;
-    transition: ease-in-out .2s;
+.mask {
+  padding: 2rem;
 }
 
-.cuenta a{
-    color: #bababa;
+.claveOlvidada a {
+  color: #bababa;
 }
-.cuenta a:hover{
-    color: #E57368;
-    transition: ease-in-out .2s;
-}
-
-.logo img{
-    width: 50%;
-    margin: 0 auto;
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: center;
+.claveOlvidada a:hover {
+  color: #e57368;
+  transition: ease-in-out 0.2s;
 }
 
+.cuenta a {
+  color: #bababa;
+}
+.cuenta a:hover {
+  color: #e57368;
+  transition: ease-in-out 0.2s;
+}
+
+.logo img {
+  width: 50%;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+/*FOOTER*/
 footer {
-    background-color: #2d1c1c;
-    color: #fff;
-    padding-bottom: 2rem;
+  background-color: #2d1c1c;
+  color: #fff;
 }
-footer a{
-    color: #bababa;
+footer li a {
+  color: #fff;
+  text-decoration: none;
 }
-footer a:hover{
-    color: #E57368;
-    text-decoration: none;
-    transition: .2s ease-in;
+footer a:hover {
+  color: #e57368;
+  text-decoration: none;
+  transition: 0.2s ease-in;
 }
-.row{
-    justify-content: center;
+
+footer p a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.row {
+  justify-content: center;
 }
