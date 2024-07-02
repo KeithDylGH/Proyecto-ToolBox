@@ -85,7 +85,7 @@ app.use(express.json())
 
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter)
-app.use('/api/login', loginRouter)
+app.use('/api/login',loginRouter)
 
 module.exports = app
 

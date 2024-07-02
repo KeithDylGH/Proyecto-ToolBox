@@ -19,7 +19,7 @@ formulario.addEventListener('submit', async (e) => {
         return;
     }
 
-    const response = await fetch('/api/users', {
+    const response = await fetch('/api/users/registrar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
