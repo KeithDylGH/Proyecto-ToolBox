@@ -17,7 +17,11 @@ const mongoUri = process.env.mongoURL;
 
 //conexion a la bd
 
-mongoose.connect(mongoUri);
+mongoose.connect(mongoUri,{
+    useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true, // Para evitar advertencias de Mongoose
+});
 
 mongoose.connection.on('error', (err) => {
     console.error('Error al conectar con MongoDB:', err);
@@ -43,17 +47,15 @@ mongoose.connection.once('open', async () => {
         const users = parsedData.usuarios;
 
         // Hash de contraseñas
+        // Hash de contraseñas y creación de usuarios
         for (let user of users) {
             const existingUser = await CUsuario.findOne({ correo: user.correo });
             user.password = await bcrypt.hash(user.password, 10);
             if (existingUser) {
-                // Si el usuario ya existe, omitir la inserción
-                console.log(`Usuario ${user.correo} ya existe, omitiendo inserción.`);
+            console.log(`Usuario ${user.correo} ya existe, omitiendo inserción.`);
             } else {
-                // Hashing de la contraseña antes de guardar
-                user.password = await bcrypt.hash(user.password, 10);
-                await CUsuario.create(user);
-                console.log(`Usuario ${user.correo} insertado correctamente.`);
+            await CUsuario.create(user);
+            console.log(`Usuario ${user.correo} insertado correctamente.`);
             }
         }
 
@@ -66,6 +68,14 @@ mongoose.connection.once('open', async () => {
     } finally {
         mongoose.connection.close();
     }
+});
+
+mongoose.connection.once('open', () => {
+    console.log('Conexión establecida con MongoDB');
+    // Aquí puedes realizar operaciones adicionales, como iniciar el servidor
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Servidor conectado y escuchando en el puerto ${PORT}`);
+    });
 });
 
 //Servir archivos estaticos

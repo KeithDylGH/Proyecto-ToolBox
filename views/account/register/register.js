@@ -1,12 +1,12 @@
 //const { response } = require("../../../app");
 
 document.addEventListener('DOMContentLoaded', function(){
-
+    
     const formulario = document.querySelector('#formulario');
-
+    
     formulario.addEventListener('submit', async (e) => {
         e.preventDefault();
-    
+        
         const nombre = document.getElementById('name').value;
         const apellido = document.getElementById('lName').value;
         const username = document.getElementById('username').value;
@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function(){
         const confirmPassword = document.getElementById('confirmPassword').value;
         const phoneNumber = document.getElementById('phoneNumber').value;
         const cedula = document.getElementById('cedula').value;
+        
     
         if (password !== confirmPassword) {
             alert('Las contraseñas no coinciden');

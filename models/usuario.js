@@ -43,8 +43,8 @@ const usuarioSchema = new mongoose.Schema({
 // Opcional: configurar opciones adicionales del esquema
 usuarioSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
-        delete returnedObject._id;
+        returnedObject.id = returnedObject._id.toString(); // Convierte _id a una cadena id
+        delete returnedObject._id; // Elimina el campo _id
         delete returnedObject.__v; // Elimina el campo __v si lo deseas
     }
 });
