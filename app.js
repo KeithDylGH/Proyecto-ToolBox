@@ -19,8 +19,10 @@ const mongoUri = process.env.mongoURL;
 
 mongoose.connect(mongoUri,{
     useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true, // Para evitar advertencias de Mongoose
+    useUnifiedTopology: true,
+    useCreateIndex: true, // Esta línea debes cambiarla por la siguiente:
+    // useCreateIndex: true, // Quedaría como esta
+    useFindAndModify: false
 });
 
 mongoose.connection.on('error', (err) => {
