@@ -90,8 +90,3 @@ app.use('/api/users',userRouter)
 app.use('/api/login',loginRouter)
 
 module.exports = app
-
-// Iniciar el servidor
-/* app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Servidor conectado (escuchando) al puerto ${PORT}`);
-}); */
