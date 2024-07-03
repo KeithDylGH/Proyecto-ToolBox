@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const botonACasa = document.getElementById('homeBtn');
+    const homeBtn = document.getElementById('homeBtn');
 
-    botonACasa.addEventListener('click', function() {
+    homeBtn.addEventListener('click', function() {
         window.location.href = '/';
     });
 });
