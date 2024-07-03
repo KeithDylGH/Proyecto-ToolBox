@@ -71,7 +71,7 @@ mongoose.connect(mongoUri).then(() => {
 
 //Servir archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'controllers')));
+//app.use(express.static(path.join(__dirname, 'controllers')));
 
 //RUTAS DE FRONTEND
 app.use('/',express.static(path.resolve(__dirname, 'views','home')));
