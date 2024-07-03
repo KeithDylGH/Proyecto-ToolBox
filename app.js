@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
-let ejs = require('ejs');
+const ejs = require('ejs');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -73,6 +73,9 @@ mongoose.connect(mongoUri).then(() => {
 //Servir archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
 //app.use(express.static(path.join(__dirname, 'controllers')));
+
+//CONFIGURAR EJS
+app.set('view engine', 'ejs');
 
 //RUTAS DE FRONTEND
 app.use('/',express.static(path.resolve(__dirname, 'views','home')));

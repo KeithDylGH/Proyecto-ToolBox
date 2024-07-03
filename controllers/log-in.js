@@ -1,4 +1,4 @@
-const express = require('express');
+/* const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { buscarUsuarioPorNombre } = require('./buscarUsuario'); // Asegúrate de usar la función correcta
@@ -38,4 +38,4 @@ router.post('/', async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = router; */
