@@ -76,7 +76,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //CONFIGURAR EJS
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
+app.use('/views', express.static(path.join(__dirname, 'views')));
 
 //RUTAS DE FRONTEND
 app.use('/',express.static(path.resolve(__dirname, 'views','home')));
