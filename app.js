@@ -76,9 +76,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //CONFIGURAR EJS
 app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
 
 //RUTAS DE FRONTEND
 app.use('/',express.static(path.resolve(__dirname, 'views','home')));
+
+app.get('/', (req, res)=>{
+    const data = {
+        CUsuario: 'ProbandoU'
+    };
+    res.render('home',data)
+})
+
 app.use('/tienda/cabeza',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
 
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
