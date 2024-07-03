@@ -1,4 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/session')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('welcome-message').textContent = `¡BIENVENIDO ${data.name}!`;
+            } else {
+                // Manejar error
+            }
+        });
+});
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
     const botonACasa = document.getElementById('homeBtn');
 
     botonACasa.addEventListener('click', function() {

@@ -2,6 +2,24 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { buscarUsuarioPorNombre } = require('./buscarUsuario'); // Asegúrate de usar la función correcta
+const CUsuario = require('../models/usuario')
+
+
+router.post('/api/login', async (req, res) => {
+    const { email, password } = req.body;
+    const user = await CUsuario.findOne({ email });
+
+    if (user && user.password === password) {
+        req.session.user = {
+            id: user._id,
+            name: user.nombre
+        };
+        res.json({ success: true, name: user.nombre });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+});
+
 
 async function iniciarSesion(usuario, contraseña) {
     try {
