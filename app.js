@@ -5,6 +5,8 @@ const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
+let ejs = require('ejs');
+let html = ejs.render('<%= CUsuario.join(", "); %>', {CUsuario: CUsuario});
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -91,16 +93,5 @@ app.use(express.json())
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter)
 app.use('/api/login',loginRouter)
-
-
-app.get('/api/session', (req, res) => {
-    if (req.session.user) {
-        res.json({ success: true, name: req.session.user.name });
-    } else {
-        res.status(401).json({ success: false });
-    }
-});
-
-
 
 module.exports = app
