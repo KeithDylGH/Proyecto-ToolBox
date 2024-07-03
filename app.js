@@ -92,4 +92,15 @@ app.use(express.json())
 app.use('/api/users',userRouter)
 app.use('/api/login',loginRouter)
 
+
+app.get('/api/session', (req, res) => {
+    if (req.session.user) {
+        res.json({ success: true, name: req.session.user.name });
+    } else {
+        res.status(401).json({ success: false });
+    }
+});
+
+
+
 module.exports = app
