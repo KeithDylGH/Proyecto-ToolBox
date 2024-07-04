@@ -99,7 +99,7 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/cuenta/menu/', (req, res) => {
-    res.render('account', 'cliente');;
+    res.render('account/cuenta/cliente');;
 });
 
 
