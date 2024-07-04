@@ -127,16 +127,18 @@ app.get('/', (req, res) => {
 });
 
 app.get('/tienda', (req, res) => {
-    res.render('shop/Cabeza');
+    res.render('shop/Catalogo');
 });
 
-app.get('/login', (req, res) => {
+app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
+/* app.get('/login', (req, res) => {
     res.render('account/login');
-});
+}); */
 
-app.get('/registrar', (req, res) => {
+app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
+/* app.get('/registrar', (req, res) => {
     res.render('account/register');
-});
+}); */
 
 app.get('/admin', (req, res) => {
     res.render('account/cuenta/admin');
