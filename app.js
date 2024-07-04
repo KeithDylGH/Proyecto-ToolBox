@@ -83,7 +83,7 @@ app.use('/',express.static(path.resolve(__dirname, 'views','home')));
 
 app.get('/', (req, res)=>{
     const data = {
-        CUsuario: {nombre: 'ProbandoU'}
+        CUsuario: {nombre: ''}
     };
     res.render('home',data)
 })
