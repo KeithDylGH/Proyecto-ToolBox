@@ -122,7 +122,7 @@ app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','acco
 
 //RUTAS DE FRONTEND (EJS)
 app.get('/', (req, res) => {
-    res.render('home');
+    res.render('home/index');
 });
 
 app.get('/tienda', (req, res) => {
