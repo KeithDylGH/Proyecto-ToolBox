@@ -71,7 +71,7 @@ mongoose.connect(mongoUri).then(() => {
 });
 
 
-//CONFIGURAR EJS
+//CONFIGURAR Y RUTAS DE EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -87,7 +87,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-app.get('/', async (req, res) => {
+/* app.get('/', async (req, res) => {
     try {
         const usuario = await CUsuario.findOne(); // Puedes agregar condiciones de búsqueda aquí
         
@@ -104,7 +104,7 @@ app.get('/', async (req, res) => {
         console.error('Error al obtener usuario:', error);
         res.status(500).send('Error del servidor');
     }
-});
+}); */
 
 
 
