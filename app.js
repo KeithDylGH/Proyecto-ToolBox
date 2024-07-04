@@ -109,6 +109,11 @@ app.get('/', async (req, res) => {
     }
 });
 
+app.get('/cuenta/menu/', (req, res) => {
+    res.render('account/menu');
+});
+
+
 
 //SUPER IMPORTANTE
 app.use(express.json())
