@@ -76,8 +76,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(express.static(path.join(__dirname, 'controllers')));
 
 //CONFIGURAR EJS
-app.set('view engine', 'ejs');
-app.use('/views', express.static(path.join(__dirname, 'views')));
+//app.set('view engine', 'ejs');
+//app.use('/views', express.static(path.join(__dirname, 'views')));
 
 
 /* app.get('/', async (req, res) => {
