@@ -75,8 +75,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(express.static(path.join(__dirname, 'controllers')));
 
 //CONFIGURAR EJS
+app.set('view engine', 'ejs');
+app.set('/views', path.join(__dirname, 'views'));
+
 app.get('/', (req, res) => {
-    res.render('views/home/index');
+    res.render('home/index');
 });
 
 
