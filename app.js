@@ -80,16 +80,7 @@ app.use('/views', express.static(path.join(__dirname, 'views')));
 
 //RUTAS DE FRONTEND
 app.use('/',express.static(path.resolve(__dirname, 'views','home')));
-
-app.get('/', (req, res)=>{
-    const data = {
-        CUsuario: {nombre: ''}
-    };
-    res.render('home',data)
-})
-
-app.use('/tienda/cabeza',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
-
+app.use('/tienda',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
 app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
 app.use('/admin',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'admin')));
@@ -97,6 +88,27 @@ app.use('/cuenta/menu',express.static(path.resolve(__dirname, 'views','account',
 app.use('/cuenta/carrito',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'carrito')));
 app.use('/cuenta/configuracion',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'configuracion')));
 app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'contactos')));
+
+
+app.get('/', async (req, res) => {
+    try {
+        const usuario = await CUsuario.findOne(); // Puedes agregar condiciones de búsqueda aquí
+        
+        let data = {
+            CUsuario: { nombre: '' }
+        };
+
+        if (usuario) {
+            data.CUsuario.nombre = usuario.nombre;
+        }
+
+        res.render('home', data);
+    } catch (error) {
+        console.error('Error al obtener usuario:', error);
+        res.status(500).send('Error del servidor');
+    }
+});
+
 
 //SUPER IMPORTANTE
 app.use(express.json())
