@@ -78,6 +78,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.use('/views', express.static(path.join(__dirname, 'views')));
 
+app.get('/', (req, res) => {
+    res.render('views/home/index');
+});
 
 app.get('/', async (req, res) => {
     try {
@@ -98,13 +101,11 @@ app.get('/', async (req, res) => {
     }
 });
 
-app.get('/', (req, res) => {
-    res.render('views/home/index');
-});
+
 
 
 //RUTAS DE FRONTEND
-app.use('/',express.static(path.resolve(__dirname, 'views','home')));
+//app.use('/',express.static(path.resolve(__dirname, 'views','home')));
 app.use('/tienda',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
 app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
