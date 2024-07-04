@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
-//const ejs = require('ejs');
+const ejs = require('ejs');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -75,13 +75,12 @@ mongoose.connect(mongoUri).then(() => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-/* app.get('/', (req, res) => {
-    res.render('home/index');
-}); */
-
-
 //Servir archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+
 //app.use(express.static(path.join(__dirname, 'controllers')));
 
 
