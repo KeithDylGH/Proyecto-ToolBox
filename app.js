@@ -72,8 +72,8 @@ mongoose.connect(mongoUri).then(() => {
 
 
 //CONFIGURAR Y RUTAS DE EJS
-//app.set('view engine', 'ejs');
-//app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 /* app.get('/', (req, res) => {
     res.render('home/index');
@@ -110,7 +110,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //RUTAS DE FRONTEND
-app.use('/',express.static(path.resolve(__dirname, 'views','home')));
+/* app.use('/',express.static(path.resolve(__dirname, 'views','home')));
 app.use('/tienda',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
 app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
@@ -119,6 +119,46 @@ app.use('/cuenta/menu',express.static(path.resolve(__dirname, 'views','account',
 app.use('/cuenta/carrito',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'carrito')));
 app.use('/cuenta/configuracion',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'configuracion')));
 app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'contactos')));
+ */
+
+//RUTAS DE FRONTEND (EJS)
+app.get('/', (req, res) => {
+    res.render('home');
+});
+
+app.get('/tienda', (req, res) => {
+    res.render('shop/Cabeza');
+});
+
+app.get('/login', (req, res) => {
+    res.render('account/login');
+});
+
+app.get('/registrar', (req, res) => {
+    res.render('account/register');
+});
+
+app.get('/admin', (req, res) => {
+    res.render('account/cuenta/admin');
+});
+
+app.get('/cuenta/menu', (req, res) => {
+    res.render('account/cuenta/cliente');
+});
+
+app.get('/cuenta/carrito', (req, res) => {
+    res.render('account/cuenta/cliente/carrito');
+});
+
+app.get('/cuenta/configuracion', (req, res) => {
+    res.render('account/cuenta/cliente/configuracion');
+});
+
+app.get('/cuenta/contactos', (req, res) => {
+    res.render('account/cuenta/cliente/contactos');
+});
+
+
 
 //SUPER IMPORTANTE
 app.use(express.json())
