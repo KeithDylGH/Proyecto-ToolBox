@@ -71,17 +71,65 @@ mongoose.connect(mongoUri).then(() => {
 });
 
 
+
+app.use(express.static(path.join(__dirname, 'public')));
 //CONFIGURAR Y RUTAS DE EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-//Servir archivos estaticos
-app.use(express.static(path.join(__dirname, 'public')));
-
-
-
-
 //app.use(express.static(path.join(__dirname, 'controllers')));
+
+//RUTAS DE FRONTEND (EJS)
+app.get('/', (req, res) => {
+    res.render('home/index');
+});
+
+app.get('/tienda', (req, res) => {
+    res.render('shop/Catalogo');
+});
+
+app.get('/login', (req, res) => {
+    res.render('account/login');
+});
+
+app.get('/registrar', (req, res) => {
+    res.render('account/register');
+});
+
+app.get('/admin', (req, res) => {
+    res.render('account/cuenta/admin');
+});
+
+app.get('/cuenta/menu', (req, res) => {
+    res.render('account/cuenta/cliente');
+});
+
+app.get('/cuenta/carrito', (req, res) => {
+    res.render('account/cuenta/cliente/carrito');
+});
+
+app.get('/cuenta/configuracion', (req, res) => {
+    res.render('account/cuenta/cliente/configuracion');
+});
+
+app.get('/cuenta/contactos', (req, res) => {
+    res.render('account/cuenta/cliente/contactos');
+});
+
+
+
+
+//RUTAS DE FRONTEND
+/* app.use('/',express.static(path.resolve(__dirname, 'views','home')));
+app.use('/tienda',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
+app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
+app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
+app.use('/admin',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'admin')));
+app.use('/cuenta/menu',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente')));
+app.use('/cuenta/carrito',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'carrito')));
+app.use('/cuenta/configuracion',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'configuracion')));
+app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'contactos')));
+ */
 
 
 
@@ -104,61 +152,6 @@ app.use(express.static(path.join(__dirname, 'public')));
         res.status(500).send('Error del servidor');
     }
 }); */
-
-
-
-
-//RUTAS DE FRONTEND
-/* app.use('/',express.static(path.resolve(__dirname, 'views','home')));
-app.use('/tienda',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
-app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
-app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
-app.use('/admin',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'admin')));
-app.use('/cuenta/menu',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente')));
-app.use('/cuenta/carrito',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'carrito')));
-app.use('/cuenta/configuracion',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'configuracion')));
-app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'contactos')));
- */
-
-//RUTAS DE FRONTEND (EJS)
-app.get('/', (req, res) => {
-    res.render('home/index');
-});
-
-app.get('/tienda', (req, res) => {
-    res.render('shop/Catalogo');
-});
-
-app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
-/* app.get('/login', (req, res) => {
-    res.render('account/login');
-}); */
-
-app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
-/* app.get('/registrar', (req, res) => {
-    res.render('account/register');
-}); */
-
-app.get('/admin', (req, res) => {
-    res.render('account/cuenta/admin');
-});
-
-app.get('/cuenta/menu', (req, res) => {
-    res.render('account/cuenta/cliente');
-});
-
-app.get('/cuenta/carrito', (req, res) => {
-    res.render('account/cuenta/cliente/carrito');
-});
-
-app.get('/cuenta/configuracion', (req, res) => {
-    res.render('account/cuenta/cliente/configuracion');
-});
-
-app.get('/cuenta/contactos', (req, res) => {
-    res.render('account/cuenta/cliente/contactos');
-});
-
 
 
 //SUPER IMPORTANTE
