@@ -80,7 +80,7 @@ app.set('view engine', 'ejs');
 app.use('/views', express.static(path.join(__dirname, 'views')));
 
 
-app.get('/', async (req, res) => {
+/* app.get('/', async (req, res) => {
     try {
         const usuario = await CUsuario.findOne(); // Puedes agregar condiciones de búsqueda aquí
         
@@ -97,7 +97,7 @@ app.get('/', async (req, res) => {
         console.error('Error al obtener usuario:', error);
         res.status(500).send('Error del servidor');
     }
-});
+}); */
 
 /* app.get('/cuenta/menu/', (req, res) => {
     res.render('account/cuenta/index');
