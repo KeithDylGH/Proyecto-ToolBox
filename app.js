@@ -16,7 +16,7 @@ const app = express()
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
 
-app.use(compression());
+
 
 mongoose.connect(mongoUri).then(() => {
     console.log('Base de Datos conectada!');
@@ -117,6 +117,7 @@ app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','acco
 
 //SUPER IMPORTANTE
 app.use(express.json())
+app.use(compression());
 
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter)
