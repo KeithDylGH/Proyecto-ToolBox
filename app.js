@@ -78,17 +78,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.use('/views', express.static(path.join(__dirname, 'views')));
 
-//RUTAS DE FRONTEND
-app.use('/',express.static(path.resolve(__dirname, 'views','home')));
-app.use('/tienda',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
-app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
-app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
-app.use('/admin',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'admin')));
-app.use('/cuenta/menu',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente')));
-app.use('/cuenta/carrito',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'carrito')));
-app.use('/cuenta/configuracion',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'configuracion')));
-app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'contactos')));
-
 
 app.get('/', async (req, res) => {
     try {
@@ -114,6 +103,16 @@ app.get('/cuenta/menu/', (req, res) => {
 });
 
 
+//RUTAS DE FRONTEND
+app.use('/',express.static(path.resolve(__dirname, 'views','home')));
+app.use('/tienda',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
+app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
+app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
+app.use('/admin',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'admin')));
+app.use('/cuenta/menu',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente')));
+app.use('/cuenta/carrito',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'carrito')));
+app.use('/cuenta/configuracion',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'configuracion')));
+app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'contactos')));
 
 //SUPER IMPORTANTE
 app.use(express.json())
