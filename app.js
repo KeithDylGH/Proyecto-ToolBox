@@ -6,6 +6,7 @@ const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
+const compression = require('compression')
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -15,7 +16,7 @@ const app = express()
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
 
-//conexion a la bd
+app.use(compression());
 
 mongoose.connect(mongoUri).then(() => {
     console.log('Base de Datos conectada!');
@@ -98,9 +99,9 @@ app.get('/', async (req, res) => {
     }
 });
 
-app.get('/cuenta/menu/', (req, res) => {
+/* app.get('/cuenta/menu/', (req, res) => {
     res.render('account/cuenta/index');
-});
+}); */
 
 
 //RUTAS DE FRONTEND
