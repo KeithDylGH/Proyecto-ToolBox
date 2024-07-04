@@ -6,7 +6,6 @@ const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
-const compression = require('compression')
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -117,7 +116,6 @@ app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','acco
 
 //SUPER IMPORTANTE
 app.use(express.json())
-app.use(compression());
 
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter)
