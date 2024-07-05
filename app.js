@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const loginRouter = require('./controllers/log-in');
-//const ejs = require('ejs');
+const ejs = require('ejs');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -74,13 +74,14 @@ mongoose.connect(mongoUri).then(() => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 //CONFIGURAR Y RUTAS DE EJS
-/* app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views')); */
+app.set('view engine', 'ejs');
+//app.set('views', path.join(__dirname, 'views')); 
+app.use(express.static(path.join(__dirname, 'views')));
 
 //app.use(express.static(path.join(__dirname, 'controllers')));
 
 //RUTAS DE FRONTEND (EJS)
-/* app.get('/', (req, res) => {
+app.get('/', (req, res) => {
     res.render('home/index');
 });
 
@@ -114,13 +115,13 @@ app.get('/cuenta/configuracion', (req, res) => {
 
 app.get('/cuenta/contactos', (req, res) => {
     res.render('account/cuenta/cliente/contactos');
-}); */
+});
 
 
 
 
 //RUTAS DE FRONTEND
-app.use('/',express.static(path.resolve(__dirname, 'views','home')));
+/* app.use('/',express.static(path.resolve(__dirname, 'views','home')));
 app.use('/tienda',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
 app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
@@ -128,7 +129,7 @@ app.use('/admin',express.static(path.resolve(__dirname, 'views','account', 'cuen
 app.use('/cuenta/menu',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente')));
 app.use('/cuenta/carrito',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'carrito')));
 app.use('/cuenta/configuracion',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'configuracion')));
-app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'contactos')));
+app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'contactos'))); */
 
 
 
