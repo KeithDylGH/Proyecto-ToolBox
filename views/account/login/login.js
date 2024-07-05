@@ -50,8 +50,12 @@ loginForm.addEventListener('submit', async (e) => {
             // Guardar el token en localStorage
             localStorage.setItem('token', data.token);
 
-            // Redirigir a la página de cuentas
-            window.location.href = '/cuenta/menu/';
+            // Redirigir según el rol del usuario
+            if (data.user.rol === 'admin') {
+                window.location.href = '/admin/';
+            } else {
+                window.location.href = '/cuenta/menu';
+            }
         } else {
             // Mostrar alerta de error en el formulario
             notification.textContent = data.message;
@@ -65,14 +69,14 @@ loginForm.addEventListener('submit', async (e) => {
         }
     } catch (error) {
         console.error('Error:', error);
-        const notification = document.querySelector('.notification');
-        notification.textContent = 'Usuario o clave incorrecta';
-        notification.classList.add('alert', 'alert-danger');
+            const notification = document.querySelector('.notification');
+            notification.textContent = 'Usuario o clave incorrecta';
+            notification.classList.add('alert', 'alert-danger');
 
-        // Desaparecer la notificación después de 3 segundos
-        setTimeout(() => {
-            notification.textContent = '';
-            notification.classList.remove('alert', 'alert-danger');
-        }, 3000);
-    }
+            // Desaparecer la notificación después de 3 segundos
+            setTimeout(() => {
+                notification.textContent = '';
+                notification.classList.remove('alert', 'alert-danger');
+            }, 3000);
+        }
 });
