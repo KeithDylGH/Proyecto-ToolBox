@@ -6,6 +6,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+//VALIDAR SI EL USUARIO ES ADMIN O CLIENTE
+/* document.addEventListener('DOMContentLoaded', function() {
+    const inicioBtn = document.getElementById('sideBtn');
+
+    inicioBtn.addEventListener('click', function() {
+        window.location.href = '/cuenta/menu/';
+    });
+}); */
+
 document.addEventListener('DOMContentLoaded', function() {
     const carritoBtn = document.getElementById('carritoBtn');
 
@@ -35,5 +44,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     logout.addEventListener('click', function() {
         window.location.href = '/login/';
+    });
+});
+
+//TEMPORAL
+document.addEventListener('DOMContentLoaded', function() {
+    const paginaCliente = document.getElementsByClassName('cliente');
+
+    paginaCliente.addEventListener('click', function() {
+        window.location.href = '/cliente/';
     });
 });

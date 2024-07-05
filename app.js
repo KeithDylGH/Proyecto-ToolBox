@@ -95,7 +95,7 @@ app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
 });
 
-app.get('/cuenta/menu', (req, res) => {
+app.get('/cliente/', (req, res) => {
     res.render('account/cuenta/cliente');
 });
 
