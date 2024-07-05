@@ -95,10 +95,6 @@ app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
 });
 
-app.get('/admin', (req, res) => {
-    res.render('account/cuenta/admin');
-});
-
 app.get('/cuenta/menu', (req, res) => {
     res.render('account/cuenta/cliente');
 });
@@ -115,6 +111,13 @@ app.get('/cuenta/contactos', (req, res) => {
     res.render('account/cuenta/cliente/contactos');
 });
 
+app.get('/admin', (req, res) => {
+    res.render('account/cuenta/admin');
+});
+
+app.get('/admin/inventario', (req, res) => {
+    res.render('account/cuenta/admin/inventory');
+});
 
 
 
