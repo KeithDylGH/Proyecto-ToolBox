@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    const botonIniciarSesion = document.getElementById('categoria');
+    const tienda = document.getElementById('categoria1');
 
-    botonIniciarSesion.addEventListener('click', function() {
-        window.location.href = '';
+    tienda.addEventListener('click', function() {
+        window.location.href = '/tienda/';
     });
 });
