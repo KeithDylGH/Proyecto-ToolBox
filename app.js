@@ -119,6 +119,10 @@ app.get('/admin/inventario', (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
+app.get('/inventario/Ver Produto', (req, res) => {
+    res.render('account/cuenta/admin/add');
+});
+
 
 
 //RUTAS DE FRONTEND

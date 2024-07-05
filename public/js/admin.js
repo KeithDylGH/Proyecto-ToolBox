@@ -13,3 +13,12 @@ document.addEventListener('DOMContentLoaded', function(){
         window.location.href = '/admin/'
     })
 })
+
+//INVENTARIO
+document.addEventListener('DOMContentLoaded', function(){
+    const verProducto = document.getElementById('verBtn');
+
+    verProducto.addEventListener('click', function() {
+        window.location.href = '/admin/'
+    })
+})

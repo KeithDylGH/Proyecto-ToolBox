@@ -22,52 +22,52 @@
 </head>
 <body>
     
-    <section>
-        <!--Sidebar-->
-
-        <div class="sidebar">
-            <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
-
-            <a href="#" id="sideBtn">Inicio</a>
-            <a href="#general" id="homeBtn">Ir a la Pág. Principal</a>
-            <a href="#carrito" id="carritoBtn">Carrito</a>
-            <a href="#contacto" id="contactoBtn">Servicio al Cliente</a>
-            <a class="active sidebar_btn" href="#inventario" id="inventarioBtn">Inventario</a>
-            <a href="#configuracion" id="configuracionBtn">Configuración</a>
-
-            <button class="Log-Out" id="logout"><a href="#">Cerrar sesion
-            </a></button>
-        </div>
-
-    </section>
+    <header>
+      
+        <nav class="navbar">
+            <div class="container-fluid">
+              <a class="navbar-brand text-light" href="#">
+                <img src="/public/img/logo/Logo trazo 180.png" alt="Logo"  height="45" class="w-25 d-inline-block align-text-top">
+                ToolBox Account
+              </a>
+                <a class="nav-link active admin" aria-current="page" href="#">Inicio</a>
+              
+            </div>
+          </nav>
+  
+      </header>
 
     <section class="container">
-
-        <h1>Mira los productos disponibles</h1>
-    
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>    
-                        <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Descripcion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td> <!-- Producto -->
-                        <td></td> <!-- Precio -->
-                        <td></td> <!-- Stock -->
-                        <td></td> <!-- Descripcion -->
-                    </tr>
-                </tbody>
-                
-            </table>
+        <div class="py-4">
+            <h2>Mira los productos disponibles</h2>
+        
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>    
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Descripcion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td> <!-- Producto -->
+                            <td></td> <!-- Precio -->
+                            <td></td> <!-- Stock -->
+                            <td></td> <!-- Descripcion -->
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
         </div>
 
     </section>
 
+    <script src="/js/cuenta.js"></script>
+    <script src="/js/admin.js"></script>
+    <script src="/js/inventario.js"></script>
 </body>
 </html>
