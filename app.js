@@ -87,17 +87,12 @@ app.get('/', (req, res) => {
     res.render('home/index');
 });
 
+app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
+
+app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
+
 app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
-});
-
-app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
-/* app.get('/login', (req, res) => {
-    res.render('account/login');
-}); */
-
-app.get('/registrar', (req, res) => {
-    res.render('account/register');
 });
 
 app.get('/admin', (req, res) => {

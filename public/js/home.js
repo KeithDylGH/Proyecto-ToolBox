@@ -13,6 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const botonIniciarSesion = document.getElementById('categoria');
 
     botonIniciarSesion.addEventListener('click', function() {
-        window.location.href = '../../shop/Catalogo/index.html';
+        window.location.href = '';
     });
 });
