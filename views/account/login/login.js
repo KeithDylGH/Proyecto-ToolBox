@@ -54,7 +54,7 @@ loginForm.addEventListener('submit', async (e) => {
             if (data.user.rol === 'admin') {
                 window.location.href = '/admin/';
             } else {
-                window.location.href = '/cuenta/menu';
+                window.location.href = '/cliente/';
             }
         } else {
             // Mostrar alerta de error en el formulario
