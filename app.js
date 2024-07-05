@@ -75,8 +75,8 @@ mongoose.connect(mongoUri).then(() => {
 app.use(express.static(path.join(__dirname, 'public')));
 //CONFIGURAR Y RUTAS DE EJS
 app.set('view engine', 'ejs');
-//app.set('views', path.join(__dirname, 'views')); 
-app.use(express.static(path.join(__dirname, 'views')));
+app.set('views', path.join(__dirname, 'views')); 
+
 
 //app.use(express.static(path.join(__dirname, 'controllers')));
 
@@ -89,9 +89,10 @@ app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
 });
 
-app.get('/login', (req, res) => {
+app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
+/* app.get('/login', (req, res) => {
     res.render('account/login');
-});
+}); */
 
 app.get('/registrar', (req, res) => {
     res.render('account/register');
