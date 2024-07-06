@@ -1,4 +1,4 @@
-const url = 'http://localhost:3000/api/productos';
+const url = 'https://proyecto-toolbox.onrender.com/api/productos';
 
 export const nuevoProducto = async producto => {
     try {
