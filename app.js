@@ -10,7 +10,7 @@ const ejs = require('ejs');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
-const IProducto = require('/models/producto');
+const IProducto = require('./models/producto');
 
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const app = express()
