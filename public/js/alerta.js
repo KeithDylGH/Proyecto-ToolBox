@@ -7,7 +7,7 @@ export function mostrarAlerta(mensaje) {
         
         const alert = document.createElement('p');
         alert.innerHTML = `
-            <strong>Error</strong>
+            <strong>Consola:</strong>
             <span>${mensaje}</span>
         `;
         
