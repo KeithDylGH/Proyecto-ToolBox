@@ -36,7 +36,7 @@ async function validarProducto(e) {
             });
 
             if (!response.ok) {
-                throw new Error('Error al agregar el producto');
+                throw new Error(`Error al agregar el producto: ${response.statusText}`);
             }
 
             mostrarAlerta('Producto agregado exitosamente');
