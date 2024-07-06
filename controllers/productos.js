@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const Producto = require('../models/producto');
+const iProducto = require('../models/producto');
 
-router.post('/menu', async (req, res) => {
+router.post('/admin/inventario', async (req, res) => {
     try {
-        const nuevoProducto = new Producto(req.body);
+        const nuevoProducto = new iProducto(req.body);
         await nuevoProducto.save();
         res.status(201).json(nuevoProducto);
     } catch (error) {
@@ -12,7 +12,7 @@ router.post('/menu', async (req, res) => {
     }
 });
 
-router.get('/menu', async (req, res) => {
+router.get('/admin/inventario', async (req, res) => {
     try {
         const productos = await Producto.find();
         res.status(200).json(productos);
@@ -21,9 +21,9 @@ router.get('/menu', async (req, res) => {
     }
 });
 
-router.get('/menu/:id', async (req, res) => {
+router.get('/admin/inventario/:id', async (req, res) => {
     try {
-        const producto = await Producto.findById(req.params.id);
+        const producto = await iProducto.findById(req.params.id);
         if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
         res.status(200).json(producto);
     } catch (error) {
@@ -31,9 +31,9 @@ router.get('/menu/:id', async (req, res) => {
     }
 });
 
-router.patch('/menu/:id', async (req, res) => {
+router.patch('/admin/inventario/:id', async (req, res) => {
     try {
-        const producto = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const producto = await iProducto.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
         res.status(200).json(producto);
     } catch (error) {
@@ -41,9 +41,9 @@ router.patch('/menu/:id', async (req, res) => {
     }
 });
 
-router.delete('/menu/:id', async (req, res) => {
+router.delete('/admin/inventario/:id', async (req, res) => {
     try {
-        const producto = await Producto.findByIdAndDelete(req.params.id);
+        const producto = await iProducto.findByIdAndDelete(req.params.id);
         if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
         res.status(200).json({ message: 'Producto eliminado' });
     } catch (error) {
