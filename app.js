@@ -10,7 +10,7 @@ const ejs = require('ejs');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
-const IProducto = require('./models/producto');
+const Producto = require('./models/producto');
 
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const app = express()
@@ -168,6 +168,7 @@ app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','acco
 
 //SUPER IMPORTANTE
 app.use(express.json())
+app.use(express.urlencoded({ extended:true }));
 
 
 
@@ -176,7 +177,7 @@ app.post('/api/productos/agregar', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
 
-        const nuevoProducto = new IProducto({ nombre, precio, categoria, descripcion });
+        const nuevoProducto = new Producto({ nombre, precio, categoria, descripcion });
         await nuevoProducto.save();
 
         res.status(201).json({ message: 'Producto agregado con éxito' });

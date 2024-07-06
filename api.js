@@ -10,7 +10,7 @@ export const nuevoProducto = async producto => {
             }
         });
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };
 
