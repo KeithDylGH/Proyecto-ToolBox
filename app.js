@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
+const productoRouter = require('./controllers/productos')
 const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 
@@ -168,7 +169,8 @@ app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','acco
 app.use(express.json())
 
 //RUTAS DE BACKEND
-app.use('/api/users',userRouter)
-app.use('/api/login',loginRouter)
+app.use('/api/users',userRouter);
+app.use('/api/login',loginRouter);
+app.use('/api/products', productoRouter);
 
 module.exports = app
