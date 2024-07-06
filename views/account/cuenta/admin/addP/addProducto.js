@@ -1,4 +1,4 @@
-import { nuevoProducto } from "../addP/addProducto.js";
+import { nuevoProducto } from "../../../../../api.js";
 //import { mostrarAlerta } from "./alerta.js";
 
 //* SELECTORES
