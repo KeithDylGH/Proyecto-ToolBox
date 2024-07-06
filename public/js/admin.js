@@ -22,3 +22,5 @@ document.addEventListener('DOMContentLoaded', function(){
         window.location.href = '/inventario/VerProduto/'
     })
 })
+
+document.addEventListener('DOMContentLoaded', inventarioBtn)
