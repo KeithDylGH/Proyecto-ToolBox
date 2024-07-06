@@ -119,7 +119,11 @@ app.get('/admin/inventario', (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/verproduto', (req, res) => {
+app.get('/inventario/agregarproduto', (req, res) => {
+    res.render('account/cuenta/admin/add');
+});
+
+app.get('/inventario/verproducto', (req, res) => {
     res.render('account/cuenta/admin/see');
 });
 

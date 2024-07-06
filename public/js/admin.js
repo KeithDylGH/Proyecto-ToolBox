@@ -16,16 +16,23 @@ document.addEventListener('DOMContentLoaded', function(){
 
 //INVENTARIO
 document.addEventListener('DOMContentLoaded', function(){
-    const verProductos = document.getElementById('verBtn');
-
-    verProductos.addEventListener('click', function() {
-        window.location.href = '/inventario/verproduto/'
-    })
-})
-document.addEventListener('DOMContentLoaded', function(){
     const irALaPaginaDeInv = document.getElementById('invPag');
 
     irALaPaginaDeInv.addEventListener('click', function() {
         window.location.href = '/admin/inventario/'
+    })
+})
+document.addEventListener('DOMContentLoaded', function(){
+    const addPro = document.getElementById('addBtn');
+
+    addPro.addEventListener('click', function() {
+        window.location.href = '/inventario/agregarproduto/'
+    })
+})
+document.addEventListener('DOMContentLoaded', function(){
+    const verProducto = document.getElementById('verBtn');
+
+    verProducto.addEventListener('click', function() {
+        window.location.href = '/inventario/verproducto'
     })
 })
