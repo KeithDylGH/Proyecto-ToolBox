@@ -95,7 +95,7 @@ app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
 });
 
-app.get('/cliente/', (req, res) => {
+app.get('/cliente', (req, res) => {
     res.render('account/cuenta/cliente');
 });
 
@@ -107,8 +107,8 @@ app.get('/cuenta/configuracion', (req, res) => {
     res.render('account/cuenta/cliente/configuracion');
 });
 
-app.get('/cuenta/contactos', (req, res) => {
-    res.render('account/cuenta/cliente/contactos');
+app.get('/cuenta/atencion', (req, res) => {
+    res.render('account/cuenta/cliente/atencion');
 });
 
 app.get('/admin', (req, res) => {
@@ -119,7 +119,7 @@ app.get('/admin/inventario', (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/Ver Produto', (req, res) => {
+app.get('/inventario/VerProduto', (req, res) => {
     res.render('account/cuenta/admin/add');
 });
 

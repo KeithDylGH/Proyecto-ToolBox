@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactoBtn = document.getElementById('contactoBtn');
 
     contactoBtn.addEventListener('click', function() {
-        window.location.href = '/cuenta/contactos/';
+        window.location.href = '/cuenta/atencion/';
     });
 });
 

@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
 //INVENTARIO
 document.addEventListener('DOMContentLoaded', function(){
-    const verProducto = document.getElementById('verBtn');
+    const verProductos = document.getElementById('verBtn');
 
-    verProducto.addEventListener('click', function() {
-        window.location.href = '/admin/'
+    verProductos.addEventListener('click', function() {
+        window.location.href = '/inventario/VerProduto/'
     })
 })
