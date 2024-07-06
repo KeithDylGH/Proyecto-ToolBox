@@ -26,6 +26,6 @@ document.addEventListener('DOMContentLoaded', function(){
     const irALaPaginaDeInv = document.getElementById('invPag');
 
     irALaPaginaDeInv.addEventListener('click', function() {
-        window.location.href = '/inventario/VerProduto/'
+        window.location.href = '/admin/inventario/'
     })
 })
