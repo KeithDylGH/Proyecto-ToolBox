@@ -6,6 +6,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    const pagBtn = document.getElementById('pagBtn');
+
+    pagBtn.addEventListener('click', function() {
+        window.location.href = '/';
+    });
+});
+
 //VALIDAR SI EL USUARIO ES ADMIN O CLIENTE
 /* document.addEventListener('DOMContentLoaded', function() {
     const inicioBtn = document.getElementById('sideBtn');
