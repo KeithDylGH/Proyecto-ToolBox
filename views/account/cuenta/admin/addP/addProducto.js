@@ -15,7 +15,7 @@ async function validarProducto(e){
     const nombre = document.querySelector('#nombre').value;
     const precio = document.querySelector('#precio').value;
     const categoria = document.querySelector('#categoria').value;
-    const descripcion = document.querySelector('#categoria').value;
+    const descripcion = document.querySelector('#desc').value;
 
     const producto = {
         nombre,
