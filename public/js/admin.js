@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function(){
         window.location.href = '/inventario/VerProduto/'
     })
 })
+document.addEventListener('DOMContentLoaded', function(){
+    const irALaPaginaDeInv = document.getElementById('invPag');
 
-const invPag = document.querySelector('#invPag')
-invPag.addEventListener('DOMContentLoaded', inventarioBtn)
+    irALaPaginaDeInv.addEventListener('click', function() {
+        window.location.href = '/inventario/VerProduto/'
+    })
+})
