@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const verProductos = document.getElementById('verBtn');
 
     verProductos.addEventListener('click', function() {
-        window.location.href = '/inventario/VerProduto/'
+        window.location.href = '/inventario/verproduto/'
     })
 })
 document.addEventListener('DOMContentLoaded', function(){

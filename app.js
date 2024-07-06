@@ -119,8 +119,8 @@ app.get('/admin/inventario', (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/VerProduto', (req, res) => {
-    res.render('account/cuenta/admin/add');
+app.get('/inventario/verproduto', (req, res) => {
+    res.render('account/cuenta/admin/see');
 });
 
 
