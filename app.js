@@ -173,7 +173,7 @@ app.use(express.urlencoded({ extended:true }));
 
 
 // Ruta para agregar productos a MongoDB
-app.post('/inventario/agregarproduto/', async (req, res) => {
+app.post('/api/productos/agregar', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
 
