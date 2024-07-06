@@ -8,7 +8,7 @@ const formulario = document.querySelector('#formulario');
 formulario.addEventListener('submit', validarProducto);
 
 //* FUNCIONES
-async function validarProducto(e){
+async function validarProducto(e) {
     e.preventDefault();
 
     const nombre = document.querySelector('#nombre').value;
@@ -21,20 +21,35 @@ async function validarProducto(e){
         precio,
         categoria,
         descripcion
+    };
+
+    if (validacion(producto)) {
+        mostrarAlerta('Todos los campos son obligatorios');
+    } else {
+        try {
+            const response = await fetch('/api/productos/agregar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(producto)
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al agregar el producto');
+            }
+
+            mostrarAlerta('Producto agregado exitosamente');
+            setTimeout(() => {
+                window.location.href = '/inventario/verproducto/';
+            }, 1000); // Redirige después de mostrar la alerta durante 1 segundo
+        } catch (error) {
+            console.error('Error al agregar producto:', error);
+            mostrarAlerta('Error al agregar el producto. Inténtalo de nuevo.');
+        }
     }
-
-    if(validacion(producto)){
-        ////console.log('todos los campos son obligatoriso')
-        mostrarAlerta('todos los campos son obligatoriso');
-        return;
-    }else{
-        await nuevoProducto(producto);
-        window.location.href = '/inventario/verproducto/';
-    }
-
-
 }
 
-function validacion(obj){
-    return !Object.values(obj).every(i=> i !== ''); //<---esta es otra manera de iterar un objeto y el every retorna un true o un false, en este caso valida el objeto producto
+function validacion(obj) {
+    return !Object.values(obj).every(i => i !== '');
 }
