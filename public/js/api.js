@@ -2,7 +2,7 @@ const url = 'https://proyecto-toolbox.onrender.com/api/productos';
 
 export const nuevoProducto = async producto => {
     try {
-        await fetch('/inventario/agregarproduto/', {
+        await fetch(`${url}/agregar`, {
             method: 'POST',
             body: JSON.stringify(producto),
             headers: {
