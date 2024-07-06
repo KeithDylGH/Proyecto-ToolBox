@@ -23,19 +23,16 @@
 <body>
     
     <header>
-      
         <nav class="navbar">
             <div class="container-fluid">
-              <a class="navbar-brand text-light" href="#" id="admin">
-                <img src="/img/logo/Logo trazo 180.png" alt="Logo"  height="45" class="w-25 d-inline-block align-text-top">
-                ToolBox Account
-              </a>
+                <a class="navbar-brand text-light" href="#" id="admin">
+                    <img src="/img/logo/Logo trazo 180.png" alt="Logo" height="45" class="w-25 d-inline-block align-text-top">
+                    ToolBox Account
+                </a>
                 <a class="nav-link active" aria-current="page" id="invPag" href="#">Inicio</a>
-              
             </div>
-          </nav>
-  
-      </header>
+        </nav>
+    </header>
 
     <section class="container">
         <div class="py-4">
@@ -47,23 +44,23 @@
                         <tr>    
                             <th>Nombre</th>
                             <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Descripcion</th>
+                            <th>Categoría</th>
+                            <th>Descripción</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td> <!-- Producto -->
-                            <td></td> <!-- Precio -->
-                            <td></td> <!-- Stock -->
-                            <td></td> <!-- Descripcion -->
-                        </tr>
+                        <% productos.forEach(producto => { %>
+                            <tr>
+                                <td><%= producto.nombre %></td>
+                                <td><%= producto.precio %></td>
+                                <td><%= producto.categoria %></td>
+                                <td><%= producto.descripcion %></td>
+                            </tr>
+                        <% }); %>
                     </tbody>
-                    
                 </table>
             </div>
         </div>
-
     </section>
 
     <script src="/js/cuenta.js"></script>
