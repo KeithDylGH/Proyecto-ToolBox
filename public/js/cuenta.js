@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //TEMPORAL
 document.addEventListener('DOMContentLoaded', function() {
-    const paginaCliente = document.getElementsByClassName('cliente');
+    const paginaCliente = document.getElementById('cliente');
 
     paginaCliente.addEventListener('click', function() {
         window.location.href = '/cliente/';

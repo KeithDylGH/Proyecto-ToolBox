@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function(){
-    const paginaAdmin = document.getElementsByClassName('admin');
+    const paginaAdmin = document.getElementById('admin');
 
     paginaAdmin.addEventListener('click', function() {
         window.location.href = '/admin/'
