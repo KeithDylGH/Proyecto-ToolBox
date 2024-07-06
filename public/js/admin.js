@@ -33,6 +33,6 @@ document.addEventListener('DOMContentLoaded', function(){
     const verProducto = document.getElementById('verBtn');
 
     verProducto.addEventListener('click', function() {
-        window.location.href = '/inventario/verproducto'
+        window.location.href = '/inventario/verproducto/'
     })
 })
