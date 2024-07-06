@@ -46,12 +46,3 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '/login/';
     });
 });
-
-//TEMPORAL
-document.addEventListener('DOMContentLoaded', function() {
-    const paginaCliente = document.getElementById('cliente');
-
-    paginaCliente.addEventListener('click', function() {
-        window.location.href = '/cliente/';
-    });
-});
