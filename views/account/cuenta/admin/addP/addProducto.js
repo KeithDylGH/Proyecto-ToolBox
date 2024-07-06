@@ -14,11 +14,13 @@ async function validarProducto(e){
     const nombre = document.querySelector('#nombre').value;
     const precio = document.querySelector('#precio').value;
     const categoria = document.querySelector('#categoria').value;
+    const descripcion = document.querySelector('#categoria').value;
 
     const producto = {
         nombre,
         precio,
-        categoria
+        categoria,
+        descripcion
     }
 
     if(validacion(producto)){
@@ -27,7 +29,7 @@ async function validarProducto(e){
         return;
     }else{
         await nuevoProducto(producto);
-        window.location.href = 'index.html';
+        window.location.href = '/inventario/verproducto/';
     }
 
 
