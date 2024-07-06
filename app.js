@@ -120,11 +120,11 @@ app.get('/admin/inventario', (req, res) => {
 });
 
 app.get('/inventario/agregarproduto', (req, res) => {
-    res.render('account/cuenta/admin/add');
+    res.render('account/cuenta/admin/addP');
 });
 
 app.get('/inventario/verproducto', (req, res) => {
-    res.render('account/cuenta/admin/see');
+    res.render('account/cuenta/admin/seeP');
 });
 
 
