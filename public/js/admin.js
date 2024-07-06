@@ -23,4 +23,5 @@ document.addEventListener('DOMContentLoaded', function(){
     })
 })
 
-document.addEventListener('DOMContentLoaded', inventarioBtn)
+const invPag = document.querySelector('#invPag')
+invPag.addEventListener('DOMContentLoaded', inventarioBtn)
