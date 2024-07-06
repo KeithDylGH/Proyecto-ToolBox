@@ -38,3 +38,8 @@ async function validarProducto(e){
 function validacion(obj){
     return !Object.values(obj).every(i=> i !== ''); //<---esta es otra manera de iterar un objeto y el every retorna un true o un false, en este caso valida el objeto producto
 }
+
+function mostrarAlerta(mensaje) {
+    // Implementa tu función de mostrar alerta aquí
+    alert(mensaje);
+}

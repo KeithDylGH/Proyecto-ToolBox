@@ -13,6 +13,7 @@ export const nuevoProducto = async producto => {
         console.log(error);
     }
 };
+
 export const obtenerProductos = async () => {
     try{
         const resultado = await fetch(url);
