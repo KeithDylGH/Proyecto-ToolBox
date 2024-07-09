@@ -14,7 +14,7 @@ router.post('/admin/inventario', async (req, res) => {
 
 router.get('/admin/inventario', async (req, res) => {
     try {
-        const productos = await Producto.find();
+        const productos = await iProducto.find();
         res.status(200).json(productos);
     } catch (error) {
         res.status(500).json({ error: error.message });
