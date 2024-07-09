@@ -8,21 +8,3 @@ const productoSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('Producto', productoSchema);
-
-
-const express = require('express');
-const router = express.Router();
-const Producto = require('../models/producto'); // Ajusta la ruta según la ubicación de tu modelo
-
-// Ruta para ver productos
-router.get('/verproducto', async (req, res) => {
-    try {
-        const productos = await Producto.find();
-        res.render('account/cuenta/admin/seeP/index', { productos });
-    } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).send('Error al obtener los productos');
-    }
-});
-
-module.exports = router;
