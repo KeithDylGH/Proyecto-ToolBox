@@ -56,7 +56,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 router.get('/verproducto', async (req, res) => {
     try {
         const productos = await iProducto.find();
-        res.render('account/cuenta/admin/seeP/index', { productos });
+        res.render('account/cuenta/admin/seeP/', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
         res.status(500).send('Error al obtener los productos');
