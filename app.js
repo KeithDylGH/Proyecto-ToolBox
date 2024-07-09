@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const fs = require('fs')
 const path = require('path')
 const userRouter = require('./controllers/usuarios');
-const productoRouter = require('./controllers/productos')
+const productoRouter = require('./controllers/productos');
 const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 
