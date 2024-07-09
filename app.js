@@ -190,7 +190,7 @@ app.post('/api/productos/agregar', async (req, res) => {
 // Ruta para ver productos
 router.get('/verproducto', async (req, res) => {
     try {
-        const productos = await Producto.find();
+        const productos = await iProducto.find();
         res.render('account/cuenta/admin/seeP/index', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
