@@ -7,4 +7,4 @@ const productoSchema = new mongoose.Schema({
     descripcion: { type: String, required: true },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Producto', productoSchema);
+module.exports = mongoose.model('producto', productoSchema);
