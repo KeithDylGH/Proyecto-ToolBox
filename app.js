@@ -187,8 +187,6 @@ app.post('/api/productos/agregar', async (req, res) => {
     }
 });
 
-
-
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter);
 app.use('/api/login',loginRouter);
