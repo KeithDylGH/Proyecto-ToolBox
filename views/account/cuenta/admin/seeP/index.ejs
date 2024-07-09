@@ -43,12 +43,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% productos.forEach(producto => { %>
+                        <% productos.forEach(productos => { %> <!-- Cambiado a 'productos' para consistencia -->
                             <tr>
-                                <td><%= producto.nombre %></td>
-                                <td><%= producto.precio %></td>
-                                <td><%= producto.categoria %></td>
-                                <td><%= producto.descripcion %></td>
+                                <td><%= productos.nombre %></td>
+                                <td><%= productos.precio %></td>
+                                <td><%= productos.categoria %></td>
+                                <td><%= productos.descripcion %></td>
                             </tr>
                         <% }); %>
                     </tbody>
