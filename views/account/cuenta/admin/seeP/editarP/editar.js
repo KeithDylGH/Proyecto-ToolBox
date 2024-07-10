@@ -1,7 +1,6 @@
 // Función para actualizar un producto
 const actualizarProducto = async (id, datos) => {
     try {
-        // Validación de campos obligatorios
         if (!datos.nombre || !datos.precio || !datos.categoria || !datos.descripcion) {
             mostrarAlerta('Completa todos los campos antes de guardar cambios', 'error');
             return;
@@ -16,7 +15,7 @@ const actualizarProducto = async (id, datos) => {
         });
 
         if (!response.ok) {
-            throw new Error('Error al actualizar el producto');
+            throw new Error('No se pudo completar la solicitud de actualización');
         }
 
         const data = await response.json();
@@ -24,11 +23,11 @@ const actualizarProducto = async (id, datos) => {
 
         mostrarAlerta('Producto actualizado correctamente');
         setTimeout(() => {
-            window.location.href = '/inventario/verproducto'; // Redirige a la página Ver Productos
-        }, 2000); // Espera 2 segundos antes de redirigir
+            window.location.href = '/inventario/verproducto';
+        }, 2000);
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
-        mostrarAlerta('Error al actualizar el producto', 'error');
+        mostrarAlerta(`Error al actualizar el producto: ${error.message}`, 'error');
     }
 };
 
@@ -75,7 +74,7 @@ const mostrarAlerta = (mensaje, tipo = 'success') => {
     }, 5000); // Remover la alerta después de 5 segundos
 };
 
-/// Evento para manejar el envío del formulario de edición
+// Evento para manejar el envío del formulario de edición
 document.getElementById('formulario').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevenir el envío por defecto del formulario
 
