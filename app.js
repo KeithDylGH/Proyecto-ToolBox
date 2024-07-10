@@ -163,6 +163,11 @@ app.patch('/inventario/editar/:id', async (req, res) => {
     const updatedProduct = req.body;
 
     try {
+        // Validación de campos obligatorios
+        if (!updatedProduct.nombre || !updatedProduct.precio || !updatedProduct.categoria || !updatedProduct.descripcion) {
+            return res.status(400).json({ message: 'Completa todos los campos obligatorios' });
+        }
+
         // Lógica para actualizar el producto en la base de datos (ejemplo con Mongoose)
         const product = await iProducto.findByIdAndUpdate(productId, updatedProduct, { new: true });
 

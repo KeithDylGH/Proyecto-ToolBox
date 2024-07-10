@@ -1,9 +1,13 @@
 // Función para actualizar un producto
 const actualizarProducto = async (id, datos) => {
     try {
-        console.log('Datos a enviar:', datos);
+        // Validación de campos obligatorios
+        if (!datos.nombre || !datos.precio || !datos.categoria || !datos.descripcion) {
+            mostrarAlerta('Completa todos los campos antes de guardar cambios', 'error');
+            return;
+        }
 
-        const response = await fetch(`/inventario/editar/${id}`, { // Corregido: usar ruta relativa
+        const response = await fetch(`/inventario/editar/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
