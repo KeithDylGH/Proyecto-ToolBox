@@ -3,7 +3,7 @@ const actualizarProducto = async (id, datos) => {
     try {
         console.log('Datos a enviar:', datos);
 
-        const response = await fetch(`https://proyecto-toolbox.onrender.com/inventario/editar/${id}`, {
+        const response = await fetch(`/inventario/editar/${id}`, { // Corregido: usar ruta relativa
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -46,9 +46,8 @@ const eliminarProducto = async (id) => {
         }
 
         const data = await response.json();
-        console.log(data.message); // Muestra el mensaje de éxito en la consola
+        console.log(data.message);
 
-        // Opcional: Redirigir o mostrar un mensaje de éxito en la interfaz
         mostrarAlerta('Producto eliminado correctamente');
     } catch (error) {
         console.error('Error al eliminar el producto:', error);
@@ -73,7 +72,7 @@ const mostrarAlerta = (mensaje, tipo = 'success') => {
 };
 
 /// Evento para manejar el envío del formulario de edición
-document.getElementById('formulario').addEventListener('submit', (event) => {
+document.getElementById('formulario').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevenir el envío por defecto del formulario
 
     const nombre = document.getElementById('nombre').value;
@@ -81,24 +80,23 @@ document.getElementById('formulario').addEventListener('submit', (event) => {
     const categoria = document.getElementById('categoria').value;
     const descripcion = document.getElementById('desc').value;
 
-    console.log({ nombre, precio, categoria, descripcion }); // Depuración para ver los datos en el cliente
+    console.log({ nombre, precio, categoria, descripcion });
 
     const formulario = document.getElementById('formulario');
-    const id = formulario.dataset.id; // Obtener el ID del producto desde el atributo data-id
+    const id = formulario.dataset.id;
 
     const datosProducto = { nombre, precio, categoria, descripcion };
 
     // Llamar a la función para actualizar el producto
-    actualizarProducto(id, datosProducto);
+    await actualizarProducto(id, datosProducto);
 });
 
-
-// Función para manejar la eliminación del producto al hacer clic en el botón correspondiente
+// Evento para manejar la eliminación del producto
 const botonesEliminar = document.querySelectorAll('.btn-eliminar');
 
 botonesEliminar.forEach((boton) => {
-    boton.addEventListener('click', () => {
+    boton.addEventListener('click', async () => {
         const idProducto = boton.dataset.id;
-        eliminarProducto(idProducto);
+        await eliminarProducto(idProducto);
     });
 });
