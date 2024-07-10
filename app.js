@@ -179,9 +179,11 @@ app.get('/inventario/descargarInv', async (req, res) => {
         console.error('Error al obtener los productos:', error);
         res.status(500).send('Error al obtener los productos');
     }
-});
 
-app.get('/inventario/descargar/excel', async (req, res) => {
+
+
+
+    //EXCEL
     try {
 
         const productos = await iProducto.find();
@@ -217,7 +219,78 @@ app.get('/inventario/descargar/excel', async (req, res) => {
         console.error('Error al generar el archivo Excel:', error);
         res.status(500).send('Error al generar el archivo Excel');
     }
+
+    
+
+    //PDF
+    try {
+        const productos = await iProducto.find();
+
+        const doc = new PDF();
+
+        res.render('account/cuenta/admin/pdfYExcel', { productos });
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=productos.pdf');
+
+        doc.pipe(res);
+
+        doc.fontSize(18).text('Lista de Productos', { align: 'center' });
+        doc.moveDown();
+
+        productos.forEach(producto => {
+            doc.fontSize(12).text(`Nombre: ${producto.nombre}`);
+            doc.text(`Precio: ${producto.precio}`);
+            doc.text(`Categoría: ${producto.categoria}`);
+            doc.text(`Descripción: ${producto.descripcion}`);
+            doc.moveDown();
+        });
+
+        doc.end();
+    } catch (error) {
+        console.error('Error al generar el archivo PDF:', error);
+        res.status(500).send('Error al generar el archivo PDF');
+    }
+
 });
+
+/* app.get('/inventario/descargar/excel', async (req, res) => {
+    try {
+
+        const productos = await iProducto.find();
+
+        const workbook = new Excel.Workbook();
+        const worksheet = workbook.addWorksheet('Productos');
+
+        res.render('account/cuenta/admin/pdfYExcel', { productos });
+
+        worksheet.columns = [
+            { header: 'Nombre', key: 'nombre', width: 30 },
+            { header: 'Precio', key: 'precio', width: 10 },
+            { header: 'Categoría', key: 'categoria', width: 20 },
+            { header: 'Descripción', key: 'descripcion', width: 50 }
+        ];
+
+        productos.forEach(producto => {
+            worksheet.addRow(producto);
+        });
+
+        res.setHeader(
+            'Content-Type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        res.setHeader(
+            'Content-Disposition',
+            'attachment; filename=productos.xlsx'
+        );
+
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (error) {
+        console.error('Error al generar el archivo Excel:', error);
+        res.status(500).send('Error al generar el archivo Excel');
+    }
+}); */
 
 
 app.get('/inventario/descargar/pdf', async (req, res) => {
