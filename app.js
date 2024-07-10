@@ -114,6 +114,16 @@ app.get('/', (req, res) => {
 
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
 
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.redirect('/');
+        }
+        res.clearCookie('connect.sid');
+        res.redirect('/login');
+    });
+});
+
 app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
 
 app.get('/tienda', (req, res) => {
