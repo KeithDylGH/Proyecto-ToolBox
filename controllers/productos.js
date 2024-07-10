@@ -63,32 +63,4 @@ router.get('/verproducto', async (req, res) => {
     }
 });
 
-
-
-app.patch('/inventario/editar/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nombre, precio, categoria, descripcion } = req.body;
-
-        await iProducto.findByIdAndUpdate(id, { nombre, precio, categoria, descripcion });
-        res.status(200).json({ message: 'Producto editado con éxito' });
-    } catch (error) {
-        console.error('Error al editar el producto:', error);
-        res.status(500).json({ error: 'Error al editar el producto' });
-    }
-});
-
-// Ruta para eliminar un producto
-app.delete('/inventario/eliminar/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        await iProducto.findByIdAndDelete(id);
-        res.status(200).json({ message: 'Producto eliminado con éxito' });
-    } catch (error) {
-        console.error('Error al eliminar el producto:', error);
-        res.status(500).json({ error: 'Error al eliminar el producto' });
-    }
-});
-
 module.exports = router;
