@@ -49,6 +49,10 @@
                                 <td><%= producto.precio %></td>
                                 <td><%= producto.categoria %></td>
                                 <td><%= producto.descripcion %></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editarProducto('<%= producto._id %>')">Editar</button>
+                                    <button class="btn btn-danger btn-sm" onclick="eliminarProducto('<%= producto._id %>')">Eliminar</button>
+                                </td>
                             </tr>
                         <% }); %>
                     </tbody>
@@ -60,5 +64,6 @@
     <script src="/controllers/productos.js"></script>
     <script src="/js/cuenta.js"></script>
     <script src="/js/admin.js"></script>
+    <script src="inventario.js"></script>
 </body>
 </html>
