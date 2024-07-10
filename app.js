@@ -210,7 +210,7 @@ app.get('/api/descargar-inventario', async (req, res) => {
         const productos = await iProducto.find();
 
         if (format === 'excel') {
-            const workbook = new ExcelJS.Workbook();
+            const workbook = new Excel.Workbook();
             const worksheet = workbook.addWorksheet('Productos');
 
             worksheet.columns = [
@@ -236,7 +236,7 @@ app.get('/api/descargar-inventario', async (req, res) => {
             await workbook.xlsx.write(res);
             res.end();
         } else if (format === 'pdf') {
-            const doc = new PDFDocument();
+            const doc = new PDF();
 
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', 'attachment; filename=productos.pdf');
