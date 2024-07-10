@@ -162,8 +162,13 @@ app.patch('/inventario/editar/:id', async (req, res) => {
         const { id } = req.params;
         const { nombre, precio, categoria, descripcion } = req.body;
 
-        await iProducto.findByIdAndUpdate(id, { nombre, precio, categoria, descripcion });
-        res.status(200).json({ message: 'Producto editado con éxito' });
+        const updatedProducto = await iProducto.findByIdAndUpdate(id, { nombre, precio, categoria, descripcion }, { new: true });
+
+        if (!updatedProducto) {
+            return res.status(404).send('Producto no encontrado');
+        }
+
+        res.status(200).json({ message: 'Producto editado con éxito', producto: updatedProducto });
     } catch (error) {
         console.error('Error al editar el producto:', error);
         res.status(500).json({ error: 'Error al editar el producto' });
