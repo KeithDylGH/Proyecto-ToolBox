@@ -139,6 +139,24 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
+// Ruta para obtener un producto específico y renderizar la página de edición
+app.get('/inventario/editar/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const producto = await iProducto.findById(id);
+
+        if (!producto) {
+            return res.status(404).send('Producto no encontrado');
+        }
+
+        res.render('account/cuenta/admin/editarProducto', { producto });
+    } catch (error) {
+        console.error('Error al obtener el producto:', error);
+        res.status(500).send('Error al obtener el producto');
+    }
+});
+
+// Ruta para editar un producto
 app.patch('/inventario/editar/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -220,7 +238,7 @@ app.get('/inventario/descargarInv', async (req, res) => {
         res.status(500).send('Error al generar el archivo Excel');
     }
 
-    
+
 
     //PDF
     try {
