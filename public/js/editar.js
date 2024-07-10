@@ -1,7 +1,7 @@
 document.getElementById('formulario').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const id = '<%= producto._id %>'; // Asegúrate de que producto._id contenga el ID válido del producto
+    const id = productoId; // Utiliza la variable productoId definida en index.ejs
     const nombre = document.getElementById('nombre').value;
     const precio = document.getElementById('precio').value;
     const categoria = document.getElementById('categoria').value;
