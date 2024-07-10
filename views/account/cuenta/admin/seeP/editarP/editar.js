@@ -27,6 +27,7 @@ document.getElementById('formulario').addEventListener('submit', async function(
     }
 });
 
+
 async function eliminarProducto(id) {
     if (confirm('¿Está seguro de que desea eliminar este producto?')) {
         try {
