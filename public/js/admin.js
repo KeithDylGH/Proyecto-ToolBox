@@ -41,6 +41,6 @@ document.addEventListener('DOMContentLoaded', function(){
     const PDFyExcel = document.getElementById('dBtn');
 
     PDFyExcel.addEventListener('click', function() {
-        window.location.href = '/inventario/verproducto/'
+        window.location.href = '/inventario/descargarInv/'
     })
 })
