@@ -1,14 +1,15 @@
+const productoId = '<%= producto._id %>'; // Esto debería ser interpolado correctamente por tu motor de plantillas
+
 document.getElementById('formulario').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const id = productoId; // Utiliza la variable productoId definida en index.ejs
     const nombre = document.getElementById('nombre').value;
     const precio = document.getElementById('precio').value;
     const categoria = document.getElementById('categoria').value;
     const descripcion = document.getElementById('desc').value;
 
     try {
-        const response = await fetch(`/inventario/editar/${id}`, {
+        const response = await fetch(`/inventario/editar/${productoId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
