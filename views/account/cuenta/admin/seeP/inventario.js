@@ -46,7 +46,10 @@ const eliminarProducto = async (id) => {
         const data = await response.json();
         console.log(data.message); // Muestra el mensaje de éxito en la consola
 
-        // Opcional: Redirigir o mostrar un mensaje de éxito en la interfaz
+        // Opcional: Puedes recargar la página para actualizar la lista de productos
+        // location.reload();
+
+        // Opcional: Mostrar una alerta o mensaje en la interfaz
         mostrarAlerta('Producto eliminado correctamente');
     } catch (error) {
         console.error('Error al eliminar el producto:', error);
