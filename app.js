@@ -163,19 +163,21 @@ app.patch('/inventario/editar/:id', async (req, res) => {
         const { nombre, precio, categoria, descripcion } = req.body;
 
         if (!nombre || !precio || !categoria || !descripcion) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+            return res.status(400).send({ error: 'Todos los campos son obligatorios' });
         }
 
-        const updatedProducto = await iProducto.findByIdAndUpdate(id, { nombre, precio, categoria, descripcion }, { new: true });
+        // Lógica para actualizar el producto en la base de datos...
+        // Suponiendo que tienes un modelo Producto para interactuar con MongoDB
+        const productoActualizado = await iProducto.findByIdAndUpdate(id, { nombre, precio, categoria, descripcion }, { new: true });
 
-        if (!updatedProducto) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
+        if (!productoActualizado) {
+            return res.status(404).send({ error: 'Producto no encontrado' });
         }
 
-        res.status(200).json({ message: 'Producto editado con éxito', producto: updatedProducto });
+        res.send({ message: 'Producto actualizado correctamente', producto: productoActualizado });
     } catch (error) {
-        console.error('Error al editar el producto:', error.message);
-        res.status(500).json({ error: 'Error al editar el producto', details: error.message });
+        console.error('Error al editar el producto:', error);
+        res.status(500).send({ error: 'Error al editar el producto' });
     }
 });
 

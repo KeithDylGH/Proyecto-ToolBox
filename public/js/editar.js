@@ -1,6 +1,8 @@
 // Función para actualizar un producto
 const actualizarProducto = async (id, datos) => {
     try {
+        console.log('Datos a enviar:', datos); // Depuración para ver los datos antes de enviarlos
+
         const response = await fetch(`https://proyecto-toolbox.onrender.com/inventario/editar/${id}`, {
             method: 'PATCH',
             headers: {
@@ -68,7 +70,7 @@ const mostrarAlerta = (mensaje, tipo = 'success') => {
     }, 5000); // Remover la alerta después de 5 segundos
 };
 
-// Evento para manejar el envío del formulario de edición
+/// Evento para manejar el envío del formulario de edición
 document.getElementById('formulario').addEventListener('submit', (event) => {
     event.preventDefault(); // Prevenir el envío por defecto del formulario
 
@@ -77,7 +79,7 @@ document.getElementById('formulario').addEventListener('submit', (event) => {
     const categoria = document.getElementById('categoria').value;
     const descripcion = document.getElementById('desc').value;
 
-    console.log({ nombre, precio, categoria, descripcion });
+    console.log({ nombre, precio, categoria, descripcion }); // Depuración para ver los datos en el cliente
 
     const formulario = document.getElementById('formulario');
     const id = formulario.dataset.id; // Obtener el ID del producto desde el atributo data-id
