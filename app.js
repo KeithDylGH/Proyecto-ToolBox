@@ -137,7 +137,7 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
-app.get('/inventario/descargarInv/excel', async (req, res) => {
+app.get('/inventario/descargarInv/', async (req, res) => {
     try {
 
         const productos = await iProducto.find();
@@ -176,7 +176,7 @@ app.get('/inventario/descargarInv/excel', async (req, res) => {
 });
 
 
-app.get('/inventario/descargar/pdf', async (req, res) => {
+app.get('/inventario/descargarInv/', async (req, res) => {
     try {
         const productos = await iProducto.find();
 
