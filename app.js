@@ -125,8 +125,14 @@ app.get('/inventario/agregarproduto', (req, res) => {
     res.render('account/cuenta/admin/addP');
 });
 
-app.get('/inventario/verproducto', (req, res) => {
-    res.render('account/cuenta/admin/seeP', iProducto);
+app.get('/inventario/verproducto', async (req, res) => {
+    try {
+        const productos = await iProducto.find();
+        res.render('account/cuenta/admin/seeP', { productos }); // Pasa la lista de productos a la plantilla
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
+    }
 });
 
 
