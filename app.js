@@ -188,7 +188,6 @@ app.patch('/inventario/editar/:id', async (req, res) => {
 app.delete('/inventario/eliminar/:id', async (req, res) => {
     try {
         const { id } = req.params;
-
         await iProducto.findByIdAndDelete(id);
         res.status(200).json({ message: 'Producto eliminado con éxito' });
     } catch (error) {
@@ -277,45 +276,6 @@ app.get('/api/descargar-inventario', async (req, res) => {
         }
     }
 });
-
-/* app.get('/inventario/descargar/excel', async (req, res) => {
-    try {
-
-        const productos = await iProducto.find();
-
-        const workbook = new Excel.Workbook();
-        const worksheet = workbook.addWorksheet('Productos');
-
-        res.render('account/cuenta/admin/pdfYExcel', { productos });
-
-        worksheet.columns = [
-            { header: 'Nombre', key: 'nombre', width: 30 },
-            { header: 'Precio', key: 'precio', width: 10 },
-            { header: 'Categoría', key: 'categoria', width: 20 },
-            { header: 'Descripción', key: 'descripcion', width: 50 }
-        ];
-
-        productos.forEach(producto => {
-            worksheet.addRow(producto);
-        });
-
-        res.setHeader(
-            'Content-Type',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        );
-        res.setHeader(
-            'Content-Disposition',
-            'attachment; filename=productos.xlsx'
-        );
-
-        await workbook.xlsx.write(res);
-        res.end();
-    } catch (error) {
-        console.error('Error al generar el archivo Excel:', error);
-        res.status(500).send('Error al generar el archivo Excel');
-    }
-}); */
-
 
 app.get('/inventario/descargar/pdf', async (req, res) => {
     try {
