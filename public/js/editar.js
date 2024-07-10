@@ -77,7 +77,8 @@ document.getElementById('formulario').addEventListener('submit', (event) => {
     const categoria = document.getElementById('categoria').value;
     const descripcion = document.getElementById('desc').value;
 
-    const id = '<%= producto._id %>'; // Obtener el ID del producto desde el servidor
+    const formulario = document.getElementById('formulario');
+    const id = formulario.dataset.id; // Obtener el ID del producto desde el atributo data-id
 
     const datosProducto = { nombre, precio, categoria, descripcion };
 
