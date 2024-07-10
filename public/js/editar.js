@@ -1,4 +1,4 @@
-const productoId = '<%= producto._id %>'; // Esto debería ser interpolado correctamente por tu motor de plantillas
+const productoId = '<%= producto._id %>'; // Asegúrate de que esto se interpole correctamente
 
 document.getElementById('formulario').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -7,6 +7,8 @@ document.getElementById('formulario').addEventListener('submit', async function(
     const precio = document.getElementById('precio').value;
     const categoria = document.getElementById('categoria').value;
     const descripcion = document.getElementById('desc').value;
+
+    console.log(`Enviando datos para producto ID: ${productoId}`);
 
     try {
         const response = await fetch(`/inventario/editar/${productoId}`, {
@@ -21,13 +23,15 @@ document.getElementById('formulario').addEventListener('submit', async function(
             alert('Producto editado con éxito');
             window.location.href = '/inventario/verproducto';
         } else {
+            const errorData = await response.json();
+            console.error('Error al editar el producto:', errorData);
             alert('Error al editar el producto');
         }
     } catch (error) {
         console.error('Error:', error);
+        alert('Error al editar el producto');
     }
 });
-
 
 async function eliminarProducto(id) {
     if (confirm('¿Está seguro de que desea eliminar este producto?')) {
