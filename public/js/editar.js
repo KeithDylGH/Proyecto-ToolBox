@@ -1,3 +1,11 @@
+const response = await fetch(`https://proyecto-toolbox.onrender.com/inventario/editar/${id}`, {
+    method: 'PATCH',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datos)
+});
+
 // Función para actualizar un producto
 const actualizarProducto = async (id, datos) => {
     try {
@@ -77,6 +85,8 @@ document.getElementById('formulario').addEventListener('submit', (event) => {
     const categoria = document.getElementById('categoria').value;
     const descripcion = document.getElementById('desc').value;
 
+    console.log({ nombre, precio, categoria, descripcion });
+
     const formulario = document.getElementById('formulario');
     const id = formulario.dataset.id; // Obtener el ID del producto desde el atributo data-id
 
@@ -85,6 +95,7 @@ document.getElementById('formulario').addEventListener('submit', (event) => {
     // Llamar a la función para actualizar el producto
     actualizarProducto(id, datosProducto);
 });
+
 
 // Función para manejar la eliminación del producto al hacer clic en el botón correspondiente
 const botonesEliminar = document.querySelectorAll('.btn-eliminar');

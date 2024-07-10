@@ -162,8 +162,9 @@ app.patch('/inventario/editar/:id', async (req, res) => {
         const { id } = req.params;
         const { nombre, precio, categoria, descripcion } = req.body;
 
-        // Verificar si el cuerpo de la solicitud contiene los datos esperados
-        console.log(req.body);
+        if (!nombre || !precio || !categoria || !descripcion) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        }
 
         const updatedProducto = await iProducto.findByIdAndUpdate(id, { nombre, precio, categoria, descripcion }, { new: true });
 
@@ -173,10 +174,11 @@ app.patch('/inventario/editar/:id', async (req, res) => {
 
         res.status(200).json({ message: 'Producto editado con éxito', producto: updatedProducto });
     } catch (error) {
-        console.error('Error al editar el producto:', error);
-        res.status(500).json({ error: 'Error al editar el producto' });
+        console.error('Error al editar el producto:', error.message);
+        res.status(500).json({ error: 'Error al editar el producto', details: error.message });
     }
 });
+
 
 
 // Ruta para eliminar un producto
