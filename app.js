@@ -165,7 +165,7 @@ app.patch('/inventario/editar/:id', async (req, res) => {
         const updatedProducto = await iProducto.findByIdAndUpdate(id, { nombre, precio, categoria, descripcion }, { new: true });
 
         if (!updatedProducto) {
-            return res.status(404).send('Producto no encontrado');
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
         res.status(200).json({ message: 'Producto editado con éxito', producto: updatedProducto });
@@ -174,6 +174,7 @@ app.patch('/inventario/editar/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al editar el producto' });
     }
 });
+
 
 // Ruta para eliminar un producto
 app.delete('/inventario/eliminar/:id', async (req, res) => {

@@ -5,10 +5,7 @@ document.getElementById('formulario').addEventListener('submit', async function(
     const precio = document.getElementById('precio').value;
     const categoria = document.getElementById('categoria').value;
     const descripcion = document.getElementById('desc').value;
-
-    const productoId = '<%= producto._id %>'; // Asegúrate de que esto se interpole correctamente
-
-    console.log(`Enviando datos para producto ID: ${productoId}`);
+    const productoId = '<%= producto._id %>';
 
     try {
         const response = await fetch(`/inventario/editar/${productoId}`, {
