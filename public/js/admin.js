@@ -44,3 +44,17 @@ document.addEventListener('DOMContentLoaded', function(){
         window.location.href = '/inventario/descargarInv/'
     })
 })
+
+
+document.getElementById('logout').addEventListener('click', function(event) {
+    event.preventDefault(); // prevenir el comportamiento predeterminado del enlace
+    fetch('/logout', {
+        method: 'POST'
+    }).then(response => {
+        if (response.redirected) {
+            window.location.href = response.url; // redirigir a la página de inicio de sesión
+        }
+    }).catch(error => {
+        console.error('Error al cerrar sesión:', error);
+    });
+});

@@ -15,6 +15,10 @@ const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
 
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+
 const app = express()
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
@@ -74,6 +78,23 @@ mongoose.connect(mongoUri).then(() => {
     console.error('Error al conectar con MongoDB:', err);
 });
 
+
+// Middleware para cookies y sesiones
+app.use(cookieParser('tu_secreto_secreto')); // Cambia esto por una cadena secreta más segura
+app.use(session({
+    secret: 'tu_secreto_secreto', // Cambia esto por una cadena secreta más segura
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: mongoUri,
+        collectionName: 'sessions'
+    }),
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24, // 1 día
+        secure: false, // Cambia esto a true si usas HTTPS
+        httpOnly: true
+    }
+}));
 
 
 // Configuración de archivos estáticos
@@ -308,48 +329,9 @@ app.get('/inventario/descargar/pdf', async (req, res) => {
     }
 });
 
-
-//RUTAS DE FRONTEND
-/* app.use('/',express.static(path.resolve(__dirname, 'views','home')));
-app.use('/tienda',express.static(path.resolve(__dirname, 'views','shop', 'Cabeza')));
-app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
-app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
-app.use('/admin',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'admin')));
-app.use('/cuenta/menu',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente')));
-app.use('/cuenta/carrito',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'carrito')));
-app.use('/cuenta/configuracion',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'configuracion')));
-app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','account', 'cuenta', 'cliente', 'contactos'))); */
-
-
-
-
-
-/* app.get('/', async (req, res) => {
-    try {
-        const usuario = await CUsuario.findOne(); // Puedes agregar condiciones de búsqueda aquí
-        
-        let data = {
-            CUsuario: { nombre: '' }
-        };
-
-        if (usuario) {
-            data.CUsuario.nombre = usuario.nombre;
-        }
-
-        res.render('home', data);
-    } catch (error) {
-        console.error('Error al obtener usuario:', error);
-        res.status(500).send('Error del servidor');
-    }
-}); */
-
-
 //SUPER IMPORTANTE
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
-
 
 // Ruta para agregar productos a MongoDB
 app.post('/api/productos/agregar', async (req, res) => {

@@ -102,4 +102,17 @@ userRouter.get('/', async (req, res) => {
     }
 });
 
+
+userRouter.post('/logout', (req, res) => {
+    // Aquí puedes destruir la sesión del usuario
+    req.session.destroy(err => {
+        if (err) {
+            return res.redirect('/'); // o manejar el error como desees
+        }
+        res.clearCookie('connect.sid'); // opcional, dependiendo de cómo manejes las cookies
+        res.redirect('/login'); // redirige a la página de inicio de sesión después de cerrar sesión
+    });
+});
+
+
 module.exports = userRouter;

@@ -14,15 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-//VALIDAR SI EL USUARIO ES ADMIN O CLIENTE
-/* document.addEventListener('DOMContentLoaded', function() {
-    const inicioBtn = document.getElementById('sideBtn');
-
-    inicioBtn.addEventListener('click', function() {
-        window.location.href = '/cuenta/menu/';
-    });
-}); */
-
 document.addEventListener('DOMContentLoaded', function() {
     const carritoBtn = document.getElementById('carritoBtn');
 
@@ -47,10 +38,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const logout = document.getElementById('logout');
-
-    logout.addEventListener('click', function() {
-        window.location.href = '/login/';
+document.getElementById('logout').addEventListener('click', function(event) {
+    event.preventDefault(); // prevenir el comportamiento predeterminado del enlace
+    fetch('/logout', {
+        method: 'POST'
+    }).then(response => {
+        if (response.redirected) {
+            window.location.href = response.url; // redirigir a la página de inicio de sesión
+        }
+    }).catch(error => {
+        console.error('Error al cerrar sesión:', error);
     });
 });
