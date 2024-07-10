@@ -137,6 +137,10 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
+app.get('/inventario/descargarInv', (req, res) => {
+    res.render('account/cuenta/admin/pdfYExcel');
+});
+
 app.get('/inventario/descargar/excel', async (req, res) => {
     try {
 
