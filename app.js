@@ -139,7 +139,7 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
-// Ruta para obtener un producto específico y renderizar la página de edición
+
 // Ruta para obtener un producto específico y renderizar la página de edición
 app.get('/inventario/editar/:id', async (req, res) => {
     try {

@@ -59,11 +59,6 @@ const eliminarProducto = async (id) => {
     }
 };
 
-// Función para cancelar la edición
-const cancelarEdicion = () => {
-    window.location.href = '/inventario/verproducto';
-};
-
 // Función para mostrar alertas en la interfaz
 const mostrarAlerta = (mensaje, tipo = 'success') => {
     const alerta = document.createElement('div');
@@ -109,4 +104,10 @@ botonesEliminar.forEach((boton) => {
 });
 
 // Evento para cancelar la edición
-document.getElementById('cancelar').addEventListener('click', cancelarEdicion);
+document.addEventListener('DOMContentLoaded', function(){
+    const cancelarBtn = document.getElementById('cancelar');
+
+    cancelarBtn.addEventListener('click', function() {
+        window.location.href = '/inventario/verproducto/'
+    })
+})
