@@ -170,8 +170,15 @@ app.delete('/inventario/eliminar/:id', async (req, res) => {
 
 
 //DESCARGAR FORMATO PDF O EXCEL
-app.get('/inventario/descargarInv', (req, res) => {
-    res.render('account/cuenta/admin/pdfYExcel');
+app.get('/inventario/descargarInv', async (req, res) => {
+    
+    try {
+        const productos = await iProducto.find();
+        res.render('account/cuenta/admin/pdfYExcel', { productos }); // Pasa la lista de productos a la plantilla
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
+    }
 });
 
 app.get('/inventario/descargar/excel', async (req, res) => {
