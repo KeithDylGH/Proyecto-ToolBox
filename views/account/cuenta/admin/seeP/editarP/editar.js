@@ -1,13 +1,14 @@
 // Función para actualizar un producto
 const actualizarProducto = async (id, datos) => {
     try {
+        // Validación de campos obligatorios
         if (!datos.nombre || !datos.precio || !datos.categoria || !datos.descripcion) {
             mostrarAlerta('Completa todos los campos antes de guardar cambios', 'error');
             return;
         }
 
         const response = await fetch(`/inventario/editar/${id}`, {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -21,10 +22,10 @@ const actualizarProducto = async (id, datos) => {
         const data = await response.json();
         console.log(data.message);
 
-        mostrarAlerta('Producto actualizado correctamente');
+        mostrarAlerta('Cambios realizados correctamente');
         setTimeout(() => {
             window.location.href = '/inventario/verproducto';
-        }, 2000);
+        }, 2000); // Redirige a la página Ver Productos después de 2 segundos
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
         mostrarAlerta(`Error al actualizar el producto: ${error.message}`, 'error');
@@ -58,6 +59,11 @@ const eliminarProducto = async (id) => {
     }
 };
 
+// Función para cancelar la edición
+const cancelarEdicion = () => {
+    window.location.href = '/inventario/verproducto';
+};
+
 // Función para mostrar alertas en la interfaz
 const mostrarAlerta = (mensaje, tipo = 'success') => {
     const alerta = document.createElement('div');
@@ -83,8 +89,6 @@ document.getElementById('formulario').addEventListener('submit', async (event) =
     const categoria = document.getElementById('categoria').value;
     const descripcion = document.getElementById('desc').value;
 
-    console.log({ nombre, precio, categoria, descripcion });
-
     const formulario = document.getElementById('formulario');
     const id = formulario.dataset.id;
 
@@ -103,3 +107,6 @@ botonesEliminar.forEach((boton) => {
         await eliminarProducto(idProducto);
     });
 });
+
+// Evento para cancelar la edición
+document.getElementById('cancelar').addEventListener('click', cancelarEdicion);
