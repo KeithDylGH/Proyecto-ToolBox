@@ -19,14 +19,14 @@ document.getElementById('formulario').addEventListener('submit', async function(
             body: JSON.stringify({ nombre, precio, categoria, descripcion })
         });
 
-        const data = await response.json(); // Intentamos leer la respuesta como JSON
-
         if (response.ok) {
+            const data = await response.json();
             alert('Producto editado con éxito');
             window.location.href = '/inventario/verproducto';
         } else {
-            console.error('Error al editar el producto:', data);
-            alert('Error al editar el producto: ' + data.error);
+            const errorData = await response.json();
+            console.error('Error al editar el producto:', errorData);
+            alert('Error al editar el producto: ' + errorData.error);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -52,4 +52,3 @@ async function eliminarProducto(id) {
         }
     }
 }
-
