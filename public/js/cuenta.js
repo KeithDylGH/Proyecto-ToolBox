@@ -1,42 +1,40 @@
 document.addEventListener('DOMContentLoaded', function() {
     const homeBtn = document.getElementById('homeBtn');
+    if (homeBtn) {
+        homeBtn.addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    }
 
-    homeBtn.addEventListener('click', function() {
-        window.location.href = '/';
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
     const pagBtn = document.getElementById('pagBtn');
+    if (pagBtn) {
+        pagBtn.addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    }
 
-    pagBtn.addEventListener('click', function() {
-        window.location.href = '/';
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
     const carritoBtn = document.getElementById('carritoBtn');
+    if (carritoBtn) {
+        carritoBtn.addEventListener('click', function() {
+            window.location.href = '/cuenta/carrito/';
+        });
+    }
 
-    carritoBtn.addEventListener('click', function() {
-        window.location.href = '/cuenta/carrito/';
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
     const contactoBtn = document.getElementById('contactoBtn');
+    if (contactoBtn) {
+        contactoBtn.addEventListener('click', function() {
+            window.location.href = '/cuenta/atencion/';
+        });
+    }
 
-    contactoBtn.addEventListener('click', function() {
-        window.location.href = '/cuenta/atencion/';
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
     const configuracionBtn = document.getElementById('configuracionBtn');
-
-    configuracionBtn.addEventListener('click', function() {
-        window.location.href = '/cuenta/configuracion/';
-    });
+    if (configuracionBtn) {
+        configuracionBtn.addEventListener('click', function() {
+            window.location.href = '/cuenta/configuracion/';
+        });
+    }
 });
+
 
 document.getElementById('logout').addEventListener('click', function(event) {
     event.preventDefault(); // prevenir el comportamiento predeterminado del enlace
