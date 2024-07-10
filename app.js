@@ -157,7 +157,7 @@ app.get('/inventario/editar/:id', async (req, res) => {
     }
 });
 
-// Ruta para editar un producto
+// Ruta para editar un producto (PATCH, no POST)
 app.patch('/inventario/editar/:id', async (req, res) => {
     const productId = req.params.id;
     const updatedProduct = req.body;

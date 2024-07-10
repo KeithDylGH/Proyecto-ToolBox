@@ -7,7 +7,7 @@ const actualizarProducto = async (id, datos) => {
         }
 
         const response = await fetch(`/inventario/editar/${id}`, {
-            method: 'PATCH',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
