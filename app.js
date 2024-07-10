@@ -162,6 +162,9 @@ app.patch('/inventario/editar/:id', async (req, res) => {
         const { id } = req.params;
         const { nombre, precio, categoria, descripcion } = req.body;
 
+        // Verificar si el cuerpo de la solicitud contiene los datos esperados
+        console.log(req.body);
+
         const updatedProducto = await iProducto.findByIdAndUpdate(id, { nombre, precio, categoria, descripcion }, { new: true });
 
         if (!updatedProducto) {
