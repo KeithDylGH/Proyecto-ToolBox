@@ -149,7 +149,7 @@ app.get('/inventario/editar/:id', async (req, res) => {
             return res.status(404).send('Producto no encontrado');
         }
 
-        res.render('account/cuenta/admin/editarProducto', { producto });
+        res.render('account/cuenta/admin/seeP/editarP', { producto });
     } catch (error) {
         console.error('Error al obtener el producto:', error);
         res.status(500).send('Error al obtener el producto');
