@@ -140,19 +140,25 @@ app.get('/inventario/verproducto', async (req, res) => {
 });
 
 // Ruta para obtener un producto específico y renderizar la página de edición
-app.get('/inventario/editar/:id', async (req, res) => {
+app.post('/inventario/editar/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const producto = await iProducto.findById(id);
+        const { nombre, precio, categoria, descripcion } = req.body;
 
-        if (!producto) {
-            return res.status(404).send('Producto no encontrado');
+        if (!nombre || !precio || !categoria || !descripcion) {
+            return res.status(400).send({ error: 'Todos los campos son obligatorios' });
         }
 
-        res.render('account/cuenta/admin/seeP/editarP', { producto });
+        const productoActualizado = await iProducto.findByIdAndUpdate(id, { nombre, precio, categoria, descripcion }, { new: true });
+
+        if (!productoActualizado) {
+            return res.status(404).send({ error: 'Producto no encontrado' });
+        }
+
+        res.send({ message: 'Producto actualizado correctamente', producto: productoActualizado });
     } catch (error) {
-        console.error('Error al obtener el producto:', error);
-        res.status(500).send('Error al obtener el producto');
+        console.error('Error al editar el producto:', error);
+        res.status(500).send({ error: 'Error al editar el producto' });
     }
 });
 
@@ -385,7 +391,7 @@ app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','acco
 
 //SUPER IMPORTANTE
 app.use(express.json());
-app.use(express.urlencoded({ extended:true }));
+app.use(express.urlencoded({ extended: true }));
 
 
 
