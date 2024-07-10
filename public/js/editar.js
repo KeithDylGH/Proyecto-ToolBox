@@ -1,7 +1,7 @@
 // Función para actualizar un producto
 const actualizarProducto = async (id, datos) => {
     try {
-        console.log('Datos a enviar:', datos); // Depuración para ver los datos antes de enviarlos
+        console.log('Datos a enviar:', datos);
 
         const response = await fetch(`https://proyecto-toolbox.onrender.com/inventario/editar/${id}`, {
             method: 'PATCH',
@@ -16,10 +16,12 @@ const actualizarProducto = async (id, datos) => {
         }
 
         const data = await response.json();
-        console.log(data.message); // Muestra el mensaje de éxito en la consola
+        console.log(data.message);
 
-        // Opcional: Mostrar una alerta o mensaje de éxito en la interfaz
         mostrarAlerta('Producto actualizado correctamente');
+        setTimeout(() => {
+            window.location.href = '/inventario/verproducto'; // Redirige a la página Ver Productos
+        }, 2000); // Espera 2 segundos antes de redirigir
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
         mostrarAlerta('Error al actualizar el producto', 'error');

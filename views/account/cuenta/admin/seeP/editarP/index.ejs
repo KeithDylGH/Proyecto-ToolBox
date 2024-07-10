@@ -40,55 +40,25 @@
                         <form id="formulario" data-id="<%= producto._id %>">
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre</label>
-                                <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="nombre"
-                                    name="nombre"
-                                    type="text"
-                                    placeholder="Nombre Producto"
-                                    value="<%= producto.nombre %>"
-                                />
+                                <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                       id="nombre" name="nombre" type="text" placeholder="Nombre Producto" value="<%= producto.nombre %>" />
                             </div>
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="precio">Precio</label>
-                                <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="precio"
-                                    name="precio"
-                                    type="number"
-                                    placeholder="Precio Producto"
-                                    value="<%= producto.precio %>"
-                                />
+                                <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                       id="precio" name="precio" type="number" placeholder="Precio Producto" value="<%= producto.precio %>" />
                             </div>
-                        
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="categoria">Categoria</label>
-                                <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="categoria"
-                                    name="categoria"
-                                    type="text"
-                                    placeholder="Categoria Producto"
-                                    value="<%= producto.categoria %>"
-                                />
+                                <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                       id="categoria" name="categoria" type="text" placeholder="Categoria Producto" value="<%= producto.categoria %>" />
                             </div>
-                        
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="desc">Descripción</label>
-                                <textarea 
-                                    class="border rounded w-full py-2 px-3"
-                                    id="desc"
-                                    name="desc"
-                                    placeholder="Descripción del producto"
-                                ><%= producto.descripcion %></textarea>
+                                <textarea class="border rounded w-full py-2 px-3" id="desc" name="descripcion" placeholder="Descripción del producto"><%= producto.descripcion %></textarea>
                             </div>
-                        
-                            <button class="rounded btn btn-primary" type="submit">
-                                Guardar Cambios
-                            </button>
-                            <button class="rounded btn btn-danger" type="button" onclick="eliminarProducto('<%= producto._id %>')">
-                                Eliminar Producto
-                            </button>
+                            <button class="rounded btn btn-primary" type="submit">Guardar Cambios</button>
+                            <button class="rounded btn btn-danger" type="button" onclick="eliminarProducto('<%= producto._id %>')">Eliminar Producto</button>
                         </form>
                         
                         

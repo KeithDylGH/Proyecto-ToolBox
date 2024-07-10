@@ -384,8 +384,9 @@ app.use('/cuenta/contactos',express.static(path.resolve(__dirname, 'views','acco
 
 
 //SUPER IMPORTANTE
-app.use(express.json())
+app.use(express.json());
 app.use(express.urlencoded({ extended:true }));
+
 
 
 
