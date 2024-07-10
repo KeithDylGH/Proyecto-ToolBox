@@ -126,7 +126,7 @@ app.get('/inventario/agregarproduto', (req, res) => {
 });
 
 app.get('/inventario/verproducto', (req, res) => {
-    res.render('account/cuenta/admin/seeP');
+    res.render('account/cuenta/admin/seeP', iProducto);
 });
 
 
