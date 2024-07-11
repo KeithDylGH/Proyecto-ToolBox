@@ -31,4 +31,4 @@ const manejarEditarProducto = async (id) => {
 };
 
 // Exportar las funciones para usarlas en otros archivos
-export { manejarEliminarProducto, manejarEditarProducto };
+export { manejarEditarProducto };
