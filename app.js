@@ -167,12 +167,12 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
-// Ruta para llevar a la página de edición de un producto por su ID
+/// Ruta para llevar a la página de edición de un producto por su ID
 app.get('/inventario/editar/:id', async (req, res) => {
     const id = req.params.id;
 
     try {
-        // Aquí deberías tener la lógica para buscar el producto en tu base de datos (ejemplo con Mongoose)
+        // Lógica para buscar el producto en la base de datos
         const producto = await iProducto.findById(id);
 
         if (!producto) {
@@ -180,7 +180,7 @@ app.get('/inventario/editar/:id', async (req, res) => {
         }
 
         // Renderizar la vista de edición con los datos del producto
-        res.render('account/cuenta/admin/addP/editarP', { producto });
+        res.render('account/cuenta/admin/addP/editP', { producto });
     } catch (error) {
         console.error('Error al obtener detalles del producto:', error);
         res.status(500).json({ error: 'No se pudo completar la solicitud' });
