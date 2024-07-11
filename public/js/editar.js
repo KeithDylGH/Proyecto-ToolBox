@@ -32,33 +32,6 @@ const actualizarProducto = async (id, datos) => {
     }
 };
 
-// Función para eliminar un producto
-const eliminarProducto = async (id) => {
-    try {
-        const confirmacion = confirm('¿Estás seguro de que quieres eliminar este producto?');
-
-        if (!confirmacion) {
-            return;
-        }
-
-        const response = await fetch(`/inventario/eliminar/${id}`, {
-            method: 'DELETE'
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al eliminar el producto');
-        }
-
-        const data = await response.json();
-        console.log(data.message);
-
-        mostrarAlerta('Producto eliminado correctamente');
-    } catch (error) {
-        console.error('Error al eliminar el producto:', error);
-        mostrarAlerta('Error al eliminar el producto', 'error');
-    }
-};
-
 // Función para mostrar alertas en la interfaz
 const mostrarAlerta = (mensaje, tipo = 'success') => {
     const alerta = document.createElement('div');
@@ -91,16 +64,6 @@ document.getElementById('formulario').addEventListener('submit', async (event) =
 
     // Llamar a la función para actualizar el producto
     await actualizarProducto(id, datosProducto);
-});
-
-// Evento para manejar la eliminación del producto
-const botonesEliminar = document.querySelectorAll('.btn-eliminar');
-
-botonesEliminar.forEach((boton) => {
-    boton.addEventListener('click', async () => {
-        const idProducto = boton.dataset.id;
-        await eliminarProducto(idProducto);
-    });
 });
 
 // Evento para cancelar la edición

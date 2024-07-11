@@ -159,31 +159,43 @@ app.get('/inventario/agregarproduto', (req, res) => {
 
 
 //VER PRODUCTO
-app.get('/inventario/verproducto', async (req, res) => {
+// Ruta para obtener detalles de un producto por su ID
+app.get('/inventario/editar/:id', async (req, res) => {
+    const id = req.params.id;
+
     try {
-        const productos = await iProducto.find();
-        res.render('account/cuenta/admin/seeP', { productos }); // Pasa la lista de productos a la plantilla
+        // Aquí deberías tener la lógica para buscar el producto en tu base de datos (ejemplo con Mongoose)
+        const producto = await Producto.findById(id);
+
+        if (!producto) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+
+        res.json(producto); // Devuelve los detalles del producto como JSON
     } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).send('Error al obtener los productos');
+        console.error('Error al obtener detalles del producto:', error);
+        res.status(500).json({ error: 'No se pudo completar la solicitud' });
     }
 });
 
 
-// Ruta para obtener un producto específico y renderizar la página de edición
-app.get('/inventario/editar/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const producto = await iProducto.findById(id);
+// Ruta para actualizar un producto por su ID
+app.patch('/inventario/editar/:id', async (req, res) => {
+    const id = req.params.id;
+    const nuevosDatos = req.body;
 
-        if (!producto) {
-            return res.status(404).send('Producto no encontrado');
+    try {
+        // Aquí deberías tener la lógica para actualizar el producto en tu base de datos (ejemplo con Mongoose)
+        const productoActualizado = await Producto.findByIdAndUpdate(id, nuevosDatos, { new: true });
+
+        if (!productoActualizado) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        res.render('account/cuenta/admin/seeP/editarP', { producto });
+        res.json({ message: 'Producto actualizado correctamente', producto: productoActualizado });
     } catch (error) {
-        console.error('Error al obtener el producto para editar:', error);
-        res.status(500).send('Error al obtener el producto para editar');
+        console.error('Error al actualizar el producto:', error);
+        res.status(500).json({ error: 'No se pudo completar la solicitud de actualización' });
     }
 });
 
