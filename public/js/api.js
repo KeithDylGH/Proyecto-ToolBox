@@ -22,7 +22,7 @@ export const obtenerProductos = async () => {
     }catch(error){
         console.log(error)
     }
-}
+};
 
 export const obtenerProducto = async id => {
     try{
@@ -32,11 +32,11 @@ export const obtenerProducto = async id => {
     }catch(error){
         console.log(error)
     }
-}
+};
 
-export const editarProducto = async producto => {
+export const editarProducto = async id => {
     try{
-        await fetch(`${url}/${producto.id}`,{
+        await fetch(`${url}/${id}`,{
             method:'PATCH',
             headers:{
                 'Content-Type':'application/json'
@@ -46,14 +46,14 @@ export const editarProducto = async producto => {
     }catch(error){
         console.log(error)
     }
-}
+};
 
 export const eliminarProducto = async id => {
     try{
         await fetch(`${url}/${id}`, {
             method: 'DELETE'
-        })
+        });
     }catch(error){
         console.log(error)
     }
-}
+};

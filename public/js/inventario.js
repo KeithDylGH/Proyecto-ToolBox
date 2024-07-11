@@ -1,53 +1,22 @@
-import { editarProducto, eliminarProducto } from './api';
+import { eliminarProducto, editarProducto } from '/controllers/api';
 
-// Función para editar un producto por su ID
-export async function editarProductoEnLista(id) {
-    const producto = await obtenerProducto(id); // Obtener el producto actual
-
-    if (!producto) {
-        console.error(`Producto con ID ${id} no encontrado.`);
-        return;
+const manejarEliminarProducto = async (id) => {
+    try {
+        await eliminarProducto(id);
+        // Opcional: Realizar alguna acción adicional después de eliminar el producto
+    } catch (error) {
+        console.error('Error al eliminar el producto:', error);
     }
+};
 
-    const nombre = prompt('Ingrese el nuevo nombre del producto:', producto.nombre);
-    const precio = prompt('Ingrese el nuevo precio del producto:', producto.precio);
-    const categoria = prompt('Ingrese la nueva categoría del producto:', producto.categoria);
-    const descripcion = prompt('Ingrese la nueva descripción del producto:', producto.descripcion);
-
-    if (nombre && precio && categoria && descripcion) {
-        try {
-            await editarProducto({
-                id,
-                nombre,
-                precio,
-                categoria,
-                descripcion
-            });
-            alert('Producto editado con éxito');
-            location.reload(); // Recargar la página para reflejar los cambios
-        } catch (error) {
-            console.error('Error al editar el producto:', error);
-            alert('Error al editar el producto');
-        }
+const manejarEditarProducto = async (id) => {
+    try {
+        await editarProducto(id);
+        // Opcional: Realizar alguna acción adicional después de editar el producto
+    } catch (error) {
+        console.error('Error al editar el producto:', error);
     }
-}
+};
 
-// Función para manejar el evento de click en los botones de eliminar
-document.addEventListener('DOMContentLoaded', () => {
-    const deleteButtons = document.querySelectorAll('.btn-eliminar');
-
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', async () => {
-            const productId = button.getAttribute('data-id');
-
-            try {
-                await eliminarProducto(productId);
-                alert('Producto eliminado con éxito');
-                location.reload(); // Recargar la página para reflejar los cambios
-            } catch (error) {
-                console.error('Error al eliminar el producto:', error);
-                alert('Error al eliminar el producto');
-            }
-        });
-    });
-});
+// Exportar las funciones para usarlas en otros archivos
+export { manejarEliminarProducto, manejarEditarProducto };
