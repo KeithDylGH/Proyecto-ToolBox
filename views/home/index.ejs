@@ -28,58 +28,59 @@
   <body>
     <header>
       <nav class="navbar navbar-expand-lg">
-          <div class="container-fluid">
-              <a href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
-              <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon bg-light"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarScroll">
-                  <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                      <li class="nav-item">
-                          <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
-                      </li>
-                      <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Categoria
+        <div class="container-fluid">
+          <a href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
+          <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon bg-light"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarScroll">
+              <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                  <li class="nav-item">
+                      <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Categoria
+                      </a>
+                      <ul class="dropdown-menu">
+                          <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
+                          <!-- Otras categorías -->
+                      </ul>
+                  </li>
+                  <li class="nav-item">
+                      <div class="carro">
+                          <a href="#" class="carrito">
+                              <img src="/img/icono/carrito de compras.png" alt="carrito" />
                           </a>
-                          <ul class="dropdown-menu">
-                              <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
-                              <li><a id="categoria2" class="dropdown-item" href="#">Candados</a></li>
-                              <li><a id="categoria3" class="dropdown-item" href="#">Cuerpo</a></li>
-                              <li><a id="categoria4" class="dropdown-item" href="#">Escaleras</a></li>
-                              <li><a id="categoria5" class="dropdown-item" href="#">Herramientas</a></li>
-                              <li><a id="categoria6" class="dropdown-item" href="#">Luces</a></li>
-                              <li><a id="categoria7" class="dropdown-item" href="#">Maquinas</a></li>
-                              <li><hr class="dropdown-divider"></li>
-                              <li><a id="categoria8" class="dropdown-item" href="#">Pinturas</a></li>
-                          </ul>
-                      </li>
-                      <li class="nav-item">
-                          <div class="carro">
-                              <a href="#" class="carrito">
-                                  <img src="/img/icono/carrito de compras.png" alt="carrito" />
-                              </a>
-                              <div class="carro-dropdown">
-                                  <button>Vaciar Carrito</button>
-                              </div>
+                          <div class="carro-dropdown">
+                              <button>Vaciar Carrito</button>
                           </div>
-                      </li>
+                      </div>
+                  </li>
+                  <% if (typeof user !== 'undefined') { %>
                       <li class="nav-item">
-                          <a class="nav-link link-light" id="login" href="#">Cuenta</a>
+                          <a class="nav-link link-light" id="username" href="#">Bienvenido, <%= user.name %></a>
                       </li>
-                      <% if (typeof user !== 'undefined') { %>
                       <li class="nav-item">
                           <a class="nav-link link-light" id="logout" href="/logout">Cerrar sesión</a>
                       </li>
-                      <% } %>
-                  </ul>
-                  <form class="d-flex" role="search">
-                      <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
-                      <button class="btn btn-outline-success" type="submit">Buscar</button>
-                  </form>
-              </div>
+                  <% } else { %>
+                      <li class="nav-item">
+                          <a class="nav-link link-light" id="login" href="#">Iniciar sesión</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link link-light" id="register" href="#">Registrarse</a>
+                      </li>
+                  <% } %>
+              </ul>
+              <form class="d-flex" role="search">
+                  <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
+                  <button class="btn btn-outline-success" type="submit">Buscar</button>
+              </form>
           </div>
+        </div>
       </nav>
+      
   </header>
 
     <div class="container">
@@ -650,6 +651,7 @@
     </footer>
 
     <script src="/js/home.js"></script>
+    <script src="/js/header.js"></script>
     <script src="/js/carrusel.js"></script>
     <script src="/js/logout.js"></script>
   </body>

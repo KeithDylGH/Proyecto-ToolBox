@@ -24,7 +24,6 @@ const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
 
 
-
 mongoose.connect(mongoUri).then(() => {
     console.log('Base de Datos conectada!');
 
@@ -80,9 +79,9 @@ mongoose.connect(mongoUri).then(() => {
 
 
 // Middleware para cookies y sesiones
-app.use(cookieParser('tu_secreto_secreto')); // Cambia esto por una cadena secreta más segura
+app.use(cookieParser('tu_secreto_secreto'));
 app.use(session({
-    secret: 'tu_secreto_secreto', // Cambia esto por una cadena secreta más segura
+    secret: 'tu_secreto_secreto',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
@@ -91,7 +90,7 @@ app.use(session({
     }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, // 1 día
-        secure: false, // Cambia esto a true si usas HTTPS
+        secure: false,
         httpOnly: true
     }
 }));
