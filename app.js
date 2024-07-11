@@ -167,23 +167,25 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
-/// Ruta para llevar a la página de edición de un producto por su ID
+// Ruta para cargar la página de edición de un producto por su ID
 app.get('/inventario/editar/:id', async (req, res) => {
     const id = req.params.id;
 
     try {
-        // Lógica para buscar el producto en la base de datos
+        // Buscar el producto por su ID en la base de datos
         const producto = await iProducto.findById(id);
 
         if (!producto) {
+            // Si el producto no existe, devolver un error 404
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
         // Renderizar la vista de edición con los datos del producto
-        res.render('account/cuenta/admin/addP/editP', { producto });
+        res.render('account/cuenta/admin/addP/editarP', { producto });
     } catch (error) {
+        // Manejar otros errores
         console.error('Error al obtener detalles del producto:', error);
-        res.status(500).json({ error: 'No se pudo completar la solicitud' });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
