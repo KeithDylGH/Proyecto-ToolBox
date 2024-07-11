@@ -1,7 +1,7 @@
 import { eliminarProducto } from './api.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const botonesEliminar = document.querySelector('#deleteBtn');
+    const botonesEliminar = document.querySelectorAll('.btn-eliminar');
 
     botonesEliminar.forEach(boton => {
         boton.addEventListener('click', async (e) => {
