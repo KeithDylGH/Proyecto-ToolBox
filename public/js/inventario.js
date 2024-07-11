@@ -1,5 +1,3 @@
-// inventario.js
-
 const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate de que la URL sea correcta
 
 // Función para eliminar un producto

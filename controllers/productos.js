@@ -67,4 +67,23 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
+// Ruta para actualizar un producto
+router.put('/api/products/admin/inventario/:id', async (req, res) => {
+    const productId = req.params.id;
+    const updatedData = req.body;
+
+    try {
+        const updatedProduct = await Producto.findByIdAndUpdate(productId, updatedData, { new: true });
+
+        if (!updatedProduct) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+
+        res.json(updatedProduct);
+    } catch (error) {
+        console.error('Error al actualizar el producto:', error);
+        res.status(500).json({ error: 'Error interno al actualizar el producto' });
+    }
+});
+
 module.exports = router;

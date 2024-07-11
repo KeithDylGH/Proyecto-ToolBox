@@ -37,27 +37,14 @@
                     <div class="shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
                         
                         <form id="formulario" data-id="<%= producto._id %>" method="POST" action="/inventario/editar/<%= producto._id %>">
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre</label>
-                                <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                       id="nombre" name="nombre" type="text" placeholder="Nombre Producto" value="<%= producto.nombre %>" />
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="precio">Precio</label>
-                                <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                       id="precio" name="precio" type="number" placeholder="Precio Producto" value="<%= producto.precio %>" />
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="categoria">Categoría</label>
-                                <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                       id="categoria" name="categoria" type="text" placeholder="Categoría Producto" value="<%= producto.categoria %>" />
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="desc">Descripción</label>
-                                <textarea class="border rounded w-full py-2 px-3" id="desc" name="descripcion" placeholder="Descripción del producto"><%= producto.descripcion %></textarea>
-                            </div>
-                            <button class="rounded btn btn-primary" type="submit">Guardar Cambios</button>
-                            <button class="rounded btn btn-secondary" type="button" id="cancelar">Cancelar Edición</button>
+                            <!-- Campos para editar -->
+                            <input id="nombre" name="nombre" type="text" value="<%= producto.nombre %>" />
+                            <input id="precio" name="precio" type="number" value="<%= producto.precio %>" />
+                            <input id="categoria" name="categoria" type="text" value="<%= producto.categoria %>" />
+                            <textarea id="desc" name="descripcion"><%= producto.descripcion %></textarea>
+                            <!-- Botones de guardar y cancelar -->
+                            <button type="submit">Guardar Cambios</button>
+                            <button type="button" id="cancelar">Cancelar Edición</button>
                         </form>
                         
                     </div>
