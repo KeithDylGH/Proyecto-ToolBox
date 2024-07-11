@@ -1,4 +1,7 @@
-async function editarProducto(id) {
+import { eliminarProducto, editarProducto } from './api';
+
+// Función para editar un producto por su ID
+async function editarProductoEnLista(id) {
     const nombre = prompt('Ingrese el nuevo nombre del producto:');
     const precio = prompt('Ingrese el nuevo precio del producto:');
     const categoria = prompt('Ingrese la nueva categoría del producto:');
@@ -6,27 +9,18 @@ async function editarProducto(id) {
 
     if (nombre && precio && categoria && descripcion) {
         try {
-            const response = await fetch(`/inventario/editar/${id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ nombre, precio, categoria, descripcion })
-            });
-
-            if (response.ok) {
-                alert('Producto editado con éxito');
-                location.reload();
-            } else {
-                alert('Error al editar el producto');
-            }
+            await editarProducto({ id, nombre, precio, categoria, descripcion });
+            alert('Producto editado con éxito');
+            location.reload(); // Recargar la página para reflejar los cambios
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error al editar el producto:', error);
+            alert('Error al editar el producto');
         }
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Función para manejar el evento de click en los botones de eliminar
+document.addEventListener('DOMContentLoaded', () => {
     const deleteButtons = document.querySelectorAll('.btn-eliminar');
 
     deleteButtons.forEach(button => {
@@ -34,19 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const productId = button.getAttribute('data-id');
 
             try {
-                const response = await fetch(`/inventario/eliminar/${productId}`, {
-                    method: 'DELETE',
-                });
-
-                if (response.ok) {
-                    alert('Producto eliminado con éxito');
-                    location.reload();
-                } else {
-                    const error = await response.json();
-                    alert(`Error al eliminar el producto: ${error.message}`);
-                }
+                await eliminarProducto(productId);
+                alert('Producto eliminado con éxito');
+                location.reload(); // Recargar la página para reflejar los cambios
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error al eliminar el producto:', error);
                 alert('Error al eliminar el producto');
             }
         });
