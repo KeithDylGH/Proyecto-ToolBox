@@ -165,7 +165,7 @@ app.get('/inventario/editar/:id', async (req, res) => {
 
     try {
         // Aquí deberías tener la lógica para buscar el producto en tu base de datos (ejemplo con Mongoose)
-        const producto = await Producto.findById(id);
+        const producto = await iProducto.findById(id);
 
         if (!producto) {
             return res.status(404).json({ error: 'Producto no encontrado' });
@@ -186,7 +186,7 @@ app.patch('/inventario/editar/:id', async (req, res) => {
 
     try {
         // Aquí deberías tener la lógica para actualizar el producto en tu base de datos (ejemplo con Mongoose)
-        const productoActualizado = await Producto.findByIdAndUpdate(id, nuevosDatos, { new: true });
+        const productoActualizado = await iProducto.findByIdAndUpdate(id, nuevosDatos, { new: true });
 
         if (!productoActualizado) {
             return res.status(404).json({ error: 'Producto no encontrado' });
