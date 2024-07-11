@@ -1,25 +1,27 @@
-import { eliminarProducto, editarProducto } from 'api';
+import { eliminarProducto } from './api.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const botonesEliminar = document.querySelectorAll('.btn-eliminar');
 
     botonesEliminar.forEach(boton => {
-        boton.addEventListener('click', async (event) => {
-            const productoId = event.target.id.replace('btn-eliminar-', '');
+        boton.addEventListener('click', async (e) => {
+            const idProducto = e.target.dataset.id;
+            const confirmacion = confirm('¿Estás seguro de que deseas eliminar este producto?');
 
-            if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
+            if (confirmacion) {
                 try {
-                    await eliminarProducto(productoId);
-                    alert('Producto eliminado con éxito');
-                    location.reload(); // Recarga la página para reflejar los cambios
+                    await eliminarProducto(idProducto);
+                    alert('Producto eliminado exitosamente.');
+                    window.location.reload();
                 } catch (error) {
-                    alert('Hubo un error al eliminar el producto');
-                    console.error('Error:', error);
+                    console.error('Error al eliminar el producto:', error);
+                    alert('Hubo un error al eliminar el producto. Intenta de nuevo.');
                 }
             }
         });
     });
 });
+
 
 const manejarEditarProducto = async (id) => {
     try {
