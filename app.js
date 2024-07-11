@@ -157,88 +157,19 @@ app.get('/inventario/agregarproduto', (req, res) => {
     res.render('account/cuenta/admin/addP');
 });
 
-
-//VER PRODUCTO
-// Ruta para obtener detalles de un producto por su ID
-app.get('/inventario/editar/:id', async (req, res) => {
-    const id = req.params.id;
-
+app.get('/inventario/verproducto', async (req, res) => {
     try {
-        // Aquí deberías tener la lógica para buscar el producto en tu base de datos (ejemplo con Mongoose)
-        const producto = await iProducto.findById(id);
-
-        if (!producto) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
-
-        res.json(producto); // Devuelve los detalles del producto como JSON
+        const productos = await iProducto.find();
+        res.render('account/cuenta/admin/seeP', { productos }); // Pasa la lista de productos a la plantilla
     } catch (error) {
-        console.error('Error al obtener detalles del producto:', error);
-        res.status(500).json({ error: 'No se pudo completar la solicitud' });
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
     }
 });
 
-
-// Ruta para actualizar un producto por su ID
-app.patch('/inventario/editar/:id', async (req, res) => {
-    const id = req.params.id;
-    const nuevosDatos = req.body;
-
-    try {
-        // Aquí deberías tener la lógica para actualizar el producto en tu base de datos (ejemplo con Mongoose)
-        const productoActualizado = await iProducto.findByIdAndUpdate(id, nuevosDatos, { new: true });
-
-        if (!productoActualizado) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
-
-        res.json({ message: 'Producto actualizado correctamente', producto: productoActualizado });
-    } catch (error) {
-        console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'No se pudo completar la solicitud de actualización' });
-    }
+app.get('/inventario/editar', (req, res) => {
+    res.render('account/cuenta/admin/addP/editarP');
 });
-
-// Ruta para editar un producto (PATCH, no POST)
-app.patch('/inventario/editar/:id', async (req, res) => {
-    const productId = req.params.id;
-    const updatedProduct = req.body;
-
-    try {
-        // Validación de campos obligatorios
-        if (!updatedProduct.nombre || !updatedProduct.precio || !updatedProduct.categoria || !updatedProduct.descripcion) {
-            return res.status(400).json({ message: 'Completa todos los campos obligatorios' });
-        }
-
-        // Lógica para actualizar el producto en la base de datos (ejemplo con Mongoose)
-        const product = await iProducto.findByIdAndUpdate(productId, updatedProduct, { new: true });
-
-        if (!product) {
-            return res.status(404).json({ message: 'Producto no encontrado' });
-        }
-
-        return res.status(200).json({ message: 'Producto actualizado correctamente', product });
-    } catch (error) {
-        console.error('Error al actualizar el producto:', error);
-        return res.status(500).json({ message: 'Error al actualizar el producto' });
-    }
-});
-
-
-
-// Ruta para eliminar un producto
-app.delete('/inventario/eliminar/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        await iProducto.findByIdAndDelete(id);
-        res.status(200).json({ message: 'Producto eliminado con éxito' });
-    } catch (error) {
-        console.error('Error al eliminar el producto:', error);
-        res.status(500).json({ error: 'Error al eliminar el producto' });
-    }
-});
-
-
 
 
 
