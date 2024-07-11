@@ -1,13 +1,17 @@
 import { eliminarProducto, editarProducto } from '/controllers/api';
 
-const manejarEliminarProducto = async (id) => {
-    try {
-        await eliminarProducto(id);
-        // Opcional: Realizar alguna acción adicional después de eliminar el producto
-    } catch (error) {
-        console.error('Error al eliminar el producto:', error);
+async function manejarEliminarProducto(productoId) {
+    if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
+        try {
+            await eliminarProducto(productoId);
+            alert('Producto eliminado con éxito');
+            location.reload(); // Recarga la página para reflejar los cambios
+        } catch (error) {
+            alert('Hubo un error al eliminar el producto');
+            console.error('Error:', error);
+        }
     }
-};
+}
 
 const manejarEditarProducto = async (id) => {
     try {
