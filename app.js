@@ -161,7 +161,7 @@ app.get('/inventario/verProducto', (req, res) => {
     res.render('account/cuenta/admin/seeP');
 });
 
-app.get('/inventario/verProducto', (req, res) => {
+app.get('/inventario/editar', (req, res) => {
     res.render('account/cuenta/admin/seeP/editarP');
 });
 
