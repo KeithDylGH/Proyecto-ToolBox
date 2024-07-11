@@ -24,6 +24,8 @@ const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
 
 
+const urlAdmin = 'https://proyecto-toolbox.onrender.com/api/productos';
+
 mongoose.connect(mongoUri).then(() => {
     console.log('Base de Datos conectada!');
 
@@ -308,6 +310,21 @@ app.post('/api/productos/agregar', async (req, res) => {
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
+
+export const eliminarProducto = async (id) => {
+    try {
+        const response = await fetch(`${urlAdmin}/${id}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            throw new Error('Error al eliminar el producto');
+        }
+    } catch (error) {
+        console.error('Error en eliminarProducto:', error);
+        throw error; // Puedes manejar este error según tu necesidad en inventario.js
+    }
+};
+
 
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter);
