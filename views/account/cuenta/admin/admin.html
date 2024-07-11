@@ -7,6 +7,7 @@
 
     <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png">
     <link rel="stylesheet" href="/public/css/admin.css">
+    <link rel="stylesheet" href="/public/css/cuenta.css">
     
     <!--BOOTSTRAP-->
    <!--  <link rel="stylesheet" href="/bootstrap-5.3.3-dist/css/bootstrap.rtl.min.css">
@@ -26,24 +27,27 @@
             <!--Sidebar-->
 
             <div class="sidebar">
-                <a href="/views/home/index.html"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
+                <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
 
-                <a class="active sidebar_btn" href="#" id="sideBtn">pepe</a>
-                <a href="#general" id="homeBtn">Ir a la Pág. Principal</a>
+                <a class="active sidebar_btn" href="#" id="client">Inicio</a>
+                <a href="#general" id="pagBtn">Ir a la Pág. Principal</a>
                 <a href="#carrito" id="carritoBtn">Carrito</a>
                 <a href="#contacto" id="contactoBtn">Servicio al Cliente</a>
                 <a href="#inventario" id="inventarioBtn">Inventario</a>
                 <a href="#configuracion" id="configuracionBtn">Configuración</a>
 
-                <button class="Log-Out"><a href="/views/account/login/index.html">Cerrar sesion
-                </a></button>
+                <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>
               </div>
 
         </section>
 
         <section>
-            <div class="content container">
-                <h1>Bienvenido Admin!</h1>
+            <div class="content">
+                <div class="bg-light p-4">
+                    <div class="bg-black p-2 rounded-2">
+                        <h1 class="text-light">Bienvenido Admin!</h1>
+                    </div>
+                </div>
               </div>
 
         </section>
@@ -51,7 +55,8 @@
 
 
 
-    <script src="admin.js"></script>
+    <script src="/js/cuenta.js"></script>
+    <script src="/js/admin.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
