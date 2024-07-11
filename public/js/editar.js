@@ -1,36 +1,49 @@
-// Función para actualizar un producto
-const actualizarProducto = async (id, datos) => {
+import { obtenerProducto, editarProducto } from './api';
+
+// Función para cargar los detalles de un producto
+const cargarProducto = async (id) => {
     try {
-        // Validación de campos obligatorios
-        if (!datos.nombre || !datos.precio || !datos.categoria || !datos.descripcion) {
-            mostrarAlerta('Completa todos los campos antes de guardar cambios', 'error');
-            return;
-        }
-
-        const response = await fetch(`/inventario/editar/${id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(datos)
-        });
-
-        if (!response.ok) {
-            throw new Error('No se pudo completar la solicitud de actualización');
-        }
-
-        const data = await response.json();
-        console.log(data.message);
-
-        mostrarAlerta('Cambios realizados correctamente');
-        setTimeout(() => {
-            window.location.href = '/inventario/verproducto';
-        }, 2000); // Redirige a la página Ver Productos después de 2 segundos
+        const producto = await obtenerProducto(id);
+        // Aquí puedes usar los datos del producto para llenar los campos del formulario de edición
+        document.getElementById('nombre').value = producto.nombre;
+        document.getElementById('precio').value = producto.precio;
+        document.getElementById('categoria').value = producto.categoria;
+        document.getElementById('descripcion').value = producto.descripcion;
     } catch (error) {
-        console.error('Error al actualizar el producto:', error);
-        mostrarAlerta(`Error al actualizar el producto: ${error.message}`, 'error');
+        console.error('Error al cargar producto:', error);
+        // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje al usuario
     }
 };
+
+// Función para enviar los cambios del producto editado
+const guardarCambios = async (id, datosProducto) => {
+    try {
+        await editarProducto({ ...datosProducto, id });
+        // Aquí puedes manejar la confirmación de que los cambios se guardaron correctamente
+        mostrarAlerta('Cambios guardados correctamente', 'success');
+    } catch (error) {
+        console.error('Error al guardar cambios:', error);
+        mostrarAlerta(`Error al guardar cambios: ${error.message}`, 'error');
+    }
+};
+
+// Evento para manejar el envío del formulario de edición
+document.getElementById('formulario').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevenir el envío por defecto del formulario
+
+    const nombre = document.getElementById('nombre').value;
+    const precio = document.getElementById('precio').value;
+    const categoria = document.getElementById('categoria').value;
+    const descripcion = document.getElementById('descripcion').value;
+
+    const formulario = document.getElementById('formulario');
+    const id = formulario.dataset.id; // Asumiendo que tienes el ID del producto en un atributo data-*
+
+    const datosProducto = { nombre, precio, categoria, descripcion };
+
+    // Llamar a la función para guardar los cambios del producto
+    await guardarCambios(id, datosProducto);
+});
 
 // Función para mostrar alertas en la interfaz
 const mostrarAlerta = (mensaje, tipo = 'success') => {
@@ -48,29 +61,9 @@ const mostrarAlerta = (mensaje, tipo = 'success') => {
     }, 5000); // Remover la alerta después de 5 segundos
 };
 
-// Evento para manejar el envío del formulario de edición
-document.getElementById('formulario').addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevenir el envío por defecto del formulario
-
-    const nombre = document.getElementById('nombre').value;
-    const precio = document.getElementById('precio').value;
-    const categoria = document.getElementById('categoria').value;
-    const descripcion = document.getElementById('desc').value;
-
+// Llama a cargarProducto al cargar la página, pasando el ID adecuado
+document.addEventListener('DOMContentLoaded', () => {
     const formulario = document.getElementById('formulario');
-    const id = formulario.dataset.id;
-
-    const datosProducto = { nombre, precio, categoria, descripcion };
-
-    // Llamar a la función para actualizar el producto
-    await actualizarProducto(id, datosProducto);
+    const id = formulario.dataset.id; // Asumiendo que tienes el ID del producto en un atributo data-*
+    cargarProducto(id);
 });
-
-// Evento para cancelar la edición
-document.addEventListener('DOMContentLoaded', function(){
-    const cancelarBtn = document.getElementById('cancelar');
-
-    cancelarBtn.addEventListener('click', function() {
-        window.location.href = '/inventario/verproducto/'
-    })
-})
