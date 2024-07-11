@@ -56,4 +56,15 @@ router.get('/verproducto', async (req, res) => {
     }
 });
 
+// Endpoint para eliminar un producto por su ID
+router.delete('/admin/inventario/:id', async (req, res) => {
+    try {
+        const producto = await Producto.findByIdAndDelete(req.params.id);
+        if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
+        res.status(200).json({ message: 'Producto eliminado exitosamente.' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al eliminar el producto.' });
+    }
+});
+
 module.exports = router;
