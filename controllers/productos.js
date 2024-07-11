@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const producto = require('../models/producto');
+const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
 
+// Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
     try {
-        const nuevoProducto = new producto(req.body);
+        const nuevoProducto = new Producto(req.body);
         await nuevoProducto.save();
         res.status(201).json(nuevoProducto);
     } catch (error) {
@@ -12,18 +13,20 @@ router.post('/admin/inventario', async (req, res) => {
     }
 });
 
+// Endpoint para obtener todos los productos
 router.get('/admin/inventario', async (req, res) => {
     try {
-        const productos = await producto.find();
+        const productos = await Producto.find();
         res.status(200).json(productos);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
+// Endpoint para obtener un producto por su ID
 router.get('/admin/inventario/:id', async (req, res) => {
     try {
-        const producto = await producto.findById(req.params.id);
+        const producto = await Producto.findById(req.params.id);
         if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
         res.status(200).json(producto);
     } catch (error) {
@@ -31,9 +34,10 @@ router.get('/admin/inventario/:id', async (req, res) => {
     }
 });
 
+// Endpoint para actualizar un producto por su ID
 router.patch('/admin/inventario/:id', async (req, res) => {
     try {
-        const producto = await producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const producto = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
         res.status(200).json(producto);
     } catch (error) {
@@ -41,36 +45,25 @@ router.patch('/admin/inventario/:id', async (req, res) => {
     }
 });
 
+// Endpoint para eliminar un producto por su ID
 router.delete('/admin/inventario/:id', async (req, res) => {
     try {
-        const producto = await producto.findByIdAndDelete(req.params.id);
+        const producto = await Producto.findByIdAndDelete(req.params.id);
         if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
-        res.status(200).json({ message: 'Producto eliminado' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-
-// Ruta para ver productos
-router.get('/verproducto', async (req, res) => {
-    try {
-        const productos = await obtenerProductos(); // Utiliza la función para obtener productos
-        res.render('account/cuenta/admin/seeP/index', { productos });
-    } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).send('Error al obtener los productos');
-    }
-});
-
-// Eliminar un producto por ID
-router.delete('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        await producto.findByIdAndDelete(id);
         res.status(200).json({ message: 'Producto eliminado exitosamente.' });
     } catch (error) {
         res.status(500).json({ error: 'Error al eliminar el producto.' });
+    }
+});
+
+// Ruta para ver productos (esto parece ser un intento previo, asegúrate de cómo deseas manejarla)
+router.get('/verproducto', async (req, res) => {
+    try {
+        const productos = await Producto.find(); // Utiliza el modelo Producto para obtener productos
+        res.render('account/cuenta/admin/seeP/index', { productos }); // Ajusta según tu lógica de renderizado
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
     }
 });
 
