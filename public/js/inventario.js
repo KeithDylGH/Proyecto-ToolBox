@@ -1,23 +1,34 @@
-import { eliminarProducto } from 'api'; // Asegúrate de que esta ruta sea correcta
+import { eliminarProducto, editarProducto } from 'api';
 
 document.addEventListener('DOMContentLoaded', () => {
     const botonesEliminar = document.querySelectorAll('.btn-eliminar');
 
     botonesEliminar.forEach(boton => {
-        boton.addEventListener('click', async (e) => {
-            const productoId = e.target.id.replace('btn-eliminar-', '');
-            const confirmar = confirm('¿Estás seguro de que deseas eliminar este producto?');
+        boton.addEventListener('click', async (event) => {
+            const productoId = event.target.id.replace('btn-eliminar-', '');
 
-            if (confirmar) {
+            if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
                 try {
                     await eliminarProducto(productoId);
-                    alert('Producto eliminado exitosamente.');
-                    location.reload(); // Recargar la página para actualizar la lista de productos
+                    alert('Producto eliminado con éxito');
+                    location.reload(); // Recarga la página para reflejar los cambios
                 } catch (error) {
-                    console.error('Error al eliminar el producto:', error);
-                    alert('Hubo un error al eliminar el producto.');
+                    alert('Hubo un error al eliminar el producto');
+                    console.error('Error:', error);
                 }
             }
         });
     });
 });
+
+const manejarEditarProducto = async (id) => {
+    try {
+        await editarProducto(id);
+        // Opcional: Realizar alguna acción adicional después de editar el producto
+    } catch (error) {
+        console.error('Error al editar el producto:', error);
+    }
+};
+
+// Exportar las funciones para usarlas en otros archivos
+export { manejarEditarProducto };

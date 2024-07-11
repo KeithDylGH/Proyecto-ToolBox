@@ -1,4 +1,4 @@
-import { obtenerProducto, editarProducto } from './api';
+import { obtenerProducto, editarProducto } from 'api';
 
 // Función para cargar los detalles de un producto
 const cargarProducto = async (id) => {
