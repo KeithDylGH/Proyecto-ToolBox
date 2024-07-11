@@ -1,15 +1,28 @@
-import { eliminarProducto, editarProducto } from './api';
+import { editarProducto, eliminarProducto } from './api';
 
 // Función para editar un producto por su ID
 export async function editarProductoEnLista(id) {
-    const nombre = prompt('Ingrese el nuevo nombre del producto:');
-    const precio = prompt('Ingrese el nuevo precio del producto:');
-    const categoria = prompt('Ingrese la nueva categoría del producto:');
-    const descripcion = prompt('Ingrese la nueva descripción del producto:');
+    const producto = await obtenerProducto(id); // Obtener el producto actual
+
+    if (!producto) {
+        console.error(`Producto con ID ${id} no encontrado.`);
+        return;
+    }
+
+    const nombre = prompt('Ingrese el nuevo nombre del producto:', producto.nombre);
+    const precio = prompt('Ingrese el nuevo precio del producto:', producto.precio);
+    const categoria = prompt('Ingrese la nueva categoría del producto:', producto.categoria);
+    const descripcion = prompt('Ingrese la nueva descripción del producto:', producto.descripcion);
 
     if (nombre && precio && categoria && descripcion) {
         try {
-            await editarProducto({ id, nombre, precio, categoria, descripcion });
+            await editarProducto({
+                id,
+                nombre,
+                precio,
+                categoria,
+                descripcion
+            });
             alert('Producto editado con éxito');
             location.reload(); // Recargar la página para reflejar los cambios
         } catch (error) {
