@@ -1,7 +1,7 @@
 import { eliminarProducto, editarProducto } from './api';
 
 // Función para editar un producto por su ID
-async function editarProductoEnLista(id) {
+export async function editarProductoEnLista(id) {
     const nombre = prompt('Ingrese el nuevo nombre del producto:');
     const precio = prompt('Ingrese el nuevo precio del producto:');
     const categoria = prompt('Ingrese la nueva categoría del producto:');
