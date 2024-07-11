@@ -1,36 +1,26 @@
-import { eliminarProducto } from './api.js';
-
 document.addEventListener('DOMContentLoaded', () => {
     const botonesEliminar = document.querySelectorAll('.btn-eliminar');
 
     botonesEliminar.forEach(boton => {
         boton.addEventListener('click', async (e) => {
-            const idProducto = e.target.dataset.id;
-            const confirmacion = confirm('¿Estás seguro de que deseas eliminar este producto?');
-
-            if (confirmacion) {
+            const productoId = e.target.dataset.id;
+            if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
                 try {
-                    await eliminarProducto(idProducto);
-                    alert('Producto eliminado exitosamente.');
-                    window.location.reload();
+                    const response = await fetch(`/api/products/admin/inventario/${productoId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        alert('Producto eliminado exitosamente');
+                        location.reload(); // Recargar la página después de eliminar
+                    } else {
+                        throw new Error('Error al eliminar el producto');
+                    }
                 } catch (error) {
-                    console.error('Error al eliminar el producto:', error);
-                    alert('Hubo un error al eliminar el producto. Intenta de nuevo.');
+                    console.error('Error:', error);
+                    alert('Hubo un error al intentar eliminar el producto');
                 }
             }
         });
     });
 });
-
-
-const manejarEditarProducto = async (id) => {
-    try {
-        await editarProducto(id);
-        // Opcional: Realizar alguna acción adicional después de editar el producto
-    } catch (error) {
-        console.error('Error al editar el producto:', error);
-    }
-};
-
-// Exportar las funciones para usarlas en otros archivos
-export { manejarEditarProducto };
