@@ -157,6 +157,15 @@ app.get('/inventario/agregarproduto', (req, res) => {
     res.render('account/cuenta/admin/addP');
 });
 
+app.get('/inventario/verProducto', (req, res) => {
+    res.render('account/cuenta/admin/seeP');
+});
+
+app.get('/inventario/verProducto', (req, res) => {
+    res.render('account/cuenta/admin/seeP/editarP');
+});
+
+
 
 //DESCARGAR FORMATO PDF O EXCEL
 app.get('/inventario/descargarInv', async (req, res) => {
