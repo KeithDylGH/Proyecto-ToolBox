@@ -181,6 +181,31 @@ app.get('/inventario/editar/:id', async (req, res) => {
 });
 
 
+app.put('/api/admin/inventario/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, precio, categoria, descripcion } = req.body;
+
+        const productoActualizado = await iProducto.findByIdAndUpdate(id, {
+            nombre,
+            precio,
+            categoria,
+            descripcion
+        }, { new: true });
+
+        if (!productoActualizado) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+
+        res.json(productoActualizado);
+    } catch (error) {
+        console.error('Error al actualizar el producto:', error);
+        res.status(500).json({ error: 'Error al actualizar el producto' });
+    }
+});
+
+
+
 
 //DESCARGAR FORMATO PDF O EXCEL
 app.get('/inventario/descargarInv', async (req, res) => {

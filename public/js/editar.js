@@ -1,12 +1,10 @@
 // editar.js
-import { editarProducto } from './api.js';
-
 document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.getElementById('formulario');
-    
+
     formulario.addEventListener('submit', async function(event) {
         event.preventDefault();
-        
+
         const formData = new FormData(formulario);
         const productId = formulario.getAttribute('data-id');
 
