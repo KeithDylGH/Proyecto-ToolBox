@@ -199,8 +199,8 @@ app.put('/api/admin/inventario/:id', async (req, res) => {
 
         res.json(productoActualizado);
     } catch (error) {
-        console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'Error al actualizar el producto' });
+        console.error('Error al actualizar el producto:', error); // Log more detailed error message
+        res.status(500).json({ error: 'Error al actualizar el producto', details: error.message });
     }
 });
 
