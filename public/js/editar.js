@@ -1,4 +1,6 @@
 // editar.js
+import { editarProducto } from './api.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.getElementById('formulario');
     
@@ -16,19 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         try {
-            const response = await fetch(`/admin/inventario/${productId}`, { // Ruta actualizada para coincidir con el servidor
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al actualizar el producto');
-            }
-
-            const result = await response.json();
+            await editarProducto(productId, data);
 
             // Mostrar notificación de éxito
             alert('Producto actualizado con éxito');
