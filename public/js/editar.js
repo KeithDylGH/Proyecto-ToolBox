@@ -18,7 +18,19 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         try {
-            await editarProducto(productId, data);
+            const response = await fetch(`/api/admin/inventario/${productId}`, { // Asegúrate de que la ruta sea correcta
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al actualizar el producto');
+            }
+
+            const result = await response.json();
 
             // Mostrar notificación de éxito
             alert('Producto actualizado con éxito');
