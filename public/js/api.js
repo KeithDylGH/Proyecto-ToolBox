@@ -34,22 +34,19 @@ export const obtenerProducto = async id => {
     }
 };
 
-export async function editarProducto(productId, data) {
-    const response = await fetch(`/api/admin/inventario/${productId}`, { // Asegúrate de que la ruta sea correcta
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
-
-    if (!response.ok) {
-        throw new Error('Error al actualizar el producto');
+export const editarProducto = async id => {
+    try{
+        await fetch(`${url}/${id}`,{
+            method:'PATCH',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(producto)
+        });
+    }catch(error){
+        console.log(error)
     }
-
-    return await response.json();
-}
-
+};
 
 export const eliminarProducto = async id => {
     try{

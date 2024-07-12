@@ -56,22 +56,27 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Endpoint para actualizar un producto por su ID
-router.put('/admin/inventario/:id', async (req, res) => { // Asegúrate de que la ruta es PUT y no PATCH
-    const productId = req.params.id;
-    const updatedData = req.body;
 
+router.put('/:id', async (req, res) => {
     try {
-        const updatedProduct = await Producto.findByIdAndUpdate(productId, updatedData, { new: true });
+        const { id } = req.params;
+        const { nombre, precio, categoria, descripcion } = req.body;
 
-        if (!updatedProduct) {
+        const productoActualizado = await Producto.findByIdAndUpdate(id, {
+            nombre,
+            precio,
+            categoria,
+            descripcion
+        }, { new: true });
+
+        if (!productoActualizado) {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        res.json(updatedProduct);
+        res.json(productoActualizado);
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'Error interno al actualizar el producto' });
+        res.status(500).json({ error: 'Error al actualizar el producto', details: error.message });
     }
 });
 
