@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         try {
-            const response = await fetch(`/api/products/admin/inventario/${productId}`, {
+            const response = await fetch(`/admin/inventario/${productId}`, { // Ruta actualizada para coincidir con el servidor
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -50,4 +50,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
