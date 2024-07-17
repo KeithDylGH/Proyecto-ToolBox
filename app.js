@@ -233,8 +233,8 @@ app.get('/api/descargar-inventario', async (req, res) => {
             const doc = new PDF();
 
             // Configurar encabezado con logo
-            const logoPath = path.join(__dirname, '/img/logo/LogoLetra.png'); // Reemplaza con la ruta correcta a tu logo
-            doc.image(logoPath, 50, 25, { width: 100 });
+            const logoPath = path.join(__dirname, 'public', 'img', 'logo', 'LogoLetra.png');
+            doc.image(logoPath, 50, 50, { width: 200 });
 
             // Establecer estilo para el título
             doc.font('Helvetica-Bold').fontSize(18).text('Lista de Productos', {
