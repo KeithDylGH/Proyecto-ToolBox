@@ -243,6 +243,23 @@ app.get('/api/descargar-inventario', async (req, res) => {
                 margin: 50
             });
 
+            // Espaciado después del título
+            doc.moveDown();
+
+            // Establecer estilo para el contenido de productos
+            doc.font('Helvetica').fontSize(12).fillColor('#333'); // Color del texto
+            productos.forEach(producto => {
+                doc.text(`Nombre: ${producto.nombre}`);
+                doc.text(`Precio: ${producto.precio}`);
+                doc.text(`Categoría: ${producto.categoria}`);
+                doc.text(`Descripción: ${producto.descripcion}`);
+                doc.moveDown();
+            });
+
+            // Finalizar y enviar el documento PDF
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'attachment; filename=productos.pdf');
+            doc.pipe(res);
             doc.end();
         }
     } catch (error) {
