@@ -1,16 +1,13 @@
+// editar.js
 document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.getElementById('formulario');
     const productId = formulario.getAttribute('data-id');
-
-    if (!productId) {
-        console.error('No se encontró el ID del producto.');
-        return;
-    }
 
     formulario.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         const formData = new FormData(formulario);
+        const productId = formulario.getAttribute('data-id');
 
         const data = {
             nombre: formData.get('nombre'),
@@ -19,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             descripcion: formData.get('descripcion')
         };
 
-        console.log('Datos del formulario:', data);
+        console.log(data);
 
         try {
             const response = await fetch(`/api/products/${productId}`, {
