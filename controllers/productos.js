@@ -57,7 +57,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar un producto
-router.put('/admin/inventario/:id', async (req, res) => {
+router.put('/inventario/editar/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { nombre, precio, categoria, descripcion } = req.body;
