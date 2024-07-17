@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(data);
 
         try {
-            const response = await fetch(`/api/products/${productId}`, {
+            const response = await fetch(`/api/products/inventario/editar/${productId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Producto actualizado con éxito');
 
             // Redireccionar a la página de inventario
-            window.location.href = '/inventario/verproducto/';
+            window.location.href = '/inventario/verproducto';
         } catch (error) {
             console.error('Error:', error);
             alert('Hubo un error al actualizar el producto');
