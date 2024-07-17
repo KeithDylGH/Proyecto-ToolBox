@@ -233,7 +233,7 @@ app.get('/api/descargar-inventario', async (req, res) => {
             const doc = new PDF();
 
             // Configurar encabezado con logo
-            const logoPath = path.join(__dirname, '/img/logo/Logo_lerra.png'); // Reemplaza con la ruta correcta a tu logo
+            const logoPath = path.join(__dirname, '/img/logo/LogoLetra.png'); // Reemplaza con la ruta correcta a tu logo
             doc.image(logoPath, 50, 25, { width: 100 });
 
             // Establecer estilo para el título
