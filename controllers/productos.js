@@ -1,83 +1,58 @@
-const express = require('express');
-const router = express.Router();
-const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
+document.addEventListener('DOMContentLoaded', function() {
+    const formulario = document.getElementById('formulario');
+    const productId = formulario.getAttribute('data-id');
 
-// Endpoint para agregar un nuevo producto
-router.post('/admin/inventario', async (req, res) => {
-    try {
-        const nuevoProducto = new Producto(req.body);
-        await nuevoProducto.save();
-        res.status(201).json(nuevoProducto);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+    if (!productId) {
+        console.error('No se encontró el ID del producto.');
+        return;
     }
-});
 
-// Endpoint para obtener todos los productos
-router.get('/admin/inventario', async (req, res) => {
-    try {
-        const productos = await Producto.find();
-        res.status(200).json(productos);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+    formulario.addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-// Endpoint para obtener un producto por su ID
-router.get('/admin/inventario/:id', async (req, res) => {
-    try {
-        const producto = await Producto.findById(req.params.id);
-        if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
-        res.status(200).json(producto);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+        const formData = new FormData(formulario);
 
-// Ruta para ver productos (esto parece ser un intento previo, asegúrate de cómo deseas manejarla)
-router.get('/verproducto', async (req, res) => {
-    try {
-        const productos = await Producto.find(); // Utiliza el modelo Producto para obtener productos
-        res.render('account/cuenta/admin/seeP/index', { productos }); // Ajusta según tu lógica de renderizado
-    } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).send('Error al obtener los productos');
-    }
-});
+        const data = {
+            nombre: formData.get('nombre'),
+            precio: formData.get('precio'),
+            categoria: formData.get('categoria'),
+            descripcion: formData.get('descripcion')
+        };
 
-// Endpoint para eliminar un producto por su ID
-router.delete('/admin/inventario/:id', async (req, res) => {
-    try {
-        const producto = await Producto.findByIdAndDelete(req.params.id);
-        if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
-        res.status(200).json({ message: 'Producto eliminado exitosamente.' });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al eliminar el producto.' });
-    }
-});
+        console.log('Datos del formulario:', data);
 
-// Endpoint para actualizar un producto
-router.put('/inventario/editar/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nombre, precio, categoria, descripcion } = req.body;
+        try {
+            const response = await fetch(`/api/products/${productId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });            
 
-        const productoActualizado = await Producto.findByIdAndUpdate(id, {
-            nombre,
-            precio,
-            categoria,
-            descripcion
-        }, { new: true });
+            if (!response.ok) {
+                throw new Error('Error al actualizar el producto');
+            }
 
-        if (!productoActualizado) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
+            const result = await response.json();
+
+            // Mostrar notificación de éxito
+            alert('Producto actualizado con éxito');
+
+            // Redireccionar a la página de inventario
+            window.location.href = '/inventario/verproducto/';
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un error al actualizar el producto');
         }
+    });
 
-        res.json(productoActualizado);
-    } catch (error) {
-        console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'Error al actualizar el producto', details: error.message });
+    // Event listener para el botón Cancelar
+    const cancelarBtn = document.getElementById('cancelar');
+    if (cancelarBtn) {
+        cancelarBtn.addEventListener('click', function() {
+            // Redireccionar a la página de inventario
+            window.location.href = '/inventario/verproducto';
+        });
     }
 });
-
-module.exports = router;
