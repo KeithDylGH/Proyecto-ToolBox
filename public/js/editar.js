@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(data);
 
         try {
-            const response = await fetch(`/api/products/${productId}`, { 
+            const response = await fetch(`/api/products/${productId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            });
+            });            
 
             if (!response.ok) {
                 throw new Error('Error al actualizar el producto');
