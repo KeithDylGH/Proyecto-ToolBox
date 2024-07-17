@@ -234,11 +234,11 @@ app.get('/api/descargar-inventario', async (req, res) => {
 
             // Configurar encabezado con logo
             const logoPath = path.join(__dirname, 'public', 'img', 'logo', 'LogoLetra.png');
-            doc.image(logoPath, 50, 50, { width: 200 });
+            doc.image(logoPath, 50, 50, { width: 100 });
 
             // Establecer estilo para el título
             doc.font('Helvetica-Bold').fontSize(18).text('Lista de Productos', {
-                align: 'center',
+                align: 'right',
                 underline: true,
                 margin: 50
             });
