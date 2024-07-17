@@ -229,22 +229,18 @@ app.get('/api/descargar-inventario', async (req, res) => {
             await workbook.xlsx.write(res);
             res.end();
         } else if (format === 'pdf') {
+            // Generar archivo PDF
             const doc = new PDF();
 
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'attachment; filename=productos.pdf');
+            // Configurar encabezado con logo
+            const logoPath = path.join(__dirname, '/img/logo/Logo_lerra.png'); // Reemplaza con la ruta correcta a tu logo
+            doc.image(logoPath, 50, 25, { width: 100 });
 
-            doc.pipe(res);
-
-            doc.fontSize(18).text('Lista de Productos', { align: 'center' });
-            doc.moveDown();
-
-            productos.forEach(producto => {
-                doc.fontSize(12).text(`Nombre: ${producto.nombre}`);
-                doc.text(`Precio: ${producto.precio}`);
-                doc.text(`Categoría: ${producto.categoria}`);
-                doc.text(`Descripción: ${producto.descripcion}`);
-                doc.moveDown();
+            // Establecer estilo para el título
+            doc.font('Helvetica-Bold').fontSize(18).text('Lista de Productos', {
+                align: 'center',
+                underline: true,
+                margin: 50
             });
 
             doc.end();
