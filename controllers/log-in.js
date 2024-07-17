@@ -33,6 +33,7 @@ router.post('/', async (req, res) => {
 
     if (result.success) {
         req.session.user = result.user; // Guardar usuario en la sesión
+        console.log('Sesión iniciada:', req.session.user); // Verificar en la consola del servidor
         res.json({ success: true, user: result.user });
     } else {
         res.status(400).json({ success: false, message: result.message });
