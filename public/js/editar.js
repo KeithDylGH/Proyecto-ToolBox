@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
             descripcion: formData.get('descripcion')
         };
 
+        console.log(data);
+
         try {
             const response = await fetch(`/api/admin/inventario/${productId}`, { // Asegúrate de que la ruta sea correcta
                 method: 'PUT',
