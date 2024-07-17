@@ -1,13 +1,12 @@
 // editar.js
 document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.getElementById('formulario');
-    const productId = formulario.getAttribute('data-id');
+    const productId = formulario.getAttribute('data-id'); // Obtener el data-id del formulario
 
     formulario.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         const formData = new FormData(formulario);
-        const productId = formulario.getAttribute('data-id');
 
         const data = {
             nombre: formData.get('nombre'),
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            });            
+            });
 
             if (!response.ok) {
                 throw new Error('Error al actualizar el producto');
