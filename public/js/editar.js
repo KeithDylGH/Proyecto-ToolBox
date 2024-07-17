@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(data);
 
         try {
-            const response = await fetch(`/api/admin/inventario/${productId}`, { // Asegúrate de que la ruta sea correcta
+            const response = await fetch(`/api/products/${productId}`, { 
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const result = await response.json();
-            
+
             // Mostrar notificación de éxito
             alert('Producto actualizado con éxito');
 
