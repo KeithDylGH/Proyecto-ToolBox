@@ -1,6 +1,7 @@
 // editar.js
 document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.getElementById('formulario');
+    const productId = formulario.getAttribute('data-id');
 
     formulario.addEventListener('submit', async function(event) {
         event.preventDefault();
