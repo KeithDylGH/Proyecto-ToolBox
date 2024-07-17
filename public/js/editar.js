@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const result = await response.json();
-
+            
             // Mostrar notificación de éxito
             alert('Producto actualizado con éxito');
 
