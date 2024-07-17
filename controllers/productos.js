@@ -57,7 +57,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 //No se lol
-router.put(`/api/admin/inventario/${Producto}`, async (req, res) => {
+router.put(`/admin/inventario/:id`, async (req, res) => {
     try {
         const { id } = req.params;
         const { nombre, precio, categoria, descripcion } = req.body;
