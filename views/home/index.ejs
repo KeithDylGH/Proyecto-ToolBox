@@ -31,7 +31,7 @@
           <div class="container-fluid">
               <a href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
-                      aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                  aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarScroll">
@@ -46,7 +46,6 @@
                           </a>
                           <ul class="dropdown-menu">
                               <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
-                              <!-- Otras categorías -->
                           </ul>
                       </li>
                       <li class="nav-item">
@@ -61,7 +60,7 @@
                       </li>
                       <% if (typeof CUsuario !== 'undefined') { %>
                           <li class="nav-item">
-                              <a class="nav-link link-light" id="username" href="/cuenta"><%= CUsuario.name %></a>
+                              <a class="nav-link link-light" id="username" href="/cliente"><%= CUsuario.usuario %></a>
                           </li>
                           <li class="nav-item">
                               <a class="nav-link link-light" id="logout" href="/logout">Cerrar sesión</a>
@@ -83,6 +82,7 @@
           </div>
       </nav>
   </header>
+  
   
 
     <div class="container">
