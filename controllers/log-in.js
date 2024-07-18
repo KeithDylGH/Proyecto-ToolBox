@@ -32,7 +32,10 @@ router.post('/', async (req, res) => {
     const result = await iniciarSesion(usuario, contraseña);
 
     if (result.success) {
-        req.session.user = result.user; // Guardar usuario en la sesión
+        req.session.user = {
+            username: result.user.nombre,
+            role: result.user.role
+        }; // Guardar usuario y rol en la sesión
         console.log('Sesión iniciada:', req.session.user); // Verificar en la consola del servidor
         res.json({ success: true, user: result.user });
     } else {
