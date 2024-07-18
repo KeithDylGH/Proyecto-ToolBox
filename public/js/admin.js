@@ -12,50 +12,47 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = '/admin/';
         });
     }
-});
 
-
-//INVENTARIO
-document.addEventListener('DOMContentLoaded', function(){
+    //INVENTARIO
     const irALaPaginaDeInv = document.getElementById('invPag');
 
-    irALaPaginaDeInv.addEventListener('click', function() {
-        window.location.href = '/admin/inventario/'
-    })
-})
-document.addEventListener('DOMContentLoaded', function(){
+    if (irALaPaginaDeInv) {
+        irALaPaginaDeInv.addEventListener('click', function() {
+            window.location.href = '/admin/inventario/';
+        });
+    }
+
     const addPro = document.getElementById('addBtn');
 
-    addPro.addEventListener('click', function() {
-        window.location.href = '/inventario/agregarproduto/'
-    })
-})
-document.addEventListener('DOMContentLoaded', function(){
+    if (addPro){
+        addPro.addEventListener('click', function() {
+            window.location.href = '/inventario/agregarproduto/'
+        })
+    }
+
     const verProducto = document.getElementById('verBtn');
 
-    verProducto.addEventListener('click', function() {
-        window.location.href = '/inventario/verproducto/'
-    })
-})
+    if (verProducto){
+        verProducto.addEventListener('click', function() {
+            window.location.href = '/inventario/verproducto/'
+        })
+    }
 
-document.addEventListener('DOMContentLoaded', function(){
     const PDFyExcel = document.getElementById('dBtn');
 
-    PDFyExcel.addEventListener('click', function() {
-        window.location.href = '/inventario/descargarInv/'
-    })
-})
+    if (PDFyExcel){
+        PDFyExcel.addEventListener('click', function() {
+            window.location.href = '/inventario/descargarInv/'
+        })
+    }
 
+});
 
-document.getElementById('logout').addEventListener('click', function(event) {
-    event.preventDefault(); // prevenir el comportamiento predeterminado del enlace
-    fetch('/logout', {
-        method: 'POST'
-    }).then(response => {
-        if (response.redirected) {
-            window.location.href = response.url; // redirigir a la página de inicio de sesión
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Error al cerrar sesión' });
         }
-    }).catch(error => {
-        console.error('Error al cerrar sesión:', error);
+        res.redirect('/');
     });
 });

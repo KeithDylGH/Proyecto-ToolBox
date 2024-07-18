@@ -43,15 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-document.getElementById('logout').addEventListener('click', function(event) {
-    event.preventDefault(); // prevenir el comportamiento predeterminado del enlace
-    fetch('/logout', {
-        method: 'POST'
-    }).then(response => {
-        if (response.redirected) {
-            window.location.href = response.url; // redirigir a la página de inicio de sesión
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Error al cerrar sesión' });
         }
-    }).catch(error => {
-        console.error('Error al cerrar sesión:', error);
+        res.redirect('/');
     });
 });
