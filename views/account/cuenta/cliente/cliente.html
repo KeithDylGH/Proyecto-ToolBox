@@ -4,11 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ToolBox - Cuenta/Cliente</title>
+  <title>ToolBox - Cuenta/Cliente/Configuracion</title>
 
   <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png">
+
   <link rel="stylesheet" href="/public/css/cuenta.css">
-  <link rel="stylesheet" href="/public/css/inicioCuenta.css">
+  <link rel="stylesheet" href="/public/css/configuration.css">
 
   <!--BOOTSTRAP-->
    <!--  <link rel="stylesheet" href="/bootstrap-5.3.3-dist/css/bootstrap.rtl.min.css">
@@ -32,13 +33,14 @@
       <div class="sidebar">
         <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
 
-        <a class="active sidebar_btn" href="#" id="client">Inicio</a>
+        <a href="#" id="client">Inicio</a>
         <a href="#general" id="pagBtn">Ir a la Pág. Principal</a>
         <a href="#carrito" id="carritoBtn">Carrito</a>
         <a href="#contacto" id="contactoBtn">Servicio al Cliente</a>
-        <a href="#configuracion" id="configuracionBtn">Configuración</a>
+        <a class="active sidebar_btn" href="#configuracion" id="configuracionBtn">Configuración</a>
 
-        <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>
+        <button class="Log-Out" id="logout"><a href="#">Cerrar sesion
+          </a></button>
       </div>
 
     </section>
@@ -47,108 +49,75 @@
       <div class="container">
         <div class="content">
 
+          <div class="conf">
 
-
-
-
-          <!--INICIO-->
-
-          <div class="inicio">
-            <div class="card bg-dark text-white" style="padding: 5rem;">
-              <div class="card-img-overlay" style="background-color: #5e3b3b;
-                                    background: rgb(94,59,59);
-                                    background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
-                <div class="welcomeMsg">
-                  
-                    <h3 class="card-title text-light">¡Bienvenido Usuario !</h3>
-                  
-                  
-                  <p class="card-text-overlay">Disfruta las funciones exclusivas de un cliente en ToolBox</p>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="d-flex justify-content-center">
-              <div class="card" style="width: 14rem; border-radius: .5rem;">
-                <div class="card-body">
-                  <h5 class="card-subtitle mb-2 mt-2">
-                    <img src="/img/icono/carrito de comprasN.png" alt="" width="50px">
-                    Carrito
-                  </h5>
-                  <p class="card-text">Mira los productos que añadiste a tu carrito</p>
-                  <a href="#" class="card-link">Entrar al carrito</a>
+            <div class="carrito">
+              <div class="card bg-dark text-white" style="padding: 5rem;">
+                <div class="card-img-overlay" style="background-color: #5e3b3b;
+                                background: rgb(94,59,59);
+                                background: linear-gradient(153deg, rgb(59, 85, 94) 25%, rgb(44, 52, 52) 100%);">
+                  <h3 class="card-title">Configuracion</h3>
+                  <p class="card-text-overlay">Configura tu cuenta y si quieres cambiar algo</p>
                 </div>
               </div>
 
-              <div class="card" style="width: 14rem; border-radius: .5rem;">
-                <div class="card-body">
-                  <h5 class="card-subtitle mb-2 mt-2">
-                    <img src="/img/icono/contactosN.png" alt="" width="50px">
-                    Contáctos
-                  </h5>
-                  <p class="card-text">Contáctanos en nuestro servicio al cliente</p>
-                  <a href="#" class="card-link">Entrar a contactos</a>
+              <div class="d-flex justify-content-center">
+                <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
+                  <div class="card-body">
+                    <h5 class="card-subtitle mb-2 mt-2">
+                      <img src="/public/img/icono/lapiz-de-usuario.png" alt="" width="50px">
+                      Cambiar Datos
+                    </h5>
+                    <p class="card-text">Cambia tu contraseña, usuario o correo</p>
+                    <a href="#" class="card-link">Cambiar datos de Usuario</a>
+                  </div>
                 </div>
+  
+                <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
+                  <div class="card-body">
+                    <h5 class="card-subtitle mb-2 mt-2">
+                      <img src="/public/img/icono/money-cheque-editar.png" alt="" width="50px">
+                      Cambiar Pagas
+                    </h5>
+                    <p class="card-text">Cambia tus datos de pagas, tarjetas, cuenta, etc</p>
+                    <a href="#" class="card-link">Cambiar datos de paga</a>
+                  </div>
+                </div>
+  
+                <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
+                  <div class="card-body">
+                    <h5 class="card-subtitle mb-2 mt-2">
+                      <img src="/public/img/icono/alt-administrador.png" alt="" width="50px">
+                      Avanzada
+                    </h5>
+                    <p class="card-text">Chequea tus datos actuales y otras funciones</p>
+                    <a href="#" class="card-link">Entrar a configuración avanzada</a>
+                  </div>
+                </div>
+  
               </div>
 
-              <div class="card" style="width: 14rem; border-radius: .5rem;">
-                <div class="card-body">
-                  <h5 class="card-subtitle mb-2 mt-2">
-                    <img src="/img/icono/configuracionN.png" alt="" width="50px">
-                    Configuración
-                  </h5>
-                  <p class="card-text">Configura tu cuenta, si quieres cambiar algo</p>
-                  <a href="#" class="card-link">Entrar a configuración</a>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="inicio-carrusel">
-              <h3>Tus ultimos 3 productos</h3>
-
-              <div class="historial">
+              
 
 
-                <div class="card-group">
-                  <div class="card card-general">
-                    <img class="card-img-top" src="/img/candados/candado anticizalla security 75mm.webp"
-                      alt="Card image cap">
-                    <div class="card-body card-body-update">
-                      <p class="card-text"><small>Last updated 3 mins ago</small></p>
                     </div>
                   </div>
-                  <div class="card card-general">
-                    <img class="card-img-top" src="/img/luz/E_led_reflectora_20w.webp" alt="Card image cap">
-                    <div class="card-body card-body-update">
-                      <p class="card-text"><small>Last updated 3 mins ago</small></p>
-                    </div>
-                  </div>
-                  <div class="card card-general">
-                    <img class="card-img-top" src="/img/escaleras/E 4.4mts telescopica A.webp" alt="Card image cap">
-                    <div class="card-body card-body-update">
-                      <p class="card-text"><small>Last updated 3 mins ago</small></p>
-                    </div>
-                  </div>
+
+
                 </div>
               </div>
 
 
             </div>
+
+
           </div>
+        </div>
 
 
     </section>
 
   </div>
-
-  <footer>
-    <div class="text-right p-3 text-muted" style="background-color:#2d1c1c; color: #fff;">
-      © 2024 Copyright:
-      <a class="link text-body" href="/views/home/index.html">ToolBox</a>
-    </div>
-  </footer>
 
   </div>
 

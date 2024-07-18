@@ -146,6 +146,11 @@ app.get('/cuenta/configuracion', (req, res) => {
     res.render('account/cuenta/cliente/configuracion');
 });
 
+app.get('/cuenta/configuracion/cambiar-datos', (req, res) => {
+    res.render('account/cuenta/cliente/configuracion/datos');
+});
+
+
 app.get('/cuenta/atencion', (req, res) => {
     res.render('account/cuenta/cliente/atencion');
 });
