@@ -1,18 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     const inventarioBtn = document.getElementById('inventarioBtn');
+    if (inventarioBtn) {
+        inventarioBtn.addEventListener('click', function() {
+            window.location.href = '/admin/inventario/';
+        });
+    }
 
-    inventarioBtn.addEventListener('click', function() {
-        window.location.href = '/admin/inventario/';
-    });
+    const paginaAdmin = document.getElementById('admin');
+    if (paginaAdmin) {
+        paginaAdmin.addEventListener('click', function() {
+            window.location.href = '/admin/';
+        });
+    }
 });
 
-document.addEventListener('DOMContentLoaded', function(){
-    const paginaAdmin = document.getElementById('admin');
-
-    paginaAdmin.addEventListener('click', function() {
-        window.location.href = '/admin/'
-    })
-})
 
 //INVENTARIO
 document.addEventListener('DOMContentLoaded', function(){
