@@ -33,6 +33,13 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = '/cuenta/configuracion/';
         });
     }
+
+    const btnDatos = document.getElementById('btnDatos');
+    if (btnDatos) {
+        btnDatos.addEventListener('click', function() {
+            window.location.href = '/cuenta/configuracion/cambiar-datos';
+        });
+    }
 });
 
 
