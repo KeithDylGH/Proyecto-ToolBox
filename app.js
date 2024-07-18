@@ -108,8 +108,13 @@ app.set('views', path.join(__dirname, 'views'));
 
 //RUTAS DE FRONTEND (EJS)
 app.get('/', (req, res) => {
-    res.render('home/index');
+    if (req.session.CUsuario) {
+        res.render('home/index', { CUsuario: req.session.CUsuario });
+    } else {
+        res.render('home/index', { CUsuario: undefined });
+    }
 });
+
 
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
 
