@@ -80,10 +80,14 @@ userRouter.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
 
-        // Generar token JWT para el usuario autenticado
-        //const token = generateToken(user.usuario, user._id);
+        // Guardar usuario en la sesión
+        req.session.user = {
+            id: user._id,
+            name: user.nombre,
+            role: user.rol
+        };
 
-        //res.json({ token });
+        res.redirect('/');
 
     } catch (error) {
         console.error('Error en el login:', error);
