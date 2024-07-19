@@ -103,16 +103,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Middleware para establecer el usuario en la plantilla EJS
+app.use((req, res, next) => {
+    res.locals.CUsuario = req.session.user || undefined;
+    next();
+});
+
 
 //app.use(express.static(path.join(__dirname, 'controllers')));
 
 //RUTAS DE FRONTEND (EJS)
 app.get('/', (req, res) => {
-    if (req.session.user) {
-        res.render('home/index', { CUsuario: req.session.user });
-    } else {
-        res.render('home/index', { CUsuario: undefined });
-    }
+    res.render('home/index');
 });
 
 

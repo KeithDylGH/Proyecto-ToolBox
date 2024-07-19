@@ -6,13 +6,6 @@ const User = require('../models/usuario'); // Importar el modelo de usuario
 
 const userRouter = express.Router();
 
-/* const generateToken = (usuario, userId) => {
-    return jwt.sign({
-        usuario,
-        userId
-    }, process.env.JWT_SECRET, { expiresIn: '1h' });
-}; */
-
 // Endpoint para registrar un nuevo usuario
 userRouter.post('/registrar', async (req, res) => {
     const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
@@ -41,14 +34,11 @@ userRouter.post('/registrar', async (req, res) => {
             password: hashedPassword,
             numero,
             cedula,
-            rol: rol || 'user'
+            rol: req.body.rol || 'user'
         });
 
         // Guardar el nuevo usuario en la base de datos
         await newUser.save();
-
-        // Generar token JWT para el nuevo usuario
-        //const token = generateToken(newUser.usuario, newUser._id);
 
         res.status(201).json({ mensaje: 'Usuario creado correctamente' });
 
