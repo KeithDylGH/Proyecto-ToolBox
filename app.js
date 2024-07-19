@@ -121,7 +121,7 @@ app.get('/', (req, res) => {
     // Suponiendo que tienes la información del usuario almacenada en req.session
     const usuario = req.session.usuario;
 
-    res.render('index', {
+    res.render('views/home', {
         CUsuario: usuario // Pasando el usuario a la vista
     });
 });
