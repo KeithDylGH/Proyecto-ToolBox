@@ -114,12 +114,7 @@ app.use((req, res, next) => {
 
 //RUTAS DE FRONTEND (EJS)
 app.get('/', (req, res) => {
-    // Suponiendo que tienes la información del usuario almacenada en req.session
-    const usuario = req.session.usuario;
-
-    res.render('home/index', {
-        CUsuario: usuario // Pasando el usuario a la vista
-    });
+    res.render('home/index');
 });
 
 
