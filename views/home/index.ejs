@@ -61,7 +61,7 @@
                       </li>
                       <% if (typeof CUsuario !== 'undefined') { %>
                         <li class="nav-item">
-                            <a class="nav-link link-light" id="username" href="<%= CUsuario.rol === 'admin' ? '/admin' : '/cliente' %>"><%= CUsuario.nombre %></a>
+                            <a class="nav-link link-light" id="username"><%= CUsuario.nombre %></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link link-light" id="logout" href="/logout">Cerrar sesión</a>
@@ -73,7 +73,7 @@
                         <li class="nav-item">
                             <a class="nav-link link-light" id="register" href="/registrar/">Registrarse</a>
                         </li>
-                    <% } %>                    
+                    <% } %>                                       
                   </ul>
                   <form class="d-flex" role="search">
                       <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
