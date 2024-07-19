@@ -41,7 +41,7 @@ userRouter.post('/registrar', async (req, res) => {
             password: hashedPassword,
             numero,
             cedula,
-            rol: 'user'
+            rol: rol || 'user'
         });
 
         // Guardar el nuevo usuario en la base de datos
@@ -80,11 +80,12 @@ userRouter.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
 
-        // Guardar usuario en la sesión
+        // Guardar el usuario en la sesión
         req.session.user = {
             id: user._id,
-            name: user.nombre,
-            role: user.rol
+            nombre: user.nombre,
+            usuario: user.usuario,
+            rol: user.rol
         };
 
         res.redirect('/');
