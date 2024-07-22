@@ -8,7 +8,7 @@ const usuarioSchema = new mongoose.Schema({
     },
     apellido: {
         type: String,
-        required: true,
+        required: true
     },
     usuario: {
         type: String,
@@ -28,7 +28,7 @@ const usuarioSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    cedula:{
+    cedula: {
         type: String,
         required: true,
         unique: true
@@ -36,9 +36,10 @@ const usuarioSchema = new mongoose.Schema({
     rol: {
         type: String,
         enum: ['user', 'admin', 'boss'],
-        default: true
+        default: 'user' // Asegúrate de que el valor por defecto sea correcto
     }
 });
+
 
 
 // Opcional: configurar opciones adicionales del esquema

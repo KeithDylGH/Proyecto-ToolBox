@@ -103,10 +103,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Middleware para establecer el usuario en la plantilla EJS
+// Middleware para exponer el usuario en res.locals
 app.use((req, res, next) => {
-    console.log('Usuario en sesión:', req.session.usuario); // Debugging
-    res.locals.CUsuario = req.session.usuario;
+    res.locals.CUsuario = req.session.user;
     next();
 });
 
