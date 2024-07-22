@@ -27,36 +27,24 @@ async function iniciarSesion(usuario, contraseña) {
     }
 }
 
+// Iniciar sesión
 router.post('/', async (req, res) => {
-    const { usuario, contraseña } = req.body;
-    const result = await iniciarSesion(usuario, contraseña);
-
-    if (result.success) {
-        req.session.user = {
-            username: result.user.nombre,
-            role: result.user.role
-        }; // Guardar usuario y rol en la sesión
-        console.log('Sesión iniciada:', req.session.user); // Verificar en la consola del servidor
-        res.json({ success: true, user: result.user });
-    } else {
-        res.status(400).json({ success: false, message: result.message });
-    }
-});
-
-// Ejemplo de controlador de inicio de sesión (loginRouter)
-router.post('/login', async (req, res) => {
     const { correo, password } = req.body;
     const user = await CUsuario.findOne({ correo });
 
     if (user && await bcrypt.compare(password, user.password)) {
-        req.session.user = user; // Guarda el usuario en la sesión
+        req.session.user = {
+            username: user.nombre,
+            role: user.role
+        };
+        console.log('Sesión iniciada:', req.session.user); // Verificar en la consola del servidor
         res.redirect('/'); // Redirige a la página principal o donde prefieras
     } else {
         res.redirect('/login'); // Redirige al login si el usuario no es válido
     }
 });
 
-
+// Cerrar sesión
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
