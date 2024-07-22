@@ -59,7 +59,7 @@
                           </div>
                       </li>
   
-                      <% if (CUsuario) { %>
+                      <% if (CUsuario && CUsuario.username) { %>
                           <li class="nav-item">
                               <span class="nav-link link-light"><%= CUsuario.username %></span>
                           </li>
@@ -83,7 +83,7 @@
               </div>
           </div>
       </nav>
-  </header>    
+  </header>     
 
     <div class="container">
       <section class="hero">
