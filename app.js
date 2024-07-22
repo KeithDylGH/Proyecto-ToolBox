@@ -105,7 +105,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware para establecer el usuario en la plantilla EJS
 app.use((req, res, next) => {
-    res.locals.CUsuario = req.session.user || undefined;
+    res.locals.CUsuario = req.session.usuario; // o la variable correspondiente que contiene los datos del usuario
     next();
 });
 
