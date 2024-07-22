@@ -43,6 +43,20 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Ejemplo de controlador de inicio de sesión (loginRouter)
+router.post('/login', async (req, res) => {
+    const { correo, password } = req.body;
+    const user = await CUsuario.findOne({ correo });
+
+    if (user && await bcrypt.compare(password, user.password)) {
+        req.session.user = user; // Guarda el usuario en la sesión
+        res.redirect('/'); // Redirige a la página principal o donde prefieras
+    } else {
+        res.redirect('/login'); // Redirige al login si el usuario no es válido
+    }
+});
+
+
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
