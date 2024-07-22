@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { buscarUsuarioPorNombre } = require('./buscarUsuario');
 const session = require('express-session');
 
-/* async function iniciarSesion(usuario, contraseña) {
+async function iniciarSesion(usuario, contraseña) {
     try {
         const user = await buscarUsuarioPorNombre(usuario);
 
@@ -25,7 +25,7 @@ const session = require('express-session');
         console.error('Error al iniciar sesión:', error);
         return { success: false, message: 'Error en el servidor' };
     }
-} */
+}
 
 // Iniciar sesión
 router.post('/', async (req, res) => {
