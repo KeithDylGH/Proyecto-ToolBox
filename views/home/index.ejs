@@ -27,54 +27,61 @@
   </head>
   <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#"><img src="/img/logo/Logo Letra trazo.png" alt="Logo" class="w-25"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarScroll">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Inicio</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Categoría
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                                <a class="dropdown-item" href="#">Cabeza</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <img src="/img/icono/carrito de compras.png" alt="Carrito" class="carrito-icon">
-                            </a>
-                        </li>
-                        <% if (typeof CUsuario !== 'undefined') { %>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/cliente"><%= CUsuario.usuario %></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/logout">Cerrar sesión</a>
-                            </li>
-                        <% } else { %>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/login">Iniciar sesión</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/registrar">Registrarse</a>
-                            </li>
-                        <% } %>
-                    </ul>
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Busca aquí" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
-    </header>
+      <nav class="navbar navbar-expand-lg navbar-light">
+          <div class="container-fluid">
+              <a href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                  aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarScroll">
+                  <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
+                      <li class="nav-item">
+                          <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
+                      </li>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle link-light" href="#" role="button"
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                              Categoría
+                          </a>
+                          <ul class="dropdown-menu">
+                              <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
+                          </ul>
+                      </li>
+                      <li class="nav-item">
+                          <div class="carro">
+                              <a href="#" class="carrito">
+                                  <img src="/img/icono/carrito de compras.png" alt="carrito" />
+                              </a>
+                              <div class="carro-dropdown">
+                                  <button>Vaciar Carrito</button>
+                              </div>
+                          </div>
+                      </li>
+                      <% if (typeof CUsuario !== 'undefined') { %>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="username" href="/cliente"><%= CUsuario.usuario %></a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="logout" href="/logout">Cerrar sesión</a>
+                          </li>
+                      <% } else { %>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="login" href="/login/">Iniciar sesión</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="register" href="/registrar/">Registrarse</a>
+                          </li>
+                      <% } %>
+                  </ul>
+                  <form class="d-flex" role="search">
+                      <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
+                      <button class="btn btn-outline-success" type="submit">Buscar</button>
+                  </form>
+              </div>
+          </div>
+      </nav>
+  </header>
   
 
   
