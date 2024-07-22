@@ -334,14 +334,6 @@ app.post('/api/productos/agregar', async (req, res) => {
     }
 });
 
-app.post('/login', (req, res) => {
-    // Lógica de autenticación
-    req.session.usuario = usuarioAutenticado; // Asigna el usuario a la sesión
-    res.redirect('/');
-});
-
-
-
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter);
 app.use('/api/login',loginRouter);
