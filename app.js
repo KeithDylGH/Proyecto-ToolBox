@@ -105,9 +105,11 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware para establecer el usuario en la plantilla EJS
 app.use((req, res, next) => {
-    res.locals.CUsuario = req.session.usuario; // o la variable correspondiente que contiene los datos del usuario
+    console.log('Usuario en sesión:', req.session.usuario); // Debugging
+    res.locals.CUsuario = req.session.usuario;
     next();
 });
+
 
 
 //app.use(express.static(path.join(__dirname, 'controllers')));
@@ -331,6 +333,13 @@ app.post('/api/productos/agregar', async (req, res) => {
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
+
+app.post('/login', (req, res) => {
+    // Lógica de autenticación
+    req.session.usuario = usuarioAutenticado; // Asigna el usuario a la sesión
+    res.redirect('/');
+});
+
 
 
 //RUTAS DE BACKEND

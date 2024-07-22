@@ -58,7 +58,7 @@
                               </div>
                           </div>
                       </li>
-                      <% if (typeof CUsuario !== 'undefined') { %>
+                      <% if (typeof CUsuario !== 'undefined' && CUsuario) { %>
                           <li class="nav-item">
                               <a class="nav-link link-light" id="username" href="/cliente"><%= CUsuario.usuario %></a>
                           </li>
@@ -82,6 +82,7 @@
           </div>
       </nav>
   </header>
+  
 
 
 
