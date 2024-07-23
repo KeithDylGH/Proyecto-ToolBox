@@ -1,8 +1,8 @@
 require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path');
+const express = require('express')
+const mongoose = require('mongoose')
+const fs = require('fs')
+const path = require('path')
 const userRouter = require('./controllers/usuarios');
 const productoRouter = require('./controllers/productos');
 const loginRouter = require('./controllers/log-in');
@@ -19,9 +19,10 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
-const app = express();
+const app = express()
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
+
 
 mongoose.connect(mongoUri).then(() => {
     console.log('Base de Datos conectada!');
@@ -57,6 +58,7 @@ mongoose.connect(mongoUri).then(() => {
             }
 
             // Insertar usuarios en la base de datos
+            //await CUsuario.insertMany(users);
             console.log('Datos importados correctamente.');
 
         } catch (error) {
@@ -75,6 +77,7 @@ mongoose.connect(mongoUri).then(() => {
     console.error('Error al conectar con MongoDB:', err);
 });
 
+
 // Middleware para cookies y sesiones
 app.use(cookieParser('tu_secreto_secreto'));
 app.use(session({
@@ -92,6 +95,7 @@ app.use(session({
     }
 }));
 
+
 // Configuración de archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -106,16 +110,17 @@ app.use((req, res, next) => {
     next();
 });
 
-// Configurar middleware para el manejo de JSON y URL encoded
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+
+//app.use(express.static(path.join(__dirname, 'controllers')));
 
 //RUTAS DE FRONTEND (EJS)
 app.get('/', (req, res) => {
     res.render('home/index');
 });
 
-app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
+
+app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
 
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
@@ -127,7 +132,7 @@ app.get('/logout', (req, res) => {
     });
 });
 
-app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
+app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
 
 app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
@@ -148,6 +153,7 @@ app.get('/cuenta/configuracion', (req, res) => {
 app.get('/cuenta/configuracion/cambiar-datos', (req, res) => {
     res.render('account/cuenta/cliente/configuracion/datos');
 });
+
 
 app.get('/cuenta/atencion', (req, res) => {
     res.render('account/cuenta/cliente/atencion');
@@ -261,34 +267,76 @@ app.get('/api/descargar-inventario', async (req, res) => {
                 doc.text(`Precio: ${producto.precio}`);
                 doc.text(`Categoría: ${producto.categoria}`);
                 doc.text(`Descripción: ${producto.descripcion}`);
-                doc.moveDown(); // Espacio entre productos
+                doc.moveDown();
             });
 
+            // Finalizar y enviar el documento PDF
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', 'attachment; filename=productos.pdf');
-
             doc.pipe(res);
             doc.end();
         }
     } catch (error) {
-        console.error('Error al generar el inventario:', error);
-        res.status(500).send('Error al generar el inventario');
+        console.error(`Error al generar el archivo ${format.toUpperCase()}:`, error);
+        if (!res.headersSent) {
+            res.status(500).send(`Error al generar el archivo ${format.toUpperCase()}`);
+        }
     }
 });
 
-//RUTAS DE API
-app.use('/api', userRouter);
-app.use('/api', productoRouter);
-app.use('/api', loginRouter);
+app.get('/inventario/descargar/pdf', async (req, res) => {
+    try {
+        const productos = await iProducto.find();
 
-// Manejo de errores
-app.use((req, res, next) => {
-    res.status(404).render('errors/404');
+        const doc = new PDF();
+
+        res.render('account/cuenta/admin/pdfYExcel', { productos });
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=productos.pdf');
+
+        doc.pipe(res);
+
+        doc.fontSize(18).text('Lista de Productos', { align: 'center' });
+        doc.moveDown();
+
+        productos.forEach(producto => {
+            doc.fontSize(12).text(`Nombre: ${producto.nombre}`);
+            doc.text(`Precio: ${producto.precio}`);
+            doc.text(`Categoría: ${producto.categoria}`);
+            doc.text(`Descripción: ${producto.descripcion}`);
+            doc.moveDown();
+        });
+
+        doc.end();
+    } catch (error) {
+        console.error('Error al generar el archivo PDF:', error);
+        res.status(500).send('Error al generar el archivo PDF');
+    }
 });
 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render('errors/500');
+//SUPER IMPORTANTE
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Ruta para agregar productos a MongoDB
+app.post('/api/productos/agregar', async (req, res) => {
+    try {
+        const { nombre, precio, categoria, descripcion } = req.body;
+
+        const nuevoProducto = new iProducto({ nombre, precio, categoria, descripcion });
+        await nuevoProducto.save();
+
+        res.status(201).json({ message: 'Producto agregado con éxito' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al agregar el producto' });
+    }
 });
 
-module.exports = app;
+//RUTAS DE BACKEND
+app.use('/api/users',userRouter);
+app.use('/api/login',loginRouter);
+app.use('/api/products', productoRouter);
+
+module.exports = app
