@@ -58,34 +58,29 @@
                               </div>
                           </div>
                       </li>
-  
+    
                       <% if (CUsuario && CUsuario.usuario) { %>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" href="<% if (CUsuario.rol === 'admin') { %>/admin<% } else { %>/cliente<% } %>">
-                                <%= CUsuario.usuario %>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" href="/api/login/logout">Cerrar sesión</a>
-                        </li>
-                    <% } else { %>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
-                        </li>
-                    <% } %>                                       
-  
+                          <li class="nav-item">
+                              <a class="nav-link link-light" href="<% if (CUsuario.rol === 'admin') { %>/admin<% } else { %>/cliente<% } %>">
+                                  <%= CUsuario.usuario %>
+                              </a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
+                          </li>
+                      <% } else { %>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
+                          </li>
+                      <% } %>
                   </ul>
-                  <form class="d-flex" role="search">
-                      <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
-                      <button class="btn btn-outline-success" type="submit">Buscar</button>
-                  </form>
               </div>
           </div>
       </nav>
-  </header>      
+  </header>        
 
     <div class="container">
       <section class="hero">
