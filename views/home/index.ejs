@@ -59,24 +59,22 @@
                           </div>
                       </li>
   
-                      <% if (CUsuario && CUsuario.username) { %>
+                      <% if (CUsuario) { %>
                           <li class="nav-item">
-                              <a class="nav-link link-light" href="<%= CUsuario.role === 'admin' ? '/admin' : '/cliente' %>">
-                                  <%= CUsuario.username %>
-                              </a>
+                              <span class="nav-link link-light">Hola, <%= CUsuario.nombre %></span>
                           </li>
                           <li class="nav-item">
-                              <a class="nav-link link-light" href="/api/login/logout">Cerrar sesión</a>
+                              <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
                           </li>
                       <% } else { %>
                           <li class="nav-item">
-                              <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
+                              <a class="nav-link link-light" id="login" href="/login/">Iniciar sesión</a>
                           </li>
                           <li class="nav-item">
-                              <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
+                              <a class="nav-link link-light" id="register" href="/registrar/">Registrarse</a>
                           </li>
                       <% } %>
-  
+                  
                   </ul>
                   <form class="d-flex" role="search">
                       <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
@@ -85,7 +83,7 @@
               </div>
           </div>
       </nav>
-  </header> 
+  </header>   
 
     <div class="container">
       <section class="hero">
