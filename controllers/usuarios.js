@@ -53,15 +53,18 @@ userRouter.post('/login', async (req, res) => {
     const { usuario, password } = req.body;
 
     try {
+        // Verificar si el usuario y la contraseña están presentes
         if (!usuario || !password) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
-        const user = await CUsuario.findOne({ usuario });
+        // Buscar usuario por nombre de usuario
+        const user = await User.findOne({ usuario });
         if (!user) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
 
+        // Comparar la contraseña ingresada con la almacenada en la base de datos
         const passwordCorrecto = await bcrypt.compare(password, user.password);
         if (!passwordCorrecto) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
