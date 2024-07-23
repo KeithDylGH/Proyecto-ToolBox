@@ -24,7 +24,7 @@ loginBtn.addEventListener('submit', async e => {
     console.log('Click');
 });
 
-// log-in.js en el frontend
+// Form login
 const loginForm = document.querySelector('#loginForm');
 
 loginForm.addEventListener('submit', async (e) => {
@@ -39,20 +39,10 @@ loginForm.addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ correo: usuario, password })
+            body: JSON.stringify({ usuario, contraseña: password })
         });
 
-        // Verificar la respuesta del servidor
-        const text = await response.text(); // Obtén la respuesta como texto para depurar
-        console.log('Respuesta del servidor:', text); // Agrega el log
-
-        let data;
-        try {
-            data = JSON.parse(text); // Intenta parsear la respuesta como JSON
-        } catch (e) {
-            console.error('Error al parsear JSON:', e); // Muestra el error si no es JSON válido
-            return;
-        }
+        const data = await response.json();
 
         const notification = document.querySelector('.notification');
 
@@ -79,14 +69,14 @@ loginForm.addEventListener('submit', async (e) => {
         }
     } catch (error) {
         console.error('Error:', error);
-        const notification = document.querySelector('.notification');
-        notification.textContent = 'Usuario o clave incorrecta';
-        notification.classList.add('alert', 'alert-danger');
+            const notification = document.querySelector('.notification');
+            notification.textContent = 'Usuario o clave incorrecta';
+            notification.classList.add('alert', 'alert-danger');
 
-        // Desaparecer la notificación después de 3 segundos
-        setTimeout(() => {
-            notification.textContent = '';
-            notification.classList.remove('alert', 'alert-danger');
-        }, 3000);
-    }
+            // Desaparecer la notificación después de 3 segundos
+            setTimeout(() => {
+                notification.textContent = '';
+                notification.classList.remove('alert', 'alert-danger');
+            }, 3000);
+        }
 });
