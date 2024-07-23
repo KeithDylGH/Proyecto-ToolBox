@@ -105,12 +105,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware para exponer el usuario en res.locals
 app.use((req, res, next) => {
-    console.log('Usuario en session:', req.session.user = {
-        id: user._id,
-        nombre: user.nombre,
-        usuario: user.usuario,
-        rol: user.rol // Asegúrate de que esto tenga el valor correcto
-    }); // Para depuración
+    console.log('Usuario en session:', req.session.user); // Para depuración
     res.locals.CUsuario = req.session.user; // Exponer el usuario en res.locals
     next();
 });
