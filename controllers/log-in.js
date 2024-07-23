@@ -29,8 +29,8 @@ async function iniciarSesion(usuario, contraseña) {
 
 // Iniciar sesión
 router.post('/', async (req, res) => {
-    const { correo, password } = req.body;
-    const user = await CUsuario.findOne({ correo });
+    const { usuario, password } = req.body;
+    const user = await CUsuario.findOne({ usuario });
 
     if (user && await bcrypt.compare(password, user.password)) {
         req.session.user = {
@@ -45,8 +45,8 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const { correo, password } = req.body;
-    const user = await CUsuario.findOne({ correo });
+    const { usuario, password } = req.body;
+    const user = await CUsuario.findOne({ usuario });
 
     if (user && await bcrypt.compare(password, user.password)) {
         req.session.user = {
