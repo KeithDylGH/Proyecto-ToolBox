@@ -105,7 +105,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware para exponer el usuario en res.locals
 app.use((req, res, next) => {
-    res.locals.CUsuario = req.session.usuario || null;
+    console.log('Usuario en session:', req.session.user); // Para depuración
+    res.locals.CUsuario = req.session.user;
     next();
 });
 
@@ -122,13 +123,14 @@ app.get('/', (req, res) => {
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
 
 app.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-      if (err) {
-        return res.status(500).send('Error al cerrar sesión');
-      }
-      res.redirect('/');
+    req.session.destroy((err) => {
+        if (err) {
+            return res.redirect('/');
+        }
+        res.clearCookie('connect.sid');
+        res.redirect('/login');
     });
-  });
+});
 
 app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
 
