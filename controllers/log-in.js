@@ -46,25 +46,19 @@ router.post('/', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { correo, password } = req.body;
-    try {
-        const user = await CUsuario.findOne({ correo });
+    const user = await CUsuario.findOne({ correo });
 
-        if (user && await bcrypt.compare(password, user.password)) {
-            req.session.user = {
-                username: user.nombre,
-                role: user.rol
-            };
-            console.log('Sesión iniciada:', req.session.user);
-            res.redirect('/'); // Redirige a la página principal o donde prefieras
-        } else {
-            res.redirect('/login'); // Redirige al login si el usuario no es válido
-        }
-    } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        res.redirect('/login');
+    if (user && await bcrypt.compare(password, user.password)) {
+        req.session.user = {
+            username: user.nombre,  // Guardar el nombre del usuario
+            role: user.rol // Guardar el rol del usuario
+        };
+        console.log('Sesión iniciada:', req.session.user); // Verificar en la consola del servidor
+        res.redirect('/'); // Redirige a la página principal o donde prefieras
+    } else {
+        res.redirect('/login'); // Redirige al login si el usuario no es válido
     }
 });
-
 
 
 // Cerrar sesión
