@@ -61,7 +61,7 @@
   
                       <% if (CUsuario && CUsuario.username) { %>
                           <li class="nav-item">
-                              <a class="nav-link link-light" href="<%= CUsuario.role === 'admin' ? '/admin' : '/cliente' %>">
+                              <a class="nav-link link-light" href="<%= CUsuario.rol === 'admin' ? '/admin' : '/cliente' %>">
                                   <%= CUsuario.username %>
                               </a>
                           </li>
