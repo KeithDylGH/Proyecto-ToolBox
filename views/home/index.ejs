@@ -27,64 +27,64 @@
   </head>
   <body>
     <header>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-            <a href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
-                aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarScroll">
-                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
-                    <li class="nav-item">
-                        <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle link-light" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Categoría
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <div class="carro">
-                            <a href="#" class="carrito">
-                                <img src="/img/icono/carrito de compras.png" alt="carrito" />
-                            </a>
-                            <div class="carro-dropdown">
-                                <button>Vaciar Carrito</button>
-                            </div>
-                        </div>
-                    </li>
-
-                    <% if (CUsuario) { %>
-                        <li class="nav-item">
-                            <span class="nav-link link-light"><%= CUsuario.username %></span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" href="/api/login/logout">Cerrar sesión</a>
-                        </li>
-                    <% } else { %>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
-                        </li>
-                    <% } %>
-
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Buscar</button>
-                </form>
-            </div>
-        </div>
-    </nav>
-</header>
+      <nav class="navbar navbar-expand-lg navbar-light">
+          <div class="container-fluid">
+              <a href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                  aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarScroll">
+                  <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
+                      <li class="nav-item">
+                          <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
+                      </li>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle link-light" href="#" role="button"
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                              Categoría
+                          </a>
+                          <ul class="dropdown-menu">
+                              <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
+                          </ul>
+                      </li>
+                      <li class="nav-item">
+                          <div class="carro">
+                              <a href="#" class="carrito">
+                                  <img src="/img/icono/carrito de compras.png" alt="carrito" />
+                              </a>
+                              <div class="carro-dropdown">
+                                  <button>Vaciar Carrito</button>
+                              </div>
+                          </div>
+                      </li>
   
+                      <% if (CUsuario && CUsuario.username) { %>
+                          <li class="nav-item">
+                              <span class="nav-link link-light"><%= CUsuario.username %></span>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" href="/api/login/logout">Cerrar sesión</a>
+                          </li>
+                      <% } else { %>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
+                          </li>
+                      <% } %>
+  
+                  </ul>
+                  <form class="d-flex" role="search">
+                      <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
+                      <button class="btn btn-outline-success" type="submit">Buscar</button>
+                  </form>
+              </div>
+          </div>
+      </nav>
+  </header>
+      
 
     <div class="container">
       <section class="hero">
