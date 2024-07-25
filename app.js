@@ -109,10 +109,13 @@ app.use((req, res, next) => {
 
 //app.use(express.static(path.join(__dirname, 'controllers')));
 
+// Rutas y middleware
+app.use('/', require('./routes/usuarios'));
+
+
 //RUTAS DE FRONTEND (EJS)
 app.get('/', (req, res) => {
-    const CUsuario = req.session.usuario; // o como sea que obtengas el usuario de la sesión
-    console.log('CUsuario:', CUsuario); // Verifica qué datos contiene
+    const CUsuario = req.session.user; // Asegúrate de que el campo sea el correcto
     res.render('home/index', { CUsuario });
 });
 
