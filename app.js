@@ -105,9 +105,14 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware para exponer el usuario en res.locals
 app.use((req, res, next) => {
-    res.locals.CUsuario = req.session.usuario;
+    if (req.session.usuario) {
+        res.locals.CUsuario = req.session.usuario;
+    } else {
+        res.locals.CUsuario = null;
+    }
     next();
 });
+
 
 //app.use(express.static(path.join(__dirname, 'controllers')));
 

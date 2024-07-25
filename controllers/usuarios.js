@@ -50,39 +50,35 @@ userRouter.post('/registrar', async (req, res) => {
 
 // Endpoint para realizar login
 userRouter.post('/login', async (req, res) => {
-    const { usuario, password } = req.body;
-
     try {
-        // Verificar si el usuario y la contraseña están presentes
-        if (!usuario || !password) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
-        }
+        const { username, password } = req.body;
+        const user = await CUsuario.findOne({ usuario: username });
 
-        // Buscar usuario por nombre de usuario
-        const user = await User.findOne({ usuario });
+        console.log('Usuario recuperado:', user);
+
         if (!user) {
-            return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
+            return res.status(400).send('Usuario no encontrado');
         }
 
-        // Comparar la contraseña ingresada con la almacenada en la base de datos
-        const passwordCorrecto = await bcrypt.compare(password, user.password);
-        if (!passwordCorrecto) {
-            return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(400).send('Contraseña incorrecta');
         }
 
-        // Guardar el usuario en la sesión
-        req.session.user = {
-            id: user._id,
-            nombre: user.nombre,
-            usuario: user.usuario,
-            rol: user.rol
+        req.session.usuario = {
+            username: user.usuario,
+            role: user.rol,
+            nombre: user.nombre
         };
 
-        res.redirect('/');
+        console.log('Usuario encontrado exitosamente.');
+        console.log('Sesión iniciada:', req.session.usuario);
 
+        res.redirect('/home'); // Ajusta la ruta de redirección según sea necesario
     } catch (error) {
-        console.error('Error en el login:', error);
-        res.status(500).json({ error: 'Error en el servidor' });
+        console.error(error);
+        res.status(500).send('Error del servidor');
     }
 });
 
