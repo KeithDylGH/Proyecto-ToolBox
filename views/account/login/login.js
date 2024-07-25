@@ -23,9 +23,9 @@ loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const usuario = document.querySelector('#usuario').value.trim();
-    const password = document.querySelector('#password').value.trim();
+    const contraseña = document.querySelector('#password').value.trim();
 
-    if (!usuario || !password) {
+    if (!usuario || !contraseña) {
         const notification = document.querySelector('.notification');
         notification.textContent = 'Por favor, complete todos los campos.';
         notification.classList.add('alert', 'alert-danger');
@@ -44,7 +44,7 @@ loginForm.addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ usuario, password }) // Asegúrate de que estos nombres coincidan
+            body: JSON.stringify({ usuario, contraseña }) // Asegúrate de que estos nombres coincidan
         });
 
         const data = await response.json();
