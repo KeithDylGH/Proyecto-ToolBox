@@ -105,20 +105,18 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware para exponer el usuario en res.locals
 app.use((req, res, next) => {
-    if (req.session.user) {
-        res.locals.CUsuario = req.session.user;
-    }
+    res.locals.CUsuario = req.session.usuario;
     next();
 });
-
-
 
 //app.use(express.static(path.join(__dirname, 'controllers')));
 
 //RUTAS DE FRONTEND (EJS)
 app.get('/', (req, res) => {
-    res.render('home/index');
+    const CUsuario = req.session.usuario; // o como sea que obtengas el usuario de la sesión
+    res.render('home/index', { CUsuario });
 });
+
 
 
 app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
