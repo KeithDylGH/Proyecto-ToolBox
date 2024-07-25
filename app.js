@@ -81,10 +81,10 @@ mongoose.connect(mongoUri).then(() => {
 // Middleware para cookies y sesiones
 app.use(cookieParser('tu_secreto_secreto'));
 app.use(session({
-    secret: 'your_secret_key',
+    secret: 'tu_secreto_secreto',
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/tu_base_de_datos' }),
+    store: MongoStore.create({ mongoUrl: mongoUri }),
     cookie: { secure: false } // Cambia a true si usas HTTPS
 }));
 
