@@ -85,7 +85,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: mongoUri }),
-    cookie: { secure: false } // Cambia a true si usas HTTPS
+    cookie: { secure: true } // Cambia a true si usas HTTPS
 }));
 
 
