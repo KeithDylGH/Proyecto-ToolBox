@@ -58,23 +58,24 @@
                               </div>
                           </div>
                       </li>
-                      <li class="nav-item">
                         <% if (CUsuario) { %>
-                            <a class="nav-link link-light" href="<%= CUsuario.role === 'admin' ? '/admin' : '/cliente' %>">
-                                <%= CUsuario.nombre %>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
-                        </li>
-                    <% } else { %>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" id="login" href="/login/">Iniciar sesión</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link link-light" id="register" href="/registrar/">Registrarse</a>
-                        </li>
-                    <% } %>                                        
+                          <li class="nav-item">
+                              <a class="nav-link link-light" href="<%= CUsuario.rol === 'admin' ? '/admin' : '/cliente' %>">
+                                  <%= CUsuario.nombre %>
+                              </a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
+                          </li>
+                      <% } else { %>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
+                          </li>
+                      <% } %>
+                                                                                                      
                   </ul>
                   <form class="d-flex" role="search">
                       <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">

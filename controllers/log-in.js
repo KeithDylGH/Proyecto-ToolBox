@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { buscarUsuarioPorNombre } = require('./buscarUsuario');
-const session = require('express-session');
+const User = require('../models/usuario'); // Asegúrate de importar el modelo correctamente
 
+// Función para iniciar sesión
 async function iniciarSesion(usuario, contraseña) {
     try {
-        const user = await buscarUsuarioPorNombre(usuario);
-
-        console.log('Usuario recuperado:', user); // Verifica que el usuario tenga los campos necesarios
+        const user = await User.findOne({ usuario });
 
         if (!user) {
             console.log("No existe el usuario.");
@@ -29,29 +27,32 @@ async function iniciarSesion(usuario, contraseña) {
     }
 }
 
+// Ruta para manejar el inicio de sesión
 router.post('/', async (req, res) => {
     const { usuario, contraseña } = req.body;
     const result = await iniciarSesion(usuario, contraseña);
 
     if (result.success) {
         req.session.user = {
-            username: result.user.usuario,
-            role: result.user.rol, // Asegúrate de que 'rol' esté correctamente asignado
-            nombre: result.user.nombre // Asegúrate de que 'nombre' esté correctamente asignado
-        }; 
+            nombre: result.user.nombre,
+            usuario: result.user.usuario,
+            rol: result.user.rol // Asegúrate de que 'rol' esté correctamente asignado
+        };
         console.log('Sesión iniciada:', req.session.user); // Verificar en la consola del servidor
-        res.json({ success: true, user: result.user });
+        res.redirect('/'); // Redirige a la página principal
     } else {
         res.status(400).json({ success: false, message: result.message });
     }
 });
 
+// Ruta para manejar el cierre de sesión
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Error al cerrar sesión' });
         }
-        res.redirect('/');
+        res.clearCookie('connect.sid'); // Asegúrate de que el nombre de la cookie sea correcto
+        res.redirect('/'); // Redirige a la página principal después del cierre de sesión
     });
 });
 
