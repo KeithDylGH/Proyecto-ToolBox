@@ -1,7 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/usuario'); // Importar el modelo de usuario
-const { buscarUsuarioPorNombre } = require('./buscarUsuarios'); // Asegúrate de que la ruta sea correcta
 
 const userRouter = express.Router();
 
