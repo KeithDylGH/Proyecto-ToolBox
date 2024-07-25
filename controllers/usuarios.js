@@ -67,7 +67,7 @@ userRouter.post('/login', async (req, res) => {
             rol: user.rol
         };
 
-        res.redirect('/');
+        res.status(200).json({ message: 'Inicio de sesión exitoso', user: req.session.user });
 
     } catch (error) {
         console.error('Error en el login:', error);

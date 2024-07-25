@@ -40,8 +40,6 @@ const usuarioSchema = new mongoose.Schema({
     }
 });
 
-
-
 // Opcional: configurar opciones adicionales del esquema
 usuarioSchema.set('toJSON', {
     transform: (document, returnedObject) => {
