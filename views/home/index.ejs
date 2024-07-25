@@ -58,23 +58,37 @@
                               </div>
                           </div>
                       </li>
-                        <% if (CUsuario) { %>
-                          <li class="nav-item">
-                              <a class="nav-link link-light" href="<%= CUsuario.rol === 'admin' ? '/admin' : '/cliente' %>">
-                                  <%= CUsuario.nombre %>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
-                          </li>
-                      <% } else { %>
-                          <li class="nav-item">
-                              <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
-                          </li>
-                      <% } %>
+                      <% if (CUsuario) { %>
+                        <!-- Si CUsuario está definido (es decir, el usuario está autenticado) -->
+                        <li class="nav-item">
+                            <!-- Determina el enlace basado en el rol del usuario -->
+                            <% if (CUsuario.rol === 'admin') { %>
+                                <!-- Si el rol es 'admin', el enlace será '/admin' -->
+                                <a class="nav-link link-light" href="/admin">
+                                    <%= CUsuario.nombre %>
+                                </a>
+                            <% } else { %>
+                                <!-- Si el rol no es 'admin', el enlace será '/cliente' -->
+                                <a class="nav-link link-light" href="/cliente">
+                                    <%= CUsuario.nombre %>
+                                </a>
+                            <% } %>
+                        </li>
+                        <li class="nav-item">
+                            <!-- Enlace para cerrar sesión -->
+                            <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
+                        </li>
+                    <% } else { %>
+                        <!-- Si CUsuario no está definido (es decir, el usuario no está autenticado) -->
+                        <li class="nav-item">
+                            <!-- Enlace para iniciar sesión -->
+                            <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
+                        </li>
+                        <li class="nav-item">
+                            <!-- Enlace para registrarse -->
+                            <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
+                        </li>
+                    <% } %>
                                                                                                       
                   </ul>
                   <form class="d-flex" role="search">
