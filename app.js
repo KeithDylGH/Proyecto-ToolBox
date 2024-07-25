@@ -81,18 +81,10 @@ mongoose.connect(mongoUri).then(() => {
 // Middleware para cookies y sesiones
 app.use(cookieParser('tu_secreto_secreto'));
 app.use(session({
-    secret: 'tu_secreto_secreto',
+    secret: 'your_secret_key',
     resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: mongoUri,
-        collectionName: 'sessions'
-    }),
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24, // 1 día
-        secure: false,
-        httpOnly: true
-    }
+    saveUninitialized: true,
+    cookie: { secure: false } // Cambia a true si usas HTTPS
 }));
 
 
@@ -105,8 +97,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware para exponer el usuario en res.locals
 app.use((req, res, next) => {
-    if (req.session.usuario) {
-        res.locals.CUsuario = req.session.usuario;
+    if (req.session.user) {
+        res.locals.CUsuario = req.session.user;
     } else {
         res.locals.CUsuario = null;
     }

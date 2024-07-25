@@ -8,6 +8,8 @@ async function iniciarSesion(usuario, contraseña) {
     try {
         const user = await buscarUsuarioPorNombre(usuario);
 
+        console.log('Usuario recuperado:', user); // Verifica que el usuario tenga los campos necesarios
+
         if (!user) {
             console.log("No existe el usuario.");
             return { success: false, message: 'Usuario no encontrado' };
@@ -33,9 +35,10 @@ router.post('/', async (req, res) => {
 
     if (result.success) {
         req.session.user = {
-            username: result.user.nombre,
-            role: result.user.role
-        }; // Guardar usuario y rol en la sesión
+            username: result.user.usuario,
+            role: result.user.rol, // Asegúrate de que 'rol' esté correctamente asignado
+            nombre: result.user.nombre // Asegúrate de que 'nombre' esté correctamente asignado
+        }; 
         console.log('Sesión iniciada:', req.session.user); // Verificar en la consola del servidor
         res.json({ success: true, user: result.user });
     } else {
