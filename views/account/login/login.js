@@ -33,6 +33,19 @@ loginForm.addEventListener('submit', async (e) => {
     const usuario = document.querySelector('#usuario').value;
     const password = document.querySelector('#password').value;
 
+    if (!usuario || !password) {
+        const notification = document.querySelector('.notification');
+        notification.textContent = 'Por favor, complete todos los campos.';
+        notification.classList.add('alert', 'alert-danger');
+
+        setTimeout(() => {
+            notification.textContent = '';
+            notification.classList.remove('alert', 'alert-danger');
+        }, 3000);
+
+        return;
+    }
+
     try {
         const response = await fetch('/api/login', {
             method: 'POST',
@@ -47,21 +60,17 @@ loginForm.addEventListener('submit', async (e) => {
         const notification = document.querySelector('.notification');
 
         if (response.ok) {
-            // Guardar el token en localStorage si es necesario
             localStorage.setItem('token', data.token);
 
-            // Redirigir según el rol del usuario
             if (data.user.rol === 'admin') {
                 window.location.href = '/admin/';
             } else {
                 window.location.href = '/cliente/';
             }
         } else {
-            // Mostrar alerta de error en el formulario
-            notification.textContent = data.error;
+            notification.textContent = data.error || 'Error en el inicio de sesión';
             notification.classList.add('alert', 'alert-danger');
 
-            // Desaparecer la notificación después de 3 segundos
             setTimeout(() => {
                 notification.textContent = '';
                 notification.classList.remove('alert', 'alert-danger');
@@ -70,10 +79,9 @@ loginForm.addEventListener('submit', async (e) => {
     } catch (error) {
         console.error('Error:', error);
         const notification = document.querySelector('.notification');
-        notification.textContent = 'Error en la conexión con el servidor';
+        notification.textContent = 'Error de conexión';
         notification.classList.add('alert', 'alert-danger');
 
-        // Desaparecer la notificación después de 3 segundos
         setTimeout(() => {
             notification.textContent = '';
             notification.classList.remove('alert', 'alert-danger');
