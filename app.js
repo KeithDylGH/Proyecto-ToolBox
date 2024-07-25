@@ -84,6 +84,7 @@ app.use(session({
     secret: 'your_secret_key',
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/tu_base_de_datos' }),
     cookie: { secure: false } // Cambia a true si usas HTTPS
 }));
 
