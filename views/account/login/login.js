@@ -16,22 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-const loginBtn = document.querySelector('#loginBtn');
-
-loginBtn.addEventListener('submit', async e => {
-    e.preventDefault();
-
-    console.log('Click');
-});
-
 // Form login
 const loginForm = document.querySelector('#loginForm');
 
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const usuario = document.querySelector('#usuario').value;
-    const password = document.querySelector('#password').value;
+    const usuario = document.querySelector('#usuario').value.trim();
+    const password = document.querySelector('#password').value.trim();
 
     if (!usuario || !password) {
         const notification = document.querySelector('.notification');
@@ -47,7 +39,7 @@ loginForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        const response = await fetch('/api/login', {
+        const response = await fetch('/login', { // Asegúrate de que la ruta sea correcta
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -60,8 +52,6 @@ loginForm.addEventListener('submit', async (e) => {
         const notification = document.querySelector('.notification');
 
         if (response.ok) {
-            localStorage.setItem('token', data.token);
-
             if (data.user.rol === 'admin') {
                 window.location.href = '/admin/';
             } else {
