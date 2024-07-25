@@ -16,22 +16,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-const loginBtn = document.querySelector('#loginBtn');
-
-loginBtn.addEventListener('submit', async e => {
-    e.preventDefault();
-
-    console.log('Click');
-});
-
 // Form login
 const loginForm = document.querySelector('#loginForm');
 
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const usuario = document.querySelector('#usuario').value;
-    const password = document.querySelector('#password').value;
+    const usuario = document.querySelector('#usuario').value.trim();
+    const contraseña = document.querySelector('#password').value.trim();
+
+    if (!usuario || !contraseña) {
+        const notification = document.querySelector('.notification');
+        notification.textContent = 'Por favor, complete todos los campos.';
+        notification.classList.add('alert', 'alert-danger');
+
+        setTimeout(() => {
+            notification.textContent = '';
+            notification.classList.remove('alert', 'alert-danger');
+        }, 3000);
+
+        return;
+    }
 
     try {
         const response = await fetch('/api/login', {
@@ -39,29 +44,23 @@ loginForm.addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ usuario, contraseña: password })
-        });
+            body: JSON.stringify({ usuario, contraseña }) // Asegúrate de que estos nombres coincidan
+        });        
 
         const data = await response.json();
 
         const notification = document.querySelector('.notification');
 
         if (response.ok) {
-            // Guardar el token en localStorage
-            localStorage.setItem('token', data.token);
-
-            // Redirigir según el rol del usuario
             if (data.user.rol === 'admin') {
                 window.location.href = '/admin/';
             } else {
                 window.location.href = '/cliente/';
             }
         } else {
-            // Mostrar alerta de error en el formulario
-            notification.textContent = data.message;
+            notification.textContent = data.error || 'Error en el inicio de sesión';
             notification.classList.add('alert', 'alert-danger');
 
-            // Desaparecer la notificación después de 3 segundos
             setTimeout(() => {
                 notification.textContent = '';
                 notification.classList.remove('alert', 'alert-danger');
@@ -69,14 +68,13 @@ loginForm.addEventListener('submit', async (e) => {
         }
     } catch (error) {
         console.error('Error:', error);
-            const notification = document.querySelector('.notification');
-            notification.textContent = 'Usuario o clave incorrecta';
-            notification.classList.add('alert', 'alert-danger');
+        const notification = document.querySelector('.notification');
+        notification.textContent = 'Error de conexión';
+        notification.classList.add('alert', 'alert-danger');
 
-            // Desaparecer la notificación después de 3 segundos
-            setTimeout(() => {
-                notification.textContent = '';
-                notification.classList.remove('alert', 'alert-danger');
-            }, 3000);
-        }
+        setTimeout(() => {
+            notification.textContent = '';
+            notification.classList.remove('alert', 'alert-danger');
+        }, 3000);
+    }
 });
