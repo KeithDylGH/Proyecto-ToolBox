@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
             fetch('/logout', {
                 method: 'GET'
             }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
+                if (response.ok) {
+                    window.location.href = '/login';
                 }
             });
         });
