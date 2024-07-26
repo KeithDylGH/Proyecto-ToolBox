@@ -98,6 +98,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware para exponer el usuario en res.locals
 app.use((req, res, next) => {
+    console.log('Session user:', req.session.user); // Agrega este log
     if (req.session.user) {
         res.locals.CUsuario = req.session.user;
     } else {
@@ -331,6 +332,20 @@ app.post('/api/productos/agregar', async (req, res) => {
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
+
+// Suponiendo que tienes una ruta POST para el login
+app.post('/api/login', async (req, res) => {
+    const { correo, password } = req.body;
+    const user = await CUsuario.findOne({ correo });
+
+    if (user && await bcrypt.compare(password, user.password)) {
+        req.session.user = user; // Guarda el usuario en la sesión
+        res.redirect('/'); // Redirige a la página principal o a otra página
+    } else {
+        res.redirect('/login'); // Redirige a la página de login en caso de error
+    }
+});
+
 
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter);
