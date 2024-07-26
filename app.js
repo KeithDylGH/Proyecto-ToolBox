@@ -85,7 +85,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: mongoUri }),
-    cookie: { secure: true, maxAge: 24 * 60 * 60 * 1000 } // maxAge opcional, configura la duración de la cookie
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // maxAge opcional, configura la duración de la cookie
 }));
 
 
@@ -332,6 +332,24 @@ app.post('/api/productos/agregar', async (req, res) => {
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
+
+app.post('/login', async (req, res) => {
+    const { usuario, contrasena } = req.body;
+    
+    // Aquí deberías buscar el usuario en la base de datos
+    const usuarioEncontrado = await buscarUsuarioPorNombre(usuario);
+  
+    if (usuarioEncontrado && await bcrypt.compare(contrasena, usuarioEncontrado.contrasena)) {
+      req.session.user = {
+        id: usuarioEncontrado._id,
+        nombre: usuarioEncontrado.nombre,
+        rol: usuarioEncontrado.rol
+      };
+      res.redirect('/'); // Redirige a la página principal o a donde necesites
+    } else {
+      res.redirect('/login'); // Redirige de vuelta al login en caso de error
+    }
+  });  
 
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter);
