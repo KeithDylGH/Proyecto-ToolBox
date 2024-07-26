@@ -13,8 +13,6 @@ const PDF = require('pdfkit');
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
-const buscarUsuarioRouter = require('./controllers/buscarUsuario');
-
 
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const cookieParser = require('cookie-parser');
@@ -339,6 +337,5 @@ app.post('/api/productos/agregar', async (req, res) => {
 app.use('/api/users',userRouter);
 app.use('/api/login',loginRouter);
 app.use('/api/products', productoRouter);
-app.use('/api/buscar-usuario', buscarUsuarioRouter);
 
 module.exports = app
