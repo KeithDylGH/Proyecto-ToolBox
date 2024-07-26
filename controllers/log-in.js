@@ -31,22 +31,23 @@ async function iniciarSesion(usuario, contraseña) {
 
 // Ruta para manejar el inicio de sesión
 router.post('/', async (req, res) => {
-    const { usuario, contraseña } = req.body;
-    
-    console.log('Datos recibidos:', { usuario, contraseña }); // Agrega esto para depuración
+    try {
+        const { usuario, contraseña } = req.body;
+        const result = await iniciarSesion(usuario, contraseña);
 
-    const result = await iniciarSesion(usuario, contraseña);
-
-    if (result.success) {
-        req.session.user = {
-            nombre: result.user.nombre,
-            usuario: result.user.usuario,
-            rol: result.user.rol
-        };
-        console.log('Sesión iniciada:', req.session.user); 
-        res.redirect('/'); 
-    } else {
-        res.status(400).json({ success: false, message: result.message });
+        if (result.success) {
+            req.session.user = {
+                nombre: result.user.nombre,
+                usuario: result.user.usuario,
+                rol: result.user.rol
+            };
+            res.json({ success: true, user: req.session.user });
+        } else {
+            res.status(400).json({ success: false, message: result.message });
+        }
+    } catch (error) {
+        console.error('Error en el inicio de sesión:', error);
+        res.status(500).json({ success: false, message: 'Error en el servidor' });
     }
 });
 
