@@ -44,21 +44,23 @@ loginForm.addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ usuario, contraseña }) // Asegúrate de que estos nombres coincidan
-        });        
+            body: JSON.stringify({ usuario, contraseña })
+        });
 
+        // Verifica si la respuesta es JSON
         const data = await response.json();
+        console.log('Login response:', data);
 
         const notification = document.querySelector('.notification');
 
-        if (response.ok) {
+        if (data.success) {
             if (data.user.rol === 'admin') {
                 window.location.href = '/admin/';
             } else {
                 window.location.href = '/cliente/';
             }
         } else {
-            notification.textContent = data.error || 'Error en el inicio de sesión';
+            notification.textContent = data.message || 'Error en el inicio de sesión';
             notification.classList.add('alert', 'alert-danger');
 
             setTimeout(() => {

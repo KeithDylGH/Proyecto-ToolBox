@@ -13,6 +13,8 @@ const PDF = require('pdfkit');
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
+const buscarUsuarioRouter = require('./controllers/buscarUsuario');
+
 
 // Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const cookieParser = require('cookie-parser');
@@ -333,23 +335,10 @@ app.post('/api/productos/agregar', async (req, res) => {
     }
 });
 
-// Suponiendo que tienes una ruta POST para el login
-app.post('/api/login', async (req, res) => {
-    const { correo, password } = req.body;
-    const user = await CUsuario.findOne({ correo });
-
-    if (user && await bcrypt.compare(password, user.password)) {
-        req.session.user = user; // Guarda el usuario en la sesión
-        res.redirect('/'); // Redirige a la página principal o a otra página
-    } else {
-        res.redirect('/login'); // Redirige a la página de login en caso de error
-    }
-});
-
-
 //RUTAS DE BACKEND
 app.use('/api/users',userRouter);
 app.use('/api/login',loginRouter);
 app.use('/api/products', productoRouter);
+app.use('/api/buscar-usuario', buscarUsuarioRouter);
 
 module.exports = app
