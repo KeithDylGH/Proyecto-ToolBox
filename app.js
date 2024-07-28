@@ -110,7 +110,7 @@ app.use(session({
 
 // Configuración de archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Configurar EJS
 app.set('view engine', 'ejs');
