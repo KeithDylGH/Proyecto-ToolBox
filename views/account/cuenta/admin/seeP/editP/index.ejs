@@ -20,10 +20,10 @@
     <header>
         <nav class="navbar">
             <div class="container-fluid">
-              <a class="navbar-brand text-light" href="#" id="admin">
-                <img src="/img/logo/Logo trazo 180.png" alt="Logo" height="45" class="w-25 d-inline-block align-text-top">
-                ToolBox Account
-              </a>
+                <a class="navbar-brand text-light" href="#" id="admin">
+                    <img src="/img/logo/Logo trazo 180.png" alt="Logo" height="45" class="w-25 d-inline-block align-text-top">
+                    ToolBox Account
+                </a>
             </div>
         </nav>
     </header>
@@ -38,8 +38,7 @@
                         <form id="formulario" class="bg-white p-3" method="POST" action="#" data-id="<%= producto._id %>">
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre</label>
-                                <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="nombre"
                                     name="nombre"
                                     type="text"
@@ -49,8 +48,7 @@
                             </div>
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="precio">Precio</label>
-                                <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="precio"
                                     name="precio"
                                     type="number"
@@ -58,37 +56,27 @@
                                     placeholder="Precio Producto"
                                 />
                             </div>
-
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="categoria">Categoria</label>
-                                <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="categoria">Categoría</label>
+                                <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="categoria"
                                     name="categoria"
                                     type="text"
                                     value="<%= producto.categoria %>"
-                                    placeholder="Categoria Producto"
+                                    placeholder="Categoría Producto"
                                 />
                             </div>
-
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="desc">Descripción</label>
-                                <textarea 
-                                    class="border rounded w-full py-2 px-3"
+                                <textarea class="border rounded w-full py-2 px-3"
                                     id="desc"
                                     name="descripcion"
                                     placeholder="Descripción del producto"
                                 ><%= producto.descripcion %></textarea>
                             </div>
-
-                            <button class="rounded btn btn-primary" type="submit">
-                                Guardar Cambios
-                            </button>
-                            <button class="rounded btn btn-secondary" type="button" id="cancelar">
-                                Cancelar Edición
-                            </button>
+                            <button class="rounded btn btn-primary" type="submit">Guardar Cambios</button>
+                            <button class="rounded btn btn-secondary" type="button" id="cancelar">Cancelar Edición</button>
                         </form>
-                        
                     </div>
                 </div>
             </div>
@@ -100,6 +88,5 @@
     
     <!-- Scripts personalizados -->
     <script src="/js/editar.js"></script>
-    
 </body>
 </html>

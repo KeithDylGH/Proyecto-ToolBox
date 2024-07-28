@@ -5,7 +5,17 @@ const Producto = require('../models/producto'); // Asegúrate de que el nombre d
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
     try {
-        const nuevoProducto = new Producto(req.body);
+        const { nombre, precio, categoria, descripcion } = req.body;
+        const imagen = req.file ? `/uploads/${req.file.filename}` : null;
+        
+        const nuevoProducto = new Producto({
+            nombre,
+            precio,
+            categoria,
+            descripcion,
+            imagen
+        });
+        
         await nuevoProducto.save();
         res.status(201).json(nuevoProducto);
     } catch (error) {
@@ -61,12 +71,14 @@ router.put('/inventario/editar/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { nombre, precio, categoria, descripcion } = req.body;
+        const imagen = req.file ? `/uploads/${req.file.filename}` : null;
 
         const productoActualizado = await Producto.findByIdAndUpdate(id, {
             nombre,
             precio,
             categoria,
-            descripcion
+            descripcion,
+            ...(imagen && { imagen })
         }, { new: true });
 
         if (!productoActualizado) {
