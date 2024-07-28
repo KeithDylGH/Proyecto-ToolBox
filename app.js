@@ -387,4 +387,4 @@ app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/products', productoRouter);
 
-module.exports = { app, upload };
+module.exports = app

@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
-const { upload } = require('../app'); // Importa 'upload' desde app.js
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
 
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', upload.single('imagen'), async (req, res) => {
