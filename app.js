@@ -317,7 +317,7 @@ app.post('/api/productos/agregar', async (req, res) => {
 });
 
 // Ruta para agregar producto con imagen
-app.post('/add-product', (req, res) => {
+app.post('/api/productos/agregar', (req, res) => {
     const form = new formidable.IncomingForm();
     form.uploadDir = path.join(__dirname, 'temp');
     form.keepExtensions = true;
