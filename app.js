@@ -333,6 +333,19 @@ app.get('/inventario/descargar/pdf', async (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Ruta para agregar producto
+app.post('/api/productos', upload.single('imagen'), (req, res) => {
+    // Aquí manejas la lógica para guardar el producto en la base de datos
+    // Incluyendo el path de la imagen cargada en `req.file`
+    const { nombre, precio, categoria, descripcion } = req.body;
+    const imagen = req.file.path;
+
+    // Guardar producto en la base de datos con la imagen
+    // ...
+    
+    res.redirect('/inventario/verproducto');
+});
+
 // Ruta para agregar productos a MongoDB
 app.post('/api/productos/agregar', async (req, res) => {
     try {
@@ -346,19 +359,6 @@ app.post('/api/productos/agregar', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
-});
-
-// Ruta para agregar producto
-app.post('/api/productos', upload.single('imagen'), (req, res) => {
-    // Aquí manejas la lógica para guardar el producto en la base de datos
-    // Incluyendo el path de la imagen cargada en `req.file`
-    const { nombre, precio, categoria, descripcion } = req.body;
-    const imagen = req.file.path;
-
-    // Guardar producto en la base de datos con la imagen
-    // ...
-    
-    res.redirect('/inventario/verproducto');
 });
 
 
