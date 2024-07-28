@@ -1,4 +1,4 @@
-import { nuevoProducto } from "./api.js";
+import { subirImagen } from './utils/bunnyStorage'; // Asegúrate de que la ruta sea correcta
 import { mostrarAlerta } from "./alerta.js";
 
 //* SELECTORES
@@ -15,38 +15,43 @@ async function validarProducto(e) {
     const precio = document.querySelector('#precio').value;
     const categoria = document.querySelector('#categoria').value;
     const descripcion = document.querySelector('#desc').value;
+    const imagen = document.querySelector('#imagen').files[0]; // Selecciona la imagen
 
-    const producto = {
-        nombre,
-        precio,
-        categoria,
-        descripcion
-    };
-
-    if (validacion(producto)) {
+    if (!nombre || !precio || !categoria || !descripcion || !imagen) {
         mostrarAlerta('Todos los campos son obligatorios');
-    } else {
-        try {
-            const response = await fetch('/api/productos/agregar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(producto)
-            });
+        return;
+    }
 
-            if (!response.ok) {
-                throw new Error(`Error al agregar el producto: ${response.statusText}`);
-            }
+    try {
+        const imagenUrl = await subirImagen(imagen); // Sube la imagen y obtiene la URL
 
-            mostrarAlerta('Producto agregado exitosamente');
-            setTimeout(() => {
-                window.location.href = '/inventario/verproducto/';
-            }, 1000); // Redirige después de mostrar la alerta durante 1 segundo
-        } catch (error) {
-            console.error('Error al agregar producto:', error);
-            mostrarAlerta('Error al agregar el producto. Inténtalo de nuevo.');
+        const producto = {
+            nombre,
+            precio,
+            categoria,
+            descripcion,
+            imagenUrl
+        };
+
+        const response = await fetch('/api/productos/agregar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(producto)
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al agregar el producto');
         }
+
+        mostrarAlerta('Producto agregado exitosamente');
+        setTimeout(() => {
+            window.location.href = '/inventario/verproducto/';
+        }, 1000);
+    } catch (error) {
+        console.error('Error al agregar producto:', error);
+        mostrarAlerta('Error al agregar el producto. Inténtalo de nuevo.');
     }
 }
 
