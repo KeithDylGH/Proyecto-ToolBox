@@ -82,14 +82,19 @@ mongoose.connect(mongoUri).then(() => {
 // Configurar almacenamiento de multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/uploads/'); // Carpeta de destino para las imágenes cargadas
+      cb(null, 'public/uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname}`);
+      cb(null, Date.now() + path.extname(file.originalname));
     }
-});
+  });
+  
+  const upload = multer({ storage: storage });
 
-const upload = multer({ storage: storage });
+// Ruta para subir archivos
+app.post('/upload', upload.single('file'), (req, res) => {
+    res.send('Archivo subido con éxito');
+});
 
 
 // Middleware para cookies y sesiones
@@ -355,6 +360,8 @@ app.post('/api/products', upload.single('imagen'), async (req, res) => {
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
+
+
 
 
 app.post('/login', async (req, res) => {

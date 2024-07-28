@@ -9,18 +9,19 @@ router.post('/admin/inventario', async (req, res) => {
         const imagen = req.file ? `/uploads/${req.file.filename}` : null;
         
         const nuevoProducto = new Producto({
-            nombre,
-            precio,
-            categoria,
-            descripcion,
-            imagen
+            nombre: req.body.nombre,
+            precio: req.body.precio,
+            categoria: req.body.categoria,
+            descripcion: req.body.descripcion,
+            imagen: req.body.imagen,
         });
         
         await nuevoProducto.save();
-        res.status(201).json(nuevoProducto);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+            res.status(200).json({ mensaje: 'Producto agregado con éxito' });
+        } catch (error) {
+            console.error('Error al agregar el producto:', error);
+            res.status(500).json({ mensaje: 'Error al agregar el producto' });
+        }
 });
 
 // Endpoint para obtener todos los productos
