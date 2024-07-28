@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
+const { upload } = require('../app'); // Importa 'upload' desde app.js
 
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', upload.single('imagen'), async (req, res) => {
@@ -17,11 +18,11 @@ router.post('/admin/inventario', upload.single('imagen'), async (req, res) => {
         });
         
         await nuevoProducto.save();
-            res.status(200).json({ mensaje: 'Producto agregado con éxito' });
-        } catch (error) {
-            console.error('Error al agregar el producto:', error);
-            res.status(500).json({ mensaje: 'Error al agregar el producto' });
-        }
+        res.status(200).json({ mensaje: 'Producto agregado con éxito' });
+    } catch (error) {
+        console.error('Error al agregar el producto:', error);
+        res.status(500).json({ mensaje: 'Error al agregar el producto' });
+    }
 });
 
 // Endpoint para obtener todos los productos
@@ -45,17 +46,6 @@ router.get('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Ruta para ver productos (esto parece ser un intento previo, asegúrate de cómo deseas manejarla)
-router.get('/verproducto', async (req, res) => {
-    try {
-        const producto = await Producto.findByIdAndDelete(req.params.id);
-        if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
-        res.status(200).json({ message: 'Producto eliminado exitosamente.' });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al eliminar el producto.' });
-    }
-});
-
 // Endpoint para eliminar un producto por su ID
 router.delete('/admin/inventario/:id', async (req, res) => {
     try {
@@ -68,7 +58,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar un producto
-router.put('/inventario/editar/:id', async (req, res) => {
+router.put('/inventario/editar/:id', upload.single('imagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
         const imagen = req.file ? `/uploads/${req.file.filename}` : null;
