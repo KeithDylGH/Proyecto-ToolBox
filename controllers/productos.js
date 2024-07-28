@@ -2,22 +2,28 @@ const express = require('express');
 const router = express.Router();
 const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+
+// Configuración del almacenamiento
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/uploads'); // Ruta de destino
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + path.extname(file.originalname)); // Nombre del archivo
+    }
+  });
+  
+  const upload = multer({ storage: storage });
 
 
-// Endpoint para agregar un nuevo producto
+// Ruta para agregar productos
 router.post('/admin/inventario', upload.single('imagen'), async (req, res) => {
     try {
-        const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file ? `/uploads/${req.file.filename}` : null;
-        
-        const nuevoProducto = new Producto({
-            nombre: req.body.nombre,
-            precio: req.body.precio,
-            categoria: req.body.categoria,
-            descripcion: req.body.descripcion,
-            imagen: req.body.imagen,
-        });
+      const producto = {
+        nombre: req.body.nombre,
+        precio: req.body.precio,
+        imagen: req.file.path // Ruta de la imagen cargada
+      };
         
         await nuevoProducto.save();
         res.status(200).json({ mensaje: 'Producto agregado con éxito' });

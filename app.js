@@ -79,17 +79,17 @@ mongoose.connect(mongoUri).then(() => {
 });
 
 
-// Configurar almacenamiento de multer
+//Configuración del almacenamiento
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'public/uploads/');
-    },
-    filename: function (req, file, cb) {
-      cb(null, Date.now() + path.extname(file.originalname));
-    }
-  });
-  
-  const upload = multer({ storage: storage });
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads'); // Ruta de destino
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // Nombre del archivo
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // Ruta para subir archivos
 app.post('/upload', upload.single('file'), (req, res) => {
