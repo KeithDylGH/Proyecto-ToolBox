@@ -35,7 +35,7 @@
             <div class="flex flex-col mt-10 items-center">
                 <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 w-10/12 md:w-8/12 lg:w-6/12">
                     <div class="shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
-                        <form id="formulario" class="bg-white p-3" method="POST" action="#" data-id="<%= producto._id %>">
+                        <form id="formulario" class="bg-white p-3" method="POST" action="#" data-id="<%= producto._id %>" enctype="multipart/form-data">
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre</label>
                                 <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -67,15 +67,24 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="desc">Descripción</label>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="descripcion">Descripción</label>
                                 <textarea class="border rounded w-full py-2 px-3"
-                                    id="desc"
+                                    id="descripcion"
                                     name="descripcion"
                                     placeholder="Descripción del producto"
                                 ><%= producto.descripcion %></textarea>
                             </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="imagen">Imagen</label>
+                                <input class="border rounded w-full py-2 px-3"
+                                    id="imagen"
+                                    name="imagen"
+                                    type="file"
+                                    accept="image/*"
+                                />
+                            </div>
                             <button class="rounded btn btn-primary" type="submit">Guardar Cambios</button>
-                            <button class="rounded btn btn-secondary" type="button" id="cancelar">Cancelar Edición</button>
+                            <button class="rounded btn btn-secondary" type="button" id="cancelarEdicion">Cancelar</button>
                         </form>
                     </div>
                 </div>
@@ -83,10 +92,8 @@
         </main>
     </div>
 
-    <!-- Bootstrap JS (si es necesario) -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
-    
-    <!-- Scripts personalizados -->
-    <script src="/js/editar.js"></script>
+    <script src="/js/cuenta.js"></script>
+    <script src="/js/admin.js"></script>
+    <script type="module" src="/js/editar.js"></script>
 </body>
 </html>

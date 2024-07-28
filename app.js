@@ -79,16 +79,17 @@ mongoose.connect(mongoUri).then(() => {
 });
 
 
-// Configuración de Multer para la carga de imágenes
+// Configurar almacenamiento de multer
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/uploads');
+    destination: function (req, file, cb) {
+        cb(null, 'public/uploads/'); // Carpeta de destino para las imágenes cargadas
     },
-    filename: (req, file, cb) => {
+    filename: function (req, file, cb) {
         cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
-const upload = multer({ storage });
+
+const upload = multer({ storage: storage });
 
 
 // Middleware para cookies y sesiones
@@ -104,6 +105,7 @@ app.use(session({
 
 // Configuración de archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Configurar EJS
 app.set('view engine', 'ejs');
@@ -345,6 +347,20 @@ app.post('/api/productos/agregar', async (req, res) => {
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
+
+// Ruta para agregar producto
+app.post('/api/productos', upload.single('imagen'), (req, res) => {
+    // Aquí manejas la lógica para guardar el producto en la base de datos
+    // Incluyendo el path de la imagen cargada en `req.file`
+    const { nombre, precio, categoria, descripcion } = req.body;
+    const imagen = req.file.path;
+
+    // Guardar producto en la base de datos con la imagen
+    // ...
+    
+    res.redirect('/inventario/verproducto');
+});
+
 
 app.post('/login', async (req, res) => {
     const { usuario, contrasena } = req.body;

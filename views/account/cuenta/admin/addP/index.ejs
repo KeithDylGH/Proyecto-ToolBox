@@ -37,7 +37,7 @@
             <div class="flex flex-col mt-10 items-center">
                 <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 w-10/12 md:w-8/12 lg:w-6/12">
                     <div class="shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
-                        <form id="formulario" class="bg-white p-3" method="POST">
+                        <form id="formulario" class="bg-white p-3" method="POST" enctype="multipart/form-data">
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre</label>
                                 <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -61,18 +61,26 @@
                                 <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="categoria"
                                     name="categoria"
-                                    type="number"
+                                    type="text"
                                     placeholder="Categoría Producto"
                                 />
                             </div>
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="desc">Descripción</label>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="descripcion">Descripción</label>
                                 <textarea class="border rounded w-full py-2 px-3"
-                                    id="desc"
-                                    name="desc"
-                                    type="text"
+                                    id="descripcion"
+                                    name="descripcion"
                                     placeholder="Descripción del producto"
                                 ></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="imagen">Imagen</label>
+                                <input class="border rounded w-full py-2 px-3"
+                                    id="imagen"
+                                    name="imagen"
+                                    type="file"
+                                    accept="image/*"
+                                />
                             </div>
                             <button class="rounded btn btn-danger" type="submit">Agregar Producto</button>
                         </form>
