@@ -333,25 +333,25 @@ app.get('/inventario/descargar/pdf', async (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Ruta para agregar producto con imagen
-router.post('/api/productos', upload.single('imagen'), async (req, res) => {
+// Endpoint para agregar producto con imagen
+app.post('/api/products', upload.single('imagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file.path;
+        const imagen = req.file ? `/uploads/${req.file.filename}` : null;
 
         const nuevoProducto = new iProducto({
             nombre,
             precio,
             categoria,
             descripcion,
-            imagen // Guardar la ruta de la imagen en la base de datos
+            imagen
         });
 
         await nuevoProducto.save();
 
         res.status(201).json({ message: 'Producto agregado con éxito' });
     } catch (error) {
-        console.error(error);
+        console.error('Error al agregar el producto:', error);
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });

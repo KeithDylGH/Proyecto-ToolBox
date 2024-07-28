@@ -47,11 +47,11 @@ router.get('/admin/inventario/:id', async (req, res) => {
 // Ruta para ver productos (esto parece ser un intento previo, asegúrate de cómo deseas manejarla)
 router.get('/verproducto', async (req, res) => {
     try {
-        const productos = await Producto.find(); // Utiliza el modelo Producto para obtener productos
-        res.render('account/cuenta/admin/seeP/index', { productos }); // Ajusta según tu lógica de renderizado
+        const producto = await Producto.findByIdAndDelete(req.params.id);
+        if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
+        res.status(200).json({ message: 'Producto eliminado exitosamente.' });
     } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).send('Error al obtener los productos');
+        res.status(500).json({ error: 'Error al eliminar el producto.' });
     }
 });
 
@@ -69,26 +69,22 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 // Endpoint para actualizar un producto
 router.put('/inventario/editar/:id', async (req, res) => {
     try {
-        const { id } = req.params;
         const { nombre, precio, categoria, descripcion } = req.body;
         const imagen = req.file ? `/uploads/${req.file.filename}` : null;
 
-        const productoActualizado = await Producto.findByIdAndUpdate(id, {
+        const productoActualizado = await Producto.findByIdAndUpdate(req.params.id, {
             nombre,
             precio,
             categoria,
             descripcion,
-            ...(imagen && { imagen })
+            imagen
         }, { new: true });
 
-        if (!productoActualizado) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
+        if (!productoActualizado) return res.status(404).json({ error: 'Producto no encontrado' });
 
-        res.json(productoActualizado);
+        res.status(200).json(productoActualizado);
     } catch (error) {
-        console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'Error al actualizar el producto', details: error.message });
+        res.status(500).json({ error: 'Error al actualizar el producto.' });
     }
 });
 
