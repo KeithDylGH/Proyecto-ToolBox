@@ -12,6 +12,12 @@ async function validarProducto(e) {
 
     const formData = new FormData(formulario);
 
+    // Validar campos
+    if (validacion(Object.fromEntries(formData.entries()))) {
+        mostrarAlerta('Todos los campos son obligatorios.');
+        return;
+    }
+
     try {
         const response = await fetch('/api/products', {
             method: 'POST',
