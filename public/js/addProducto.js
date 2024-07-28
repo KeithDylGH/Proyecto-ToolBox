@@ -13,7 +13,7 @@ async function validarProducto(e) {
     const formData = new FormData(formulario);
 
     try {
-        const response = await fetch('/api/productos', {
+        const response = await fetch('/api/products', {
             method: 'POST',
             body: formData
         });

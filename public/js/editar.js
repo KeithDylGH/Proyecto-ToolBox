@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(formulario);
 
         try {
-            const response = await fetch(`/api/productos/inventario/editar/${productId}`, {
+            const response = await fetch(`/api/products/inventario/editar/${productId}`, {
                 method: 'PUT',
                 body: formData
             });
