@@ -3,7 +3,7 @@ const router = express.Router();
 const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
 
 // Endpoint para agregar un nuevo producto
-router.post('/admin/inventario', async (req, res) => {
+router.post('/admin/inventario', upload.single('imagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
         const imagen = req.file ? `/uploads/${req.file.filename}` : null;
