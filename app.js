@@ -9,7 +9,6 @@ const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 const Excel = require('exceljs');
 const PDF = require('pdfkit');
-const multer = require('multer');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -79,24 +78,6 @@ mongoose.connect(mongoUri).then(() => {
 });
 
 
-//Configuración del almacenamiento
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/uploads'); // Ruta de destino
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Nombre del archivo
-  }
-});
-
-const upload = multer({ storage: storage });
-
-// Ruta para subir archivos
-app.post('/upload', upload.single('file'), (req, res) => {
-    res.send('Archivo subido con éxito');
-});
-
-
 // Middleware para cookies y sesiones
 app.use(cookieParser('tu_secreto_secreto'));
 app.use(session({
@@ -110,7 +91,6 @@ app.use(session({
 
 // Configuración de archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Configurar EJS
 app.set('view engine', 'ejs');
@@ -338,31 +318,20 @@ app.get('/inventario/descargar/pdf', async (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Endpoint para agregar producto con imagen
-app.post('/api/products', upload.single('imagen'), async (req, res) => {
+// Ruta para agregar productos a MongoDB
+app.post('/api/productos/agregar', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file ? `/uploads/${req.file.filename}` : null;
 
-        const nuevoProducto = new iProducto({
-            nombre,
-            precio,
-            categoria,
-            descripcion,
-            imagen
-        });
-
+        const nuevoProducto = new iProducto({ nombre, precio, categoria, descripcion });
         await nuevoProducto.save();
 
         res.status(201).json({ message: 'Producto agregado con éxito' });
     } catch (error) {
-        console.error('Error al agregar el producto:', error);
+        console.error(error);
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
-
-
-
 
 app.post('/login', async (req, res) => {
     const { usuario, contrasena } = req.body;
@@ -383,8 +352,8 @@ app.post('/login', async (req, res) => {
   });  
 
 //RUTAS DE BACKEND
-app.use('/api/users', userRouter);
-app.use('/api/login', loginRouter);
+app.use('/api/users',userRouter);
+app.use('/api/login',loginRouter);
 app.use('/api/products', productoRouter);
 
 module.exports = app

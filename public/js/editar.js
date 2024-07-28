@@ -1,3 +1,4 @@
+// editar.js
 document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.getElementById('formulario');
     const productId = formulario.getAttribute('data-id');
@@ -7,11 +8,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData(formulario);
 
+        const data = {
+            nombre: formData.get('nombre'),
+            precio: formData.get('precio'),
+            categoria: formData.get('categoria'),
+            descripcion: formData.get('descripcion')
+        };
+
+        console.log(data);
+
         try {
             const response = await fetch(`/api/products/inventario/editar/${productId}`, {
                 method: 'PUT',
-                body: formData
-            });
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });            
 
             if (!response.ok) {
                 throw new Error('Error al actualizar el producto');

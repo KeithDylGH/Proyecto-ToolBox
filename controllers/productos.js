@@ -1,35 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
-const multer = require('multer');
 
-// Configuración del almacenamiento
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'public/uploads'); // Ruta de destino
-    },
-    filename: function (req, file, cb) {
-      cb(null, Date.now() + path.extname(file.originalname)); // Nombre del archivo
-    }
-  });
-  
-  const upload = multer({ storage: storage });
-
-
-// Ruta para agregar productos
-router.post('/admin/inventario', upload.single('imagen'), async (req, res) => {
+// Endpoint para agregar un nuevo producto
+router.post('/admin/inventario', async (req, res) => {
     try {
-      const producto = {
-        nombre: req.body.nombre,
-        precio: req.body.precio,
-        imagen: req.file.path // Ruta de la imagen cargada
-      };
-        
+        const nuevoProducto = new Producto(req.body);
         await nuevoProducto.save();
-        res.status(200).json({ mensaje: 'Producto agregado con éxito' });
+        res.status(201).json(nuevoProducto);
     } catch (error) {
-        console.error('Error al agregar el producto:', error);
-        res.status(500).json({ mensaje: 'Error al agregar el producto' });
+        res.status(400).json({ error: error.message });
     }
 });
 
@@ -54,6 +34,17 @@ router.get('/admin/inventario/:id', async (req, res) => {
     }
 });
 
+// Ruta para ver productos (esto parece ser un intento previo, asegúrate de cómo deseas manejarla)
+router.get('/verproducto', async (req, res) => {
+    try {
+        const productos = await Producto.find(); // Utiliza el modelo Producto para obtener productos
+        res.render('account/cuenta/admin/seeP/index', { productos }); // Ajusta según tu lógica de renderizado
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
+    }
+});
+
 // Endpoint para eliminar un producto por su ID
 router.delete('/admin/inventario/:id', async (req, res) => {
     try {
@@ -66,24 +57,26 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar un producto
-router.put('/inventario/editar/:id', upload.single('imagen'), async (req, res) => {
+router.put('/inventario/editar/:id', async (req, res) => {
     try {
+        const { id } = req.params;
         const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file ? `/uploads/${req.file.filename}` : null;
 
-        const productoActualizado = await Producto.findByIdAndUpdate(req.params.id, {
+        const productoActualizado = await Producto.findByIdAndUpdate(id, {
             nombre,
             precio,
             categoria,
-            descripcion,
-            imagen
+            descripcion
         }, { new: true });
 
-        if (!productoActualizado) return res.status(404).json({ error: 'Producto no encontrado' });
+        if (!productoActualizado) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
 
-        res.status(200).json(productoActualizado);
+        res.json(productoActualizado);
     } catch (error) {
-        res.status(500).json({ error: 'Error al actualizar el producto.' });
+        console.error('Error al actualizar el producto:', error);
+        res.status(500).json({ error: 'Error al actualizar el producto', details: error.message });
     }
 });
 
