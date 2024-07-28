@@ -9,6 +9,7 @@ const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 const Excel = require('exceljs');
 const PDF = require('pdfkit');
+const multer = require('multer');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -76,6 +77,18 @@ mongoose.connect(mongoUri).then(() => {
 }).catch((err) => {
     console.error('Error al conectar con MongoDB:', err);
 });
+
+
+// Configuración de Multer para la carga de imágenes
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+const upload = multer({ storage });
 
 
 // Middleware para cookies y sesiones
@@ -355,5 +368,6 @@ app.post('/login', async (req, res) => {
 app.use('/api/users',userRouter);
 app.use('/api/login',loginRouter);
 app.use('/api/products', productoRouter);
+app.use('/api/products', upload.single('imagen'), productoRouter);
 
 module.exports = app
