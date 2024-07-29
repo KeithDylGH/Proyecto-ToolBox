@@ -14,7 +14,7 @@ const multer = require('multer');
 const upload = multer(); // Configura multer para manejar los archivos
 
 // Ruta para subir archivos
-router.post('/upload', upload.single('imagen'), async (req, res) => {
+router.post('/upload', upload.single('inputImagen'), async (req, res) => {
     console.log('Archivo recibido:', req.file); // Verifica el archivo subido
     console.log('Campos del formulario:', req.body); // Verifica los datos del formulario
     if (!req.file || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
