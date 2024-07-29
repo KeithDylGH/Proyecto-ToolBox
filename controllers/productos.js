@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
-const fetch = require('node-fetch'); // Para subir imágenes a Bunny Storage
+const Producto = require('../models/producto');
+const formidable = require('formidable');
+const fs = require('fs');
+const fetch = require('node-fetch');
 
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
@@ -35,11 +37,11 @@ router.get('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Ruta para ver productos (esto parece ser un intento previo, asegúrate de cómo deseas manejarla)
+// Ruta para ver productos
 router.get('/verproducto', async (req, res) => {
     try {
-        const productos = await Producto.find(); // Utiliza el modelo Producto para obtener productos
-        res.render('account/cuenta/admin/seeP/index', { productos }); // Ajusta según tu lógica de renderizado
+        const productos = await Producto.find();
+        res.render('account/cuenta/admin/seeP/index', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
         res.status(500).send('Error al obtener los productos');
@@ -58,16 +60,16 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar producto
-router.put('/inventario/editar/:id', async (req, res) => {
+router.put('/inventario/editar/:id', (req, res) => {
     const productId = req.params.id;
-    const form = new formidable.IncomingForm(); // Usar formidable para manejar archivos
+    const form = new formidable.IncomingForm();
+
     form.parse(req, async (err, fields, files) => {
         if (err) return res.status(400).send('Error en la carga del archivo');
-        
+
         const { nombre, precio, categoria, descripcion } = fields;
         let imagenUrl = '';
 
-        // Manejo de imagen
         if (files.inputImagen && files.inputImagen[0]) {
             const image = files.inputImagen[0];
             const imageData = await fs.promises.readFile(image.filepath);
@@ -85,7 +87,6 @@ router.put('/inventario/editar/:id', async (req, res) => {
             }
         }
 
-        // Actualizar producto en la base de datos
         try {
             const productoActualizado = await Producto.findByIdAndUpdate(productId, {
                 nombre,
