@@ -33,7 +33,7 @@ async function validarProducto(e) {
             imagenUrl
         };
 
-        const response = await fetch('/api/productos/agregar', { // Cambia aquí
+        const response = await fetch('/api/productos/verproducto', { // Cambia aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
