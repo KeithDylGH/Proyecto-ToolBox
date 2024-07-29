@@ -291,7 +291,7 @@ app.post('/login', async (req, res) => {
 app.use('/api/productos', productoRouter);
 app.use('/api/products', subirProducto);
 app.use('/api/usuarios', userRouter);
-app.use('/', loginRouter);
+app.use('/api/login', loginRouter);
 
 app.post('/subir-imagen', async (req, res) => {
     try {
