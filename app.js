@@ -9,7 +9,6 @@ const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 const Excel = require('exceljs');
 const PDF = require('pdfkit');
-const fileUpload = require('express-fileupload');
 const subirProducto = require('./controllers/subirProducto');
 const bcrypt = require('bcryptjs');
 const CUsuario = require('./models/usuario');
@@ -75,8 +74,6 @@ app.use(session({
     store: MongoStore.create({ mongoUrl: mongoUri }),
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
-
-app.use(fileUpload());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

@@ -3,34 +3,30 @@ const router = express.Router();
 const axios = require('axios');
 const Producto = require('../models/producto');
 require('dotenv').config();
-const multer = require('multer');
 
 const bunnyAccessKey = process.env.bunnyNetAPIKEY;
 const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}`;
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-router.post('/upload', upload.single('inputImagen'), async (req, res) => {
-    console.log('Archivo recibido:', req.file);
+router.post('/upload', async (req, res) => {
     console.log('Cuerpo de la solicitud:', req.body);
 
-    if (!req.file || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
+    // Verifica si el archivo se encuentra en la solicitud
+    if (!req.files || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
         return res.status(400).send('Faltan campos obligatorios');
     }
 
     try {
-        const file = req.file;
-        const fileName = file.originalname;
-        const fileBuffer = file.buffer;
+        const file = req.files.inputImagen;
+        const fileName = file.name;
+        const fileBuffer = file.data;
 
         const response = await axios.put(
             `${bunnyStorageUrl}/${fileName}`,
             fileBuffer,
             {
                 headers: {
-                    'Content-Type': 'application/octet-stream',
+                    'Content-Type': file.mimetype,
                     'AccessKey': bunnyAccessKey,
                 },
             }
@@ -44,7 +40,7 @@ router.post('/upload', upload.single('inputImagen'), async (req, res) => {
                 precio: req.body.precio,
                 imagen: {
                     data: fileUrl,
-                    contentType: req.file.mimetype
+                    contentType: file.mimetype
                 },
                 categoria: req.body.categoria,
                 descripcion: req.body.descripcion
