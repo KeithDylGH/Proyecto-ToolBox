@@ -1,4 +1,4 @@
-const url = '/api/admin/inventario'; // URL corregida
+const url = '/api/admin/inventario'; // Usa la ruta correcta del endpoint
 
 // Función para eliminar un producto
 const eliminarProducto = async (id) => {
