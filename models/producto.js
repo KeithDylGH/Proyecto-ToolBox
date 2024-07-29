@@ -1,30 +1,14 @@
 const mongoose = require('mongoose');
 
 const productoSchema = new mongoose.Schema({
-    nombre: {
-        type: String,
-        required: true,
-    },
-    precio: {
-        type: Number,
-        required: true,
-    },
-    categoria: {
-        type: String,
-        required: true,
-    },
-    descripcion: {
-        type: String,
-        required: true,
-    },
+    nombre: String,
+    precio: Number,
     imagen: {
-        data: {
-            type: String,
-        },
-        contentType: {
-            type: String,
-        },
+        data: String, // URL de la imagen en Bunny Storage
+        contentType: String
     },
+    categoria: String,
+    descripcion: String
 });
 
 const Producto = mongoose.model('Producto', productoSchema);
