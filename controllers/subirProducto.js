@@ -2,9 +2,9 @@ require('dotenv').config();
 const fetch = require('node-fetch'); // Asegúrate de tener node-fetch instalado
 const FormData = require('form-data'); // Asegúrate de instalar form-data
 
-export async function subirImagen(file) {
+export async function subirImagen(imagen) {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', imagen);
 
     const response = await fetch('/api/subir-imagen', {
         method: 'POST',
@@ -16,7 +16,7 @@ export async function subirImagen(file) {
     }
 
     const data = await response.json();
-    return data.url; // Asegúrate de que `data.url` contiene la URL de la imagen subida
+    return data.url; // Asegúrate de que el backend devuelva la URL de la imagen
 }
 
 module.exports = { subirImagen };

@@ -18,6 +18,7 @@ const productoRouter = require('./controllers/productos');
 const loginRouter = require('./controllers/log-in');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
+const fetch = require('node-fetch'); // Asegúrate de instalar este paquete
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -342,6 +343,36 @@ app.post('/api/productos/agregar', async (req, res) => {
     } catch (error) {
         console.error('Error al agregar el producto:', error);
         res.status(500).json({ error: 'Error al agregar el producto' });
+    }
+});
+
+app.post('/api/subir-imagen', async (req, res) => {
+    try {
+        const imageFile = req.files.file; // Usando `express-fileupload` o similar
+
+        // Configura Bunny Storage
+        const bunnyStorageUrl = 'https://storage.bunnycdn.com/your-bucket-name/';
+        const bunnyStorageApiKey = 'your-bunny-storage-api-key';
+        const imageUrl = `${bunnyStorageUrl}${imageFile.name}`;
+
+        // Subir la imagen a Bunny Storage
+        const uploadResponse = await fetch(imageUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${bunnyStorageApiKey}`,
+                'Content-Type': imageFile.mimetype
+            },
+            body: imageFile.data
+        });
+
+        if (!uploadResponse.ok) {
+            throw new Error('Error al subir la imagen a Bunny Storage');
+        }
+
+        res.json({ url: imageUrl });
+    } catch (error) {
+        console.error('Error al subir la imagen:', error);
+        res.status(500).json({ error: 'Error al subir la imagen' });
     }
 });
 

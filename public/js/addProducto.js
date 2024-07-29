@@ -15,7 +15,7 @@ async function validarProducto(e) {
     const precio = document.querySelector('#precio').value.trim();
     const categoria = document.querySelector('#categoria').value.trim();
     const descripcion = document.querySelector('#desc').value.trim();
-    const imagen = document.querySelector('#imagen').files[0]; // Selecciona la imagen
+    const imagen = document.querySelector('#imagen').files[0];
 
     if (!nombre || !precio || !categoria || !descripcion || !imagen) {
         mostrarAlerta('Todos los campos son obligatorios');
@@ -23,7 +23,7 @@ async function validarProducto(e) {
     }
 
     try {
-        const imagenUrl = await subirImagen(imagen); // Sube la imagen y obtiene la URL
+        const imagenUrl = await subirImagen(imagen);
 
         const producto = {
             nombre,
