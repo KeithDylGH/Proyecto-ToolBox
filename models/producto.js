@@ -5,10 +5,6 @@ const productoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    costo: {
-        type: Number,
-        required: true,
-    },
     precio: {
         type: Number,
         required: true,

@@ -12,7 +12,7 @@ const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
 // Ruta para subir archivos
 router.post('/', async (req, res) => {
-    if (!req.file || !req.body.nombre || !req.body.costo || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
+    if (!req.file || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
         return res.status(400).send('Faltan campos obligatorios');
     }
 
@@ -40,7 +40,6 @@ router.post('/', async (req, res) => {
             // Guardar el producto en MongoDB
             const nuevoProducto = new Producto({
                 nombre: req.body.nombre,
-                costo: req.body.costo,
                 precio: req.body.precio,
                 imagen: {
                     data: fileUrl, // Usamos la URL del Pull Zone como el campo data
