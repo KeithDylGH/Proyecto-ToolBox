@@ -1,57 +1,55 @@
-import { subirImagen } from '../../controllers/subirProducto.js'; // Asegúrate de la ruta correcta
+import { nuevoProducto } from "./api.js";
 import { mostrarAlerta } from "./alerta.js";
 
-// SELECTORES
+//* SELECTORES
 const formulario = document.querySelector('#formulario');
 
-// EVENTOS
+//* EVENTOS
 formulario.addEventListener('submit', validarProducto);
 
-// FUNCIONES
+//* FUNCIONES
 async function validarProducto(e) {
     e.preventDefault();
 
-    const nombre = document.querySelector('#nombre').value.trim();
-    const precio = document.querySelector('#precio').value.trim();
-    const categoria = document.querySelector('#categoria').value.trim();
-    const descripcion = document.querySelector('#desc').value.trim();
-    const imagen = document.querySelector('#imagen').files[0];
+    const nombre = document.querySelector('#nombre').value;
+    const precio = document.querySelector('#precio').value;
+    const categoria = document.querySelector('#categoria').value;
+    const descripcion = document.querySelector('#desc').value;
 
-    if (!nombre || !precio || !categoria || !descripcion || !imagen) {
+    const producto = {
+        nombre,
+        precio,
+        categoria,
+        descripcion
+    };
+
+    if (validacion(producto)) {
         mostrarAlerta('Todos los campos son obligatorios');
-        return;
-    }
+    } else {
+        try {
+            const response = await fetch('/api/productos/agregar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(producto)
+            });
 
-    try {
-        const imagenUrl = await subirImagen(imagen);
+            if (!response.ok) {
+                throw new Error(`Error al agregar el producto: ${response.statusText}`);
+            }
 
-        const producto = {
-            nombre,
-            precio,
-            categoria,
-            descripcion,
-            imagenUrl
-        };
-
-        const response = await fetch('/api/productos/agregar', { // Cambia aquí
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(producto)
-        });        
-
-        if (!response.ok) {
-            throw new Error('Error al agregar el producto');
+            mostrarAlerta('Producto agregado exitosamente');
+            setTimeout(() => {
+                window.location.href = '/inventario/verproducto/';
+            }, 1000); // Redirige después de mostrar la alerta durante 1 segundo
+        } catch (error) {
+            console.error('Error al agregar producto:', error);
+            mostrarAlerta('Error al agregar el producto. Inténtalo de nuevo.');
         }
-
-        const result = await response.json();
-        mostrarAlerta(result.message || 'Producto agregado exitosamente');
-        setTimeout(() => {
-            window.location.href = '/inventario/verproducto/';
-        }, 1000);
-    } catch (error) {
-        console.error('Error al agregar producto:', error);
-        mostrarAlerta('Error al agregar el producto. Inténtalo de nuevo.');
     }
+}
+
+function validacion(obj) {
+    return !Object.values(obj).every(i => i !== '');
 }
