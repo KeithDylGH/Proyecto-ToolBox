@@ -35,7 +35,7 @@ router.get('/admin/inventario/:id', async (req, res) => {
 });
 
 // Ruta para ver productos (esto parece ser un intento previo, asegúrate de cómo deseas manejarla)
-router.get('/inventario/verproducto', async (req, res) => {
+router.get('/verproducto', async (req, res) => {
     try {
         const productos = await Producto.find(); // Utiliza el modelo Producto para obtener productos
         res.render('account/cuenta/admin/seeP/index', { productos }); // Ajusta según tu lógica de renderizado
