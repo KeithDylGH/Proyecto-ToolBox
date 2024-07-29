@@ -14,9 +14,11 @@ const multer = require('multer');
 const upload = multer(); // Configura multer para manejar los archivos
 
 // Ruta para subir archivos
-router.post('/upload', upload.single('inputImagen'), async (req, res) => {
-    console.log('Archivo recibido:', req.file); // Verifica el archivo subido
-    console.log('Campos del formulario:', req.body); // Verifica los datos del formulario
+router.post('/upload', upload.single('inputImagen'), (req, res, next) => {
+    console.log('Archivo recibido:', req.file);
+    console.log('Cuerpo de la solicitud:', req.body);
+    next();
+}, async (req, res) => {
     if (!req.file || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
         return res.status(400).send('Faltan campos obligatorios');
     }
@@ -48,7 +50,7 @@ router.post('/upload', upload.single('inputImagen'), async (req, res) => {
                 precio: req.body.precio,
                 imagen: {
                     data: fileUrl, // Usamos la URL del Pull Zone como el campo data
-                    contentType: file.mimetype // Ajusta el tipo de contenido según el archivo subido
+                    contentType: req.file.mimetype // Ajusta el tipo de contenido según el archivo subido
                 },
                 categoria: req.body.categoria,
                 descripcion: req.body.descripcion // Incluido el campo descripcion
