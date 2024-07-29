@@ -321,61 +321,6 @@ app.post('/api/productos/agregar', async (req, res) => {
     }
 });
 
-// Ruta para agregar producto con imagen
-app.post('/api/productos/agregar', async (req, res) => {
-    try {
-        const { nombre, precio, categoria, descripcion, imagenUrl } = req.body;
-
-        if (!nombre || !precio || !categoria || !descripcion || !imagenUrl) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-        }
-
-        const nuevoProducto = new iProducto({
-            nombre,
-            precio,
-            categoria,
-            descripcion,
-            imagenUrl // Guarda la URL de la imagen en el producto
-        });
-
-        await nuevoProducto.save();
-        res.status(201).json({ message: 'Producto agregado con éxito' });
-    } catch (error) {
-        console.error('Error al agregar el producto:', error);
-        res.status(500).json({ error: 'Error al agregar el producto' });
-    }
-});
-
-app.post('/api/subir-imagen', async (req, res) => {
-    try {
-        const imageFile = req.files.file; // Usando `express-fileupload` o similar
-
-        // Configura Bunny Storage
-        const bunnyStorageUrl = 'https://storage.bunnycdn.com/your-bucket-name/';
-        const bunnyStorageApiKey = 'your-bunny-storage-api-key';
-        const imageUrl = `${bunnyStorageUrl}${imageFile.name}`;
-
-        // Subir la imagen a Bunny Storage
-        const uploadResponse = await fetch(imageUrl, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${bunnyStorageApiKey}`,
-                'Content-Type': imageFile.mimetype
-            },
-            body: imageFile.data
-        });
-
-        if (!uploadResponse.ok) {
-            throw new Error('Error al subir la imagen a Bunny Storage');
-        }
-
-        res.json({ url: imageUrl });
-    } catch (error) {
-        console.error('Error al subir la imagen:', error);
-        res.status(500).json({ error: 'Error al subir la imagen' });
-    }
-});
-
 app.post('/login', async (req, res) => {
     const { usuario, contrasena } = req.body;
     
