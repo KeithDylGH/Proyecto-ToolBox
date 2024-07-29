@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             // Enviar el formulario con datos de imagen
             const response = await fetch(`/api/products/inventario/editar/${productId}`, {
-                method: 'PUT',
+                method: 'PUT', // Usar PUT para actualizar
                 body: formData // No es necesario establecer Content-Type en FormData
             });
 
