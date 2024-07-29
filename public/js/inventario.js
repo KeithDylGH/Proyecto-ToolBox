@@ -1,10 +1,9 @@
-// inventario.js
-const url = 'https://proyecto-toolbox.onrender.com/api/products/inventario'; // Asegúrate de que la URL sea correcta
+const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate de que la URL sea correcta
 
 // Función para eliminar un producto
 const eliminarProducto = async (id) => {
     try {
-        const response = await fetch(`/api/products/${id}`, {
+        const response = await fetch(`${url}/admin/inventario/${id}`, {
             method: 'DELETE'
         });
 
@@ -32,3 +31,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
