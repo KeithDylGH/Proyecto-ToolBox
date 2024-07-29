@@ -321,9 +321,13 @@ app.post('/api/productos/agregar', async (req, res) => {
 });
 
 // Ruta para agregar producto con imagen
-app.post('/inventario/agregarproduto', async (req, res) => {
+app.post('/api/productos/agregar', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion, imagenUrl } = req.body;
+
+        if (!nombre || !precio || !categoria || !descripcion || !imagenUrl) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        }
 
         const nuevoProducto = new iProducto({
             nombre,
