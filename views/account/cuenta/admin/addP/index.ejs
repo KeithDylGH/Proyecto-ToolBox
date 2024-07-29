@@ -20,10 +20,10 @@
 <body>
     
     <header>
-        <nav class="navbar">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-              <a class="navbar-brand text-light" href="#" id="admin">
-                <img src="/img/logo/Logo trazo 180.png" alt="Logo"  height="45" class="w-25 d-inline-block align-text-top">
+              <a class="navbar-brand" href="#" id="admin">
+                <img src="/img/logo/Logo trazo 180.png" alt="Logo" height="45" class="d-inline-block align-text-top">
                 ToolBox Account
               </a>
                 <a class="nav-link active" aria-current="page" id="invPag" href="#">Inicio</a>
@@ -31,63 +31,69 @@
         </nav>
     </header>
 
-    <div>
+    <div class="container mt-5">
         <main class="px-5 py-2">
             <h2>Nuevo producto</h2>
 
-            <div class="flex flex-col mt-10 items-center">
-                <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 w-10/12 md:w-8/12 lg:w-6/12">
-                    <div class="shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+            <div class="d-flex justify-content-center mt-4">
+                <div class="w-75">
+                    <div class="card shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
                         <form id="formulario" class="bg-white p-3" method="POST" enctype="multipart/form-data" action="/api/upload">
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre</label>
+                                <label class="form-label" for="nombre">Nombre</label>
                                 <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="form-control"
                                     id="nombre"
                                     name="nombre"
                                     type="text"
                                     placeholder="Nombre Producto"
+                                    required
                                 />
                             </div>
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="precio">Precio</label>
+                                <label class="form-label" for="precio">Precio</label>
                                 <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="form-control"
                                     id="precio"
                                     name="precio"
                                     type="number"
+                                    step="0.01"
                                     placeholder="Precio Producto"
+                                    required
                                 />
                             </div>
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="categoria">Categoría</label>
+                                <label class="form-label" for="categoria">Categoría</label>
                                 <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="form-control"
                                     id="categoria"
                                     name="categoria"
                                     type="text"
                                     placeholder="Categoría Producto"
+                                    required
                                 />
                             </div>
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="desc">Descripción</label>
+                                <label class="form-label" for="desc">Descripción</label>
                                 <textarea 
-                                    class="border rounded w-full py-2 px-3"
+                                    class="form-control"
                                     id="desc"
                                     name="descripcion"
                                     placeholder="Descripción del producto"
+                                    required
                                 ></textarea>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="imagen">Imagen</label>
+                                <label class="form-label" for="imagen">Imagen</label>
                                 <input 
-                                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="form-control"
                                     id="imagen"
                                     name="inputImagen" 
                                     type="file"
+                                    required
                                 />
                             </div>
-                            <button class="rounded btn btn-danger" type="submit">Agregar Producto</button>
+                            <button class="btn btn-danger" type="submit">Agregar Producto</button>
                         </form>                                                
                     </div>
                 </div>

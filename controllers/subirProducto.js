@@ -3,14 +3,12 @@ const router = express.Router();
 const axios = require('axios');
 const Producto = require('../models/producto');
 require('dotenv').config();
+const multer = require('multer');
 
-// Obtén las variables de entorno
 const bunnyAccessKey = process.env.bunnyNetAPIKEY;
 const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}`;
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
-// Configura multer para manejar la carga de archivos
-const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -27,7 +25,6 @@ router.post('/upload', upload.single('inputImagen'), async (req, res) => {
         const fileName = file.originalname;
         const fileBuffer = file.buffer;
 
-        // Sube el archivo a Bunny.net
         const response = await axios.put(
             `${bunnyStorageUrl}/${fileName}`,
             fileBuffer,
@@ -40,24 +37,21 @@ router.post('/upload', upload.single('inputImagen'), async (req, res) => {
         );
 
         if (response.status === 200 || response.status === 201) {
-            // URL del archivo subido usando el Pull Zone
             const fileUrl = `${bunnyPullZoneUrl}/${fileName}`;
 
-            // Guardar el producto en MongoDB
             const nuevoProducto = new Producto({
                 nombre: req.body.nombre,
                 precio: req.body.precio,
                 imagen: {
-                    data: fileUrl, // Usamos la URL del Pull Zone como el campo data
-                    contentType: req.file.mimetype // Ajusta el tipo de contenido según el archivo subido
+                    data: fileUrl,
+                    contentType: req.file.mimetype
                 },
                 categoria: req.body.categoria,
-                descripcion: req.body.descripcion // Incluido el campo descripcion
+                descripcion: req.body.descripcion
             });
 
             await nuevoProducto.save();
 
-            // Redirigir a /inventario/verproducto
             res.redirect('/inventario/verproducto');
         } else {
             const errorMsg = `Error al subir el archivo. Código de estado: ${response.status}`;
