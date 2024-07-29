@@ -58,41 +58,30 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Endpoint para actualizar un producto
-router.put('/inventario/editar/:id', upload.single('imagen'), async (req, res) => {
-    const productId = req.params.id;
-
-    if (!productId) {
-        return res.status(400).json({ error: 'ID del producto no proporcionado' });
-    }
-
+// Ruta para actualizar un producto
+router.put('/inventario/editar/:id', async (req, res) => {
     try {
-        const updateData = {
-            nombre: req.body.nombre,
-            precio: req.body.precio,
-            categoria: req.body.categoria,
-            descripcion: req.body.descripcion
-        };
+        const { nombre, precio, categoria, descripcion } = req.body;
+        const productoId = req.params.id;
 
-        // Si se proporciona una imagen, debes manejar su almacenamiento
-        if (req.file) {
-            // Aquí puedes agregar el manejo para subir la imagen
-            // Ejemplo: subir la imagen a Bunny Storage y obtener la URL
-
-            // Actualizar la URL de la imagen en el producto
-            updateData.imagen = {
-                data: 'url_de_la_imagen',
-                contentType: req.file.mimetype
-            };
-        }
-
-        const productoActualizado = await Producto.findByIdAndUpdate(productId, updateData, { new: true });
-
-        if (!productoActualizado) {
+        // Verificar si el producto existe
+        const producto = await iProducto.findById(productoId);
+        if (!producto) {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        res.status(200).json({ message: 'Producto actualizado con éxito', producto: productoActualizado });
+        // Actualizar el producto
+        producto.nombre = nombre;
+        producto.precio = precio;
+        producto.categoria = categoria;
+        producto.descripcion = descripcion;
+
+        if (req.file) {
+            producto.imagen = req.file.buffer.toString('base64'); // Guardar la imagen en formato base64
+        }
+
+        await producto.save();
+        res.status(200).json({ message: 'Producto actualizado con éxito' });
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
         res.status(500).json({ error: 'Error al actualizar el producto' });

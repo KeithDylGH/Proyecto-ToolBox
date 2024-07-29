@@ -38,6 +38,7 @@
                 <div class="w-75">
                     <div class="card shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
                         <form id="formulario" class="bg-white p-3" method="POST" enctype="multipart/form-data" action="/api/products/inventario/editar/<%= producto._id %>">
+                            <input type="hidden" name="_method" value="PUT">
                             <div class="mb-4">
                                 <label class="form-label" for="nombre">Nombre</label>
                                 <input 
