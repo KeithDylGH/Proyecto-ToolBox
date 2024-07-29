@@ -17,10 +17,6 @@ const productoSchema = new Schema({
     descripcion: {
         type: String,
         required: [true, 'La descripción es obligatoria']
-    },
-    imagenUrl: {
-        type: String,
-        required: [true, 'La URL de la imagen es obligatoria']
     }
 });
 
