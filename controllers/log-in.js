@@ -33,6 +33,8 @@ async function iniciarSesion(usuario, contraseña) {
 router.post('/', async (req, res) => {
     try {
         const { usuario, contraseña } = req.body;
+        console.log('Usuario:', usuario); // Para depuración
+        console.log('Contraseña:', contraseña); // Para depuración
         const result = await iniciarSesion(usuario, contraseña);
 
         if (result.success) {
@@ -41,6 +43,7 @@ router.post('/', async (req, res) => {
                 usuario: result.user.usuario,
                 rol: result.user.rol
             };
+            console.log('Session user set:', req.session.user); // Para depuración
             res.json({ success: true, user: req.session.user });
         } else {
             res.status(400).json({ success: false, message: result.message });

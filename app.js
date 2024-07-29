@@ -16,7 +16,6 @@ const iProducto = require('./models/producto');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-
 const multer = require('multer');
 const upload = multer();
 
@@ -24,51 +23,11 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
 
-mongoose.connect(mongoUri).then(() => {
-    console.log('Base de Datos conectada!');
+// Middlewares para analizar el cuerpo de las solicitudes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    mongoose.connection.once('open', async () => {
-        try {
-            await CUsuario.deleteMany({});
-            console.log('Colección usuarios limpia.');
-
-            const filePath = path.join(__dirname, 'db.json');
-            const data = fs.readFileSync(filePath, 'utf-8');
-            const parsedData = JSON.parse(data);
-
-            if (!Array.isArray(parsedData.usuarios)) {
-                throw new Error('El formato del archivo db.json es incorrecto');
-            }
-
-            const users = parsedData.usuarios;
-
-            for (let user of users) {
-                const existingUser = await CUsuario.findOne({ correo: user.correo });
-                user.password = await bcrypt.hash(user.password, 10);
-                if (existingUser) {
-                    console.log(`Usuario ${user.correo} ya existe, omitiendo inserción.`);
-                } else {
-                    await CUsuario.create(user);
-                    console.log(`Usuario ${user.correo} insertado correctamente.`);
-                }
-            }
-
-            console.log('Datos importados correctamente.');
-        } catch (error) {
-            console.error('Error al importar datos:', error);
-        } finally {
-            mongoose.connection.close();
-        }
-    });
-
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`Servidor conectado y escuchando en el puerto ${PORT}`);
-    });
-
-}).catch((err) => {
-    console.error('Error al conectar con MongoDB:', err);
-});
-
+// Configuración de la sesión
 app.use(cookieParser('tu_secreto_secreto'));
 app.use(session({
     secret: 'tu_secreto_secreto',
@@ -78,14 +37,10 @@ app.use(session({
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
+// Middleware para la sesión
 app.use((req, res, next) => {
-    console.log('Session user:', req.session.user);
+    console.log('Session middleware:', req.session); // Agrega esto para depuración
+    console.log('Session user:', req.session.user); // Agrega esto para depuración
     if (req.session.user) {
         res.locals.CUsuario = req.session.user;
     } else {
@@ -93,6 +48,13 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+// Rutas y otros middlewares
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
     const CUsuario = req.session.user;
@@ -145,7 +107,7 @@ app.get('/admin/inventario', (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/agregarproduto', (req, res) => {
+app.get('/inventario/agregarproducto', (req, res) => {
     res.render('account/cuenta/admin/addP');
 });
 
