@@ -9,7 +9,6 @@ const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 const Excel = require('exceljs');
 const PDF = require('pdfkit');
-const fileUpload = require('express-fileupload');
 const subirProducto = require('./controllers/subirProducto');
 const bcrypt = require('bcryptjs');
 const CUsuario = require('./models/usuario');
@@ -18,7 +17,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const multer = require('multer');
-const upload = multer();
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // Límite de 10MB para archivos
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -80,10 +79,7 @@ app.use(session({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(fileUpload({
-    limits: { fileSize: 10 * 1024 * 1024 } // Limita el tamaño del archivo a 10 MB
-}));
-app.use(upload.array()); // Para manejar archivos subidos con multer
+app.use(upload.any()); // Configura multer para aceptar cualquier tipo de archivo
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
