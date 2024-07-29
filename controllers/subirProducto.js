@@ -1,14 +1,11 @@
 const express = require('express');
-const multer = require('multer');
 const axios = require('axios');
 const Producto = require('../models/producto');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const router = express.Router();
-
-// Configura multer para manejar archivos en memoria
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 
 // Obtén las variables de entorno
 const bunnyAccessKey = process.env.bunnyNetAPIKEY;
@@ -16,16 +13,18 @@ const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.b
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
 // Ruta para subir archivos
-router.post('/upload', upload.single('inputImagen'), async (req, res) => {
-    if (!req.file) {
+router.post('/upload', async (req, res) => {
+    const { inputImagen } = req.body;
+
+    if (!inputImagen) {
         const errorMsg = 'No se ha cargado ningún archivo';
         console.error(errorMsg);
         return res.status(400).send(errorMsg);
     }
 
     try {
-        const fileName = req.file.originalname;
-        const fileBuffer = req.file.buffer;
+        const fileName = path.basename(inputImagen);
+        const fileBuffer = fs.readFileSync(inputImagen);
 
         // Sube el archivo a Bunny.net
         const response = await axios.put(
