@@ -1,4 +1,4 @@
-import { subirImagen } from './subirProducto.js'; // Asegúrate de que la ruta sea correcta
+import { subirImagen } from '../../controllers/subirProducto.js'; // Asegúrate de que la ruta sea correcta
 import { mostrarAlerta } from "./alerta.js";
 
 //* SELECTORES
