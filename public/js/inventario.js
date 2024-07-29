@@ -1,9 +1,10 @@
-const url = '/api/admin/inventario'; // Usa la ruta correcta del endpoint
+// inventario.js
+const url = 'https://proyecto-toolbox.onrender.com/api/products/inventario'; // Asegúrate de que la URL sea correcta
 
 // Función para eliminar un producto
 const eliminarProducto = async (id) => {
     try {
-        const response = await fetch(`${url}/${id}`, {
+        const response = await fetch(`/api/products/${id}`, {
             method: 'DELETE'
         });
 
