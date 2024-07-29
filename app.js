@@ -340,6 +340,6 @@ app.post('/login', async (req, res) => {
 // RUTAS DE BACKEND
 app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
-app.use('/api/products', productoRouter);
+app.use('/api/productos', productoRouter);
 
 module.exports = app;
