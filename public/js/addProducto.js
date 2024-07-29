@@ -11,10 +11,10 @@ formulario.addEventListener('submit', validarProducto);
 async function validarProducto(e) {
     e.preventDefault();
 
-    const nombre = document.querySelector('#nombre').value;
-    const precio = document.querySelector('#precio').value;
-    const categoria = document.querySelector('#categoria').value;
-    const descripcion = document.querySelector('#desc').value;
+    const nombre = document.querySelector('#nombre').value.trim();
+    const precio = document.querySelector('#precio').value.trim();
+    const categoria = document.querySelector('#categoria').value.trim();
+    const descripcion = document.querySelector('#desc').value.trim();
     const imagen = document.querySelector('#imagen').files[0]; // Selecciona la imagen
 
     if (!nombre || !precio || !categoria || !descripcion || !imagen) {
