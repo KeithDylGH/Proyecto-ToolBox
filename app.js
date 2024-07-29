@@ -273,11 +273,19 @@ app.post('/api/productos/agregar', async (req, res) => {
 app.post('/login', async (req, res) => {
     const { usuario, contrasena } = req.body;
     
-    // Aquí deberías buscar al usuario en tu base de datos
-    // y comparar la contraseña con bcrypt.compare
-    // ...
-
-    res.redirect('/admin');
+    // Aquí deberías buscar el usuario en la base de datos
+    const usuarioEncontrado = await buscarUsuarioPorNombre(usuario);
+  
+    if (usuarioEncontrado && await bcrypt.compare(contrasena, usuarioEncontrado.contrasena)) {
+      req.session.user = {
+        id: usuarioEncontrado._id,
+        nombre: usuarioEncontrado.nombre,
+        rol: usuarioEncontrado.rol
+      };
+      res.redirect('/'); // Redirige a la página principal o a donde necesites
+    } else {
+      res.redirect('/login'); // Redirige de vuelta al login en caso de error
+    }
 });
 
 app.use('/api/productos', productoRouter);
