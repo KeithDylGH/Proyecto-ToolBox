@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
@@ -57,26 +59,43 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar un producto
-router.put('/inventario/editar/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nombre, precio, categoria, descripcion } = req.body;
+router.put('/inventario/editar/:id', upload.single('imagen'), async (req, res) => {
+    const productId = req.params.id;
 
-        const productoActualizado = await Producto.findByIdAndUpdate(id, {
-            nombre,
-            precio,
-            categoria,
-            descripcion
-        }, { new: true });
+    if (!productId) {
+        return res.status(400).json({ error: 'ID del producto no proporcionado' });
+    }
+
+    try {
+        const updateData = {
+            nombre: req.body.nombre,
+            precio: req.body.precio,
+            categoria: req.body.categoria,
+            descripcion: req.body.descripcion
+        };
+
+        // Si se proporciona una imagen, debes manejar su almacenamiento
+        if (req.file) {
+            // Aquí puedes agregar el manejo para subir la imagen
+            // Ejemplo: subir la imagen a Bunny Storage y obtener la URL
+
+            // Actualizar la URL de la imagen en el producto
+            updateData.imagen = {
+                data: 'url_de_la_imagen',
+                contentType: req.file.mimetype
+            };
+        }
+
+        const productoActualizado = await Producto.findByIdAndUpdate(productId, updateData, { new: true });
 
         if (!productoActualizado) {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        res.json(productoActualizado);
+        res.status(200).json({ message: 'Producto actualizado con éxito', producto: productoActualizado });
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'Error al actualizar el producto', details: error.message });
+        res.status(500).json({ error: 'Error al actualizar el producto' });
     }
 });
 

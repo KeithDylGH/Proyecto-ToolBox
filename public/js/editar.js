@@ -2,10 +2,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.getElementById('formulario');
     const productId = formulario.getAttribute('data-id');
 
+    if (!productId) {
+        console.error('No se encontró el ID del producto en el formulario.');
+        return;
+    }
+
     formulario.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         const formData = new FormData(formulario);
+        formData.append('id', productId); // Agregar el ID al FormData
 
         try {
             // Enviar el formulario con datos de imagen
