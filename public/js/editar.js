@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(data);
 
         try {
-            const response = await fetch(`/api/productos/inventario/editar/${productId}`, {
+            const response = await fetch(`/api/products/inventario/editar/${productId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Producto actualizado con éxito');
 
             // Redireccionar a la página de inventario
-            window.location.href = '/inventario/verproducto/';
+            window.location.href = '/inventario/verproducto';
         } catch (error) {
             console.error('Error:', error);
             alert('Hubo un error al actualizar el producto');
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cancelarBtn) {
         cancelarBtn.addEventListener('click', function() {
             // Redireccionar a la página de inventario
-            window.location.href = '/inventario/verproducto/';
+            window.location.href = '/inventario/verproducto';
         });
     }
 });
