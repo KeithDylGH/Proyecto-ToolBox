@@ -1,17 +1,20 @@
 const express = require('express');
+const router = express.Router();
 const axios = require('axios');
 const Producto = require('../models/producto');
 require('dotenv').config();
-
-const router = express.Router();
 
 // Obtén las variables de entorno
 const bunnyAccessKey = process.env.bunnyNetAPIKEY;
 const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}`;
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
+// Configura multer para manejar la carga de archivos
+const multer = require('multer');
+const upload = multer(); // Configura multer para manejar los archivos
+
 // Ruta para subir archivos
-router.post('/upload', async (req, res) => {
+router.post('/upload', upload.single('inputImagen'), async (req, res) => {
     if (!req.file || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
         return res.status(400).send('Faltan campos obligatorios');
     }
