@@ -12,6 +12,7 @@ const PDF = require('pdfkit');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const path = require('path');
 
 const userRouter = require('./controllers/usuarios');
 const productoRouter = require('./controllers/productos');
@@ -315,6 +316,30 @@ app.post('/api/productos/agregar', async (req, res) => {
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
+
+// Endpoint para subir imágenes
+app.post('/api/subir-imagen', upload.single('file'), async (req, res) => {
+    try {
+        const file = req.file;
+        if (!file) {
+            return res.status(400).send('No se ha cargado ninguna imagen');
+        }
+
+        // Subir imagen a Bunny CDN
+        const filePath = path.join(__dirname, 'uploads', file.filename);
+        const fileBuffer = fs.readFileSync(filePath);
+        const imagenUrl = await subirImagen(fileBuffer, file.filename);
+
+        // Elimina el archivo temporal
+        fs.unlinkSync(filePath);
+
+        res.status(200).json({ fileName: file.filename });
+    } catch (error) {
+        console.error('Error al subir imagen:', error);
+        res.status(500).send('Error al subir la imagen');
+    }
+});
+
 
 // Ruta para agregar producto con imagen
 app.post('/inventario/agregarproduto', async (req, res) => {
