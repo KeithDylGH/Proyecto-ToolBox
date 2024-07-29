@@ -8,18 +8,23 @@ const bunnyAccessKey = process.env.bunnyNetAPIKEY;
 const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}`;
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
-router.post('/upload', async (req, res) => {
+// Middleware para procesar archivos
+const multer = require('multer');
+const upload = multer();
+
+router.post('/upload', upload.single('inputImagen'), async (req, res) => {
     console.log('Cuerpo de la solicitud:', req.body);
+    console.log('Archivo recibido:', req.file);
 
     // Verifica si el archivo se encuentra en la solicitud
-    if (!req.files || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
+    if (!req.file || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
         return res.status(400).send('Faltan campos obligatorios');
     }
 
     try {
-        const file = req.files.inputImagen;
-        const fileName = file.name;
-        const fileBuffer = file.data;
+        const file = req.file;
+        const fileName = file.originalname;
+        const fileBuffer = file.buffer;
 
         const response = await axios.put(
             `${bunnyStorageUrl}/${fileName}`,

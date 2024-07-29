@@ -17,6 +17,9 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
+const multer = require('multer');
+const upload = multer();
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
