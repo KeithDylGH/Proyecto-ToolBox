@@ -8,23 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData(formulario);
 
-        const data = {
-            nombre: formData.get('nombre'),
-            precio: formData.get('precio'),
-            categoria: formData.get('categoria'),
-            descripcion: formData.get('descripcion')
-        };
-
-        console.log(data);
-
         try {
+            // Enviar el formulario con datos de imagen
             const response = await fetch(`/api/products/inventario/editar/${productId}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });            
+                body: formData // No es necesario establecer Content-Type en FormData
+            });
 
             if (!response.ok) {
                 throw new Error('Error al actualizar el producto');

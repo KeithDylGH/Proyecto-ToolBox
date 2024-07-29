@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
+const fetch = require('node-fetch'); // Para subir imágenes a Bunny Storage
 
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
@@ -56,28 +57,49 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Endpoint para actualizar un producto
+// Endpoint para actualizar producto
 router.put('/inventario/editar/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nombre, precio, categoria, descripcion } = req.body;
+    const productId = req.params.id;
+    const form = new formidable.IncomingForm(); // Usar formidable para manejar archivos
+    form.parse(req, async (err, fields, files) => {
+        if (err) return res.status(400).send('Error en la carga del archivo');
+        
+        const { nombre, precio, categoria, descripcion } = fields;
+        let imagenUrl = '';
 
-        const productoActualizado = await Producto.findByIdAndUpdate(id, {
-            nombre,
-            precio,
-            categoria,
-            descripcion
-        }, { new: true });
-
-        if (!productoActualizado) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
+        // Manejo de imagen
+        if (files.inputImagen && files.inputImagen[0]) {
+            const image = files.inputImagen[0];
+            const imageData = await fs.promises.readFile(image.filepath);
+            const response = await fetch('https://storage.bunnycdn.com/your-bucket/' + image.originalFilename, {
+                method: 'PUT',
+                body: imageData,
+                headers: {
+                    'Content-Type': image.mimetype
+                }
+            });
+            if (response.ok) {
+                imagenUrl = 'https://storage.bunnycdn.com/your-bucket/' + image.originalFilename;
+            } else {
+                return res.status(500).send('Error al subir la imagen');
+            }
         }
 
-        res.json(productoActualizado);
-    } catch (error) {
-        console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'Error al actualizar el producto', details: error.message });
-    }
+        // Actualizar producto en la base de datos
+        try {
+            const productoActualizado = await Producto.findByIdAndUpdate(productId, {
+                nombre,
+                precio,
+                categoria,
+                descripcion,
+                imagen: imagenUrl
+            }, { new: true });
+
+            res.json(productoActualizado);
+        } catch (error) {
+            res.status(500).send('Error al actualizar el producto');
+        }
+    });
 });
 
 module.exports = router;
