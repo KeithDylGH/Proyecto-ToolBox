@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Producto actualizado con éxito');
 
             // Redireccionar a la página de inventario
-            window.location.href = '/inventario/verproducto';
+            window.location.href = '/inventario/verproducto/';
         } catch (error) {
             console.error('Error:', error);
             alert('Hubo un error al actualizar el producto');

@@ -1,17 +1,21 @@
 require('dotenv').config();
-const fetch = require('node-fetch');
+const fetch = require('node-fetch'); // Asegúrate de tener node-fetch instalado
+const FormData = require('form-data'); // Asegúrate de instalar form-data
 
-async function subirImagen(buffer, fileName) {
-    const url = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${fileName}`;
+async function subirImagen(file) {
+    const form = new FormData();
+    form.append('file', file.buffer, file.originalname); // Ajusta según la forma en que envíes el archivo
+
+    const url = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${file.originalname}`;
     const apiKey = process.env.bunnyNetAPIKEY;
 
     const response = await fetch(url, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/octet-stream', // Ajusta el Content-Type según sea necesario
+            ...form.getHeaders(),
             'AccessKey': apiKey
         },
-        body: buffer
+        body: form
     });
 
     if (!response.ok) {

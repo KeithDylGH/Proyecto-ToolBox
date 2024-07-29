@@ -1,10 +1,13 @@
+import { subirImagen } from '../../controllers/subirProducto.js'; // Asegúrate de la ruta correcta
 import { mostrarAlerta } from "./alerta.js";
-import { subirImagen } from '../../controllers/subirProducto.js'; // Asegúrate de que la ruta sea correcta
 
+//* SELECTORES
 const formulario = document.querySelector('#formulario');
 
+//* EVENTOS
 formulario.addEventListener('submit', validarProducto);
 
+//* FUNCIONES
 async function validarProducto(e) {
     e.preventDefault();
 
@@ -20,20 +23,7 @@ async function validarProducto(e) {
     }
 
     try {
-        const formData = new FormData();
-        formData.append('file', imagen);
-
-        const response = await fetch('/api/subir-imagen', { // Debes definir esta ruta en el backend
-            method: 'POST',
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al subir la imagen');
-        }
-
-        const { fileName } = await response.json();
-        const imagenUrl = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${fileName}`;
+        const imagenUrl = await subirImagen(imagen); // Sube la imagen y obtiene la URL
 
         const producto = {
             nombre,
@@ -43,7 +33,7 @@ async function validarProducto(e) {
             imagenUrl
         };
 
-        const productoResponse = await fetch('/api/productos/agregar', {
+        const response = await fetch('/api/productos/agregar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -51,7 +41,7 @@ async function validarProducto(e) {
             body: JSON.stringify(producto)
         });
 
-        if (!productoResponse.ok) {
+        if (!response.ok) {
             throw new Error('Error al agregar el producto');
         }
 
