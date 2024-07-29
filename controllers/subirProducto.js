@@ -11,7 +11,7 @@ const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.b
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
 // Ruta para subir archivos
-router.post('/upload', async (req, res) => {
+router.post('/', async (req, res) => {
     if (!req.file || !req.body.nombre || !req.body.costo || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
         return res.status(400).send('Faltan campos obligatorios');
     }
