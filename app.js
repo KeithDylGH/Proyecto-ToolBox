@@ -361,12 +361,6 @@ app.post('/login', async (req, res) => {
 app.use('/api/users',userRouter);
 app.use('/api/login',loginRouter);
 app.use('/api/products', productoRouter);
-app.use('/api/upload', (req, res, next) => {
-    console.log('Método:', req.method);
-    console.log('Ruta:', req.path);
-    console.log('Cuerpo de la Solicitud:', req.body);
-    console.log('Archivo:', req.file);
-    next();
-}, subirProducto);
+app.use('/api/upload', subirProducto);
 
 module.exports = app
