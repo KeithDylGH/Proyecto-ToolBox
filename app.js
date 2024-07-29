@@ -296,7 +296,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Ruta para recibir la URL de la imagen y datos del producto
-app.post('/api/productos/agregar', async (req, res) => {
+/* app.post('/api/productos/verProducto', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion, imagenUrl } = req.body;
 
@@ -318,7 +318,7 @@ app.post('/api/productos/agregar', async (req, res) => {
         console.error('Error al agregar el producto:', error);
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
-});
+}); */
 
 app.post('/login', async (req, res) => {
     const { usuario, contrasena } = req.body;
