@@ -1,8 +1,6 @@
 const express = require('express');
 const axios = require('axios');
 const Producto = require('../models/producto');
-const fs = require('fs');
-const path = require('path');
 require('dotenv').config();
 
 const router = express.Router();
@@ -14,17 +12,16 @@ const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
 // Ruta para subir archivos
 router.post('/upload', async (req, res) => {
-    const { inputImagen } = req.body;
-
-    if (!inputImagen) {
+    if (!req.files || !req.files.inputImagen) {
         const errorMsg = 'No se ha cargado ningún archivo';
         console.error(errorMsg);
         return res.status(400).send(errorMsg);
     }
 
     try {
-        const fileName = path.basename(inputImagen);
-        const fileBuffer = fs.readFileSync(inputImagen);
+        const file = req.files.inputImagen;
+        const fileName = file.name;
+        const fileBuffer = file.data;
 
         // Sube el archivo a Bunny.net
         const response = await axios.put(
@@ -49,9 +46,10 @@ router.post('/upload', async (req, res) => {
                 precio: req.body.precio,
                 imagen: {
                     data: fileUrl, // Usamos la URL del Pull Zone como el campo data
-                    contentType: 'image/jpeg' // Ajusta el tipo de contenido según el archivo subido
+                    contentType: file.mimetype // Ajusta el tipo de contenido según el archivo subido
                 },
-                categoria: req.body.categoria
+                categoria: req.body.categoria,
+                descripcion: req.body.descripcion // Incluido el campo descripcion
             });
 
             await nuevoProducto.save();
