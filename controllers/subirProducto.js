@@ -14,7 +14,9 @@ const multer = require('multer');
 const upload = multer(); // Configura multer para manejar los archivos
 
 // Ruta para subir archivos
-router.post('/inventario/verproducto/', upload.single('inputImagen'), (req, res, next) => {
+
+//CAMBIA EL /UPLOAD POR LA PAGINA VER PRODUCTOS POR SI NO FUNCIONA /UPLOAD
+router.post('/api/upload', upload.single('inputImagen'), (req, res, next) => {
     console.log('Archivo recibido:', req.file);
     console.log('Cuerpo de la solicitud:', req.body);
     next();
