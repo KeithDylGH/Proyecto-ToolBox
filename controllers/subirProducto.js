@@ -11,17 +11,15 @@ const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.b
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
 // Ruta para subir archivos
-router.post('/', async (req, res) => {
-    if (!req.files || !req.files.inputImagen) {
-        const errorMsg = 'No se ha cargado ningún archivo';
-        console.error(errorMsg);
-        return res.status(400).send(errorMsg);
+router.post('/upload', async (req, res) => {
+    if (!req.file || !req.body.nombre || !req.body.costo || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
+        return res.status(400).send('Faltan campos obligatorios');
     }
 
     try {
-        const file = req.files.inputImagen;
-        const fileName = file.name;
-        const fileBuffer = file.data;
+        const file = req.file;
+        const fileName = file.originalname;
+        const fileBuffer = file.buffer;
 
         // Sube el archivo a Bunny.net
         const response = await axios.put(
@@ -45,8 +43,8 @@ router.post('/', async (req, res) => {
                 costo: req.body.costo,
                 precio: req.body.precio,
                 imagen: {
-                    data: fileUrl,
-                    contentType: file.mimetype
+                    data: fileUrl, // Usamos la URL del Pull Zone como el campo data
+                    contentType: file.mimetype // Ajusta el tipo de contenido según el archivo subido
                 },
                 categoria: req.body.categoria,
                 descripcion: req.body.descripcion // Incluido el campo descripcion
