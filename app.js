@@ -17,7 +17,15 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // Límite de 10MB para archivos
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    fileFilter: (req, file, cb) => {
+      // Puedes agregar filtros aquí para restringir los tipos de archivos permitidos
+      cb(null, true);
+    }
+  });
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -286,7 +294,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.post('/subir-imagen', async (req, res) => {
+app.post('/api/upload/agregar', upload.single('imagen'), async (req, res) => {
     try {
         if (!req.files || !req.files.imagen) {
             return res.status(400).send('No se ha subido ninguna imagen.');
