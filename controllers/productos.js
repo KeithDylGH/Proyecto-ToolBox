@@ -65,7 +65,7 @@ router.put('/inventario/editar/:id', async (req, res) => {
         const productoId = req.params.id;
 
         // Verificar si el producto existe
-        const producto = await iProducto.findById(productoId);
+        const producto = await Producto.findById(productoId);
         if (!producto) {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
