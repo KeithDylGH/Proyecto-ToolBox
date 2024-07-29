@@ -57,8 +57,8 @@ router.post('/upload', upload.single('inputImagen'), async (req, res) => {
 
             await nuevoProducto.save();
 
-            // Responder con la URL del archivo y confirmación de guardado
-            res.json({ url: fileUrl, mensaje: 'Producto subido y guardado exitosamente' });
+            // Redirigir a /inventario/verproducto
+            res.redirect('/inventario/verproducto');
         } else {
             const errorMsg = `Error al subir el archivo. Código de estado: ${response.status}`;
             console.error(errorMsg);
