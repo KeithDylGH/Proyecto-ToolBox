@@ -317,53 +317,24 @@ app.post('/api/productos/agregar', async (req, res) => {
 });
 
 // Ruta para agregar producto con imagen
-app.post('/api/productos/agregar', (req, res) => {
-    const form = new formidable.IncomingForm();
-    form.uploadDir = path.join(__dirname, 'temp');
-    form.keepExtensions = true;
+app.post('/inventario/agregarproduto', async (req, res) => {
+    try {
+        const { nombre, precio, categoria, descripcion, imagenUrl } = req.body;
 
-    form.parse(req, async (err, fields, files) => {
-        if (err) {
-            res.status(500).send('Error al procesar el formulario');
-            return;
-        }
+        const nuevoProducto = new iProducto({
+            nombre,
+            precio,
+            categoria,
+            descripcion,
+            imagenUrl // Guarda la URL de la imagen en el producto
+        });
 
-        try {
-            let imageUrl = null;
-
-            if (files.imagen) {
-                const filePath = files.imagen.filepath;
-                const fileName = path.basename(filePath);
-                
-                // Cargar imagen a BunnyNet
-                const fileData = fs.readFileSync(filePath);
-                const response = await axios.post(`https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}/${fileName}`, fileData, {
-                    headers: {
-                        'Content-Type': files.imagen.mimetype,
-                        'AccessKey': process.env.bunnyNetAPIKEY,
-                        'Content-Disposition': `attachment; filename="${fileName}"`
-                    }
-                });
-
-                imageUrl = `https://${process.env.bunnyNetPullZone}/${fileName}`;
-            }
-
-            const { nombre, precio, categoria, descripcion } = fields;
-
-            const nuevoProducto = new iProducto({
-                nombre,
-                precio,
-                categoria,
-                descripcion,
-                imagenUrl
-            });
-
-            await nuevoProducto.save();
-            res.redirect('/'); // Redirige a la página principal o a donde necesites
-        } catch (uploadError) {
-            res.status(500).send('Error al subir la imagen');
-        }
-    });
+        await nuevoProducto.save();
+        res.status(201).json({ message: 'Producto agregado con éxito' });
+    } catch (error) {
+        console.error('Error al agregar el producto:', error);
+        res.status(500).json({ error: 'Error al agregar el producto' });
+    }
 });
 
 app.post('/login', async (req, res) => {
