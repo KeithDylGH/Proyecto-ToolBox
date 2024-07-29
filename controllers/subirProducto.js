@@ -11,7 +11,7 @@ const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.b
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
 // Ruta para subir archivos
-router.post('/upload', async (req, res) => {
+router.post('/', async (req, res) => {
     if (!req.files || !req.files.inputImagen) {
         const errorMsg = 'No se ha cargado ningún archivo';
         console.error(errorMsg);

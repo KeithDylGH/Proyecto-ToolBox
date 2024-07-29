@@ -10,6 +10,7 @@ const ejs = require('ejs');
 const Excel = require('exceljs');
 const PDF = require('pdfkit');
 const fileUpload = require('express-fileupload');
+const uploadRoutes = require('./controllers/subirProducto');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -89,7 +90,8 @@ app.use(session({
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // maxAge opcional, configura la duración de la cookie
 }));
 
-app.use(fileUpload());
+//app.use(fileUpload());
+app.use('/upload', uploadRoutes); // Ajusta según el nombre de tu archivo de rutas
 
 // Configuración de archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
