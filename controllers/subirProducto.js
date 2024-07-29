@@ -4,22 +4,28 @@ const axios = require('axios');
 const Producto = require('../models/producto');
 require('dotenv').config();
 
+// Obtén las variables de entorno
 const bunnyAccessKey = process.env.bunnyNetAPIKEY;
 const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}`;
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
-router.post('/api/upload', async (req, res) => {
-    console.log('Archivo recibido:', req.files);
+// Configura multer para manejar la carga de archivos
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+router.post('/upload', upload.single('inputImagen'), async (req, res) => {
+    console.log('Archivo recibido:', req.file);
     console.log('Cuerpo de la solicitud:', req.body);
 
-    if (!req.files || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
+    if (!req.file || !req.body.nombre || !req.body.precio || !req.body.categoria || !req.body.descripcion) {
         return res.status(400).send('Faltan campos obligatorios');
     }
 
     try {
-        const file = req.files.inputImagen;
-        const fileName = file.name;
-        const fileBuffer = file.data;
+        const file = req.file;
+        const fileName = file.originalname;
+        const fileBuffer = file.buffer;
 
         // Sube el archivo a Bunny.net
         const response = await axios.put(
@@ -34,22 +40,25 @@ router.post('/api/upload', async (req, res) => {
         );
 
         if (response.status === 200 || response.status === 201) {
+            // URL del archivo subido usando el Pull Zone
             const fileUrl = `${bunnyPullZoneUrl}/${fileName}`;
 
+            // Guardar el producto en MongoDB
             const nuevoProducto = new Producto({
                 nombre: req.body.nombre,
                 precio: req.body.precio,
                 imagen: {
-                    data: fileUrl,
-                    contentType: file.mimetype
+                    data: fileUrl, // Usamos la URL del Pull Zone como el campo data
+                    contentType: req.file.mimetype // Ajusta el tipo de contenido según el archivo subido
                 },
                 categoria: req.body.categoria,
-                descripcion: req.body.descripcion
+                descripcion: req.body.descripcion // Incluido el campo descripcion
             });
 
             await nuevoProducto.save();
 
-            res.redirect('/inventario/verproducto/');
+            // Redirigir a /inventario/verproducto
+            res.redirect('/inventario/verproducto');
         } else {
             const errorMsg = `Error al subir el archivo. Código de estado: ${response.status}`;
             console.error(errorMsg);

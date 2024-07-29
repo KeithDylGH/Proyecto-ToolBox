@@ -94,9 +94,9 @@ app.use(fileUpload());
 
 
 // Configuración de archivos estáticos
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Configurar EJS
 app.set('view engine', 'ejs');
@@ -361,6 +361,6 @@ app.post('/login', async (req, res) => {
 app.use('/api/users',userRouter);
 app.use('/api/login',loginRouter);
 app.use('/api/products', productoRouter);
-app.use('/api/upload', subirProducto);
+app.use('/api', subirProducto);
 
 module.exports = app
