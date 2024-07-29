@@ -90,7 +90,7 @@ app.use(session({
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // maxAge opcional, configura la duración de la cookie
 }));
 
-//app.use(fileUpload());
+app.use(fileUpload());
 app.use('/upload', uploadRoutes); // Ajusta según el nombre de tu archivo de rutas
 
 // Configuración de archivos estáticos
