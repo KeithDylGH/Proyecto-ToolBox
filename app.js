@@ -91,7 +91,7 @@ app.use(session({
 }));
 
 app.use(fileUpload());
-app.use('/upload', uploadRoutes); // Ajusta según el nombre de tu archivo de rutas
+
 
 // Configuración de archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
@@ -359,5 +359,6 @@ app.post('/login', async (req, res) => {
 app.use('/api/users',userRouter);
 app.use('/api/login',loginRouter);
 app.use('/api/products', productoRouter);
+app.use('/api/upload', uploadRoutes);
 
 module.exports = app
