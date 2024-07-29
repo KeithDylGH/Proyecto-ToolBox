@@ -286,17 +286,12 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.use('/api/productos', productoRouter);
-app.use('/api/products', subirProducto);
-app.use('/api/usuarios', userRouter);
-app.use('/api/login', loginRouter);
-
 app.post('/subir-imagen', async (req, res) => {
     try {
         if (!req.files || !req.files.imagen) {
             return res.status(400).send('No se ha subido ninguna imagen.');
         }
-
+        
         const archivo = req.files.imagen;
         const ruta = path.join(__dirname, 'uploads', archivo.name);
         await archivo.mv(ruta);
@@ -307,3 +302,8 @@ app.post('/subir-imagen', async (req, res) => {
         res.status(500).send('Error al subir la imagen.');
     }
 });
+
+app.use('/api/products', productoRouter); // Rutas para productos
+app.use('/api/upload', subirProducto);   // Rutas para subir productos
+app.use('/api/usuarios', userRouter);
+app.use('/api/login', loginRouter);
