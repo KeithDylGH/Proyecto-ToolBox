@@ -258,7 +258,7 @@ app.get('/api/descargar-inventario', async (req, res) => {
     }
 });
 
-app.post('/api/productos/agregar', async (req, res) => {
+app.post('/api/products/agregar', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
 
