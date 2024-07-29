@@ -14,7 +14,7 @@ const multer = require('multer');
 const upload = multer(); // Configura multer para manejar los archivos
 
 // Ruta para subir archivos
-router.post('/upload', upload.single('inputImagen'), (req, res, next) => {
+router.post('/inventario/verproducto/', upload.single('inputImagen'), (req, res, next) => {
     console.log('Archivo recibido:', req.file);
     console.log('Cuerpo de la solicitud:', req.body);
     next();
@@ -59,7 +59,7 @@ router.post('/upload', upload.single('inputImagen'), (req, res, next) => {
             await nuevoProducto.save();
 
             // Redirigir a /inventario/verproducto
-            res.redirect('/inventario/verproducto');
+            res.redirect('/inventario/verproducto/');
         } else {
             const errorMsg = `Error al subir el archivo. Código de estado: ${response.status}`;
             console.error(errorMsg);
