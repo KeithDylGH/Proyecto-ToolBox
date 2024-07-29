@@ -10,7 +10,7 @@ const ejs = require('ejs');
 const Excel = require('exceljs');
 const PDF = require('pdfkit');
 const fileUpload = require('express-fileupload');
-const uploadRoutes = require('./controllers/subirProducto');
+const subirProducto = require('./controllers/subirProducto');
 
 const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
 const CUsuario = require('./models/usuario');
@@ -94,6 +94,8 @@ app.use(fileUpload());
 
 
 // Configuración de archivos estáticos
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configurar EJS
@@ -359,6 +361,6 @@ app.post('/login', async (req, res) => {
 app.use('/api/users',userRouter);
 app.use('/api/login',loginRouter);
 app.use('/api/products', productoRouter);
-app.use('/api/upload', uploadRoutes);
+app.use('/api/upload', subirProducto);
 
 module.exports = app
