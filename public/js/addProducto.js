@@ -45,7 +45,8 @@ async function validarProducto(e) {
             throw new Error('Error al agregar el producto');
         }
 
-        mostrarAlerta('Producto agregado exitosamente');
+        const result = await response.json();
+        mostrarAlerta(result.message || 'Producto agregado exitosamente');
         setTimeout(() => {
             window.location.href = '/inventario/verproducto/';
         }, 1000);
