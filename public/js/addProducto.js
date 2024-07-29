@@ -1,4 +1,3 @@
-import { nuevoProducto } from "./api.js";
 import { mostrarAlerta } from "./alerta.js";
 
 //* SELECTORES
@@ -15,41 +14,36 @@ async function validarProducto(e) {
     const precio = document.querySelector('#precio').value;
     const categoria = document.querySelector('#categoria').value;
     const descripcion = document.querySelector('#desc').value;
+    const imagen = document.querySelector('#imagen').files[0];
 
-    const producto = {
-        nombre,
-        precio,
-        categoria,
-        descripcion
-    };
-
-    if (validacion(producto)) {
-        mostrarAlerta('Todos los campos son obligatorios');
-    } else {
-        try {
-            const response = await fetch('/api/products/agregar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(producto)
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error al agregar el producto: ${response.statusText}`);
-            }
-
-            mostrarAlerta('Producto agregado exitosamente');
-            setTimeout(() => {
-                window.location.href = '/inventario/verproducto/';
-            }, 1000); // Redirige después de mostrar la alerta durante 1 segundo
-        } catch (error) {
-            console.error('Error al agregar producto:', error);
-            mostrarAlerta('Error al agregar el producto. Inténtalo de nuevo.');
-        }
+    if (!nombre || !precio || !categoria || !descripcion || !imagen) {
+        mostrarAlerta('Todos los campos y la imagen son obligatorios');
+        return;
     }
-}
 
-function validacion(obj) {
-    return !Object.values(obj).every(i => i !== '');
+    const formData = new FormData();
+    formData.append('nombre', nombre);
+    formData.append('precio', precio);
+    formData.append('categoria', categoria);
+    formData.append('descripcion', descripcion);
+    formData.append('imagen', imagen);
+
+    try {
+        const response = await fetch('/api/products/agregar', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al agregar el producto: ${response.statusText}`);
+        }
+
+        mostrarAlerta('Producto agregado exitosamente');
+        setTimeout(() => {
+            window.location.href = '/inventario/verproducto/';
+        }, 1000); // Redirige después de mostrar la alerta durante 1 segundo
+    } catch (error) {
+        console.error('Error al agregar producto:', error);
+        mostrarAlerta('Error al agregar el producto. Inténtalo de nuevo.');
+    }
 }

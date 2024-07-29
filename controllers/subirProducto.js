@@ -36,7 +36,7 @@ router.post('/agregar', upload.single('imagen'), async (req, res) => {
             }
         );
 
-        if (response.status === 200 || response.status === 201) {
+        if (response.status === 200 || 201) {
             const fileUrl = `${bunnyPullZoneUrl}/${fileName}`;
 
             const nuevoProducto = new Producto({

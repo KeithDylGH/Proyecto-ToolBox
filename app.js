@@ -18,6 +18,11 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const multer = require('multer');
 
+const app = express();
+const PORT = process.env.PORT || 4000;
+const mongoUri = process.env.mongoURL;
+
+// Configuración de multer para manejar archivos en memoria
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
@@ -25,11 +30,7 @@ const upload = multer({
       // Puedes agregar filtros aquí para restringir los tipos de archivos permitidos
       cb(null, true);
     }
-  });
-
-const app = express();
-const PORT = process.env.PORT || 4000;
-const mongoUri = process.env.mongoURL;
+});
 
 mongoose.connect(mongoUri).then(() => {
     console.log('Base de Datos conectada!');
@@ -87,8 +88,6 @@ app.use(session({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(upload.any()); // Configura multer para aceptar cualquier tipo de archivo
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -111,6 +110,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
+app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
 
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
@@ -121,8 +121,6 @@ app.get('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
-
-app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
 
 app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
@@ -262,52 +260,28 @@ app.get('/api/descargar-inventario', async (req, res) => {
     }
 });
 
-app.post('/api/productos/agregar', async (req, res) => {
+// Maneja la subida de productos con imágenes
+app.post('/api/productos/agregar', upload.single('imagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
+        const imagen = req.file; // Cambiado de req.files.imagen a req.file
+
+        // Guarda el archivo en el servidor
+        if (imagen) {
+            const ruta = path.join(__dirname, 'uploads', imagen.originalname);
+            fs.writeFileSync(ruta, imagen.buffer);
+        }
 
         const nuevoProducto = new iProducto({ nombre, precio, categoria, descripcion });
+        if (imagen) {
+            nuevoProducto.imagen = imagen.originalname; // Guarda el nombre del archivo en el modelo de producto
+        }
         await nuevoProducto.save();
 
         res.status(201).json({ message: 'Producto agregado con éxito' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al agregar el producto' });
-    }
-});
-
-app.post('/login', async (req, res) => {
-    const { usuario, contrasena } = req.body;
-    
-    // Aquí deberías buscar el usuario en la base de datos
-    const usuarioEncontrado = await buscarUsuarioPorNombre(usuario);
-  
-    if (usuarioEncontrado && await bcrypt.compare(contrasena, usuarioEncontrado.contrasena)) {
-      req.session.user = {
-        id: usuarioEncontrado._id,
-        nombre: usuarioEncontrado.nombre,
-        rol: usuarioEncontrado.rol
-      };
-      res.redirect('/'); // Redirige a la página principal o a donde necesites
-    } else {
-      res.redirect('/login'); // Redirige de vuelta al login en caso de error
-    }
-});
-
-app.post('/api/upload/agregar', upload.single('imagen'), async (req, res) => {
-    try {
-        if (!req.files || !req.files.imagen) {
-            return res.status(400).send('No se ha subido ninguna imagen.');
-        }
-        
-        const archivo = req.files.imagen;
-        const ruta = path.join(__dirname, 'uploads', archivo.name);
-        await archivo.mv(ruta);
-
-        res.status(200).send('Imagen subida con éxito.');
-    } catch (error) {
-        console.error('Error al subir la imagen:', error);
-        res.status(500).send('Error al subir la imagen.');
     }
 });
 
