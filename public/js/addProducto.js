@@ -27,7 +27,7 @@ async function validarProducto(e) {
         mostrarAlerta('Todos los campos son obligatorios');
     } else {
         try {
-            const response = await fetch('/api/productos/agregar', {
+            const response = await fetch('/api/products/agregar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
