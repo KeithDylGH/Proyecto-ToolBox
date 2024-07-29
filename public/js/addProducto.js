@@ -1,13 +1,13 @@
 import { subirImagen } from '../../controllers/subirProducto.js'; // Asegúrate de la ruta correcta
 import { mostrarAlerta } from "./alerta.js";
 
-//* SELECTORES
+// SELECTORES
 const formulario = document.querySelector('#formulario');
 
-//* EVENTOS
+// EVENTOS
 formulario.addEventListener('submit', validarProducto);
 
-//* FUNCIONES
+// FUNCIONES
 async function validarProducto(e) {
     e.preventDefault();
 

@@ -2,27 +2,21 @@ require('dotenv').config();
 const fetch = require('node-fetch'); // Asegúrate de tener node-fetch instalado
 const FormData = require('form-data'); // Asegúrate de instalar form-data
 
-async function subirImagen(file) {
-    const form = new FormData();
-    form.append('file', file.buffer, file.originalname); // Ajusta según la forma en que envíes el archivo
+export async function subirImagen(file) {
+    const formData = new FormData();
+    formData.append('file', file);
 
-    const url = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${file.originalname}`;
-    const apiKey = process.env.bunnyNetAPIKEY;
-
-    const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-            ...form.getHeaders(),
-            'AccessKey': apiKey
-        },
-        body: form
+    const response = await fetch('/api/subir-imagen', {
+        method: 'POST',
+        body: formData
     });
 
     if (!response.ok) {
-        throw new Error(`Error al subir la imagen: ${response.statusText}`);
+        throw new Error('Error al subir la imagen');
     }
 
-    return url;
+    const data = await response.json();
+    return data.url; // Asegúrate de que `data.url` contiene la URL de la imagen subida
 }
 
 module.exports = { subirImagen };

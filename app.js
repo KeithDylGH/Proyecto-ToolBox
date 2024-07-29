@@ -300,7 +300,7 @@ app.post('/api/productos/agregar', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion, imagenUrl } = req.body;
 
-        if (!nombre || !precio || !categoria || !descripcion) {
+        if (!nombre || !precio || !categoria || !descripcion || !imagenUrl) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios' });
         }
 
