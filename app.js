@@ -83,7 +83,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({
     limits: { fileSize: 10 * 1024 * 1024 } // Limita el tamaño del archivo a 10 MB
 }));
-app.use(upload.array()); // Para manejar archivos subidos con multer
+//app.use(upload.array());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
