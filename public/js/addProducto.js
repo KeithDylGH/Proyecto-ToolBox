@@ -33,13 +33,13 @@ async function validarProducto(e) {
             imagenUrl
         };
 
-        const response = await fetch('/api/products/agregar', {
+        const response = await fetch('/api/productos/agregar', { // Cambia aquí
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(producto)
-        });
+        });        
 
         if (!response.ok) {
             throw new Error('Error al agregar el producto');

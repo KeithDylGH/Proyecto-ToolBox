@@ -18,7 +18,6 @@ const productoRouter = require('./controllers/productos');
 const loginRouter = require('./controllers/log-in');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
-const fetch = require('node-fetch'); // Asegúrate de instalar este paquete
 
 const app = express();
 const PORT = process.env.PORT || 4000;
