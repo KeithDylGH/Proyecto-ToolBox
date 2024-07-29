@@ -16,13 +16,16 @@ const iProducto = require('./models/producto');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-
 const multer = require('multer');
 const upload = multer();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
+
+// Middlewares para analizar el cuerpo de las solicitudes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect(mongoUri).then(() => {
     console.log('Base de Datos conectada!');
@@ -145,7 +148,7 @@ app.get('/admin/inventario', (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/agregarproduto', (req, res) => {
+app.get('/inventario/agregarproducto', (req, res) => {
     res.render('account/cuenta/admin/addP');
 });
 
