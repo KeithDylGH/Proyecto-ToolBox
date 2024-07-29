@@ -12,7 +12,6 @@ const PDF = require('pdfkit');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const path = require('path');
 
 const userRouter = require('./controllers/usuarios');
 const productoRouter = require('./controllers/productos');
