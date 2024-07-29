@@ -1,8 +1,8 @@
 require('dotenv').config();
-const express = require('express')
-const mongoose = require('mongoose')
-const fs = require('fs')
-const path = require('path')
+const express = require('express');
+const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 const userRouter = require('./controllers/usuarios');
 const productoRouter = require('./controllers/productos');
 const loginRouter = require('./controllers/log-in');
@@ -11,35 +11,27 @@ const Excel = require('exceljs');
 const PDF = require('pdfkit');
 const fileUpload = require('express-fileupload');
 const subirProducto = require('./controllers/subirProducto');
-
-const bcrypt = require('bcryptjs'); // Importar bcrypt para el hashing de contraseñas
+const bcrypt = require('bcryptjs');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
-
-const multer = require('multer');
-const upload = multer();
-
-// Definir el puerto desde las variables de entorno o usar 4000 por defecto
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const multer = require('multer');
+const upload = multer();
 
-const app = express()
+const app = express();
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
-
 
 mongoose.connect(mongoUri).then(() => {
     console.log('Base de Datos conectada!');
 
-    // Operaciones adicionales después de conectar con éxito
     mongoose.connection.once('open', async () => {
         try {
-            // Eliminar todos los documentos existentes en la colección usuarios
             await CUsuario.deleteMany({});
             console.log('Colección usuarios limpia.');
 
-            // Leer datos del archivo db.json
             const filePath = path.join(__dirname, 'db.json');
             const data = fs.readFileSync(filePath, 'utf-8');
             const parsedData = JSON.parse(data);
@@ -50,7 +42,6 @@ mongoose.connect(mongoUri).then(() => {
 
             const users = parsedData.usuarios;
 
-            // Hash de contraseñas y creación de usuarios
             for (let user of users) {
                 const existingUser = await CUsuario.findOne({ correo: user.correo });
                 user.password = await bcrypt.hash(user.password, 10);
@@ -62,10 +53,7 @@ mongoose.connect(mongoUri).then(() => {
                 }
             }
 
-            // Insertar usuarios en la base de datos
-            //await CUsuario.insertMany(users);
             console.log('Datos importados correctamente.');
-
         } catch (error) {
             console.error('Error al importar datos:', error);
         } finally {
@@ -73,7 +61,6 @@ mongoose.connect(mongoUri).then(() => {
         }
     });
 
-    // Iniciar el servidor solo cuando la conexión a la base de datos es exitosa
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Servidor conectado y escuchando en el puerto ${PORT}`);
     });
@@ -82,32 +69,28 @@ mongoose.connect(mongoUri).then(() => {
     console.error('Error al conectar con MongoDB:', err);
 });
 
-
-// Middleware para cookies y sesiones
 app.use(cookieParser('tu_secreto_secreto'));
 app.use(session({
     secret: 'tu_secreto_secreto',
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: mongoUri }),
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // maxAge opcional, configura la duración de la cookie
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-
-
-// Configuración de archivos estáticos
+app.use(upload.array()); // Para manejar archivos subidos con multer
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Configurar EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Middleware para exponer el usuario en res.locals
 app.use((req, res, next) => {
-    console.log('Session user:', req.session.user); // Agrega este log
+    console.log('Session user:', req.session.user);
     if (req.session.user) {
         res.locals.CUsuario = req.session.user;
     } else {
@@ -116,19 +99,12 @@ app.use((req, res, next) => {
     next();
 });
 
-
-//app.use(express.static(path.join(__dirname, 'controllers')));
-
-//RUTAS DE FRONTEND (EJS)
 app.get('/', (req, res) => {
-    const CUsuario = req.session.user; // Asegúrate de que el campo sea el correcto
+    const CUsuario = req.session.user;
     res.render('home/index', { CUsuario });
 });
 
-
-
-
-app.use('/login',express.static(path.resolve(__dirname, 'views','account', 'login')));
+app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
 
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
@@ -140,7 +116,7 @@ app.get('/logout', (req, res) => {
     });
 });
 
-app.use('/registrar',express.static(path.resolve(__dirname, 'views','account', 'register')));
+app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
 
 app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
@@ -162,7 +138,6 @@ app.get('/cuenta/configuracion/cambiar-datos', (req, res) => {
     res.render('account/cuenta/cliente/configuracion/datos');
 });
 
-
 app.get('/cuenta/atencion', (req, res) => {
     res.render('account/cuenta/cliente/atencion');
 });
@@ -182,14 +157,13 @@ app.get('/inventario/agregarproduto', (req, res) => {
 app.get('/inventario/verproducto', async (req, res) => {
     try {
         const productos = await iProducto.find();
-        res.render('account/cuenta/admin/seeP', { productos }); // Pasa la lista de productos a la plantilla
+        res.render('account/cuenta/admin/seeP', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
         res.status(500).send('Error al obtener los productos');
     }
 });
 
-// Ruta para servir la página de edición
 app.get('/inventario/editar/:id', async (req, res) => {
     try {
         const producto = await iProducto.findById(req.params.id);
@@ -202,23 +176,21 @@ app.get('/inventario/editar/:id', async (req, res) => {
     }
 });
 
-//DESCARGAR FORMATO PDF O EXCEL
 app.get('/inventario/descargarInv', async (req, res) => {
     try {
         const productos = await iProducto.find();
-        res.render('account/cuenta/admin/pdfYExcel', { productos }); // Pasa la lista de productos a la plantilla
+        res.render('account/cuenta/admin/pdfYExcel', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
         res.status(500).send('Error al obtener los productos');
     }
 });
 
-// Ruta para descargar el inventario en formato seleccionado
 app.get('/api/descargar-inventario', async (req, res) => {
     const format = req.query.format;
 
     if (!['pdf', 'excel'].includes(format)) {
-        return res.status(400).send('Formato no válido. Use "pdf" o "excel".');
+        return res.status(400).send('Formato no válido. Debe ser pdf o excel.');
     }
 
     try {
@@ -251,25 +223,20 @@ app.get('/api/descargar-inventario', async (req, res) => {
             await workbook.xlsx.write(res);
             res.end();
         } else if (format === 'pdf') {
-            // Generar archivo PDF
             const doc = new PDF();
 
-            // Configurar encabezado con logo
             const logoPath = path.join(__dirname, 'public', 'img', 'logo', 'LogoLetra.png');
             doc.image(logoPath, 50, 50, { width: 100 });
 
-            // Establecer estilo para el título
             doc.font('Helvetica-Bold').fontSize(18).text('Lista de Productos', {
                 align: 'right',
                 underline: true,
                 margin: 50
             });
 
-            // Espaciado después del título
             doc.moveDown();
 
-            // Establecer estilo para el contenido de productos
-            doc.font('Helvetica').fontSize(12).fillColor('#333'); // Color del texto
+            doc.font('Helvetica').fontSize(12).fillColor('#333');
             productos.forEach(producto => {
                 doc.text(`Nombre: ${producto.nombre}`);
                 doc.text(`Precio: ${producto.precio}`);
@@ -278,56 +245,17 @@ app.get('/api/descargar-inventario', async (req, res) => {
                 doc.moveDown();
             });
 
-            // Finalizar y enviar el documento PDF
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', 'attachment; filename=productos.pdf');
             doc.pipe(res);
             doc.end();
         }
     } catch (error) {
-        console.error(`Error al generar el archivo ${format.toUpperCase()}:`, error);
-        if (!res.headersSent) {
-            res.status(500).send(`Error al generar el archivo ${format.toUpperCase()}`);
-        }
+        console.error('Error al generar el archivo:', error);
+        res.status(500).send('Error al generar el archivo');
     }
 });
 
-app.get('/inventario/descargar/pdf', async (req, res) => {
-    try {
-        const productos = await iProducto.find();
-
-        const doc = new PDF();
-
-        res.render('account/cuenta/admin/pdfYExcel', { productos });
-
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=productos.pdf');
-
-        doc.pipe(res);
-
-        doc.fontSize(18).text('Lista de Productos', { align: 'center' });
-        doc.moveDown();
-
-        productos.forEach(producto => {
-            doc.fontSize(12).text(`Nombre: ${producto.nombre}`);
-            doc.text(`Precio: ${producto.precio}`);
-            doc.text(`Categoría: ${producto.categoria}`);
-            doc.text(`Descripción: ${producto.descripcion}`);
-            doc.moveDown();
-        });
-
-        doc.end();
-    } catch (error) {
-        console.error('Error al generar el archivo PDF:', error);
-        res.status(500).send('Error al generar el archivo PDF');
-    }
-});
-
-//SUPER IMPORTANTE
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Ruta para agregar productos a MongoDB
 app.post('/api/productos/agregar', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
@@ -345,25 +273,30 @@ app.post('/api/productos/agregar', async (req, res) => {
 app.post('/login', async (req, res) => {
     const { usuario, contrasena } = req.body;
     
-    // Aquí deberías buscar el usuario en la base de datos
-    const usuarioEncontrado = await buscarUsuarioPorNombre(usuario);
-  
-    if (usuarioEncontrado && await bcrypt.compare(contrasena, usuarioEncontrado.contrasena)) {
-      req.session.user = {
-        id: usuarioEncontrado._id,
-        nombre: usuarioEncontrado.nombre,
-        rol: usuarioEncontrado.rol
-      };
-      res.redirect('/'); // Redirige a la página principal o a donde necesites
-    } else {
-      res.redirect('/login'); // Redirige de vuelta al login en caso de error
+    // Aquí deberías buscar al usuario en tu base de datos
+    // y comparar la contraseña con bcrypt.compare
+    // ...
+
+    res.redirect('/admin');
+});
+
+app.use('/api/productos', productoRouter);
+app.use('/api/usuarios', userRouter);
+app.use('/', loginRouter);
+
+app.post('/subir-imagen', async (req, res) => {
+    try {
+        if (!req.files || !req.files.imagen) {
+            return res.status(400).send('No se ha subido ninguna imagen.');
+        }
+
+        const archivo = req.files.imagen;
+        const ruta = path.join(__dirname, 'uploads', archivo.name);
+        await archivo.mv(ruta);
+
+        res.status(200).send('Imagen subida con éxito.');
+    } catch (error) {
+        console.error('Error al subir la imagen:', error);
+        res.status(500).send('Error al subir la imagen.');
     }
-  });  
-
-//RUTAS DE BACKEND
-app.use('/api/users',userRouter);
-app.use('/api/login',loginRouter);
-app.use('/api/products', productoRouter);
-app.use('/api', subirProducto);
-
-module.exports = app
+});
