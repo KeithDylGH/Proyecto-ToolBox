@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
 const multer = require('multer');
+const axios = require('axios');
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Endpoint para agregar un nuevo producto
@@ -58,15 +59,11 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Ruta para actualizar un producto
-router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+// Endpoint para actualizar un producto
+router.put('/admin/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
         const productoId = req.params.id;
-
-        if (!productoId) {
-            return res.status(400).json({ error: 'ID del producto no proporcionado' });
-        }
 
         // Verificar si el producto existe
         const producto = await Producto.findById(productoId);
@@ -74,21 +71,35 @@ router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, r
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        // Actualizar el producto
+        // Actualizar los datos del producto
         producto.nombre = nombre;
         producto.precio = precio;
         producto.categoria = categoria;
         producto.descripcion = descripcion;
 
+        // Subir la imagen a Bunny Storage si se ha proporcionado
         if (req.file) {
-            producto.imagen = req.file.buffer.toString('base64'); // Guardar la imagen en formato base64
+            const imageName = `${productoId}_${req.file.originalname}`;
+            const uploadResponse = await axios.post(`https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`, req.file.buffer, {
+                headers: {
+                    'AccessKey': process.env.bunnyNetAPIKEY,
+                    'Content-Type': req.file.mimetype
+                }
+            });
+
+            if (uploadResponse.status === 200) {
+                // Actualizar la URL de la imagen en el producto
+                producto.imagen = `https://${process.env.bunnyNetPullZone}/${imageName}`;
+            } else {
+                throw new Error('Error al subir la imagen a Bunny Storage');
+            }
         }
 
         await producto.save();
         res.status(200).json({ message: 'Producto actualizado con éxito' });
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'Error al actualizar el producto', details: error.message });
+        res.status(500).json({ error: 'Error al actualizar el producto' });
     }
 });
 

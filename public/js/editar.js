@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!response.ok) {
-                const errorData = await response.json(); // Obtener detalles del error
-                throw new Error(`Error al actualizar el producto: ${errorData.error}`);
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al actualizar el producto');
             }
 
             const result = await response.json();
