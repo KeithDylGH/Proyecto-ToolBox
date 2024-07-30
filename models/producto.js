@@ -18,7 +18,12 @@ const productoSchema = new mongoose.Schema({
         required: true,
     },
     imagen: {
-        type: String,
+        data: {
+            type: String,
+        },
+        contentType: {
+            type: String,
+        },
     },
 });
 
