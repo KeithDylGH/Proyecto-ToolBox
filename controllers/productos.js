@@ -59,52 +59,30 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Endpoint para actualizar un producto
-router.put('/admin/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+// Ruta para actualizar un producto
+app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
-        const productoId = req.params.id;
+        const imagen = req.file; // La imagen subida, si existe
 
-        // Verificar si el producto existe
-        const producto = await Producto.findById(productoId);
+        // Busca el producto por ID
+        const producto = await iProducto.findById(req.params.id);
         if (!producto) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
+            return res.status(404).send('Producto no encontrado');
         }
 
-        // Actualizar el producto
+        // Actualiza los datos del producto
         producto.nombre = nombre;
         producto.precio = precio;
         producto.categoria = categoria;
         producto.descripcion = descripcion;
 
-        if (req.file) {
-            const imageName = `${Date.now()}_${req.file.originalname}`;
-
-            // Subir imagen a Bunny Storage
-            try {
-                const response = await axios({
-                    method: 'PUT',
-                    url: `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`,
-                    headers: {
-                        'AccessKey': process.env.bunnyNetAPIKEY,
-                        'Content-Type': req.file.mimetype,
-                    },
-                    data: req.file.buffer,
-                });
-
-                if (response.status === 201) {
-                    producto.imagen = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`;
-                } else {
-                    console.error('Respuesta de Bunny Storage:', response.data);
-                    return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
-                }
-            } catch (uploadError) {
-                console.error('Error al subir la imagen a Bunny Storage:', uploadError.message);
-                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
-            }
-        } else {
-            // Si no hay archivo, mantenemos la imagen actual
-            producto.imagen = producto.imagen || null;
+        // Si se ha subido una nueva imagen, guarda el archivo
+        if (imagen) {
+            // Elimina la imagen antigua si es necesario
+            producto.imagen = imagen.originalname; // Guarda el nombre del archivo en el modelo de producto
+            const ruta = path.join(__dirname, 'uploads', imagen.originalname);
+            fs.writeFileSync(ruta, imagen.buffer);
         }
 
         await producto.save();
