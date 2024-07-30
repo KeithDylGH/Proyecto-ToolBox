@@ -7,7 +7,6 @@ const axios = require('axios');
 // Configuración de multer para manejar la carga de archivos
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-const subirImagenABunny = require('../utils/subirImagen'); // Ruta a la función de subida de imágenes
 
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', upload.single('imagen'), async (req, res) => {
