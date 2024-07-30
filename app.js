@@ -168,57 +168,15 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
-// Ruta para editar producto
-app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+app.get('/inventario/editar/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const { nombre, precio, categoria, descripcion } = req.body;
-        let imagenURL = null;
-
-        // Verificar si se ha subido una nueva imagen
-        if (req.file) {
-            const { buffer, originalname } = req.file;
-
-            // Subir la imagen a Bunny Storage
-            const fileName = `${Date.now()}_${originalname}`;
-            const uploadURL = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}/${fileName}`;
-
-            const config = {
-                headers: {
-                    AccessKey: process.env.bunnyNetAPIKEY,
-                    'Content-Type': 'application/octet-stream'
-                }
-            };
-
-            try {
-                await axios.put(uploadURL, buffer, config);
-                imagenURL = `https://${process.env.bunnyNetPullZone}/${fileName}`;
-            } catch (error) {
-                console.error('Error al subir la imagen a Bunny Storage:', error);
-                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
-            }
-        }
-
-        // Actualizar el producto en la base de datos
-        const producto = await iProducto.findById(id);
+        const producto = await iProducto.findById(req.params.id);
         if (!producto) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
+            return res.status(404).send('Producto no encontrado');
         }
-
-        producto.nombre = nombre || producto.nombre;
-        producto.precio = precio || producto.precio;
-        producto.categoria = categoria || producto.categoria;
-        producto.descripcion = descripcion || producto.descripcion;
-
-        if (imagenURL) {
-            producto.imagen = imagenURL;
-        }
-
-        await producto.save();
-        res.status(200).json({ message: 'Producto actualizado con éxito' });
+        res.render('account/cuenta/admin/seeP/editP', { producto });
     } catch (error) {
-        console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'Error al actualizar el producto' });
+        res.status(500).send('Error del servidor');
     }
 });
 

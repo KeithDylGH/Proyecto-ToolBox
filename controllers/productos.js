@@ -3,13 +3,10 @@ const router = express.Router();
 const Producto = require('../models/producto');
 const multer = require('multer');
 const axios = require('axios');
-const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
-    fileFilter: (req, file, cb) => {
-        cb(null, true);
-    }
-});
+
+// Configuración de multer para manejar la carga de archivos
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
@@ -66,14 +63,14 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Ruta para actualizar un producto
-/* router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
+router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
     console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
     console.log('Datos recibidos en la solicitud:', req.body);
     console.log('Archivo recibido:', req.file);
 
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file; // Cambiado de req.files.imagen a req.file
+        const imagen = req.file; // Archivo de imagen recibido
         const id = req.params.id;
 
         console.log('Datos procesados:', { nombre, precio, categoria, descripcion, imagen });
@@ -90,9 +87,26 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         producto.descripcion = descripcion;
 
         if (imagen) {
-            const ruta = path.join(__dirname, '../uploads', imagen.originalname);
-            fs.writeFileSync(ruta, imagen.buffer);
-            producto.imagen = imagen.originalname;
+            try {
+                // Subir imagen a Bunny Storage
+                const response = await axios.put(
+                    `https://${process.env.BUNNY_HOSTNAME}/${process.env.BUNNY_STORAGE_ZONE}/${imagen.originalname}`,
+                    imagen.buffer,
+                    {
+                        headers: {
+                            'Content-Type': imagen.mimetype,
+                            'AccessKey': process.env.BUNNY_STORAGE_API_KEY
+                        }
+                    }
+                );
+                console.log('Imagen subida a Bunny Storage:', response.data);
+                
+                // Guardar URL de la imagen en el producto
+                producto.imagen = `${process.env.BUNNY_PULL_ZONE}/${imagen.originalname}`;
+            } catch (error) {
+                console.error('Error al subir la imagen a Bunny Storage:', error);
+                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
+            }
         }
 
         await producto.save();
@@ -101,8 +115,6 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         console.error('Error al actualizar el producto:', error);
         res.status(500).json({ error: 'Error al actualizar el producto' });
     }
-}); */
-
-
+});
 
 module.exports = router;
