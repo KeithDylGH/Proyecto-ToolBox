@@ -60,7 +60,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar un producto
-router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+router.put('/admin/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
         const productoId = req.params.id;
@@ -79,7 +79,7 @@ router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, r
 
         if (req.file) {
             const imageName = `${Date.now()}_${req.file.originalname}`;
-            
+
             // Subir imagen a Bunny Storage
             try {
                 const response = await axios({
@@ -102,6 +102,9 @@ router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, r
                 console.error('Error al subir la imagen a Bunny Storage:', uploadError.message);
                 return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
             }
+        } else {
+            // Si no hay archivo, mantenemos la imagen actual
+            producto.imagen = producto.imagen || null;
         }
 
         await producto.save();
