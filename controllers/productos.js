@@ -62,7 +62,6 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Ruta para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
     console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
     console.log('Datos recibidos en la solicitud:', req.body);
@@ -110,6 +109,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         }
 
         await producto.save();
+        console.log('Producto actualizado con éxito');
         res.status(200).json({ message: 'Producto actualizado con éxito' });
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
