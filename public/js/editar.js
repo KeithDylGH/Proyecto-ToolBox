@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = form.getAttribute('action').split('/').pop();
 
         try {
-            const response = await fetch(`/inventario/editar/${id}`, {
-                method: 'POST',
+            const response = await fetch(`/api/products/editar/${id}`, {
+                method: 'PUT', // Cambiado a PUT
                 body: formData
             });
 
