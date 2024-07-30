@@ -14,37 +14,54 @@ router.post('/admin/inventario', upload.single('imagen'), async (req, res) => {
         const { nombre, precio, categoria, descripcion } = req.body;
         const imagen = req.file; // Cambiado de req.files.imagen a req.file
 
+        // Validar configuración de Bunny Storage
+        const hostname = process.env.bunnyNetHOSTNAME;
+        const storageZone = process.env.bunnyNetZONE;
+        const apiKey = process.env.bunnyNetAPIKEY;
+        const pullZone = process.env.bunnyNetPullZone;
+        
+        if (!hostname || !storageZone || !apiKey || !pullZone) {
+            throw new Error('Configuración de Bunny Storage incompleta');
+        }
+
         // Subida de imagen a Bunny Storage si existe
         let imagenUrl = '';
         if (imagen) {
-            const hostname = process.env.bunnyNetHOSTNAME;
-            const storageZone = process.env.bunnyNetZONE;
-            const apiKey = process.env.bunnyNetAPIKEY;
-            const pullZone = process.env.bunnyNetPullZone;
-
-            if (!hostname || !storageZone || !apiKey || !pullZone) {
-                throw new Error('Configuración de Bunny Storage incompleta');
-            }
-
-            // Subir imagen a Bunny Storage
-            const response = await axios.put(
-                `https://${hostname}/${storageZone}/${imagen.originalname}`,
-                imagen.buffer,
-                {
-                    headers: {
-                        'Content-Type': imagen.mimetype,
-                        'AccessKey': apiKey
+            try {
+                const response = await axios.put(
+                    `https://${hostname}/${storageZone}/${imagen.originalname}`,
+                    imagen.buffer,
+                    {
+                        headers: {
+                            'Content-Type': imagen.mimetype,
+                            'AccessKey': apiKey
+                        }
                     }
-                }
-            );
-            imagenUrl = `${pullZone}/${imagen.originalname}`;
+                );
+                console.log('Imagen subida a Bunny Storage:', response.data);
+
+                // Guardar URL de la imagen en el producto
+                imagenUrl = `${pullZone}/${imagen.originalname}`;
+            } catch (error) {
+                console.error('Error al subir la imagen a Bunny Storage:', error.message);
+                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
+            }
         }
 
-        const nuevoProducto = new Producto({ nombre, precio, categoria, descripcion, imagen: imagenUrl });
+        // Crear y guardar nuevo producto
+        const nuevoProducto = new Producto({
+            nombre,
+            precio,
+            categoria,
+            descripcion,
+            imagen: imagenUrl
+        });
+
         await nuevoProducto.save();
-        res.status(201).json(nuevoProducto);
+        res.status(201).json({ message: 'Producto agregado exitosamente' });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error al agregar el producto:', error.message);
+        res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
 
