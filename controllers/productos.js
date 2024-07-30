@@ -110,11 +110,8 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 );
                 console.log('Imagen subida a Bunny Storage:', response.data);
 
-                // Guardar datos de la imagen en el producto
-                producto.imagen = {
-                    data: `${pullZone}/${imagen.originalname}`, // URL de la imagen
-                    contentType: imagen.mimetype, // Tipo de contenido
-                };
+                // Guardar URL de la imagen en el producto
+                producto.imagen = `${pullZone}/${imagen.originalname}`;
             } catch (error) {
                 console.error('Error al subir la imagen a Bunny Storage:', error.message);
                 return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
