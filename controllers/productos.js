@@ -60,7 +60,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar un producto
-router.put('/admin/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
         const productoId = req.params.id;
@@ -71,28 +71,29 @@ router.put('/admin/inventario/editar/:id', upload.single('inputImagen'), async (
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        // Actualizar los datos del producto
+        // Actualizar el producto
         producto.nombre = nombre;
         producto.precio = precio;
         producto.categoria = categoria;
         producto.descripcion = descripcion;
 
-        // Subir la imagen a Bunny Storage si se ha proporcionado
         if (req.file) {
-            const imageName = `${productoId}_${req.file.originalname}`;
-            const uploadResponse = await axios.post(`https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`, req.file.buffer, {
+            const imageName = `${Date.now()}_${req.file.originalname}`;
+            const response = await axios({
+                method: 'PUT',
+                url: `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`,
                 headers: {
                     'AccessKey': process.env.bunnyNetAPIKEY,
-                    'Content-Type': req.file.mimetype
-                }
+                    'Content-Type': req.file.mimetype,
+                },
+                data: req.file.buffer,
             });
 
-            if (uploadResponse.status === 200) {
-                // Actualizar la URL de la imagen en el producto
-                producto.imagen = `https://${process.env.bunnyNetPullZone}/${imageName}`;
-            } else {
+            if (response.status !== 200) {
                 throw new Error('Error al subir la imagen a Bunny Storage');
             }
+
+            producto.imagen = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`;
         }
 
         await producto.save();

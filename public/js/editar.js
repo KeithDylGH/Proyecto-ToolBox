@@ -7,23 +7,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(formulario);
 
         try {
-            // Enviar el formulario con datos de imagen
             const response = await fetch(formulario.action, {
                 method: 'PUT',
                 body: formData
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Error al actualizar el producto');
+                const errorText = await response.text(); // Obtener el texto de error
+                throw new Error(`Error al actualizar el producto: ${errorText}`);
             }
 
             const result = await response.json();
 
-            // Mostrar notificación de éxito
             alert('Producto actualizado con éxito');
-
-            // Redireccionar a la página de inventario
             window.location.href = '/inventario/verproducto';
         } catch (error) {
             console.error('Error:', error);
