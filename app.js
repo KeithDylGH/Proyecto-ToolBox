@@ -285,6 +285,26 @@ app.post('/api/productos/agregar', upload.single('imagen'), async (req, res) => 
     }
 });
 
+app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+    try {
+      const producto = await iProducto.findById(req.params.id);
+  
+      if (req.file) {
+        producto.imagen = await subirImagen(req.file);
+      }
+  
+      producto.nombre = req.body.nombre;
+      producto.precio = req.body.precio;
+      producto.categoria = req.body.categoria;
+      producto.descripcion = req.body.descripcion;
+  
+      await producto.save();
+      res.redirect(`/inventario/verproducto/${producto._id}`);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al actualizar el producto' });
+    }
+  });
+
 app.use('/api/products', productoRouter); // Rutas para productos
 app.use('/api/upload', subirProducto);   // Rutas para subir productos
 app.use('/api/usuarios', userRouter);
