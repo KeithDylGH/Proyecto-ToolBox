@@ -66,7 +66,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Ruta para actualizar un producto
-router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
+/* router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
     console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
     console.log('Datos recibidos en la solicitud:', req.body);
     console.log('Archivo recibido:', req.file);
@@ -101,6 +101,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         console.error('Error al actualizar el producto:', error);
         res.status(500).json({ error: 'Error al actualizar el producto' });
     }
-});
+}); */
 
 module.exports = router;

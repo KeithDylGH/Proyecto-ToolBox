@@ -169,7 +169,7 @@ app.get('/inventario/verproducto', async (req, res) => {
 });
 
 // Ruta para editar producto
-app.post('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+app.post('admin/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
     const { id } = req.params;
     const { nombre, precio, categoria, descripcion } = req.body;
     const imagen = req.file;
