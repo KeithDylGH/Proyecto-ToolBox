@@ -92,12 +92,12 @@ router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, r
                     data: req.file.buffer,
                 });
 
-                if (response.status !== 200) {
+                if (response.status === 201) {
+                    producto.imagen = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`;
+                } else {
                     console.error('Respuesta de Bunny Storage:', response.data);
                     return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
                 }
-
-                producto.imagen = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`;
             } catch (uploadError) {
                 console.error('Error al subir la imagen a Bunny Storage:', uploadError.message);
                 return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
