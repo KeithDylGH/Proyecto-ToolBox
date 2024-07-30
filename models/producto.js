@@ -18,7 +18,7 @@ const productoSchema = new mongoose.Schema({
         required: true,
     },
     imagen: {
-        type: String, // Cambiar a String para almacenar la URL de la imagen
+        type: String,
     },
 });
 

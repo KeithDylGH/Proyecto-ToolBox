@@ -7,11 +7,41 @@ const axios = require('axios');
 // Configuración de multer para manejar la carga de archivos
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const subirImagenABunny = require('../utils/subirImagen'); // Ruta a la función de subida de imágenes
 
 // Endpoint para agregar un nuevo producto
-router.post('/admin/inventario', async (req, res) => {
+router.post('/admin/inventario', upload.single('imagen'), async (req, res) => {
     try {
-        const nuevoProducto = new Producto(req.body);
+        const { nombre, precio, categoria, descripcion } = req.body;
+        const imagen = req.file; // Cambiado de req.files.imagen a req.file
+
+        // Subida de imagen a Bunny Storage si existe
+        let imagenUrl = '';
+        if (imagen) {
+            const hostname = process.env.bunnyNetHOSTNAME;
+            const storageZone = process.env.bunnyNetZONE;
+            const apiKey = process.env.bunnyNetAPIKEY;
+            const pullZone = process.env.bunnyNetPullZone;
+
+            if (!hostname || !storageZone || !apiKey || !pullZone) {
+                throw new Error('Configuración de Bunny Storage incompleta');
+            }
+
+            // Subir imagen a Bunny Storage
+            const response = await axios.put(
+                `https://${hostname}/${storageZone}/${imagen.originalname}`,
+                imagen.buffer,
+                {
+                    headers: {
+                        'Content-Type': imagen.mimetype,
+                        'AccessKey': apiKey
+                    }
+                }
+            );
+            imagenUrl = `${pullZone}/${imagen.originalname}`;
+        }
+
+        const nuevoProducto = new Producto({ nombre, precio, categoria, descripcion, imagen: imagenUrl });
         await nuevoProducto.save();
         res.status(201).json(nuevoProducto);
     } catch (error) {
