@@ -169,47 +169,56 @@ app.get('/inventario/verproducto', async (req, res) => {
 });
 
 // Ruta para editar producto
-app.post('admin/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
-    const { id } = req.params;
-    const { nombre, precio, categoria, descripcion } = req.body;
-    const imagen = req.file;
-
+app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
-        // Busca el producto en la base de datos
+        const { id } = req.params;
+        const { nombre, precio, categoria, descripcion } = req.body;
+        let imagenURL = null;
+
+        // Verificar si se ha subido una nueva imagen
+        if (req.file) {
+            const { buffer, originalname } = req.file;
+
+            // Subir la imagen a Bunny Storage
+            const fileName = `${Date.now()}_${originalname}`;
+            const uploadURL = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}/${fileName}`;
+
+            const config = {
+                headers: {
+                    AccessKey: process.env.bunnyNetAPIKEY,
+                    'Content-Type': 'application/octet-stream'
+                }
+            };
+
+            try {
+                await axios.put(uploadURL, buffer, config);
+                imagenURL = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+            } catch (error) {
+                console.error('Error al subir la imagen a Bunny Storage:', error);
+                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
+            }
+        }
+
+        // Actualizar el producto en la base de datos
         const producto = await iProducto.findById(id);
         if (!producto) {
-            return res.status(404).send('Producto no encontrado');
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        // Actualiza los campos
-        producto.nombre = nombre;
-        producto.precio = precio;
-        producto.categoria = categoria;
-        producto.descripcion = descripcion;
+        producto.nombre = nombre || producto.nombre;
+        producto.precio = precio || producto.precio;
+        producto.categoria = categoria || producto.categoria;
+        producto.descripcion = descripcion || producto.descripcion;
 
-        // Si hay una nueva imagen, súbela a Bunny Storage
-        if (imagen) {
-            const imagePath = `/${bunnyZone}/${imagen.originalname}`;
-            const bunnyUrl = `https://${bunnyHostName}${imagePath}`;
-
-            const uploadUrl = `https://${bunnyHostName}/${bunnyZone}/${imagen.originalname}`;
-            await axios.put(uploadUrl, imagen.buffer, {
-                headers: {
-                    'AccessKey': bunnyAPIKEY,
-                    'Content-Type': imagen.mimetype,
-                },
-            });
-
-            // Asigna la nueva URL de la imagen al producto
-            producto.imagen = bunnyUrl;
+        if (imagenURL) {
+            producto.imagen = imagenURL;
         }
 
-        // Guarda los cambios en la base de datos
         await producto.save();
-        res.redirect('/inventario/verproducto');
+        res.status(200).json({ message: 'Producto actualizado con éxito' });
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
-        res.status(500).send('Error del servidor al actualizar el producto');
+        res.status(500).json({ error: 'Error al actualizar el producto' });
     }
 });
 

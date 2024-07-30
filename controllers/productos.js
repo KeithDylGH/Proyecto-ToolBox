@@ -103,4 +103,6 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 }); */
 
+
+
 module.exports = router;
