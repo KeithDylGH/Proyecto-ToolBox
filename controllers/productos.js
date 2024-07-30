@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Producto = require('../models/producto'); // Asegúrate de que el nombre del modelo coincida
+const Producto = require('../models/producto');
 const multer = require('multer');
 const axios = require('axios');
 const upload = multer({ storage: multer.memoryStorage() });
@@ -37,11 +37,11 @@ router.get('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Ruta para ver productos (esto parece ser un intento previo, asegúrate de cómo deseas manejarla)
+// Ruta para ver productos
 router.get('/verproducto', async (req, res) => {
     try {
-        const productos = await Producto.find(); // Utiliza el modelo Producto para obtener productos
-        res.render('account/cuenta/admin/seeP/index', { productos }); // Ajusta según tu lógica de renderizado
+        const productos = await Producto.find();
+        res.render('account/cuenta/admin/seeP/index', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
         res.status(500).send('Error al obtener los productos');
@@ -79,6 +79,8 @@ router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, r
 
         if (req.file) {
             const imageName = `${Date.now()}_${req.file.originalname}`;
+            
+            // Subir imagen a Bunny Storage
             const response = await axios({
                 method: 'PUT',
                 url: `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`,
@@ -89,6 +91,7 @@ router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, r
                 data: req.file.buffer,
             });
 
+            // Verificar respuesta de Bunny Storage
             if (response.status !== 200) {
                 throw new Error('Error al subir la imagen a Bunny Storage');
             }
