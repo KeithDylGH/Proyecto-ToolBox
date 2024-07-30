@@ -72,18 +72,18 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <label class="form-label" for="descripcion">Descripción</label>
+                                <label class="form-label" for="desc">Descripción</label>
                                 <textarea 
                                     class="form-control"
-                                    id="descripcion"
-                                    name="descripcion"
+                                    id="desc"
+                                    name="desc"
                                     placeholder="Descripción del producto"
                                 ><%= producto.descripcion %></textarea>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label" for="imagen">Imagen actual</label>
-                                <% if (producto.imagen) { %>
-                                    <img src="<%= producto.imagen %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 200px;">
+                                <% if (producto.imagen && producto.imagen.data) { %>
+                                    <img src="<%= producto.imagen.data %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 200px;">
                                 <% } %>
                                 <input 
                                     class="form-control"
@@ -98,7 +98,7 @@
                             <button class="btn btn-secondary" type="button" id="cancelar">
                                 Cancelar Edición
                             </button>
-                        </form>                                                                       
+                        </form>                                                
                     </div>
                 </div>
             </div>
