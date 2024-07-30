@@ -62,6 +62,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
+// Ruta para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
     console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
     console.log('Datos recibidos en la solicitud:', req.body);
@@ -87,23 +88,32 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
 
         if (imagen) {
             try {
+                const hostname = process.env.bunnyNetHOSTNAME;
+                const storageZone = process.env.bunnyNetZONE;
+                const apiKey = process.env.bunnyNetAPIKEY;
+                const pullZone = process.env.bunnyNetPullZone;
+
+                if (!hostname || !storageZone || !apiKey || !pullZone) {
+                    throw new Error('Configuración de Bunny Storage incompleta');
+                }
+
                 // Subir imagen a Bunny Storage
                 const response = await axios.put(
-                    `https://${process.env.BUNNY_HOSTNAME}/${process.env.BUNNY_STORAGE_ZONE}/${imagen.originalname}`,
+                    `https://${hostname}/${storageZone}/${imagen.originalname}`,
                     imagen.buffer,
                     {
                         headers: {
                             'Content-Type': imagen.mimetype,
-                            'AccessKey': process.env.BUNNY_STORAGE_API_KEY
+                            'AccessKey': apiKey
                         }
                     }
                 );
                 console.log('Imagen subida a Bunny Storage:', response.data);
-                
+
                 // Guardar URL de la imagen en el producto
-                producto.imagen = `${process.env.BUNNY_PULL_ZONE}/${imagen.originalname}`;
+                producto.imagen = `${pullZone}/${imagen.originalname}`;
             } catch (error) {
-                console.error('Error al subir la imagen a Bunny Storage:', error);
+                console.error('Error al subir la imagen a Bunny Storage:', error.message);
                 return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
             }
         }
@@ -112,7 +122,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         console.log('Producto actualizado con éxito');
         res.status(200).json({ message: 'Producto actualizado con éxito' });
     } catch (error) {
-        console.error('Error al actualizar el producto:', error);
+        console.error('Error al actualizar el producto:', error.message);
         res.status(500).json({ error: 'Error al actualizar el producto' });
     }
 });
