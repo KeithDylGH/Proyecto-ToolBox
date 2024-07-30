@@ -66,14 +66,18 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Ruta para actualizar un producto
-router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
+    console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
         const imagen = req.file; // Cambiado de req.files.imagen a req.file
         const id = req.params.id;
 
-        const producto = await Producto.findById(id);
+        console.log('Datos recibidos:', { nombre, precio, categoria, descripcion, imagen });
+
+        const producto = await iProducto.findById(id);
         if (!producto) {
+            console.log('Producto no encontrado');
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
