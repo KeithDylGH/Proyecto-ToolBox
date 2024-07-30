@@ -3,30 +3,23 @@ const mongoose = require('mongoose');
 const productoSchema = new mongoose.Schema({
     nombre: {
         type: String,
-        required: true,
+        required: true
     },
     precio: {
         type: Number,
-        required: true,
+        required: true
     },
     categoria: {
-        type: String,
-        required: true,
+        type: Number,
+        required: true
     },
     descripcion: {
         type: String,
-        required: true,
+        required: true
     },
     imagen: {
-        data: {
-            type: String,
-        },
-        contentType: {
-            type: String,
-        },
-    },
+        type: String // Asegúrate de que sea de tipo String para aceptar URLs
+    }
 });
 
-const Producto = mongoose.model('Producto', productoSchema);
-
-module.exports = Producto;
+module.exports = mongoose.model('Producto', productoSchema);
