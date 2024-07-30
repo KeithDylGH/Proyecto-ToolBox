@@ -17,10 +17,9 @@ const productoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    imagen: { 
-        data: { type: String }, // URL de la imagen en Bunny Storage
-        contentType: { type: String } 
-    }
+    imagen: {
+        type: String, // Cambiar a String para almacenar la URL de la imagen
+    },
 });
 
 const Producto = mongoose.model('Producto', productoSchema);
