@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             // Enviar el formulario con datos de imagen
             const response = await fetch(formulario.action, {
-                method: 'POST', // Usar POST para el formulario con _method hidden
+                method: 'PUT', // Usar PUT para actualizar
                 body: formData // No es necesario establecer Content-Type en FormData
             });
 
