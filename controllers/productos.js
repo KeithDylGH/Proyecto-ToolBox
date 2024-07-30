@@ -66,7 +66,7 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
         const imagen = req.file; // La imagen subida, si existe
 
         // Busca el producto por ID
-        const producto = await iProducto.findById(req.params.id);
+        const producto = await Producto.findById(req.params.id);
         if (!producto) {
             return res.status(404).send('Producto no encontrado');
         }
