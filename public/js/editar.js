@@ -6,6 +6,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData(formulario);
 
+        // Log the FormData content
+        for (const [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
         try {
             // Enviar el formulario con datos de imagen
             const response = await fetch(formulario.action, {
@@ -14,7 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!response.ok) {
-                throw new Error('Error al actualizar el producto');
+                const errorData = await response.json();
+                throw new Error(`Error al actualizar el producto: ${errorData.error}`);
             }
 
             const result = await response.json();
