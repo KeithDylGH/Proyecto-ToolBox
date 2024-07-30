@@ -3,7 +3,13 @@ const router = express.Router();
 const Producto = require('../models/producto');
 const multer = require('multer');
 const axios = require('axios');
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    fileFilter: (req, file, cb) => {
+        cb(null, true);
+    }
+});
 
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
@@ -60,29 +66,26 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Ruta para actualizar un producto
-app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file; // La imagen subida, si existe
+        const imagen = req.file; // Cambiado de req.files.imagen a req.file
+        const id = req.params.id;
 
-        // Busca el producto por ID
-        const producto = await Producto.findById(req.params.id);
+        const producto = await Producto.findById(id);
         if (!producto) {
-            return res.status(404).send('Producto no encontrado');
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        // Actualiza los datos del producto
         producto.nombre = nombre;
         producto.precio = precio;
         producto.categoria = categoria;
         producto.descripcion = descripcion;
 
-        // Si se ha subido una nueva imagen, guarda el archivo
         if (imagen) {
-            // Elimina la imagen antigua si es necesario
-            producto.imagen = imagen.originalname; // Guarda el nombre del archivo en el modelo de producto
-            const ruta = path.join(__dirname, 'uploads', imagen.originalname);
+            const ruta = path.join(__dirname, '../uploads', imagen.originalname);
             fs.writeFileSync(ruta, imagen.buffer);
+            producto.imagen = imagen.originalname;
         }
 
         await producto.save();
