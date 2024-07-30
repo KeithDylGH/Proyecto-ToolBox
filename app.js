@@ -168,15 +168,48 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
-app.get('/inventario/editar/:id', async (req, res) => {
+// Ruta para editar producto
+app.post('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+    const { id } = req.params;
+    const { nombre, precio, categoria, descripcion } = req.body;
+    const imagen = req.file;
+
     try {
-        const producto = await iProducto.findById(req.params.id);
+        // Busca el producto en la base de datos
+        const producto = await iProducto.findById(id);
         if (!producto) {
             return res.status(404).send('Producto no encontrado');
         }
-        res.render('account/cuenta/admin/seeP/editP', { producto });
+
+        // Actualiza los campos
+        producto.nombre = nombre;
+        producto.precio = precio;
+        producto.categoria = categoria;
+        producto.descripcion = descripcion;
+
+        // Si hay una nueva imagen, súbela a Bunny Storage
+        if (imagen) {
+            const imagePath = `/${bunnyZone}/${imagen.originalname}`;
+            const bunnyUrl = `https://${bunnyHostName}${imagePath}`;
+
+            const uploadUrl = `https://${bunnyHostName}/${bunnyZone}/${imagen.originalname}`;
+            await axios.put(uploadUrl, imagen.buffer, {
+                headers: {
+                    'AccessKey': bunnyAPIKEY,
+                    'Content-Type': imagen.mimetype,
+                },
+            });
+
+            // Asigna la nueva URL de la imagen al producto
+            producto.imagen = bunnyUrl;
+        }
+
+        // Guarda los cambios en la base de datos
+        await producto.save();
+        res.redirect('/inventario/verproducto');
     } catch (error) {
-        res.status(500).send('Error del servidor');
+        console.error('Error al actualizar el producto:', error);
+        res.status(500).send('Error del servidor al actualizar el producto');
     }
 });
 
