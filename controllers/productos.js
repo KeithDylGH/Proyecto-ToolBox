@@ -81,22 +81,27 @@ router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, r
             const imageName = `${Date.now()}_${req.file.originalname}`;
             
             // Subir imagen a Bunny Storage
-            const response = await axios({
-                method: 'PUT',
-                url: `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`,
-                headers: {
-                    'AccessKey': process.env.bunnyNetAPIKEY,
-                    'Content-Type': req.file.mimetype,
-                },
-                data: req.file.buffer,
-            });
+            try {
+                const response = await axios({
+                    method: 'PUT',
+                    url: `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`,
+                    headers: {
+                        'AccessKey': process.env.bunnyNetAPIKEY,
+                        'Content-Type': req.file.mimetype,
+                    },
+                    data: req.file.buffer,
+                });
 
-            // Verificar respuesta de Bunny Storage
-            if (response.status !== 200) {
-                throw new Error('Error al subir la imagen a Bunny Storage');
+                if (response.status !== 200) {
+                    console.error('Respuesta de Bunny Storage:', response.data);
+                    return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
+                }
+
+                producto.imagen = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`;
+            } catch (uploadError) {
+                console.error('Error al subir la imagen a Bunny Storage:', uploadError.message);
+                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
             }
-
-            producto.imagen = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/${imageName}`;
         }
 
         await producto.save();
