@@ -59,10 +59,14 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Ruta para actualizar un producto
-router.put('/inventario/editar/:id', async (req, res) => {
+router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
         const productoId = req.params.id;
+
+        if (!productoId) {
+            return res.status(400).json({ error: 'ID del producto no proporcionado' });
+        }
 
         // Verificar si el producto existe
         const producto = await Producto.findById(productoId);
@@ -84,7 +88,7 @@ router.put('/inventario/editar/:id', async (req, res) => {
         res.status(200).json({ message: 'Producto actualizado con éxito' });
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ error: 'Error al actualizar el producto' });
+        res.status(500).json({ error: 'Error al actualizar el producto', details: error.message });
     }
 });
 

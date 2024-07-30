@@ -6,20 +6,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData(formulario);
 
-        // Log the FormData content
-        for (const [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
-
         try {
             // Enviar el formulario con datos de imagen
             const response = await fetch(formulario.action, {
-                method: 'PUT', // Usar PUT para actualizar
-                body: formData // No es necesario establecer Content-Type en FormData
+                method: 'PUT',
+                body: formData
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
+                const errorData = await response.json(); // Obtener detalles del error
                 throw new Error(`Error al actualizar el producto: ${errorData.error}`);
             }
 
