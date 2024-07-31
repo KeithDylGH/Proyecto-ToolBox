@@ -82,7 +82,7 @@
                             </div>
                             <div class="mb-4">
                                 <label class="form-label" for="imagen">Imagen actual</label>
-                                <% if (producto.imagen) { %>
+                                <% if (producto.imagen && producto.imagen.data) { %>
                                     <img src="<%= producto.imagen %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 200px;">
                                 <% } %>                                
                                 <input 
