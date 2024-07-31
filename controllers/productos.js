@@ -47,6 +47,12 @@ router.get('/admin/inventario/:id', async (req, res) => {
 router.get('/verproducto', async (req, res) => {
     try {
         const productos = await Producto.find();
+        // Asegúrate de que la URL de la imagen se pase correctamente
+        productos.forEach(producto => {
+            if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                producto.imagen.data = `${process.env.bunnyNetPullZone}/${producto.imagen.data.split('/').pop()}`;
+            }
+        });
         res.render('account/cuenta/admin/seeP/index', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
