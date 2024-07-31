@@ -99,12 +99,16 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 }
 
                 // Eliminar la imagen anterior del Bunny Storage
-                if (producto.imagen && producto.imagen.data) {
+                if (producto && producto.imagen && producto.imagen.data) {
                     const imagenUrl = producto.imagen.data.split('/').pop();
-                    await axios.delete(`https://${hostname}/${storageZone}/${imagenUrl}`, {
-                        headers: { 'AccessKey': apiKey }
-                    });
-                    console.log('Imagen anterior eliminada de Bunny Storage');
+                    try {
+                        await axios.delete(`https://${hostname}/${storageZone}/${imagenUrl}`, {
+                            headers: { 'AccessKey': apiKey }
+                        });
+                        console.log('Imagen anterior eliminada de Bunny Storage');
+                    } catch (error) {
+                        console.error('Error al eliminar la imagen anterior de Bunny Storage:', error.message);
+                    }
                 }
 
                 // Subir la nueva imagen a Bunny Storage
