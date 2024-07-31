@@ -8,6 +8,8 @@ const axios = require('axios');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+const bunnyStorageAPI = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/`;
+
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
     try {
@@ -51,14 +53,39 @@ router.get('/verproducto', async (req, res) => {
     }
 });
 
-// Endpoint para eliminar un producto por su ID
+// Ruta para eliminar un producto
 router.delete('/admin/inventario/:id', async (req, res) => {
     try {
-        const producto = await Producto.findByIdAndDelete(req.params.id);
-        if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
-        res.status(200).json({ message: 'Producto eliminado exitosamente.' });
+        const producto = await Producto.findById(req.params.id);
+        
+        if (!producto) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+        
+        // Eliminar la imagen de Bunny Storage
+        if (producto.imagen) {
+            const imagenUrl = producto.imagen;
+            const imagenNombre = imagenUrl.split('/').pop();
+            
+            const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
+                method: 'DELETE',
+                headers: {
+                    'AccessKey': process.env.bunnyNetAPIKEY,
+                },
+            });
+            
+            if (!deleteResponse.ok) {
+                throw new Error('Error al eliminar la imagen de Bunny Storage');
+            }
+        }
+        
+        // Eliminar el producto de la base de datos
+        await Producto.findByIdAndDelete(req.params.id);
+        
+        res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
-        res.status(500).json({ error: 'Error al eliminar el producto.' });
+        console.error('Error:', error.message);
+        res.status(500).json({ message: 'Hubo un error al eliminar el producto' });
     }
 });
 
