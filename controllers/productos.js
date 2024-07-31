@@ -100,70 +100,56 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Endpoint para actualizar un producto
-router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
-    console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
-    console.log('Datos recibidos en la solicitud:', req.body);
-    console.log('Archivo recibido:', req.file);
-
+// Función para subir imagen a Bunny Storage
+async function uploadImageToBunnyStorage(fileBuffer, originalname) {
+    const filename = path.basename(originalname);
+    const url = `${process.env.bunnyNetPullZone}/${filename}`;
+    
     try {
-        const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file; // Archivo de imagen recibido
-        const id = req.params.id;
-
-        console.log('Datos procesados:', { nombre, precio, categoria, descripcion, imagen });
-
-        const producto = await Producto.findById(id);
-        if (!producto) {
-            console.log('Producto no encontrado');
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
-
-        producto.nombre = nombre;
-        producto.precio = precio;
-        producto.categoria = categoria;
-        producto.descripcion = descripcion;
-
-        // Verificar si se proporciona una nueva imagen
-        if (imagen) {
-            try {
-                // Convertir la imagen a formato WebP
-                const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
-                const fileBuffer = await sharp(imagen.buffer)
-                    .webp()
-                    .toBuffer();
-
-                // Subir la imagen a Bunny Storage
-                const response = await axios.put(
-                    `${bunnyStorageAPI}${fileName}`,
-                    fileBuffer,
-                    {
-                        headers: {
-                            'Content-Type': 'image/webp',
-                            'AccessKey': process.env.bunnyNetAPIKEY
-                        }
-                    }
-                );
-                console.log('Nueva imagen subida a Bunny Storage:', response.data);
-
-                // Actualizar la URL de la imagen en el producto
-                producto.imagen = {
-                    data: `${process.env.bunnyNetPullZone}/${fileName}`,
-                    contentType: 'image/webp'
-                };
-
-            } catch (error) {
-                console.error('Error al subir la imagen a Bunny Storage:', error.message);
-                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
+        await axios.put(url, fileBuffer, {
+            headers: {
+                'Content-Type': 'image/jpeg',
+                'AccessKey': process.env.bunnyNetAPIKEY
             }
+        });
+        console.log(`Imagen subida con éxito: ${url}`);
+        return url;
+    } catch (error) {
+        console.error('Error al subir la imagen a Bunny Storage:', error);
+        throw error;
+    }
+}
+
+// Ruta para actualizar producto
+router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
+    try {
+        const productoId = req.params.id;
+        const { nombre, precio, categoria, descripcion } = req.body;
+        const imagen = req.file; // Manejo del archivo de imagen
+
+        // Verificar datos recibidos
+        console.log('Datos recibidos:', req.body);
+        console.log('Archivo recibido:', imagen);
+
+        // Subir imagen y obtener URL
+        let imagenURL = null;
+        if (imagen) {
+            imagenURL = await uploadImageToBunnyStorage(imagen.buffer, imagen.originalname);
         }
 
-        // Guardar los cambios en el producto
-        await producto.save();
-        res.status(200).json(producto);
+        // Actualizar producto
+        const productoActualizado = await Producto.findByIdAndUpdate(productoId, {
+            nombre,
+            precio,
+            categoria,
+            descripcion,
+            imagen: imagenURL ? { data: imagenURL } : undefined
+        }, { new: true });
+
+        res.json(productoActualizado);
     } catch (error) {
-        console.error('Error en la actualización del producto:', error.message);
-        res.status(500).json({ error: 'Error en la actualización del producto' });
+        console.error('Error al actualizar el producto:', error);
+        res.status(500).send('Error al actualizar el producto');
     }
 });
 
