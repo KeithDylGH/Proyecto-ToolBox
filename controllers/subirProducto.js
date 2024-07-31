@@ -22,11 +22,9 @@ router.post('/upload', upload.single('inputImagen'), async (req, res) => {
     }
 
     try {
-
-        
         const file = req.file;
-        const fileName = req.file.originalname.replace(/\.[^/.]+$/, '') + '.webp'; // Cambia la extensión a .webp
-        const fileBuffer = await sharp(req.file.buffer)
+        const fileName = file.originalname.replace(/\.[^/.]+$/, '') + '.webp';
+        const fileBuffer = await sharp(file.buffer)
             .webp()
             .toBuffer();
 
@@ -48,15 +46,14 @@ router.post('/upload', upload.single('inputImagen'), async (req, res) => {
                 nombre: req.body.nombre,
                 precio: req.body.precio,
                 imagen: {
-                    data: fileUrl, // Usamos la URL del Pull Zone como el campo data
-                    contentType: 'image/webp' // Ajusta el tipo de contenido según el archivo subido
+                    data: fileUrl,
+                    contentType: 'image/webp'
                 },
                 categoria: req.body.categoria,
                 descripcion: req.body.descripcion
             });
 
             await nuevoProducto.save();
-
             res.redirect('/inventario/verproducto');
         } else {
             const errorMsg = `Error al subir el archivo. Código de estado: ${response.status}`;
