@@ -25,6 +25,8 @@ const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
 
 // Configuración de multer para manejar archivos en memoria
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
@@ -90,7 +92,7 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
