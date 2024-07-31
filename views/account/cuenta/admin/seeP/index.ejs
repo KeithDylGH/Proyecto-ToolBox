@@ -53,8 +53,9 @@
                                 <td><%= producto.descripcion %></td>
                                 <td>
                                     <% if (producto.imagen.data) { %>
-                                        <p> <% producto.imagen.data %> </p>
                                         <img src="<%= producto.imagen.data %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 200px;">
+                                        <!-- Mostrar la URL de la imagen debajo de la imagen -->
+                                        <p><%= producto.imagen.data %></p>
                                     <% } else { %>
                                         Sin imagen
                                     <% } %>
