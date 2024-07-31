@@ -8,7 +8,6 @@ const productoSchema = new mongoose.Schema({
     precio: {
         type: Number,
         required: true,
-        min: 0,
     },
     categoria: {
         type: String,
@@ -21,11 +20,9 @@ const productoSchema = new mongoose.Schema({
     imagen: {
         data: {
             type: String,
-            required: true,
         },
         contentType: {
             type: String,
-            required: true,
         },
     },
 });
