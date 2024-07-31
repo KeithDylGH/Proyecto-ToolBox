@@ -53,10 +53,11 @@
                                 <td><%= producto.descripcion %></td>
                                 <td>
                                     <% if (producto.imagen) { %>
+                                        <p><%= producto.imagen %></p>
                                         <img src="<%= producto.imagen %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 200px;">
                                     <% } else { %>
                                         Sin imagen
-                                    <% } %>
+                                    <% } %>                                    
                                 </td>                                                                                                
                                 <td>
                                     <a href="/inventario/editar/<%= producto._id %>" class="btn btn-primary btn-sm">Editar</a>

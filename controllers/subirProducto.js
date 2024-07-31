@@ -43,7 +43,6 @@ router.post('/upload', upload.single('inputImagen'), async (req, res) => {
 
         if (response.status === 200 || 201) {
             const fileUrl = `${bunnyPullZoneUrl}/${fileName}`;
-            console.log('URL de la imagen subida:', fileUrl);
 
             const nuevoProducto = new Producto({
                 nombre: req.body.nombre,
