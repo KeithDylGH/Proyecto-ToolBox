@@ -153,8 +153,8 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
 
                 // Actualizar los datos de la imagen en el producto
                 producto.imagen = {
-                    data: `${pullZone}/${imagen.originalname}`, // URL de la nueva imagen
-                    contentType: imagen.mimetype, // Tipo de contenido
+                    data: `${pullZone}/${imagen.originalname}`,
+                    contentType: imagen.mimetype,
                 };
             } catch (error) {
                 console.error('Error al manejar la imagen en Bunny Storage:', error.message);
