@@ -13,7 +13,7 @@ const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // Límite de 10MB para archivos
 
-router.post('/upload', upload.single('inputImagen'), async (req, res) => {
+router.post('/agregar', upload.single('inputImagen'), async (req, res) => {
     console.log('Cuerpo de la solicitud:', req.body);
     console.log('Archivo recibido:', req.file);
 
