@@ -20,9 +20,11 @@ const productoSchema = new mongoose.Schema({
     imagen: {
         data: {
             type: String,
+            required: true
         },
         contentType: {
             type: String,
+            required: true
         },
     },    
 });
