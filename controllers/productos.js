@@ -63,7 +63,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         }
         
         // Eliminar la imagen de Bunny Storage
-        if (producto.imagen) {
+        if (producto.imagen && typeof producto.imagen === 'string') {
             const imagenUrl = producto.imagen;
             const imagenNombre = imagenUrl.split('/').pop();
             
