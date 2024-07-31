@@ -8,9 +8,8 @@ const bunnyAccessKey = process.env.bunnyNetAPIKEY;
 const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}`;
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 
-// Configuración de multer para manejar archivos en memoria
 const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // Límite de 10MB para archivos
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // Límite de 10MB
 
 router.post('/agregar', upload.single('imagen'), async (req, res) => {
     console.log('Cuerpo de la solicitud:', req.body);
@@ -21,22 +20,20 @@ router.post('/agregar', upload.single('imagen'), async (req, res) => {
     }
 
     try {
-        const file = req.file;
-        const fileName = file.originalname;
-        const fileBuffer = file.buffer;
+        const { originalname: fileName, mimetype, buffer: fileBuffer } = req.file;
 
         const response = await axios.put(
             `${bunnyStorageUrl}/${fileName}`,
             fileBuffer,
             {
                 headers: {
-                    'Content-Type': file.mimetype,
+                    'Content-Type': mimetype,
                     'AccessKey': bunnyAccessKey,
                 },
             }
         );
 
-        if (response.status === 200 || 201) {
+        if (response.status === 200 || response.status === 201) {
             const fileUrl = `${bunnyPullZoneUrl}/${fileName}`;
 
             const nuevoProducto = new Producto({
@@ -44,7 +41,7 @@ router.post('/agregar', upload.single('imagen'), async (req, res) => {
                 precio: req.body.precio,
                 imagen: {
                     data: fileUrl,
-                    contentType: file.mimetype
+                    contentType: mimetype
                 },
                 categoria: req.body.categoria,
                 descripcion: req.body.descripcion
@@ -54,21 +51,12 @@ router.post('/agregar', upload.single('imagen'), async (req, res) => {
 
             res.redirect('/inventario/verproducto');
         } else {
-            const errorMsg = `Error al subir el archivo. Código de estado: ${response.status}`;
-            console.error(errorMsg);
-            res.status(response.status).send(errorMsg);
+            console.error(`Error al subir el archivo. Código de estado: ${response.status}`);
+            res.status(response.status).send(`Error al subir el archivo. Código de estado: ${response.status}`);
         }
     } catch (err) {
-        if (err.response) {
-            console.error(`Error en la respuesta de Bunny.net: ${err.response.status} - ${err.response.data}`);
-            res.status(err.response.status).send(`Error en la respuesta de Bunny.net: ${err.response.status}`);
-        } else if (err.request) {
-            console.error('Error en la solicitud a Bunny.net:', err.request);
-            res.status(500).send('Error en la solicitud a Bunny.net. Verifica la conexión de red.');
-        } else {
-            console.error('Error inesperado:', err.message);
-            res.status(500).send('Error inesperado. Por favor, intenta nuevamente.');
-        }
+        console.error('Error inesperado:', err.message);
+        res.status(500).send('Error inesperado. Por favor, intenta nuevamente.');
     }
 });
 
