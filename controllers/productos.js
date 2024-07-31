@@ -3,6 +3,7 @@ const router = express.Router();
 const Producto = require('../models/producto');
 const multer = require('multer');
 const axios = require('axios');
+const sharp = require('sharp');
 
 // Configuración de multer para manejar la carga de archivos
 const storage = multer.memoryStorage();
@@ -116,58 +117,40 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         // Verificar si se proporciona una nueva imagen
         if (imagen) {
             try {
-                const hostname = process.env.bunnyNetHOSTNAME;
-                const storageZone = process.env.bunnyNetZONE;
-                const apiKey = process.env.bunnyNetAPIKEY;
-                const pullZone = process.env.bunnyNetPullZone;
+                const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
+                const fileBuffer = await sharp(imagen.buffer)
+                    .webp()
+                    .toBuffer();
 
-                if (!hostname || !storageZone || !apiKey || !pullZone) {
-                    throw new Error('Configuración de Bunny Storage incompleta');
-                }
-
-                // Eliminar la imagen anterior del Bunny Storage
-                if (producto && producto.imagen && producto.imagen.data) {
-                    const imagenUrl = producto.imagen.data.split('/').pop();
-                    try {
-                        await axios.delete(`https://${hostname}/${storageZone}/${imagenUrl}`, {
-                            headers: { 'AccessKey': apiKey }
-                        });
-                        console.log('Imagen anterior eliminada de Bunny Storage');
-                    } catch (error) {
-                        console.error('Error al eliminar la imagen anterior de Bunny Storage:', error.message);
-                    }
-                }
-
-                // Subir la nueva imagen a Bunny Storage
                 const response = await axios.put(
-                    `https://${hostname}/${storageZone}/${imagen.originalname}`,
-                    imagen.buffer,
+                    `${bunnyStorageAPI}${fileName}`,
+                    fileBuffer,
                     {
                         headers: {
-                            'Content-Type': imagen.mimetype,
-                            'AccessKey': apiKey
+                            'Content-Type': 'image/webp',
+                            'AccessKey': process.env.bunnyNetAPIKEY
                         }
                     }
                 );
                 console.log('Nueva imagen subida a Bunny Storage:', response.data);
 
-                // Actualizar los datos de la imagen en el producto
+                // Actualizar la URL de la imagen en el producto
                 producto.imagen = {
-                    data: `${pullZone}/${imagen.originalname}`,
-                    contentType: imagen.mimetype,
+                    data: `${process.env.bunnyNetPullZone}/${fileName}`,
+                    contentType: 'image/webp'
                 };
+
             } catch (error) {
-                console.error('Error al manejar la imagen en Bunny Storage:', error.message);
-                return res.status(500).json({ error: 'Error al manejar la imagen en Bunny Storage' });
+                console.error('Error al subir la imagen a Bunny Storage:', error.message);
+                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
             }
         }
 
         await producto.save();
-        console.log('Producto actualizado con éxito');
-        res.status(200).json({ message: 'Producto actualizado con éxito' });
+        res.status(200).json(producto);
     } catch (error) {
-        console.error('Error al actualizar el producto:', error.message);
-        res.status(500).json({ error: 'Error al actualizar el producto' });
+        console.error('Error en la actualización del producto:', error.message);
+        res.status(500).json({ error: 'Error en la actualización del producto' });
     }
 });
 
