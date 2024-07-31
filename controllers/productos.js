@@ -62,7 +62,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Ruta para actualizar un producto
+// Endpoint para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
     console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
     console.log('Datos recibidos en la solicitud:', req.body);
@@ -86,6 +86,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         producto.categoria = categoria;
         producto.descripcion = descripcion;
 
+        // Verificar si se proporciona una nueva imagen
         if (imagen) {
             try {
                 const hostname = process.env.bunnyNetHOSTNAME;
@@ -97,7 +98,16 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                     throw new Error('Configuración de Bunny Storage incompleta');
                 }
 
-                // Subir imagen a Bunny Storage
+                // Eliminar la imagen anterior del Bunny Storage
+                if (producto.imagen && producto.imagen.data) {
+                    const imagenUrl = producto.imagen.data.split('/').pop();
+                    await axios.delete(`https://${hostname}/${storageZone}/${imagenUrl}`, {
+                        headers: { 'AccessKey': apiKey }
+                    });
+                    console.log('Imagen anterior eliminada de Bunny Storage');
+                }
+
+                // Subir la nueva imagen a Bunny Storage
                 const response = await axios.put(
                     `https://${hostname}/${storageZone}/${imagen.originalname}`,
                     imagen.buffer,
@@ -108,16 +118,16 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                         }
                     }
                 );
-                console.log('Imagen subida a Bunny Storage:', response.data);
+                console.log('Nueva imagen subida a Bunny Storage:', response.data);
 
-                // Guardar datos de la imagen en el producto
+                // Actualizar los datos de la imagen en el producto
                 producto.imagen = {
-                    data: `${pullZone}/${imagen.originalname}`, // URL de la imagen
+                    data: `${pullZone}/${imagen.originalname}`, // URL de la nueva imagen
                     contentType: imagen.mimetype, // Tipo de contenido
                 };
             } catch (error) {
-                console.error('Error al subir la imagen a Bunny Storage:', error.message);
-                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
+                console.error('Error al manejar la imagen en Bunny Storage:', error.message);
+                return res.status(500).json({ error: 'Error al manejar la imagen en Bunny Storage' });
             }
         }
 
