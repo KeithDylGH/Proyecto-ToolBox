@@ -117,11 +117,13 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         // Verificar si se proporciona una nueva imagen
         if (imagen) {
             try {
+                // Convertir la imagen a formato WebP
                 const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
                 const fileBuffer = await sharp(imagen.buffer)
                     .webp()
                     .toBuffer();
 
+                // Subir la imagen a Bunny Storage
                 const response = await axios.put(
                     `${bunnyStorageAPI}${fileName}`,
                     fileBuffer,
@@ -146,6 +148,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
             }
         }
 
+        // Guardar los cambios en el producto
         await producto.save();
         res.status(200).json(producto);
     } catch (error) {
