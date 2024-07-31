@@ -50,7 +50,11 @@ router.get('/verproducto', async (req, res) => {
         // Asegúrate de que la URL de la imagen se pase correctamente
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                // Convertir el campo `data` en una URL completa accesible
                 producto.imagen.data = `${process.env.bunnyNetPullZone}/${producto.imagen.data.split('/').pop()}`;
+
+                console.log('URL de la imagen:', producto.imagen.data);
+
             }
         });
         res.render('account/cuenta/admin/seeP/index', { productos });
