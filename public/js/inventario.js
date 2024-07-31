@@ -1,5 +1,6 @@
-const url = 'https://proyecto-toolbox.onrender.com/api/products';
+const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate de que la URL sea correcta
 
+// Función para eliminar un producto
 const eliminarProducto = async (id) => {
     try {
         const response = await fetch(`${url}/admin/inventario/${id}`, {
@@ -11,19 +12,20 @@ const eliminarProducto = async (id) => {
         }
 
         alert('Producto eliminado correctamente');
-        location.reload();
+        location.reload(); // Recargar la página después de eliminar
     } catch (error) {
         console.error('Error:', error.message);
         alert('Hubo un error al eliminar el producto');
     }
 };
 
+// Event listener para los botones de eliminar
 document.addEventListener('DOMContentLoaded', () => {
     const botonesEliminar = document.querySelectorAll('.btn-eliminar');
     botonesEliminar.forEach(boton => {
-        boton.addEventListener('click', () => {
-            const id = boton.dataset.id;
-            if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+        boton.addEventListener('click', (e) => {
+            const id = e.target.dataset.id;
+            if (confirm('¿Estás seguro de eliminar este producto?')) {
                 eliminarProducto(id);
             }
         });
