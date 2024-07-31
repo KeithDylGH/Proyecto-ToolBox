@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const sharp = require('sharp');
 const Producto = require('../models/producto');
 require('dotenv').config();
 
@@ -12,7 +13,7 @@ const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // Límite de 10MB para archivos
 
-router.post('/agregar', upload.single('imagen'), async (req, res) => {
+router.post('/agregar', upload.single('inputImagen'), async (req, res) => {
     console.log('Cuerpo de la solicitud:', req.body);
     console.log('Archivo recibido:', req.file);
 
@@ -21,16 +22,20 @@ router.post('/agregar', upload.single('imagen'), async (req, res) => {
     }
 
     try {
+
+        
         const file = req.file;
-        const fileName = file.originalname;
-        const fileBuffer = file.buffer;
+        const fileName = req.file.originalname.replace(/\.[^/.]+$/, '') + '.webp'; // Cambia la extensión a .webp
+        const fileBuffer = await sharp(req.file.buffer)
+            .webp()
+            .toBuffer();
 
         const response = await axios.put(
             `${bunnyStorageUrl}/${fileName}`,
             fileBuffer,
             {
                 headers: {
-                    'Content-Type': file.mimetype,
+                    'Content-Type': 'image/webp',
                     'AccessKey': bunnyAccessKey,
                 },
             }
@@ -43,8 +48,8 @@ router.post('/agregar', upload.single('imagen'), async (req, res) => {
                 nombre: req.body.nombre,
                 precio: req.body.precio,
                 imagen: {
-                    data: fileUrl,
-                    contentType: file.mimetype
+                    data: fileUrl, // Usamos la URL del Pull Zone como el campo data
+                    contentType: 'image/webp' // Ajusta el tipo de contenido según el archivo subido
                 },
                 categoria: req.body.categoria,
                 descripcion: req.body.descripcion
