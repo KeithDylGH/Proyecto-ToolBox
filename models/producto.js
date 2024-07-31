@@ -24,7 +24,7 @@ const productoSchema = new mongoose.Schema({
         contentType: {
             type: String,
         },
-    },
+    },    
 });
 
 const Producto = mongoose.model('Producto', productoSchema);

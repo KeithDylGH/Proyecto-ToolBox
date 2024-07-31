@@ -29,7 +29,6 @@ const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     fileFilter: (req, file, cb) => {
-      // Puedes agregar filtros aquí para restringir los tipos de archivos permitidos
       cb(null, true);
     }
 });
