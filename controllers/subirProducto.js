@@ -13,7 +13,7 @@ const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // Límite de 10MB para archivos
 
-router.post('/agregar', upload.single('inputImagen'), async (req, res) => {
+router.post('/upload', upload.single('inputImagen'), async (req, res) => {
     console.log('Cuerpo de la solicitud:', req.body);
     console.log('Archivo recibido:', req.file);
 
@@ -22,9 +22,11 @@ router.post('/agregar', upload.single('inputImagen'), async (req, res) => {
     }
 
     try {
+
+        
         const file = req.file;
-        const fileName = file.originalname.replace(/\.[^/.]+$/, '') + '.webp';
-        const fileBuffer = await sharp(file.buffer)
+        const fileName = req.file.originalname.replace(/\.[^/.]+$/, '') + '.webp'; // Cambia la extensión a .webp
+        const fileBuffer = await sharp(req.file.buffer)
             .webp()
             .toBuffer();
 
@@ -41,19 +43,21 @@ router.post('/agregar', upload.single('inputImagen'), async (req, res) => {
 
         if (response.status === 200 || 201) {
             const fileUrl = `${bunnyPullZoneUrl}/${fileName}`;
+            console.log('URL de la imagen subida:', fileUrl);
 
             const nuevoProducto = new Producto({
                 nombre: req.body.nombre,
                 precio: req.body.precio,
                 imagen: {
-                    data: fileUrl,
-                    contentType: 'image/webp'
+                    data: fileUrl, // Usamos la URL del Pull Zone como el campo data
+                    contentType: 'image/webp' // Ajusta el tipo de contenido según el archivo subido
                 },
                 categoria: req.body.categoria,
                 descripcion: req.body.descripcion
             });
 
             await nuevoProducto.save();
+
             res.redirect('/inventario/verproducto');
         } else {
             const errorMsg = `Error al subir el archivo. Código de estado: ${response.status}`;
