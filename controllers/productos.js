@@ -4,12 +4,17 @@ const Producto = require('../models/producto');
 const multer = require('multer');
 const axios = require('axios');
 const sharp = require('sharp');
+require('dotenv').config();
 
 // Configuración de multer para manejar la carga de archivos
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const bunnyStorageAPI = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/`;
+const bunnyAccessKey = process.env.bunnyNetAPIKEY;
+const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}`;
+const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
+
 
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
