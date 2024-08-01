@@ -81,13 +81,16 @@
                                 ><%= producto.descripcion %></textarea>
                             </div>
                             
-                            <input type="hidden" name="imagenUrl" value="<%= producto.imagen %>">
-
                             <div class="mb-4">
                                 <label class="form-label" for="imagen">Imagen actual</label>
-                                <input type="hidden" name="imagenUrl" value="<%= producto.imagen %>">
+                                <% if (producto.imagen && producto.imagen.data !== '') { %>
+                                    <img src="<%= producto.imagen.data %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 200px;">
+                                <% } else { %>
+                                    Sin imagen
+                                <% } %>
                                 <input type="file" name="inputImagen" id="imagen">
                             </div>
+                            
                             <button class="btn btn-primary" type="submit">
                                 Guardar Cambios
                             </button>
