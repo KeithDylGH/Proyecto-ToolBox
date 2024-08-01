@@ -133,22 +133,28 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
 
                 // Subir la imagen a Bunny Storage
                 const response = await axios.put(
-                    `${bunnyStorageAPI}${fileName}`,
+                    `${bunnyStorageUrl}/${fileName}`,
                     fileBuffer,
                     {
                         headers: {
                             'Content-Type': 'image/webp',
-                            'AccessKey': process.env.bunnyNetAPIKEY
+                            'AccessKey': bunnyAccessKey
                         }
                     }
                 );
-                console.log('Nueva imagen subida a Bunny Storage:', response.data);
 
-                // Actualizar la URL de la imagen en el producto
-                producto.imagen = {
-                    data: `${process.env.bunnyNetPullZone}/${fileName}`,
-                    contentType: 'image/webp'
-                };
+                if (response.status === 200 || response.status === 201) {
+                    console.log('Nueva imagen subida a Bunny Storage:', response.data);
+
+                    // Actualizar la URL de la imagen en el producto
+                    producto.imagen = {
+                        data: `${bunnyPullZoneUrl}/${fileName}`,
+                        contentType: 'image/webp'
+                    };
+                } else {
+                    console.error(`Error al subir la imagen a Bunny Storage: ${response.statusText}`);
+                    return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
+                }
 
             } catch (error) {
                 console.error('Error al subir la imagen a Bunny Storage:', error.message);
