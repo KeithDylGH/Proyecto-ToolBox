@@ -100,26 +100,6 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Función para subir imagen a Bunny Storage
-async function uploadImageToBunnyStorage(fileBuffer, originalname) {
-    const filename = path.basename(originalname);
-    const url = `${process.env.bunnyNetPullZone}/${filename}`;
-    
-    try {
-        await axios.put(url, fileBuffer, {
-            headers: {
-                'Content-Type': 'image/jpeg',
-                'AccessKey': process.env.bunnyNetAPIKEY
-            }
-        });
-        console.log(`Imagen subida con éxito: ${url}`);
-        return url;
-    } catch (error) {
-        console.error('Error al subir la imagen a Bunny Storage:', error);
-        throw error;
-    }
-}
-
 // Endpoint para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
     console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
