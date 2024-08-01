@@ -18,8 +18,14 @@ const productoSchema = new mongoose.Schema({
         required: true,
     },
     imagen: {
-        type: String, // Almacena la URL de la imagen como una cadena
-        required: false // No es necesario que sea requerido si no siempre hay una imagen
+        data: {
+            type: String,
+            required: false
+        },
+        contentType: {
+            type: String,
+            required: true
+        },
     },    
 });
 

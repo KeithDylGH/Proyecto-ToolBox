@@ -22,13 +22,14 @@ router.post('/admin/inventario', async (req, res) => {
     }
 });
 
-// Endpoint para obtener todos los productos
-router.get('/admin/inventario', async (req, res) => {
+// Endpoint para agregar un nuevo producto
+router.post('/admin/inventario', async (req, res) => {
     try {
-        const productos = await Producto.find();
-        res.status(200).json(productos);
+        const nuevoProducto = new Producto(req.body);
+        await nuevoProducto.save();
+        res.status(201).json(nuevoProducto);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(400).json({ error: error.message });
     }
 });
 
@@ -47,16 +48,6 @@ router.get('/admin/inventario/:id', async (req, res) => {
 router.get('/verproducto', async (req, res) => {
     try {
         const productos = await Producto.find();
-        // Asegúrate de que la URL de la imagen se pase correctamente
-        productos.forEach(producto => {
-            if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
-                // Convertir el campo `data` en una URL completa accesible
-                producto.imagen.data = `${process.env.bunnyNetPullZone}/${producto.imagen.data.split('/').pop()}`;
-
-                console.log('URL de la imagen:', producto.imagen.data);
-
-            }
-        });
         res.render('account/cuenta/admin/seeP/index', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
@@ -74,18 +65,16 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         }
         
         // Eliminar la imagen de Bunny Storage
-        if (producto.imagen && typeof producto.imagen === 'string') {
-            const imagenUrl = producto.imagen;
-            const imagenNombre = imagenUrl.split('/').pop();
+        if (producto.imagen) {
+            const imagenNombre = producto.imagen.split('/').pop();
             
-            const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
-                method: 'DELETE',
+            const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
                 headers: {
                     'AccessKey': process.env.bunnyNetAPIKEY,
                 },
             });
             
-            if (!deleteResponse.ok) {
+            if (!deleteResponse.status === 204) {
                 throw new Error('Error al eliminar la imagen de Bunny Storage');
             }
         }
@@ -101,7 +90,9 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Función para subir imagen a Bunny Storage
-async function pasarBunnyStorage(fileBuffer, fileName) {
+async function subirImagenBunnyStorage(file) {
+    const fileName = file.originalname.replace(/\.[^/.]+$/, '') + '.webp';
+    const fileBuffer = await sharp(file.buffer).webp().toBuffer();
     const url = `${bunnyStorageAPI}${fileName}`;
     
     try {
@@ -121,55 +112,29 @@ async function pasarBunnyStorage(fileBuffer, fileName) {
 
 // Endpoint para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
-    console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
-    console.log('Datos recibidos en la solicitud:', req.body);
-    console.log('Archivo recibido:', req.file);
-
     try {
-        const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file; // Archivo de imagen recibido
         const id = req.params.id;
+        const { nombre, precio, categoria, descripcion } = req.body;
+        let imagenUrl = req.body.imagenUrl; // URL de la imagen en caso de no actualizarla
 
-        console.log('Datos procesados:', { nombre, precio, categoria, descripcion, imagen });
-
-        const producto = await Producto.findById(id);
-        if (!producto) {
-            console.log('Producto no encontrado');
-            return res.status(404).json({ error: 'Producto no encontrado' });
+        // Si hay una nueva imagen, sube la imagen y actualiza la URL
+        if (req.file) {
+            const imagenSubida = await subirImagenBunnyStorage(req.file);
+            imagenUrl = imagenSubida; // Guarda la nueva URL
         }
 
-        producto.nombre = nombre;
-        producto.precio = precio;
-        producto.categoria = categoria;
-        producto.descripcion = descripcion;
+        await Producto.findByIdAndUpdate(id, {
+            nombre,
+            precio,
+            categoria,
+            descripcion,
+            imagen: imagenUrl
+        });
 
-        // Verificar si se proporciona una nueva imagen
-        if (imagen) {
-            try {
-                // Convertir la imagen a formato WebP
-                const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
-                const fileBuffer = await sharp(imagen.buffer)
-                    .webp()
-                    .toBuffer();
-
-                // Subir la imagen a Bunny Storage
-                const imagenURL = await pasarBunnyStorage(fileBuffer, fileName);
-
-                // Actualizar la URL de la imagen en el producto
-                producto.imagen = imagenURL;
-
-            } catch (error) {
-                console.error('Error al procesar o subir la imagen:', error.message);
-                return res.status(500).json({ error: 'Error al procesar o subir la imagen' });
-            }
-        }
-
-        // Guardar los cambios en el producto
-        await producto.save();
-        res.status(200).json(producto);
+        res.redirect(`/inventario/verproducto/${id}`);
     } catch (error) {
-        console.error('Error en la actualización del producto:', error.message);
-        res.status(500).json({ error: 'Error en la actualización del producto' });
+        console.error(error);
+        res.status(500).send('Error al actualizar el producto');
     }
 });
 
