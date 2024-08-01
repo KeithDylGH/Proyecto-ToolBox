@@ -48,16 +48,17 @@
                         <% productos.forEach(producto => { %>
                             <tr>
                                 <td><%= producto.nombre %></td>
-                                <td><%= producto.precio %>$</td>
+                                <td><%= producto.precio %> $</td>
                                 <td><%= producto.categoria %></td>
                                 <td><%= producto.descripcion %></td>
                                 <td>
-                                    <% if (producto.imagen.data) { %>
+                                    <% if (producto.imagen && producto.imagen.data !== '') { %>
                                         <img src="<%= producto.imagen.data %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 200px;">
                                     <% } else { %>
                                         Sin imagen
                                     <% } %>
-                                </td>                                
+                                </td>
+                                <td>
                                     <a href="/inventario/editar/<%= producto._id %>" class="btn btn-primary btn-sm">Editar</a>
                                     <button class="btn btn-danger btn-sm btn-eliminar" data-id="<%= producto._id %>">Eliminar</button>
                                 </td>
@@ -75,7 +76,6 @@
     <!-- Scripts personalizados -->
     <script src="/js/cuenta.js"></script>
     <script src="/js/admin.js"></script>
-    <script type="module" src="/js/inventario.js"></script>
 
 </body>
 </html>
