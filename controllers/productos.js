@@ -22,14 +22,13 @@ router.post('/admin/inventario', async (req, res) => {
     }
 });
 
-// Endpoint para agregar un nuevo producto
-router.post('/admin/inventario', async (req, res) => {
+// Endpoint para obtener todos los productos
+router.get('/admin/inventario', async (req, res) => {
     try {
-        const nuevoProducto = new Producto(req.body);
-        await nuevoProducto.save();
-        res.status(201).json(nuevoProducto);
+        const productos = await Producto.find();
+        res.status(200).json(productos);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 });
 
@@ -48,6 +47,16 @@ router.get('/admin/inventario/:id', async (req, res) => {
 router.get('/verproducto', async (req, res) => {
     try {
         const productos = await Producto.find();
+        // Asegúrate de que la URL de la imagen se pase correctamente
+        productos.forEach(producto => {
+            if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                // Convertir el campo `data` en una URL completa accesible
+                producto.imagen.data = `${process.env.bunnyNetPullZone}/${producto.imagen.data.split('/').pop()}`;
+
+                console.log('URL de la imagen:', producto.imagen.data);
+
+            }
+        });
         res.render('account/cuenta/admin/seeP/index', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
@@ -91,6 +100,26 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
+// Función para subir imagen a Bunny Storage
+async function uploadImageToBunnyStorage(fileBuffer, originalname) {
+    const filename = path.basename(originalname);
+    const url = `${process.env.bunnyNetPullZone}/${filename}`;
+    
+    try {
+        await axios.put(url, fileBuffer, {
+            headers: {
+                'Content-Type': 'image/jpeg',
+                'AccessKey': process.env.bunnyNetAPIKEY
+            }
+        });
+        console.log(`Imagen subida con éxito: ${url}`);
+        return url;
+    } catch (error) {
+        console.error('Error al subir la imagen a Bunny Storage:', error);
+        throw error;
+    }
+}
+
 // Endpoint para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
     console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
@@ -125,14 +154,27 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                     .toBuffer();
 
                 // Subir la imagen a Bunny Storage
-                const imagenURL = await pasarBunnyStorage(fileBuffer, fileName);
+                const response = await axios.put(
+                    `${bunnyStorageAPI}${fileName}`,
+                    fileBuffer,
+                    {
+                        headers: {
+                            'Content-Type': 'image/webp',
+                            'AccessKey': process.env.bunnyNetAPIKEY
+                        }
+                    }
+                );
+                console.log('Nueva imagen subida a Bunny Storage:', response.data);
 
                 // Actualizar la URL de la imagen en el producto
-                producto.imagen = imagenURL;
+                producto.imagen = {
+                    data: `${process.env.bunnyNetPullZone}/${fileName}`,
+                    contentType: 'image/webp'
+                };
 
             } catch (error) {
-                console.error('Error al procesar o subir la imagen:', error.message);
-                return res.status(500).json({ error: 'Error al procesar o subir la imagen' });
+                console.error('Error al subir la imagen a Bunny Storage:', error.message);
+                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
             }
         }
 

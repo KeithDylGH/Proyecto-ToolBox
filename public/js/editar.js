@@ -9,8 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = form.getAttribute('action').split('/').pop();
 
         try {
-            // Actualiza la ruta en el fetch para que coincida con tu backend
-            const response = await fetch(`/inventario/editar/${id}`, {
+            const response = await fetch(`/api/products/editar/${id}`, {
                 method: 'PUT',
                 body: formData
             });
