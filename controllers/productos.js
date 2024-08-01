@@ -110,17 +110,16 @@ async function subirImagenBunnyStorage(file) {
     }
 }
 
-// Endpoint para actualizar un producto
+// Ruta para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
         const id = req.params.id;
         const { nombre, precio, categoria, descripcion } = req.body;
-        let imagenUrl = req.body.imagenUrl; // URL de la imagen en caso de no actualizarla
+        let imagenUrl = req.body.imagenUrl;
 
-        // Si hay una nueva imagen, sube la imagen y actualiza la URL
         if (req.file) {
             const imagenSubida = await subirImagenBunnyStorage(req.file);
-            imagenUrl = imagenSubida; // Guarda la nueva URL
+            imagenUrl = imagenSubida;
         }
 
         await Producto.findByIdAndUpdate(id, {

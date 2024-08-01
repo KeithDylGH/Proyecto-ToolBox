@@ -85,15 +85,8 @@
 
                             <div class="mb-4">
                                 <label class="form-label" for="imagen">Imagen actual</label>
-                                <% if (producto.imagen.data) { %>
-                                    <img src="<%= producto.imagen.data %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 200px;">
-                                <% } %>
-                                <input 
-                                    class="form-control"
-                                    id="imagen"
-                                    name="inputImagen"
-                                    type="file"
-                                />
+                                <input type="hidden" name="imagenUrl" value="<%= producto.imagen %>">
+                                <input type="file" name="inputImagen" id="imagen">
                             </div>
                             <button class="btn btn-primary" type="submit">
                                 Guardar Cambios
