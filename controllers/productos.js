@@ -65,16 +65,18 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         }
         
         // Eliminar la imagen de Bunny Storage
-        if (producto.imagen) {
-            const imagenNombre = producto.imagen.split('/').pop();
+        if (producto.imagen && typeof producto.imagen === 'string') {
+            const imagenUrl = producto.imagen;
+            const imagenNombre = imagenUrl.split('/').pop();
             
-            const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
+            const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
+                method: 'DELETE',
                 headers: {
                     'AccessKey': process.env.bunnyNetAPIKEY,
                 },
             });
             
-            if (!deleteResponse.status === 204) {
+            if (!deleteResponse.ok) {
                 throw new Error('Error al eliminar la imagen de Bunny Storage');
             }
         }
@@ -89,51 +91,57 @@ router.delete('/admin/inventario/:id', async (req, res) => {
     }
 });
 
-// Función para subir imagen a Bunny Storage
-async function subirImagenBunnyStorage(file) {
-    const fileName = file.originalname.replace(/\.[^/.]+$/, '') + '.webp';
-    const fileBuffer = await sharp(file.buffer).webp().toBuffer();
-    const url = `${bunnyStorageAPI}${fileName}`;
-    
-    try {
-        await axios.put(url, fileBuffer, {
-            headers: {
-                'Content-Type': 'image/webp',
-                'AccessKey': process.env.bunnyNetAPIKEY
-            }
-        });
-        console.log(`Imagen subida con éxito: ${url}`);
-        return url;
-    } catch (error) {
-        console.error('Error al subir la imagen a Bunny Storage:', error.message);
-        throw error;
-    }
-}
+// Endpoint para actualizar un producto
+router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
+    console.log('Solicitud PUT recibida para el producto con ID:', req.params.id);
+    console.log('Datos recibidos en la solicitud:', req.body);
+    console.log('Archivo recibido:', req.file);
 
-// Ruta para actualizar un producto
-router.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
-        const id = req.params.id;
         const { nombre, precio, categoria, descripcion } = req.body;
-        let imagenUrl = req.body.imagenUrl;
+        const imagen = req.file; // Archivo de imagen recibido
+        const id = req.params.id;
 
-        if (req.file) {
-            const imagenSubida = await subirImagenBunnyStorage(req.file);
-            imagenUrl = imagenSubida;
+        console.log('Datos procesados:', { nombre, precio, categoria, descripcion, imagen });
+
+        const producto = await Producto.findById(id);
+        if (!producto) {
+            console.log('Producto no encontrado');
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        await Producto.findByIdAndUpdate(id, {
-            nombre,
-            precio,
-            categoria,
-            descripcion,
-            imagen: imagenUrl
-        });
+        producto.nombre = nombre;
+        producto.precio = precio;
+        producto.categoria = categoria;
+        producto.descripcion = descripcion;
 
-        res.redirect(`/inventario/verproducto/${id}`);
+        // Verificar si se proporciona una nueva imagen
+        if (imagen) {
+            try {
+                // Convertir la imagen a formato WebP
+                const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
+                const fileBuffer = await sharp(imagen.buffer)
+                    .webp()
+                    .toBuffer();
+
+                // Subir la imagen a Bunny Storage
+                const imagenURL = await pasarBunnyStorage(fileBuffer, fileName);
+
+                // Actualizar la URL de la imagen en el producto
+                producto.imagen = imagenURL;
+
+            } catch (error) {
+                console.error('Error al procesar o subir la imagen:', error.message);
+                return res.status(500).json({ error: 'Error al procesar o subir la imagen' });
+            }
+        }
+
+        // Guardar los cambios en el producto
+        await producto.save();
+        res.status(200).json(producto);
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al actualizar el producto');
+        console.error('Error en la actualización del producto:', error.message);
+        res.status(500).json({ error: 'Error en la actualización del producto' });
     }
 });
 
