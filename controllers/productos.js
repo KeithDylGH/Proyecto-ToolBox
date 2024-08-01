@@ -111,7 +111,7 @@ async function subirImagenBunnyStorage(file) {
 }
 
 // Ruta para actualizar un producto
-router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
+router.put('/inventario-editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
         const id = req.params.id;
         const { nombre, precio, categoria, descripcion } = req.body;
