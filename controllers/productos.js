@@ -119,6 +119,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
+        // Actualizar los campos básicos del producto
         producto.nombre = nombre;
         producto.precio = precio;
         producto.categoria = categoria;
@@ -147,11 +148,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 console.log('Nueva imagen subida a Bunny Storage:', response.data);
 
                 // Actualizar la URL de la imagen en el producto
-                producto.imagen = {
-                    data: `${process.env.bunnyNetPullZone}/${fileName}`,
-                    contentType: 'image/webp'
-                };
-
+                producto.imagen = `${process.env.bunnyNetPullZone}/${fileName}`;
             } catch (error) {
                 console.error('Error al subir la imagen a Bunny Storage:', error.message);
                 return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
