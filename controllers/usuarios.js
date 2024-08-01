@@ -13,7 +13,7 @@ userRouter.post('/registrar', async (req, res) => {
     try {
         // Verificar si todos los campos obligatorios están presentes
         if (!nombre || !apellido || !usuario || !correo || !password || !numero || !cedula) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+            res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
         // Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico

@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function(){
             return;
         }
     
-        const response = await fetch('/api/users/registrar', {
+        const response = await fetch('/api/usuarios/registrar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -35,6 +35,14 @@ document.addEventListener('DOMContentLoaded', function(){
                 cedula: cedula
             }),
         });
+
+        if (!response.ok) {
+            // Muestra el cuerpo de la respuesta en caso de error
+            const errorText = await response.text();
+            console.error('Error en la respuesta:', errorText);
+            alert('Error: ' + errorText);
+            return;
+        }
     
         const result = await response.json();
     
