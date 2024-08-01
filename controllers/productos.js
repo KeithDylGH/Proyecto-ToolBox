@@ -101,7 +101,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 });
 
 // Función para subir imagen a Bunny Storage
-async function uploadImageToBunnyStorage(fileBuffer, fileName) {
+async function pasarBunnyStorage(fileBuffer, fileName) {
     const url = `${bunnyStorageAPI}${fileName}`;
     
     try {
@@ -153,13 +153,10 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                     .toBuffer();
 
                 // Subir la imagen a Bunny Storage
-                const imagenURL = await uploadImageToBunnyStorage(fileBuffer, fileName);
+                const imagenURL = await pasarBunnyStorage(fileBuffer, fileName);
 
                 // Actualizar la URL de la imagen en el producto
-                producto.imagen = {
-                    data: imagenURL,
-                    contentType: 'image/webp'
-                };
+                producto.imagen = imagenURL;
 
             } catch (error) {
                 console.error('Error al procesar o subir la imagen:', error.message);
