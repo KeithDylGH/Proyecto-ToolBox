@@ -1,11 +1,32 @@
 const mongoose = require('mongoose');
 
 const productoSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
-  precio: { type: Number, required: true },
-  categoria: { type: String, required: true },
-  descripcion: { type: String, required: true },
-  imagen: { type: String } // Cambiar a String si solo se almacena la URL
+    nombre: {
+        type: String,
+        required: true,
+    },
+    precio: {
+        type: Number,
+        required: true,
+    },
+    categoria: {
+        type: String,
+        required: true,
+    },
+    descripcion: {
+        type: String,
+        required: true,
+    },
+    imagen: {
+        data: {
+            type: String,
+            required: false
+        },
+        contentType: {
+            type: String,
+            required: true
+        },
+    },    
 });
 
 const Producto = mongoose.model('Producto', productoSchema);
