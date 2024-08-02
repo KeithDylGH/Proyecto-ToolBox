@@ -1,4 +1,3 @@
-// Archivo categorias.js
 const express = require('express');
 const router = express.Router();
 const Categoria = require('../models/categoria');
@@ -23,8 +22,8 @@ router.post('/', async (req, res) => {
         const nuevaCategoria = new Categoria({ nombre, numero: nuevoNumero });
         await nuevaCategoria.save();
 
-        // Redirige a la página de gestión de categorías después de agregar
-        res.redirect('/inventario/categoria');
+        // Redirige a la página de gestión de categorías con mensaje de éxito
+        res.redirect('/inventario/categoria?success=Categoría agregada con éxito');
     } catch (error) {
         res.status(500).json({ error: 'Error al agregar categoría' });
     }
@@ -39,7 +38,8 @@ router.put('/:id', async (req, res) => {
         if (!categoriaActualizada) {
             return res.status(404).json({ error: 'Categoría no encontrada' });
         }
-        res.redirect('/inventario/categoria'); // Redirige a la lista de categorías
+        // Redirige a la lista de categorías con mensaje de éxito
+        res.redirect('/inventario/categoria?success=Categoría actualizada con éxito');
     } catch (error) {
         res.status(500).json({ error: 'Error al actualizar la categoría' });
     }
@@ -53,7 +53,8 @@ router.delete('/:id', async (req, res) => {
         if (!categoriaEliminada) {
             return res.status(404).json({ error: 'Categoría no encontrada' });
         }
-        res.redirect('/inventario/categoria'); // Redirige a la lista de categorías
+        // Redirige a la lista de categorías con mensaje de éxito
+        res.redirect('/inventario/categoria?success=Categoría eliminada con éxito');
     } catch (error) {
         res.status(500).json({ error: 'Error al eliminar la categoría' });
     }

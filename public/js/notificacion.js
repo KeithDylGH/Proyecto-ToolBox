@@ -1,26 +1,36 @@
-document.getElementById('formularioCategoria').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Evita el envío del formulario por defecto
+// notificacion.js
+// Mostrar notificación
+function showNotification(message) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.classList.remove('d-none');
+    setTimeout(() => {
+        notification.classList.add('d-none');
+    }, 3000); // Mostrar durante 3 segundos
+}
 
-    const nombre = document.getElementById('nombreCategoria').value;
-    try {
-        const response = await fetch('/api/categorias', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ nombre })
-        });
+// Mostrar notificación de éxito al cargar la página
+const urlParams = new URLSearchParams(window.location.search);
+const successMessage = urlParams.get('success');
+if (successMessage) {
+    showNotification(successMessage);
+    history.replaceState({}, document.title, window.location.pathname); // Limpiar parámetros de la URL
+}
 
-        if (response.ok) {
-            const nuevaCategoria = await response.json();
-            // Actualiza la interfaz o redirige a la página deseada
-            alert('Categoría agregada con éxito');
-            window.location.href = '/inventario/categoria'; // Redirige a la página de categorías
-        } else {
-            const error = await response.json();
-            alert('Error al agregar categoría: ' + error.error);
-        }
-    } catch (error) {
-        console.error('Error al agregar la categoría:', error);
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const successMessage = urlParams.get('success');
+    if (successMessage) {
+        showNotification(successMessage);
+        history.replaceState({}, document.title, window.location.pathname); // Limpiar parámetros de la URL
     }
 });
+
+function showNotification(message) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.classList.remove('d-none');
+    setTimeout(() => {
+        notification.classList.add('d-none');
+    }, 3000); // Mostrar durante 3 segundos
+}
