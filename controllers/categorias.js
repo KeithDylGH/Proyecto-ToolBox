@@ -3,13 +3,13 @@ const router = express.Router();
 const Categoria = require('../models/categoria');
 
 // Obtener todas las categorías
-router.get('/inventario/categoria', async (req, res) => {
-try {
+router.get('/categorias', async (req, res) => {
+  try {
     const categorias = await Categoria.find();
-    res.render('account/cuenta/admin/category/index', { categorias });
-    } catch (error) {
+    res.status(200).json(categorias);
+  } catch (error) {
     res.status(500).json({ error: 'Error al obtener las categorías' });
-    }
+  }
 });
 
 // Crear una nueva categoría

@@ -38,6 +38,14 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     }
 
+    const verCategoria = document.getElementById('btnCat');
+
+    if (verCategoria){
+        verCategoria.addEventListener('click', function() {
+            window.location.href = '/inventario/categoria/'
+        })
+    }
+
     const PDFyExcel = document.getElementById('dBtn');
 
     if (PDFyExcel){
