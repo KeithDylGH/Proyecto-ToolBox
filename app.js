@@ -136,14 +136,14 @@ app.get('/', async (req, res) => {
             },
             {
                 $addFields: {
-                    fieldType: { $type: "$fieldToConvert" } // Verificar el tipo de datos
+                    fieldToConvertType: { $type: "$fieldToConvert" } // Verificar el tipo de datos
                 }
             },
             {
                 $project: {
                     fieldAsString: {
                         $cond: {
-                            if: { $eq: ["$fieldType", "string"] },
+                            if: { $eq: ["$fieldToConvertType", "string"] },
                             then: "$fieldToConvert",
                             else: {
                                 $convert: {
