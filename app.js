@@ -135,17 +135,28 @@ app.get('/', async (req, res) => {
                 }
             },
             {
-                $project: {
-                  convertedField: {
-                    $convert: {
-                      input: "$fieldToConvert",
-                      to: "string",
-                      onError: "conversionError",
-                      onNull: "nullValue"
-                    }
-                  }
+                $addFields: {
+                    fieldType: { $type: "$fieldToConvert" } // Verificar el tipo de datos
                 }
-              }              
+            },
+            {
+                $project: {
+                    fieldAsString: {
+                        $cond: {
+                            if: { $eq: ["$fieldType", "string"] },
+                            then: "$fieldToConvert",
+                            else: {
+                                $convert: {
+                                    input: "$fieldToConvert",
+                                    to: "string",
+                                    onError: "conversionError",
+                                    onNull: "nullValue"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         ]);
 
         res.render('home/index', { CUsuario, productos });
