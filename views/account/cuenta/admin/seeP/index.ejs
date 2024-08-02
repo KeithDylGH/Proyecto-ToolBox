@@ -47,8 +47,7 @@
                     <tbody>
                         <% productos.forEach(producto => { 
                             const categoria = categorias.find(c => c._id && producto.categoria && c._id.toString() === producto.categoria.toString());
-                            // Obtener el ID simplificado de la categoría
-                            const categoriaIndex = categoria ? categorias.indexOf(categoria) + 1 : null;
+                            const categoriaIndex = categoria ? categorias.indexOf(categoria) + 1 : 'No asignada'; // Manejo de categorías no asignadas
                         %>
                             <tr>
                                 <td><%= producto.nombre %></td>
@@ -57,7 +56,7 @@
                                     <% if (categoria) { %>
                                         <%= categoria.nombre %> (ID: <%= categoriaIndex %>)
                                     <% } else { %>
-                                        Categoría no encontrada
+                                        Categoría no asignada
                                     <% } %>
                                 </td>
                                 <td><%= producto.descripcion %></td>
