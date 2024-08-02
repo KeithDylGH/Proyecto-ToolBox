@@ -112,7 +112,30 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     const CUsuario = req.session.user;
     try {
-        const productos = await iProducto.find(); // Obtener todos los productos
+        // Obtener todos los productos junto con el nombre de la categoría
+        const productos = await iProducto.aggregate([
+            {
+                $lookup: {
+                    from: 'categorias',
+                    localField: 'categoria',
+                    foreignField: '_id',
+                    as: 'categoriaData'
+                }
+            },
+            {
+                $unwind: '$categoriaData'
+            },
+            {
+                $project: {
+                    nombre: 1,
+                    precio: 1,
+                    imagen: 1,
+                    imagenURL: { $concat: ['https://storage.bunnycdn.com/toolboxproject/', '$imagen'] },
+                    nombreCategoria: '$categoriaData.nombre'
+                }
+            }
+        ]);
+
         res.render('home/index', { CUsuario, productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);

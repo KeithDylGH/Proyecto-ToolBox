@@ -127,19 +127,20 @@
       <section class="FeaturedProduct">
         <div>
           <h2>Los mejores productos</h2>
-        <div class="row row-cols-4">
+          <div class="row row-cols-4">
             <% productos.forEach(producto => { %>
                 <div class="card" style="width: 15rem">
-                    <img class="card-img-top" src="/uploads/<%= producto.imagen %>" alt="<%= producto.nombre %>">
+                    <!-- Aquí debes construir la URL completa de la imagen -->
+                    <img class="card-img-top" src="<%= producto.imagenURL %>" alt="<%= producto.nombre %>">
                     <div class="card-body">
                         <h5 class="card-title"><%= producto.nombre %></h5>
                         <p class="card-text">Precio: $<%= producto.precio %></p>
-                        <p class="card-text">Categoría: <%= producto.categoria %></p>
+                        <p class="card-text">Categoría: <%= producto.nombreCategoria %></p>
                         <a href="#" class="btn btn-primary">Comprar</a>
                     </div>
                 </div>
             <% }) %>
-            </div>
+        </div>        
           </div>
         
         </div>
