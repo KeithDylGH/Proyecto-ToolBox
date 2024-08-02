@@ -112,7 +112,6 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     const CUsuario = req.session.user;
     try {
-        // Obtener todos los productos junto con el nombre de la categoría
         const productos = await iProducto.aggregate([
             {
                 $lookup: {
@@ -130,7 +129,7 @@ app.get('/', async (req, res) => {
                     imagenURL: {
                         $concat: [
                             'https://storage.bunnycdn.com/toolboxproject/',
-                            { $ifNull: ['$imagen', 'default.jpg'] } // Agregado para manejar valores nulos
+                            { $ifNull: [{ $toString: '$imagen' }, 'default.jpg'] } // Convertir a cadena antes de concatenar
                         ]
                     }
                 }
