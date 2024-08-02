@@ -2,6 +2,17 @@ const express = require('express');
 const router = express.Router();
 const Categoria = require('../models/categoria');
 
+
+// Ruta para mostrar la página de categorías
+router.get('/categories', async (req, res) => {
+    try {
+      const categorias = await Categoria.find(); // Obtiene todas las categorías
+      res.render('account/cuenta/admin/category/index', { categorias }); // Pasa las categorías a la vista
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener las categorías' });
+    }
+  });
+
 // Obtener todas las categorías
 router.get('/categorias', async (req, res) => {
   try {
