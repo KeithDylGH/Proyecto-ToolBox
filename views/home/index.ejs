@@ -127,69 +127,26 @@
       <section class="FeaturedProduct">
         <div>
           <h2>Los mejores productos</h2>
-
-          <div class="row row-cols-4">
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
+        <div class="row row-cols-4">
+            <% productos.forEach(producto => { %>
+                <div class="card" style="width: 15rem">
+                    <img class="card-img-top" src="/uploads/<%= producto.imagen %>" alt="<%= producto.nombre %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= producto.nombre %></h5>
+                        <p class="card-text">Precio: $<%= producto.precio %></p>
+                        <p class="card-text">Categoría: <%= producto.categoria %></p>
+                        <a href="#" class="btn btn-primary">Comprar</a>
+                    </div>
+                </div>
+            <% }) %>
             </div>
           </div>
+        
         </div>
 
         <div>
           <h2>Relacionados con tu busqueda</h2>
-
+<!--EJEMPLO-->
           <div class="recomendados row row-cols-4">
             <div class="card" style="width: 15rem">
               <img
@@ -205,109 +162,13 @@
               </div>
             </div>
 
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
             </div>
           </div>
         </div>
 
         <section>
           <h2>Te puede interesar</h2>
-
+<!--EJEMPLO-->
           <div
             class="MultiCarousel"
             data-items="1,3,5,6"
@@ -334,131 +195,7 @@
                 </div>
               </div>
 
-              <div class="item">
-                <div class="card" style="width: 100%">
-                  <img
-                    class="card-img-top"
-                    src="/img/cabeza/Casco de Seg tipo 1.webp"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <a
-                      href="#"
-                      class="card-title text-white p-2"
-                      style="border-radius: 5px"
-                      >Ver mas</a
-                    >
-                  </div>
-                </div>
-              </div>
 
-              <div class="item">
-                <div class="card" style="width: 100%">
-                  <img
-                    class="card-img-top"
-                    src="/img/cabeza/Casco de Seg tipo 1.webp"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <a
-                      href="#"
-                      class="card-title text-white p-2"
-                      style="border-radius: 5px"
-                      >Ver mas</a
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <div class="item">
-                <div class="card" style="width: 100%">
-                  <img
-                    class="card-img-top"
-                    src="/img/cabeza/Casco de Seg tipo 1.webp"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <a
-                      href="#"
-                      class="card-title text-white p-2"
-                      style="border-radius: 5px"
-                      >Ver mas</a
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <div class="item">
-                <div class="card" style="width: 100%">
-                  <img
-                    class="card-img-top"
-                    src="/img/cabeza/Casco de Seg tipo 1.webp"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <a
-                      href="#"
-                      class="card-title text-white p-2"
-                      style="border-radius: 5px"
-                      >Ver mas</a
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <div class="item">
-                <div class="card" style="width: 100%">
-                  <img
-                    class="card-img-top"
-                    src="/img/cabeza/Casco de Seg tipo 1.webp"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <a
-                      href="#"
-                      class="card-title text-white p-2"
-                      style="border-radius: 5px"
-                      >Ver mas</a
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <div class="item">
-                <div class="card" style="width: 100%">
-                  <img
-                    class="card-img-top"
-                    src="/img/cabeza/Casco de Seg tipo 1.webp"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <a
-                      href="#"
-                      class="card-title text-white p-2"
-                      style="border-radius: 5px"
-                      >Ver mas</a
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <div class="item">
-                <div class="card" style="width: 100%">
-                  <img
-                    class="card-img-top"
-                    src="/img/cabeza/Casco de Seg tipo 1.webp"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <a
-                      href="#"
-                      class="card-title text-white p-2"
-                      style="border-radius: 5px"
-                      >Ver mas</a
-                    >
-                  </div>
-                </div>
-              </div>
             </div>
             <button class="btn leftLst bg-light text-dark"><</button>
             <button class="btn rightLst bg-light text-dark">></button>
@@ -467,7 +204,7 @@
 
         <div class="categoria">
           <h2>Categoria de nuestros productos disponibles</h2>
-
+<!--EJEMPLO-->
           <div class="categoria_items row row-cols-4">
             <div
               class="card"
@@ -486,55 +223,6 @@
               </div>
             </div>
 
-            <div
-              class="card"
-              style="width: 15rem; background-color: #5e3b3b; color: #fff"
-            >
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div
-              class="card"
-              style="width: 15rem; background-color: #5e3b3b; color: #fff"
-            >
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            <div
-              class="card"
-              style="width: 15rem; background-color: #5e3b3b; color: #fff"
-            >
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
             </div>
           </div>
         </div>

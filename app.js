@@ -109,9 +109,15 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     const CUsuario = req.session.user;
-    res.render('home/index', { CUsuario });
+    try {
+        const productos = await iProducto.find(); // Obtener todos los productos
+        res.render('home/index', { CUsuario, productos });
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
+    }
 });
 
 app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
