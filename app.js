@@ -325,4 +325,4 @@ app.use('/api/products', productoRouter); // Rutas para productos
 app.use('/api/upload', subirProducto);   // Rutas para subir productos
 app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
-app.use('/api/categoria', categoriaRouter);
+app.use('/api/categorias', categoriaRouter);
