@@ -45,28 +45,29 @@
         </div>
       </div>
 
-      <div class="mt-5">
-        <h3>Lista de Categorías</h3>
-        <ul class="list-group">
-          <% if (categorias && categorias.length > 0) { %>
-            <% categorias.forEach(function(categoria) { %>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <form action="/api/categorias/<%= categoria._id %>" method="POST" class="w-75 d-flex">
-                  <input type="hidden" name="_method" value="PUT">
-                  <input type="text" name="nombre" class="form-control" value="<%= categoria.nombre %>" required>
-                  <button type="submit" class="btn btn-secondary ms-3">Actualizar</button>
-                </form>
-                <form action="/api/categorias/<%= categoria._id %>" method="POST" style="display:inline;">
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button type="submit" class="btn btn-danger">Eliminar</button>
-                </form>
-              </li>
-            <% }); %>
-          <% } else { %>
-            <li class="list-group-item">No hay categorías disponibles.</li>
-          <% } %>
-        </ul>
-      </div>
+        <div class="mt-5">
+            <h3>Lista de Categorías</h3>
+            <ul class="list-group">
+                <% if (categorias && categorias.length > 0) { %>
+                    <% categorias.forEach(function(categoria) { %>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><%= categoria.numero %>. <%= categoria.nombre %></span>
+                            <form action="/api/categorias/<%= categoria._id %>" method="POST" class="w-75 d-flex">
+                                <input type="hidden" name="_method" value="PUT">
+                                <input type="text" name="nombre" class="form-control" value="<%= categoria.nombre %>" required>
+                                <button type="submit" class="btn btn-secondary ms-3">Actualizar</button>
+                            </form>
+                            <form action="/api/categorias/<%= categoria._id %>" method="POST" style="display:inline;">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </li>
+                    <% }); %>
+                <% } else { %>
+                    <li class="list-group-item">No hay categorías disponibles.</li>
+                <% } %>
+            </ul>
+        </div>    
     </main>
   </div>
 

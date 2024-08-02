@@ -12,11 +12,14 @@ router.get('/categorias', async (req, res) => {
     }
 });
 
-// Agregar una nueva categoría
 router.post('/categorias', async (req, res) => {
     try {
         const { nombre } = req.body;
-        const nuevaCategoria = new Categoria({ nombre });
+        // Obtener el número más alto existente
+        const ultimaCategoria = await Categoria.findOne().sort({ numero: -1 });
+        const nuevoNumero = ultimaCategoria ? ultimaCategoria.numero + 1 : 1;
+        
+        const nuevaCategoria = new Categoria({ nombre, numero: nuevoNumero });
         await nuevaCategoria.save();
         res.status(201).json(nuevaCategoria);
     } catch (error) {
