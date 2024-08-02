@@ -45,10 +45,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% productos.forEach(producto => { 
+                        <% productos.forEach((producto, index) => { 
                             const categoria = categorias.find(c => c._id && producto.categoria && c._id.toString() === producto.categoria.toString());
                             if (categoria) {
-                                const categoriaIndex = categorias.indexOf(categoria) + 1; // Asumimos que las categorías están ordenadas y comenzamos el conteo desde 1
+                                const categoriaIndex = categorias.indexOf(categoria) + 1; // Obtener ID simplificado
                         %>
                             <tr>
                                 <td><%= producto.nombre %></td>
