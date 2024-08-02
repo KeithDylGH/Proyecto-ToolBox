@@ -126,11 +126,20 @@ app.get('/', async (req, res) => {
                 $unwind: '$categoriaData'
             },
             {
+                $addFields: {
+                    imagenURL: {
+                        $concat: [
+                            'https://storage.bunnycdn.com/toolboxproject/',
+                            { $ifNull: ['$imagen', 'default.jpg'] } // Agregado para manejar valores nulos
+                        ]
+                    }
+                }
+            },
+            {
                 $project: {
                     nombre: 1,
                     precio: 1,
-                    imagen: 1,
-                    imagenURL: { $concat: ['https://storage.bunnycdn.com/toolboxproject/', '$imagen'] },
+                    imagenURL: 1,
                     nombreCategoria: '$categoriaData.nombre'
                 }
             }
