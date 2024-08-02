@@ -173,6 +173,10 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
+app.get('/inventario/categoria', (req, res) => {
+    res.render('account/cuenta/admin/category');
+});
+
 app.get('/inventario/editar/:id', async (req, res) => {
     try {
         const producto = await iProducto.findById(req.params.id);
