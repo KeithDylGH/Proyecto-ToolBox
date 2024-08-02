@@ -127,38 +127,14 @@
       <section class="FeaturedProduct">
         <div>
           <h2>Los mejores productos</h2>
-<!--EJEMPLO-->
-          <div class="row row-cols-4">
-            <div class="card" style="width: 15rem">
-              <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
-              </div>
-            </div>
-
-            </div>
-          </div>
-        
-        </div>
-
-        <div>
-          <h2>Los mejores productos</h2>
           <div class="row row-cols-4">
               <% productos.forEach(function(producto) { %>
                   <div class="card" style="width: 15rem">
                     <img
-                    class="card-img-top"
-                    src="https://<tu-cname>.bunnycdn.com/<%= producto.imagen.data %>"
-                    alt="<%= producto.nombre %>"
-                />
-                
+                        class="card-img-top"
+                        src="https://<tu-cname>.bunnycdn.com/<%= producto.imagen.data %>"
+                        alt="<%= producto.nombre %>"
+                    />
                       <div class="card-body">
                           <h5 class="card-title"><%= producto.nombre %></h5>
                           <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>

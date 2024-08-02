@@ -112,11 +112,14 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     try {
         // Obtener productos aleatorios
-        const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]); // Cambia el tamaño según tus necesidades
+        const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
+
+        // Imprimir los productos para verificar la URL de la imagen
+        console.log('Productos:', productos);
         
         // Obtén el usuario de la sesión
         const CUsuario = req.session.user;
-        
+
         res.render('home/index', { CUsuario, productos });
     } catch (error) {
         console.error('Error al obtener productos aleatorios:', error);
