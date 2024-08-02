@@ -185,13 +185,12 @@ app.get('/inventario/categoria', async (req, res) => {
 
 app.get('/inventario/editar/:id', async (req, res) => {
     try {
-        const producto = await iProducto.findById(req.params.id);
-        if (!producto) {
-            return res.status(404).send('Producto no encontrado');
-        }
-        res.render('account/cuenta/admin/seeP/editP', { producto });
+        const producto = await Producto.findById(req.params.id);
+        const categorias = await Categoria.find();
+        res.render('account/cuenta/admin/editP/index', { producto, categorias });
     } catch (error) {
-        res.status(500).send('Error del servidor');
+        console.error(error);
+        res.status(500).send('Error al cargar la página de edición de producto');
     }
 });
 
