@@ -49,7 +49,11 @@
                         </div>
                         <div class="mb-4">
                             <label class="form-label" for="categoria">Categoría</label>
-                            <input class="form-control" id="categoria" name="categoria" type="number" placeholder="Categoría Producto" required />
+                            <select class="form-control" id="categoria" name="categoria" required>
+                                <% categorias.forEach(function(categoria) { %>
+                                    <option value="<%= categoria._id %>"><%= categoria.nombre %></option>
+                                <% }); %>
+                            </select>
                         </div>
                         <div class="mb-4">
                             <label class="form-label" for="desc">Descripción</label>

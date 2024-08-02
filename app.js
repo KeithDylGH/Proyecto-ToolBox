@@ -11,6 +11,8 @@ const Excel = require('exceljs');
 const PDF = require('pdfkit');
 const subirProducto = require('./controllers/subirProducto');
 const bcrypt = require('bcryptjs');
+const Categoria = require('./models/categoria');
+const categoriaRouter = require('./controllers/categorias');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
 const cookieParser = require('cookie-parser');
@@ -313,3 +315,4 @@ app.use('/api/products', productoRouter); // Rutas para productos
 app.use('/api/upload', subirProducto);   // Rutas para subir productos
 app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/categoria', categoriaRouter);

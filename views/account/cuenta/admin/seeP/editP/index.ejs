@@ -62,15 +62,14 @@
                             </div>
                             <div class="mb-4">
                                 <label class="form-label" for="categoria">Categoría</label>
-                                <input 
-                                    class="form-control"
-                                    id="categoria"
-                                    name="categoria"
-                                    type="number"
-                                    value="<%= producto.categoria %>"
-                                    placeholder="Categoría Producto"
-                                />
-                            </div>
+                                <select class="form-control" id="categoria" name="categoria" required>
+                                    <% categorias.forEach(function(categoria) { %>
+                                        <option value="<%= categoria._id %>" <%= producto.categoria.equals(categoria._id) ? 'selected' : '' %>>
+                                            <%= categoria.nombre %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                            </div>                            
                             <div class="mb-4">
                                 <label class="form-label" for="descripcion">Descripción</label>
                                 <textarea 

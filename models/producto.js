@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const productoSchema = new mongoose.Schema({
     nombre: {
@@ -10,8 +11,9 @@ const productoSchema = new mongoose.Schema({
         required: true,
     },
     categoria: {
-        type: String,
-        required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'Categoria',
+        required: true
     },
     descripcion: {
         type: String,
