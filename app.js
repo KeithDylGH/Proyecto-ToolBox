@@ -193,15 +193,15 @@ app.get('/inventario/categoria', async (req, res) => {
 app.get('/inventario/editar/:id', async (req, res) => {
     try {
         const productoId = req.params.id;
-        const producto = await iProducto.findById(productoId).exec();
+        const producto = await Producto.findById(productoId).exec();
         if (!producto) {
             return res.status(404).send('Producto no encontrado');
         }
 
-        // Buscar la categoría asociada si existe
-        const categoria = producto.categoria ? await Categoria.findById(producto.categoria).exec() : null;
+        // Buscar todas las categorías
+        const categorias = await Categoria.find().exec();
 
-        res.render('account/cuenta/admin/seeP/editP', { producto, categoria });
+        res.render('account/cuenta/admin/seeP/editP/index', { producto, categorias });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
