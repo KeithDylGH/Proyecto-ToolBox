@@ -45,15 +45,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% productos.forEach((producto, index) => { 
+                        <% productos.forEach(producto => { 
                             const categoria = categorias.find(c => c._id && producto.categoria && c._id.toString() === producto.categoria.toString());
-                            if (categoria) {
-                                const categoriaIndex = categorias.indexOf(categoria) + 1; // Obtener ID simplificado
+                            // Obtener el ID simplificado de la categoría
+                            const categoriaIndex = categoria ? categorias.indexOf(categoria) + 1 : null;
                         %>
                             <tr>
                                 <td><%= producto.nombre %></td>
                                 <td><%= producto.precio %> $</td>
-                                <td><%= categoria.nombre %> (ID: <%= categoriaIndex %>)</td>
+                                <td>
+                                    <% if (categoria) { %>
+                                        <%= categoria.nombre %> (ID: <%= categoriaIndex %>)
+                                    <% } else { %>
+                                        Categoría no encontrada
+                                    <% } %>
+                                </td>
                                 <td><%= producto.descripcion %></td>
                                 <td>
                                     <% if (producto.imagen && producto.imagen.data !== '') { %>
@@ -67,11 +73,7 @@
                                     <button class="btn btn-danger btn-sm btn-eliminar" data-id="<%= producto._id %>">Eliminar</button>
                                 </td>
                             </tr>
-                        <% 
-                            } else {
-                                console.log('Categoría no encontrada para el producto:', producto.nombre);
-                            }
-                        }); %>
+                        <% }); %>
                     </tbody>                                        
                 </table>
             </div>
