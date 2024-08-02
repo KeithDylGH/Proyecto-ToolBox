@@ -173,7 +173,7 @@ app.get('/inventario/verproducto', async (req, res) => {
     try {
         const productos = await iProducto.find();
         const categorias = await Categoria.find();
-        res.render('account/cuenta/admin/seeP', { productos });
+        res.render('account/cuenta/admin/seeP', { productos, categorias });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
         res.status(500).send('Error al obtener los productos');
