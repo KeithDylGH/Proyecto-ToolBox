@@ -136,12 +136,16 @@ app.get('/', async (req, res) => {
             },
             {
                 $project: {
-                    nombre: 1,
-                    precio: 1,
-                    imagenURL: 1,
-                    nombreCategoria: '$categoriaData.nombre'
+                  convertedField: {
+                    $convert: {
+                      input: "$fieldToConvert",
+                      to: "string",
+                      onError: "conversionError",
+                      onNull: "nullValue"
+                    }
+                  }
                 }
-            }
+              }              
         ]);
 
         res.render('home/index', { CUsuario, productos });
