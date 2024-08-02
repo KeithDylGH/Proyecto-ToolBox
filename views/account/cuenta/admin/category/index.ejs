@@ -48,8 +48,8 @@
       <div class="mt-5">
         <h3>Lista de Categorías</h3>
         <ul class="list-group">
-          <% if (categorias && categorias.length > 0) { %>
-            <% categorias.forEach(function(categoria) { %>
+          <% if (categoria && categoria.length > 0) { %>
+            <% categoria.forEach(function(categoria) { %>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 <form action="/api/categorias/<%= categoria._id %>" method="POST" class="w-75 d-flex">
                   <input type="hidden" name="_method" value="PUT">
