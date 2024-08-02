@@ -64,11 +64,11 @@
                                 <label class="form-label" for="categoria">Categoría</label>
                                 <select class="form-control" id="categoria" name="categoria" required>
                                     <% categorias.forEach(function(categoria) { %>
-                                        <option value="<%= categoria._id %>" <%= producto.categoria.equals(categoria._id) ? 'selected' : '' %>>
+                                        <option value="<%= categoria._id %>" <%= producto.categoria && producto.categoria.equals(categoria._id) ? 'selected' : '' %>>
                                             <%= categoria.nombre %>
                                         </option>
                                     <% }); %>
-                                </select>
+                                </select>                                
                             </div>                                                        
                             <div class="mb-4">
                                 <label class="form-label" for="descripcion">Descripción</label>
