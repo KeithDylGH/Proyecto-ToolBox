@@ -127,28 +127,8 @@
       <section class="FeaturedProduct">
         <div>
           <h2>Los mejores productos</h2>
-          <div class="row row-cols-4">
-            <% productos.forEach(producto => { %>
-                <div class="card" style="width: 15rem">
-                    <!-- Aquí debes construir la URL completa de la imagen -->
-                    <img class="card-img-top" src="<%= producto.imagenURL %>" alt="<%= producto.nombre %>">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= producto.nombre %></h5>
-                        <p class="card-text">Precio: $<%= producto.precio %></p>
-                        <p class="card-text">Categoría: <%= producto.nombreCategoria %></p>
-                        <a href="#" class="btn btn-primary">Comprar</a>
-                    </div>
-                </div>
-            <% }) %>
-        </div>        
-          </div>
-        
-        </div>
-
-        <div>
-          <h2>Relacionados con tu busqueda</h2>
 <!--EJEMPLO-->
-          <div class="recomendados row row-cols-4">
+          <div class="row row-cols-4">
             <div class="card" style="width: 15rem">
               <img
                 class="card-img-top"
@@ -165,7 +145,28 @@
 
             </div>
           </div>
+        
         </div>
+
+        <div>
+          <h2>Los mejores productos</h2>
+          <div class="row row-cols-4">
+              <% productos.forEach(function(producto) { %>
+                  <div class="card" style="width: 15rem">
+                    <img
+                    class="card-img-top"
+                    src="https://<tu-cname>.bunnycdn.com/<%= producto.imagen.data %>"
+                    alt="<%= producto.nombre %>"
+                />
+                
+                      <div class="card-body">
+                          <h5 class="card-title"><%= producto.nombre %></h5>
+                          <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
+                      </div>
+                  </div>
+              <% }); %>
+          </div>
+      </div>
 
         <section>
           <h2>Te puede interesar</h2>

@@ -110,15 +110,20 @@ app.use((req, res, next) => {
 });
 
 app.get('/', async (req, res) => {
-    const CUsuario = req.session.user;
     try {
-        const productos = await iProducto.find(); // Obtener todos los productos
+        // Obtener productos aleatorios
+        const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]); // Cambia el tamaño según tus necesidades
+        
+        // Obtén el usuario de la sesión
+        const CUsuario = req.session.user;
+        
         res.render('home/index', { CUsuario, productos });
     } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).send('Error al obtener los productos');
+        console.error('Error al obtener productos aleatorios:', error);
+        res.status(500).send('Error al obtener productos');
     }
 });
+
 
 app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
 app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
