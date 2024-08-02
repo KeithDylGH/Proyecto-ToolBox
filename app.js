@@ -201,7 +201,7 @@ app.get('/inventario/editar/:id', async (req, res) => {
         // Buscar la categoría asociada si existe
         const categoria = producto.categoria ? await Categoria.findById(producto.categoria).exec() : null;
 
-        res.render('editar/producto', { producto, categoria });
+        res.render('account/cuenta/admin/editP', { producto, categoria });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');
