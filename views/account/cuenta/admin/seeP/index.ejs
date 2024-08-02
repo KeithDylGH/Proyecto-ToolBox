@@ -47,17 +47,13 @@
                     <tbody>
                         <% productos.forEach(producto => { 
                             const categoria = categorias.find(c => c._id && producto.categoria && c._id.toString() === producto.categoria.toString());
+                            if (categoria) {
+                                const categoriaIndex = categorias.indexOf(categoria) + 1; // Asumimos que las categorías están ordenadas y comenzamos el conteo desde 1
                         %>
                             <tr>
                                 <td><%= producto.nombre %></td>
                                 <td><%= producto.precio %> $</td>
-                                <td>
-                                    <% if (categoria) { %>
-                                        <%= categoria.nombre %> (ID: <%= categoria._id %>)
-                                    <% } else { %>
-                                        Categoría no encontrada
-                                    <% } %>
-                                </td>
+                                <td><%= categoria.nombre %> (ID: <%= categoriaIndex %>)</td>
                                 <td><%= producto.descripcion %></td>
                                 <td>
                                     <% if (producto.imagen && producto.imagen.data !== '') { %>
@@ -71,7 +67,11 @@
                                     <button class="btn btn-danger btn-sm btn-eliminar" data-id="<%= producto._id %>">Eliminar</button>
                                 </td>
                             </tr>
-                        <% }); %>
+                        <% 
+                            } else {
+                                console.log('Categoría no encontrada para el producto:', producto.nombre);
+                            }
+                        }); %>
                     </tbody>                                        
                 </table>
             </div>
