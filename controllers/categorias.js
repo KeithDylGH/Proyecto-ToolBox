@@ -3,7 +3,7 @@ const router = express.Router();
 const Categoria = require('../models/categoria');
 
 // Obtener todas las categorías
-router.get('/categorias', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const categorias = await Categoria.find();
         res.json(categorias);
@@ -12,13 +12,14 @@ router.get('/categorias', async (req, res) => {
     }
 });
 
-router.post('/categorias', async (req, res) => {
+// Agregar una categoría
+router.post('/', async (req, res) => {
     try {
         const { nombre } = req.body;
         // Obtener el número más alto existente
         const ultimaCategoria = await Categoria.findOne().sort({ numero: -1 });
         const nuevoNumero = ultimaCategoria ? ultimaCategoria.numero + 1 : 1;
-        
+
         const nuevaCategoria = new Categoria({ nombre, numero: nuevoNumero });
         await nuevaCategoria.save();
         res.status(201).json(nuevaCategoria);
@@ -28,7 +29,7 @@ router.post('/categorias', async (req, res) => {
 });
 
 // Actualizar una categoría
-router.put('/categorias/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { nombre } = req.body;
@@ -43,7 +44,7 @@ router.put('/categorias/:id', async (req, res) => {
 });
 
 // Eliminar una categoría
-router.delete('/categorias/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const categoriaEliminada = await Categoria.findByIdAndDelete(id);
