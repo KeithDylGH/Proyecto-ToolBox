@@ -112,53 +112,7 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     const CUsuario = req.session.user;
     try {
-        const productos = await iProducto.aggregate([
-            {
-                $lookup: {
-                    from: 'categorias',
-                    localField: 'categoria',
-                    foreignField: '_id',
-                    as: 'categoriaData'
-                }
-            },
-            {
-                $unwind: '$categoriaData'
-            },
-            {
-                $addFields: {
-                    imagenURL: {
-                        $concat: [
-                            'https://storage.bunnycdn.com/toolboxproject/',
-                            { $ifNull: [{ $toString: '$imagen' }, 'default.jpg'] } // Convertir a cadena antes de concatenar
-                        ]
-                    }
-                }
-            },
-            {
-                $addFields: {
-                    fieldToConvertType: { $type: "$fieldToConvert" } // Verificar el tipo de datos
-                }
-            },
-            {
-                $project: {
-                    fieldAsString: {
-                        $cond: {
-                            if: { $eq: ["$fieldToConvertType", "string"] },
-                            then: "$fieldToConvert",
-                            else: {
-                                $convert: {
-                                    input: "$fieldToConvert",
-                                    to: "string",
-                                    onError: "conversionError",
-                                    onNull: "nullValue"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        ]);
-
+        const productos = await iProducto.find(); // Obtener todos los productos
         res.render('home/index', { CUsuario, productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
