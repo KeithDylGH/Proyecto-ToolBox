@@ -11,7 +11,7 @@ const Excel = require('exceljs');
 const PDF = require('pdfkit');
 const subirProducto = require('./controllers/subirProducto');
 const bcrypt = require('bcryptjs');
-const categoria = require('./models/categoria');
+const Categoria = require('./models/categoria');
 const categoriaRouter = require('./controllers/categorias');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
@@ -173,8 +173,14 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
-app.get('/inventario/categoria', (req, res) => {
-    res.render('account/cuenta/admin/category');
+app.get('/inventario/categoria', async (req, res) => {
+    try {
+        const categorias = await Categoria.find();
+        res.render('account/cuenta/admin/category', { categorias });
+    } catch (error) {
+        console.error('Error al obtener las categorías:', error);
+        res.status(500).send('Error al obtener las categorías');
+    }
 });
 
 app.get('/inventario/editar/:id', async (req, res) => {
