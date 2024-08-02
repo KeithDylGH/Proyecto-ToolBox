@@ -159,13 +159,20 @@ app.get('/admin/inventario', (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/agregarproduto', (req, res) => {
-    res.render('account/cuenta/admin/addP');
+app.get('/inventario/agregarproduto', async (req, res) => {
+    try {
+        const categorias = await Categoria.find(); // Obtener categorías
+        res.render('account/cuenta/admin/addP', { categorias });
+    } catch (error) {
+        console.error('Error al obtener las categorías:', error);
+        res.status(500).send('Error al obtener las categorías');
+    }
 });
 
 app.get('/inventario/verproducto', async (req, res) => {
     try {
         const productos = await iProducto.find();
+        const categorias = await Categoria.find();
         res.render('account/cuenta/admin/seeP', { productos });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
