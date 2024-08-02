@@ -193,7 +193,7 @@ app.get('/inventario/categoria', async (req, res) => {
 app.get('/inventario/editar/:id', async (req, res) => {
     try {
         const productoId = req.params.id;
-        const producto = await Producto.findById(productoId).exec();
+        const producto = await iProducto.findById(productoId).exec();
         if (!producto) {
             return res.status(404).send('Producto no encontrado');
         }
