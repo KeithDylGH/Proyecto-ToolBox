@@ -21,8 +21,6 @@ const MongoStore = require('connect-mongo');
 const multer = require('multer');
 const formData = require('form-data');
 const axios = require('axios');
-const adminAuth = require('./middleware/auth');
-const autorizar = require('./middleware/rol');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
