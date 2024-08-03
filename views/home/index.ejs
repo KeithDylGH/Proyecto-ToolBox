@@ -130,12 +130,10 @@
           <div class="row row-cols-4">
             <% productos.forEach(function(producto) { %>
               <div class="card" style="width: 15rem">
-                  <% if (producto.imagen && producto.imagen.data) { 
-                      const imageUrl = `https://${bunnyNetPullZone}/${producto.imagen.data}`; // Construcción de URL completa
-                  %>
+                  <% if (producto.imagen && producto.imagen.data) { %>
                       <img 
                           class="card-img-top"
-                          src="<%= imageUrl %>" 
+                          src="<%= producto.imagen.data %>" 
                           alt="<%= producto.nombre %>"
                           class="img-thumbnail mb-3" 
                           style="max-width: 100px;"
@@ -148,7 +146,7 @@
                       <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
                   </div>
               </div>
-          <% }); %>                    
+          <% }); %>                                       
           </div>
       </div>
 

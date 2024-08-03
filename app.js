@@ -113,10 +113,13 @@ app.get('/', async (req, res) => {
     try {
         const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
 
-        // Verificar la URL de la imagen y otros datos
+        // Asegúrate de que la URL de la imagen se pase correctamente
         productos.forEach(producto => {
-            const imageUrl = `https://${process.env.bunnyNetPullZone}/${producto.imagen.data}`;
-            console.log(`Producto: ${producto.nombre}, Imagen: ${imageUrl}`);
+            if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                // Construir la URL completa de la imagen
+                producto.imagen.data = `${process.env.bunnyNetPullZone}/${producto.imagen.data.split('/').pop()}`;
+                console.log('URL de la imagen:', producto.imagen.data);
+            }
         });
 
         const CUsuario = req.session.user;
