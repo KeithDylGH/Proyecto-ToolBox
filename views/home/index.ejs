@@ -128,23 +128,26 @@
         <div>
           <h2>Los mejores productos</h2>
           <div class="row row-cols-4">
-              <% productos.forEach(function(producto) { %>
-                  <div class="card" style="width: 15rem">
-                      <% if (producto.imagen && producto.imagen.data) { %>
-                        <img
-                            class="card-img-top"
-                            src="https://<%= bunnyNetPullZone %>/<%= producto.imagen.data %>"
-                            alt="<%= producto.nombre %>"
-                        />
-                      <% } else { %>
-                          <p>Sin imagen</p>
-                      <% } %>
-                      <div class="card-body">
-                          <h5 class="card-title"><%= producto.nombre %></h5>
-                          <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
-                      </div>
+            <% productos.forEach(function(producto) { %>
+              <div class="card" style="width: 15rem">
+                  <% if (producto.imagen && producto.imagen.data) { 
+                      const imageUrl = `https://${bunnyNetPullZone}/${producto.imagen.data}`; // Construcción de URL completa
+                  %>
+                      <img
+                          class="card-img-top"
+                          src="<%= imageUrl %>"
+                          alt="<%= producto.nombre %>"
+                      />
+                      <p>URL: <%= imageUrl %></p> <!-- Mostrar URL para verificación -->
+                  <% } else { %>
+                      <p>Sin imagen</p>
+                  <% } %>
+                  <div class="card-body">
+                      <h5 class="card-title"><%= producto.nombre %></h5>
+                      <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
                   </div>
-              <% }); %>
+              </div>
+          <% }); %>          
           </div>
       </div>
 
