@@ -117,7 +117,8 @@ app.get('/', async (req, res) => {
         productos.forEach(producto => console.log(`Producto: ${producto.nombre}, Imagen: ${producto.imagen.data}`));
 
         const CUsuario = req.session.user;
-        res.render('home/index', { CUsuario, productos });
+        const bunnyNetPullZone = process.env.bunnyNetPullZone; // Obtén la Pull Zone desde las variables de entorno
+        res.render('home/index', { CUsuario, productos, bunnyNetPullZone });
     } catch (error) {
         console.error('Error al obtener productos aleatorios:', error);
         res.status(500).send('Error al obtener productos');
