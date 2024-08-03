@@ -87,7 +87,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
                 },
             });
             
-            if (deleteResponse.status !== 204) {
+            if (deleteResponse.status !== 204) { // Bunny Storage devuelve 204 No Content en caso de éxito
                 throw new Error('Error al eliminar la imagen de Bunny Storage');
             }
         }
