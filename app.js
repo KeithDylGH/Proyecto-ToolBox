@@ -21,6 +21,7 @@ const MongoStore = require('connect-mongo');
 const multer = require('multer');
 const formData = require('form-data');
 const axios = require('axios');
+const adminAuth = require('./middlewares/auth');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -147,6 +148,10 @@ app.get('/logout', (req, res) => {
 
 app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
+});
+
+app.get('/tienda/producto', (req, res) => {
+    res.render('shop/Productos');
 });
 
 app.get('/cliente', (req, res) => {
@@ -357,3 +362,6 @@ app.use('/api/upload', subirProducto);   // Rutas para subir productos
 app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
+// Aplicar el middleware a las rutas de admin
+app.use('/admin', adminAuth);
+app.use('/inventario', adminAuth);
