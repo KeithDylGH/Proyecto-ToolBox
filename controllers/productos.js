@@ -81,12 +81,20 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop(); // Extraer el nombre del archivo
             
-            const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
+            // URL para eliminar la imagen
+            const deleteUrl = `${bunnyStorageAPI}${imagenNombre}`;
+            
+            // Intentar eliminar la imagen
+            const deleteResponse = await axios.delete(deleteUrl, {
                 headers: {
                     'AccessKey': bunnyAccessKey,
                 },
             });
-            
+
+            // Imprimir la respuesta para depuración
+            console.log('Respuesta de eliminación de Bunny Storage:', deleteResponse.status, deleteResponse.data);
+
+            // Verificar si la eliminación fue exitosa
             if (deleteResponse.status !== 204) { // Bunny Storage devuelve 204 No Content en caso de éxito
                 throw new Error('Error al eliminar la imagen de Bunny Storage');
             }
