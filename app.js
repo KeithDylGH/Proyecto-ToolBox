@@ -21,8 +21,7 @@ const MongoStore = require('connect-mongo');
 const multer = require('multer');
 const formData = require('form-data');
 const axios = require('axios');
-const adminAuth = require('./middleware/auth');
-const autorizar = require('./middleware/rol');
+const { authorize } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -180,15 +179,15 @@ app.get('/error', (req, res) => {
     res.status(403).render('error/index', { message });
 });
 
-app.get('/admin',  (req, res) => {
+app.get('/admin', authorize(['admin', 'boss']),  (req, res) => {
     res.render('account/cuenta/admin');
 });
 
-app.get('/admin/inventario', (req, res) => {
+app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/agregarproduto', async (req, res) => {
+app.get('/inventario/agregarproduto', authorize(['admin', 'boss']), async (req, res) => {
     try {
         const categorias = await Categoria.find(); // Obtener categorías
         res.render('account/cuenta/admin/addP', { categorias });
@@ -198,7 +197,7 @@ app.get('/inventario/agregarproduto', async (req, res) => {
     }
 });
 
-app.get('/inventario/verproducto', async (req, res) => {
+app.get('/inventario/verproducto', authorize(['admin', 'boss']), async (req, res) => {
     try {
         const productos = await iProducto.find();
         const categorias = await Categoria.find();
@@ -209,7 +208,7 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
-app.get('/inventario/categoria', async (req, res) => {
+app.get('/inventario/categoria', authorize(['admin', 'boss']), async (req, res) => {
     try {
         const categorias = await Categoria.find();
         res.render('account/cuenta/admin/category', { categorias });
@@ -219,7 +218,7 @@ app.get('/inventario/categoria', async (req, res) => {
     }
 });
 
-app.get('/inventario/editar/:id', async (req, res) => {
+app.get('/inventario/editar/:id', authorize(['admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.params.id;
         const producto = await iProducto.findById(productoId).exec();
@@ -237,7 +236,7 @@ app.get('/inventario/editar/:id', async (req, res) => {
     }
 });
 
-app.get('/inventario/descargarInv', async (req, res) => {
+app.get('/inventario/descargarInv', authorize(['admin', 'boss']), async (req, res) => {
     try {
         const productos = await iProducto.find();
         res.render('account/cuenta/admin/pdfYExcel', { productos });
@@ -368,6 +367,3 @@ app.use('/api/upload', subirProducto);   // Rutas para subir productos
 app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
-// Aplicar el middleware a las rutas de admin
-app.use('/admin', adminAuth);
-app.use('/inventario', adminAuth);

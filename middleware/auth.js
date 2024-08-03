@@ -1,9 +1,14 @@
-function isAdminOrBoss(req, res, next) {
-    if (req.session.user && (req.session.user.role === 'admin' || req.session.user.role === 'boss')) {
-        next();
-    } else {
-        res.status(403).render('error/index', { message: 'ERROR al entrar a la pagina.' });
-    }
+// authAndRole.js
+
+function authorize(roles) {
+    return function(req, res, next) {
+        // Asegúrate de que `req.session.user` contenga la información del usuario
+        if (req.session.user && roles.includes(req.session.user.role)) {
+            next(); // Usuario tiene uno de los roles adecuados
+        } else {
+            res.redirect('/error'); // Redirige a una página de acceso denegado
+        }
+    };
 }
 
-module.exports = isAdminOrBoss;
+module.exports = { authorize };
