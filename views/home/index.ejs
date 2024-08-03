@@ -129,14 +129,13 @@
           <h2>Los mejores productos</h2>
           <div class="row row-cols-4">
             <% productos.forEach(function(producto) { %>
-              <div class="card" style="width: 15rem">
+              <div class="card" style="width: 15rem;">
                   <% if (producto.imagen && producto.imagen.data) { %>
                       <img 
-                          class="card-img-top"
+                          class="card-img-top img-thumbnail mb-3"
                           src="<%= producto.imagen.data %>" 
                           alt="<%= producto.nombre %>"
-                          class="img-thumbnail mb-3" 
-                          style="max-width: 100px;"
+                          style="max-width: 100%; height: auto;" 
                       />
                   <% } else { %>
                       <p>Sin imagen</p>
@@ -146,7 +145,7 @@
                       <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
                   </div>
               </div>
-          <% }); %>                                       
+          <% }); %>                                                 
           </div>
       </div>
 

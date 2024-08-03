@@ -33,3 +33,10 @@ function showNotification(message) {
         notification.classList.add('d-none');
     }, 3000); // Mostrar durante 3 segundos
 }
+
+//PAGINA DE ERROR
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        window.location.href = '/cliente'; // Redirige después de 5 segundos
+    }, 5000); // 5000 ms = 5 segundos
+});

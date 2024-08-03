@@ -22,6 +22,7 @@ const multer = require('multer');
 const formData = require('form-data');
 const axios = require('axios');
 const adminAuth = require('./middleware/auth');
+const autorizar = require('./middleware/rol');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -114,18 +115,18 @@ app.get('/', async (req, res) => {
     try {
         const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
 
-        // Asegúrate de que la URL de la imagen se pase correctamente
+        // Construir la URL completa de la imagen
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
-                // Construir la URL completa de la imagen
-                producto.imagen.data = `${process.env.bunnyNetPullZone}/${producto.imagen.data.split('/').pop()}`;
+                // Verifica si producto.imagen.data es solo el nombre del archivo
+                const fileName = producto.imagen.data.split('/').pop();
+                producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
                 console.log('URL de la imagen:', producto.imagen.data);
             }
         });
 
         const CUsuario = req.session.user;
-        const bunnyNetPullZone = process.env.bunnyNetPullZone; // Obtén la Pull Zone desde las variables de entorno
-        res.render('home/index', { CUsuario, productos, bunnyNetPullZone });
+        res.render('home/index', { CUsuario, productos });
     } catch (error) {
         console.error('Error al obtener productos aleatorios:', error);
         res.status(500).send('Error al obtener productos');
@@ -175,18 +176,19 @@ app.get('/cuenta/atencion', (req, res) => {
 });
 
 app.get('/error', (req, res) => {
-    res.render('error/index');
+    const message = req.query.message || 'Se ha producido un error.';
+    res.status(403).render('error/index', { message });
 });
 
-app.get('/admin', (req, res) => {
+app.get('/admin', autorizar('admin' || 'boss'),  (req, res) => {
     res.render('account/cuenta/admin');
 });
 
-app.get('/admin/inventario', (req, res) => {
+app.get('/admin/inventario', autorizar('admin' || 'boss'), (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/agregarproduto', async (req, res) => {
+app.get('/inventario/agregarproduto', autorizar('admin' || 'boss'), async (req, res) => {
     try {
         const categorias = await Categoria.find(); // Obtener categorías
         res.render('account/cuenta/admin/addP', { categorias });
@@ -196,7 +198,7 @@ app.get('/inventario/agregarproduto', async (req, res) => {
     }
 });
 
-app.get('/inventario/verproducto', async (req, res) => {
+app.get('/inventario/verproducto', autorizar('admin' || 'boss'), async (req, res) => {
     try {
         const productos = await iProducto.find();
         const categorias = await Categoria.find();
@@ -207,7 +209,7 @@ app.get('/inventario/verproducto', async (req, res) => {
     }
 });
 
-app.get('/inventario/categoria', async (req, res) => {
+app.get('/inventario/categoria', autorizar('admin' || 'boss'), async (req, res) => {
     try {
         const categorias = await Categoria.find();
         res.render('account/cuenta/admin/category', { categorias });
@@ -217,7 +219,7 @@ app.get('/inventario/categoria', async (req, res) => {
     }
 });
 
-app.get('/inventario/editar/:id', async (req, res) => {
+app.get('/inventario/editar/:id', autorizar('admin' || 'boss'), async (req, res) => {
     try {
         const productoId = req.params.id;
         const producto = await iProducto.findById(productoId).exec();
@@ -235,7 +237,7 @@ app.get('/inventario/editar/:id', async (req, res) => {
     }
 });
 
-app.get('/inventario/descargarInv', async (req, res) => {
+app.get('/inventario/descargarInv', autorizar('admin' || 'boss'), async (req, res) => {
     try {
         const productos = await iProducto.find();
         res.render('account/cuenta/admin/pdfYExcel', { productos });
