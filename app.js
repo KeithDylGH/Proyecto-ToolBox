@@ -175,7 +175,7 @@ app.get('/cuenta/atencion', (req, res) => {
 });
 
 app.get('/error', (req, res) => {
-    res.render('error');
+    res.render('error/index');
 });
 
 app.get('/admin', (req, res) => {
