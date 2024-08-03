@@ -174,6 +174,10 @@ app.get('/cuenta/atencion', (req, res) => {
     res.render('account/cuenta/cliente/atencion');
 });
 
+app.get('/error', (req, res) => {
+    res.render('error');
+});
+
 app.get('/admin', (req, res) => {
     res.render('account/cuenta/admin');
 });
