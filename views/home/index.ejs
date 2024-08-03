@@ -133,10 +133,12 @@
                   <% if (producto.imagen && producto.imagen.data) { 
                       const imageUrl = `https://${bunnyNetPullZone}/${producto.imagen.data}`; // Construcción de URL completa
                   %>
-                      <img
+                      <img 
                           class="card-img-top"
-                          src="<%= imageUrl %>"
+                          src="<%= imageUrl %>" 
                           alt="<%= producto.nombre %>"
+                          class="img-thumbnail mb-3" 
+                          style="max-width: 100px;"
                       />
                   <% } else { %>
                       <p>Sin imagen</p>
