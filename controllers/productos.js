@@ -75,20 +75,19 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
-        
+
         // Eliminar la imagen de Bunny Storage
-        if (producto.imagen && typeof producto.imagen === 'string') {
-            const imagenUrl = producto.imagen;
-            const imagenNombre = imagenUrl.split('/').pop();
+        if (producto.imagen && producto.imagen.data) {
+            const imagenUrl = producto.imagen.data;
+            const imagenNombre = imagenUrl.split('/').pop(); // Extraer el nombre del archivo
             
-            const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
-                method: 'DELETE',
+            const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
                 headers: {
-                    'AccessKey': process.env.bunnyNetAPIKEY,
+                    'AccessKey': bunnyAccessKey,
                 },
             });
             
-            if (!deleteResponse.ok) {
+            if (deleteResponse.status !== 204) {
                 throw new Error('Error al eliminar la imagen de Bunny Storage');
             }
         }

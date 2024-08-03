@@ -236,7 +236,7 @@ app.get('/inventario/editar/:id', authorize(['admin', 'boss']), async (req, res)
     }
 });
 
-app.get('/inventario/descargarInv', async (req, res) => {
+app.get('/inventario/descargarInv', authorize(['admin', 'boss']), async (req, res) => {
     try {
         const productos = await iProducto.find();
         res.render('account/cuenta/admin/pdfYExcel', { productos });
