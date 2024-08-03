@@ -366,6 +366,3 @@ app.use('/api/upload', subirProducto);   // Rutas para subir productos
 app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
-// Aplicar el middleware a las rutas de admin
-app.use('/admin', adminAuth);
-app.use('/inventario', adminAuth);
