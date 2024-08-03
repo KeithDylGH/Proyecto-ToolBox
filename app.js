@@ -21,6 +21,7 @@ const MongoStore = require('connect-mongo');
 const multer = require('multer');
 const formData = require('form-data');
 const axios = require('axios');
+
 const { authorize } = require('./middleware/auth');
 
 const app = express();
@@ -133,15 +134,7 @@ app.get('/', async (req, res) => {
 });
 
 
-app.post('/login', (req, res) => {
-    // Supongamos que `user` es el objeto de usuario recuperado después de la autenticación
-    const user = { id: 1, username: 'admin', role: 'admin' }; // Ejemplo de usuario con rol de 'admin'
-    
-    // Guardar la información del usuario en la sesión
-    req.session.user = user;
-    
-    res.redirect('/admin');
-});
+app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
 app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
 
 app.get('/logout', (req, res) => {
@@ -187,15 +180,15 @@ app.get('/error', (req, res) => {
     res.status(403).render('error/index', { message });
 });
 
-app.get('/admin', authorize(['admin', 'boss']),  (req, res) => {
+app.get('/admin',  (req, res) => {
     res.render('account/cuenta/admin');
 });
 
-app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
+app.get('/admin/inventario', (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/agregarproduto', authorize(['admin', 'boss']), async (req, res) => {
+app.get('/inventario/agregarproduto', async (req, res) => {
     try {
         const categorias = await Categoria.find(); // Obtener categorías
         res.render('account/cuenta/admin/addP', { categorias });
@@ -205,7 +198,7 @@ app.get('/inventario/agregarproduto', authorize(['admin', 'boss']), async (req, 
     }
 });
 
-app.get('/inventario/verproducto', authorize(['admin', 'boss']), async (req, res) => {
+app.get('/inventario/verproducto', async (req, res) => {
     try {
         const productos = await iProducto.find();
         const categorias = await Categoria.find();
@@ -216,7 +209,7 @@ app.get('/inventario/verproducto', authorize(['admin', 'boss']), async (req, res
     }
 });
 
-app.get('/inventario/categoria', authorize(['admin', 'boss']), async (req, res) => {
+app.get('/inventario/categoria', async (req, res) => {
     try {
         const categorias = await Categoria.find();
         res.render('account/cuenta/admin/category', { categorias });
@@ -226,7 +219,7 @@ app.get('/inventario/categoria', authorize(['admin', 'boss']), async (req, res) 
     }
 });
 
-app.get('/inventario/editar/:id', authorize(['admin', 'boss']), async (req, res) => {
+app.get('/inventario/editar/:id', async (req, res) => {
     try {
         const productoId = req.params.id;
         const producto = await iProducto.findById(productoId).exec();
@@ -244,7 +237,7 @@ app.get('/inventario/editar/:id', authorize(['admin', 'boss']), async (req, res)
     }
 });
 
-app.get('/inventario/descargarInv', authorize(['admin', 'boss']), async (req, res) => {
+app.get('/inventario/descargarInv', async (req, res) => {
     try {
         const productos = await iProducto.find();
         res.render('account/cuenta/admin/pdfYExcel', { productos });
