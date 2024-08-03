@@ -180,15 +180,15 @@ app.get('/error', (req, res) => {
     res.status(403).render('error/index', { message });
 });
 
-app.get('/admin', autorizar('admin' || 'boss'),  (req, res) => {
+app.get('/admin', autorizar(['admin', 'boss']),  (req, res) => {
     res.render('account/cuenta/admin');
 });
 
-app.get('/admin/inventario', autorizar('admin' || 'boss'), (req, res) => {
+app.get('/admin/inventario', autorizar(['admin', 'boss']), (req, res) => {
     res.render('account/cuenta/admin/inventory');
 });
 
-app.get('/inventario/agregarproduto', autorizar('admin' || 'boss'), async (req, res) => {
+app.get('/inventario/agregarproduto', autorizar(['admin', 'boss']), async (req, res) => {
     try {
         const categorias = await Categoria.find(); // Obtener categorías
         res.render('account/cuenta/admin/addP', { categorias });
@@ -198,7 +198,7 @@ app.get('/inventario/agregarproduto', autorizar('admin' || 'boss'), async (req, 
     }
 });
 
-app.get('/inventario/verproducto', autorizar('admin' || 'boss'), async (req, res) => {
+app.get('/inventario/verproducto', autorizar(['admin', 'boss']), async (req, res) => {
     try {
         const productos = await iProducto.find();
         const categorias = await Categoria.find();
@@ -209,7 +209,7 @@ app.get('/inventario/verproducto', autorizar('admin' || 'boss'), async (req, res
     }
 });
 
-app.get('/inventario/categoria', autorizar('admin' || 'boss'), async (req, res) => {
+app.get('/inventario/categoria', autorizar(['admin', 'boss']), async (req, res) => {
     try {
         const categorias = await Categoria.find();
         res.render('account/cuenta/admin/category', { categorias });
@@ -219,7 +219,7 @@ app.get('/inventario/categoria', autorizar('admin' || 'boss'), async (req, res) 
     }
 });
 
-app.get('/inventario/editar/:id', autorizar('admin' || 'boss'), async (req, res) => {
+app.get('/inventario/editar/:id', autorizar(['admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.params.id;
         const producto = await iProducto.findById(productoId).exec();
@@ -237,7 +237,7 @@ app.get('/inventario/editar/:id', autorizar('admin' || 'boss'), async (req, res)
     }
 });
 
-app.get('/inventario/descargarInv', autorizar('admin' || 'boss'), async (req, res) => {
+app.get('/inventario/descargarInv', autorizar(['admin', 'boss']), async (req, res) => {
     try {
         const productos = await iProducto.find();
         res.render('account/cuenta/admin/pdfYExcel', { productos });
