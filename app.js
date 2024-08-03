@@ -112,9 +112,11 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     try {
         const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
-        
-        // Verifica que la información de la imagen esté presente y sea correcta
-        productos.forEach(producto => console.log(`Producto: ${producto.nombre}, Imagen: ${producto.imagen.data}`));
+
+        // Verificar la URL de la imagen y otros datos
+        productos.forEach(producto => {
+            console.log(`Producto: ${producto.nombre}, Imagen: ${producto.imagen ? producto.imagen.data : 'Sin imagen'}`);
+        });
 
         const CUsuario = req.session.user;
         const bunnyNetPullZone = process.env.bunnyNetPullZone; // Obtén la Pull Zone desde las variables de entorno
