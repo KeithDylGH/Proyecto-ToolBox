@@ -115,7 +115,8 @@ app.get('/', async (req, res) => {
 
         // Verificar la URL de la imagen y otros datos
         productos.forEach(producto => {
-            console.log(`Producto: ${producto.nombre}, Imagen: ${producto.imagen ? producto.imagen.data : 'Sin imagen'}`);
+            const imageUrl = `https://${process.env.bunnyNetPullZone}/${producto.imagen.data}`;
+            console.log(`Producto: ${producto.nombre}, Imagen: ${imageUrl}`);
         });
 
         const CUsuario = req.session.user;
