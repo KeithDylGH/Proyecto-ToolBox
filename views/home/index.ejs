@@ -130,11 +130,15 @@
           <div class="row row-cols-4">
               <% productos.forEach(function(producto) { %>
                   <div class="card" style="width: 15rem">
-                      <img
-                          class="card-img-top"
-                          src="https://<tu-cname>.bunnycdn.com/<%= producto.imagen.data %>"
-                          alt="<%= producto.nombre %>"
-                      />
+                      <% if (producto.imagen && producto.imagen.data) { %>
+                          <img
+                              class="card-img-top"
+                              src="https://toolboxProject.b-cdn.net/<%= producto.imagen.data %>"
+                              alt="<%= producto.nombre %>"
+                          />
+                      <% } else { %>
+                          <p>Sin imagen</p>
+                      <% } %>
                       <div class="card-body">
                           <h5 class="card-title"><%= producto.nombre %></h5>
                           <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
