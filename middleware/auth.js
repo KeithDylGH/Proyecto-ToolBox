@@ -1,8 +1,6 @@
-// authAndRole.js
-
 function authorize(roles) {
     return function(req, res, next) {
-        // Asegúrate de que `req.session.user` contenga la información del usuario
+        console.log('User session:', req.session.user); // Log para depuración
         if (req.session.user && roles.includes(req.session.user.role)) {
             next(); // Usuario tiene uno de los roles adecuados
         } else {

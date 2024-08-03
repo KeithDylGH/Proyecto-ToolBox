@@ -133,7 +133,15 @@ app.get('/', async (req, res) => {
 });
 
 
-app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
+app.post('/login', (req, res) => {
+    // Supongamos que `user` es el objeto de usuario recuperado después de la autenticación
+    const user = { id: 1, username: 'admin', role: 'admin' }; // Ejemplo de usuario con rol de 'admin'
+    
+    // Guardar la información del usuario en la sesión
+    req.session.user = user;
+    
+    res.redirect('/admin');
+});
 app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
 
 app.get('/logout', (req, res) => {
