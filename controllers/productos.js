@@ -131,13 +131,31 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         // Verificar si se proporciona una nueva imagen
         if (imagen) {
             try {
-                // Convertir la imagen a formato WebP
+                // Eliminar la imagen antigua de Bunny Storage si existe
+                if (producto.imagen && typeof producto.imagen.data === 'string') {
+                    const imagenUrl = producto.imagen.data;
+                    const imagenNombre = imagenUrl.split('/').pop();
+                    
+                    const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'AccessKey': bunnyAccessKey,
+                            'Content-Type': 'application/json' // Asegúrate de que el tipo de contenido sea correcto
+                        },
+                    });
+                    
+                    if (!deleteResponse.ok) {
+                        throw new Error(`Error al eliminar la imagen antigua de Bunny Storage: ${deleteResponse.statusText}`);
+                    }
+                }
+
+                // Convertir la nueva imagen a formato WebP
                 const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
                 const fileBuffer = await sharp(imagen.buffer)
                     .webp()
                     .toBuffer();
 
-                // Subir la imagen a Bunny Storage
+                // Subir la nueva imagen a Bunny Storage
                 const response = await axios.put(
                     `${bunnyStorageUrl}/${fileName}`,
                     fileBuffer,
@@ -158,13 +176,13 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                         contentType: 'image/webp'
                     };
                 } else {
-                    console.error(`Error al subir la imagen a Bunny Storage: ${response.statusText}`);
-                    return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
+                    console.error(`Error al subir la nueva imagen a Bunny Storage: ${response.statusText}`);
+                    return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
                 }
 
             } catch (error) {
-                console.error('Error al subir la imagen a Bunny Storage:', error.message);
-                return res.status(500).json({ error: 'Error al subir la imagen a Bunny Storage' });
+                console.error('Error al subir la nueva imagen a Bunny Storage:', error.message);
+                return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
             }
         }
 
