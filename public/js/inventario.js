@@ -1,7 +1,5 @@
 const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate de que la URL sea correcta
 
-const axios = require('axios');
-
 // Función para eliminar un producto
 async function eliminarProducto(id) {
     try {
