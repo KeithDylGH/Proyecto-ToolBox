@@ -4,7 +4,7 @@ const url = 'https://proyecto-toolbox.onrender.com'; // Asegúrate de que la URL
 const eliminarProducto = async (id) => {
     try {
         const deleteUrl = `${url}/admin/inventario/${id}`;
-        console.log('URL de eliminación:', deleteUrl); // Imprimir la URL para verificar
+        console.log('URL de eliminación:', deleteUrl); // Asegúrate de que la URL sea correcta
         const response = await fetch(deleteUrl, {
             method: 'DELETE'
         });
