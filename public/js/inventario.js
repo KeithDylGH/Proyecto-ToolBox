@@ -1,9 +1,11 @@
-const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate de que la URL sea correcta
+const url = 'https://proyecto-toolbox.onrender.com'; // Asegúrate de que la URL base sea correcta
 
 // Función para eliminar un producto
 const eliminarProducto = async (id) => {
     try {
-        const response = await fetch(`${url}/admin/inventario/${id}`, {
+        const deleteUrl = `${url}/admin/inventario/${id}`;
+        console.log('URL de eliminación:', deleteUrl); // Imprimir la URL para verificar
+        const response = await fetch(deleteUrl, {
             method: 'DELETE'
         });
 
