@@ -69,32 +69,37 @@ router.get('/verproducto', async (req, res) => {
 
 // Ruta para eliminar un producto
 router.delete('/admin/inventario/:id', async (req, res) => {
-    console.log(`Solicitud DELETE recibida para ID: ${req.params.id}`);
     try {
-        const productoId = req.params.id;
-        const producto = await Producto.findById(productoId);
-
+        const producto = await Producto.findById(req.params.id);
+        
         if (!producto) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
+            return res.status(404).json({ message: 'Producto no encontrado' });
         }
-
-        // Eliminar la imagen de Bunny Storage si existe
-        if (producto.imagen && producto.imagen.data) {
-            const fileName = producto.imagen.data.split('/').pop();
-            await axios.delete(`${bunnyStorageUrl}/${fileName}`, {
+        
+        // Eliminar la imagen de Bunny Storage
+        if (producto.imagen && typeof producto.imagen === 'string') {
+            const imagenUrl = producto.imagen;
+            const imagenNombre = imagenUrl.split('/').pop();
+            
+            const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
+                method: 'DELETE',
                 headers: {
-                    'AccessKey': bunnyAccessKey
-                }
+                    'AccessKey': process.env.bunnyNetAPIKEY,
+                },
             });
+            
+            if (!deleteResponse.ok) {
+                throw new Error('Error al eliminar la imagen de Bunny Storage');
+            }
         }
-
-        // Eliminar el producto
-        await Producto.findByIdAndDelete(productoId);
-
-        res.json({ message: 'Producto eliminado con éxito' });
+        
+        // Eliminar el producto de la base de datos
+        await Producto.findByIdAndDelete(req.params.id);
+        
+        res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
-        console.error('Error al eliminar el producto:', error);
-        res.status(500).json({ error: 'Error al eliminar el producto' });
+        console.error('Error:', error.message);
+        res.status(500).json({ message: 'Hubo un error al eliminar el producto' });
     }
 });
 
