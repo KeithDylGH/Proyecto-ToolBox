@@ -1,25 +1,14 @@
-const url = 'https://proyecto-toolbox.onrender.com'; // Asegúrate de que la URL base sea correcta
+const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate de que la URL sea correcta
+
+const axios = require('axios');
 
 // Función para eliminar un producto
 async function eliminarProducto(id) {
-    const deleteUrl = `/admin/inventario/${id}`; // Verifica que esta URL sea la misma que has definido en el servidor
-
     try {
-        const response = await fetch(deleteUrl, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            console.log('Producto eliminado correctamente');
-            // Aquí puedes actualizar la interfaz de usuario
-        } else {
-            console.error('Error al eliminar el producto');
-        }
+        const response = await axios.delete(`${url}/${id}`);
+        console.log('Producto eliminado con éxito', response.data);
     } catch (error) {
-        console.error('Error en la solicitud de eliminación:', error.message);
+        console.error('Error al eliminar el producto:', error.message);
     }
 }
 

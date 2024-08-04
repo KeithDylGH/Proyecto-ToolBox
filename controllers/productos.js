@@ -78,12 +78,14 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
-        // Eliminar el archivo de imagen si existe
-        if (producto.imagen) {
-            const filePath = path.join(__dirname, '..', 'uploads', producto.imagen);
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-            }
+        // Eliminar la imagen de Bunny Storage si existe
+        if (producto.imagen && producto.imagen.data) {
+            const fileName = producto.imagen.data.split('/').pop();
+            await axios.delete(`${bunnyStorageUrl}/${fileName}`, {
+                headers: {
+                    'AccessKey': bunnyAccessKey
+                }
+            });
         }
 
         // Eliminar el producto
