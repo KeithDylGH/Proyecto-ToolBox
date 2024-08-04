@@ -1,25 +1,27 @@
 const url = 'https://proyecto-toolbox.onrender.com'; // Asegúrate de que la URL base sea correcta
 
 // Función para eliminar un producto
-const eliminarProducto = async (id) => {
+async function eliminarProducto(id) {
+    const deleteUrl = `/admin/inventario/${id}`; // Verifica que esta URL sea la misma que has definido en el servidor
+
     try {
-        const deleteUrl = `${url}/admin/inventario/${id}`;
-        console.log('URL de eliminación:', deleteUrl); // Asegúrate de que la URL sea correcta
         const response = await fetch(deleteUrl, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
 
-        if (!response.ok) {
-            throw new Error('Error al eliminar el producto');
+        if (response.ok) {
+            console.log('Producto eliminado correctamente');
+            // Aquí puedes actualizar la interfaz de usuario
+        } else {
+            console.error('Error al eliminar el producto');
         }
-
-        alert('Producto eliminado correctamente');
-        location.reload(); // Recargar la página después de eliminar
     } catch (error) {
-        console.error('Error:', error.message);
-        alert('Hubo un error al eliminar el producto');
+        console.error('Error en la solicitud de eliminación:', error.message);
     }
-};
+}
 
 // Event listener para los botones de eliminar
 document.addEventListener('DOMContentLoaded', () => {

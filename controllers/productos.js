@@ -69,10 +69,11 @@ router.get('/verproducto', async (req, res) => {
 
 // Ruta para eliminar un producto
 router.delete('/admin/inventario/:id', async (req, res) => {
+    console.log(`Solicitud DELETE recibida para ID: ${req.params.id}`);
     try {
         const producto = await Producto.findById(req.params.id);
-        
         if (!producto) {
+            console.log('Producto no encontrado');
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
@@ -109,10 +110,10 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         
         // Eliminar el producto de la base de datos
         await Producto.findByIdAndDelete(req.params.id);
-        
+        console.log('Producto eliminado correctamente');
         res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error('Error al eliminar el producto:', error.message);
         res.status(500).json({ message: 'Hubo un error al eliminar el producto' });
     }
 });
