@@ -48,16 +48,21 @@
                               <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
                           </ul>
                       </li>
+
                       <li class="nav-item">
-                          <div class="carro">
-                              <a href="#" class="carrito">
-                                  <img src="/img/icono/carrito de compras.png" alt="carrito" />
-                              </a>
-                              <div class="carro-dropdown">
-                                  <button>Vaciar Carrito</button>
-                              </div>
-                          </div>
-                      </li>
+                        <div class="carro">
+                            <a href="#" class="carrito">
+                                <img src="/img/icono/carrito de compras.png" alt="carrito" />
+                            </a>
+                            <div class="carro-dropdown">
+                                <div id="carro-productos">
+                                    <p>El carrito está vacío.</p>
+                                </div>
+                                <button id="vaciar-carrito">Vaciar Carrito</button>
+                            </div>
+                        </div>
+                    </li>                    
+
                       <% if (CUsuario) { %>
                         <li class="nav-item">
                             <% if (CUsuario.rol === 'admin') { %>
@@ -143,6 +148,7 @@
                   <div class="card-body">
                       <h5 class="card-title"><%= producto.nombre %></h5>
                       <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
+                      <button class="btn btn-secondary agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al carrito</button>
                   </div>
               </div>
           <% }); %>                                                 

@@ -13,8 +13,10 @@ const subirProducto = require('./controllers/subirProducto');
 const bcrypt = require('bcryptjs');
 const Categoria = require('./models/categoria');
 const categoriaRouter = require('./controllers/categorias');
+const carritoRouter = require('./controllers/carritos');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
+const Carrito = require('../models/carrito');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -362,8 +364,10 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
 });
 
 
+
 app.use('/api/products', productoRouter); // Rutas para productos
 app.use('/api/upload', subirProducto);   // Rutas para subir productos
+app.use('/api/carritos', carritoRouter);
 app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
