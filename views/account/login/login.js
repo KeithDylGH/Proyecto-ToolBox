@@ -60,14 +60,14 @@ loginForm.addEventListener('submit', async (e) => {
                 window.location.href = '/cliente/';
             }
         } else {
-            notification.textContent = data.message || 'Error en el inicio de sesión';
+            notification.textContent = data.error || 'Error en el inicio de sesión'; // Usa 'error' aquí
             notification.classList.add('alert', 'alert-danger');
-
+        
             setTimeout(() => {
                 notification.textContent = '';
                 notification.classList.remove('alert', 'alert-danger');
             }, 3000);
-        }
+        }        
     } catch (error) {
         console.error('Error:', error);
         const notification = document.querySelector('.notification');

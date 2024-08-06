@@ -103,12 +103,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use((req, res, next) => {
-    console.log('Session user:', req.session.user);
-    if (req.session.user) {
-        res.locals.CUsuario = req.session.user;
-    } else {
-        res.locals.CUsuario = null;
-    }
+    console.log('Session user:', req.session.user);  // Verifica la salida aquí
+    res.locals.CUsuario = req.session.user ? req.session.user : null;
     next();
 });
 
@@ -174,7 +170,7 @@ app.get('/cuenta/carrito', async (req, res) => {
       console.error('Error al obtener el carrito:', error);
       res.status(500).send('Error al obtener el carrito');
     }
-  });  
+});  
 
 app.get('/cuenta/configuracion', (req, res) => {
     res.render('account/cuenta/cliente/configuracion');
