@@ -26,33 +26,37 @@ router.get('/ver', async (req, res) => {
 
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ error: 'Debe iniciar sesión para agregar productos al carrito.' });
-    }
+  if (!req.session.user) {
+      return res.status(401).json({ error: 'Debe iniciar sesión para agregar productos al carrito.' });
+  }
 
-    const { productoId, cantidad = 1 } = req.body;
-    const usuarioId = req.session.user._id;
+  const { productoId, cantidad = 1 } = req.body;
+  const usuarioId = req.session.user._id;  // Asegúrate de que esto esté definido
 
-    try {
-        let carrito = await Carrito.findOne({ usuarioId });
+  if (!usuarioId) {
+      return res.status(400).json({ error: 'ID de usuario no proporcionado.' });
+  }
 
-        if (!carrito) {
-            carrito = new Carrito({ usuarioId, productos: [] });
-        }
+  try {
+      let carrito = await Carrito.findOne({ usuarioId });
 
-        const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
-        if (productoExistente) {
-            productoExistente.cantidad += parseInt(cantidad, 10);
-        } else {
-            carrito.productos.push({ productoId, cantidad });
-        }
+      if (!carrito) {
+          carrito = new Carrito({ usuarioId, productos: [] });
+      }
 
-        await carrito.save();
-        res.json({ success: true, message: 'Producto agregado al carrito.' });
-    } catch (error) {
-        console.error('Error al agregar al carrito:', error);
-        res.status(500).json({ error: 'Error al agregar al carrito' });
-    }
+      const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
+      if (productoExistente) {
+          productoExistente.cantidad += parseInt(cantidad, 10);
+      } else {
+          carrito.productos.push({ productoId, cantidad });
+      }
+
+      await carrito.save();
+      res.json({ success: true, message: 'Producto agregado al carrito.' });
+  } catch (error) {
+      console.error('Error al agregar al carrito:', error);
+      res.status(500).json({ error: 'Error al agregar al carrito' });
+  }
 });
 
 // Eliminar producto del carrito
