@@ -50,9 +50,8 @@
                       </li>
 
                       <li class="nav-item">
-                        <a class="nav-link" href="/cuenta/carrito">
-                          <i class="fas fa-shopping-cart"></i>
-                          <span class="badge badge-pill badge-danger">{{CUsuario && CUsuario.carrito && CUsuario.carrito.productos.length}}</span>
+                       <a href="/cuenta/carrito" class="carrito">
+                          <img src="/img/icono/carrito de compras.png" alt="carrito" />
                         </a>
                       </li>                                        
 
@@ -141,11 +140,11 @@
                   <div class="card-body">
                       <h5 class="card-title"><%= producto.nombre %></h5>
                       <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
-                      <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
                       <!-- Formulario para agregar producto al carrito -->
-                      <form action="/carrito/agregar" method="POST">
+                      <form action="/carritos/agregar" method="POST" class="mt-2">
                         <input type="hidden" name="productoId" value="<%= producto._id %>">
-                        <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+                        <input type="hidden" name="cantidad" value="1">
+                        <button type="submit" class="btn btn-success">Añadir al carrito</button>
                       </form>
                   </div>
               </div>
