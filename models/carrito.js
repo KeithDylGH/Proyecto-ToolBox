@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const carritoSchema = new mongoose.Schema({
   usuarioId: {
       type: mongoose.Schema.Types.ObjectId,
