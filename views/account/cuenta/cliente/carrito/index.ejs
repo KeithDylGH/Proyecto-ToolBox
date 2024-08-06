@@ -10,6 +10,7 @@
 
   <link rel="stylesheet" href="/css/cuenta.css">
   <link rel="stylesheet" href="/css/carrito.css">
+  <link rel="stylesheet" href="/css/notificacion.css">
 
   <!--BOOTSTRAP-->
    <!--  <link rel="stylesheet" href="/bootstrap-5.3.3-dist/css/bootstrap.rtl.min.css">
@@ -49,37 +50,34 @@
       <div class="container">
         <div class="content">
           <h1>Tu Carrito de Compras</h1>
-          <% if (productos.length === 0) { %>
-            <p>El carrito está vacío.</p>
-          <% } else { %>
-            <div class="row row-cols-4">
-              <% productos.forEach(function(producto) { %>
-                <div class="card" style="width: 15rem;">
+          <% if (productos.length > 0) { %>
+            <% productos.forEach(producto => { %>
+              <div class="col-md-4">
+                <div class="card mb-4">
                   <% if (producto.imagen && producto.imagen.data) { %>
-                    <img 
-                      class="card-img-top img-thumbnail mb-3"
-                      src="<%= producto.imagen.data %>" 
-                      alt="<%= producto.nombre %>"
-                      style="max-width: 100%; height: auto;" 
-                    />
+                    <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>">
                   <% } else { %>
-                    <p>Sin imagen</p>
+                    <img src="/img/default-product.jpg" class="card-img-top" alt="Sin imagen">
                   <% } %>
                   <div class="card-body">
                     <h5 class="card-title"><%= producto.nombre %></h5>
                     <p class="card-text">Cantidad: <%= producto.cantidad %></p>
-                    <form action="/carritos/eliminar" method="POST" class="mt-2">
+                    <p class="card-text">$<%= producto.precio %></p>
+                    <form action="/carrito/eliminar" method="post">
                       <input type="hidden" name="productoId" value="<%= producto._id %>">
-                      <button type="submit" class="btn btn-danger">Eliminar del carrito</button>
+                      <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
                   </div>
                 </div>
-              <% }); %>                                                 
-            </div>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <p>No hay productos en el carrito.</p>
           <% } %>
-          <form action="/carritos/vaciar" method="POST">
-            <button type="submit" id="vaciar-carrito" class="btn btn-warning mt-3">Vaciar Carrito</button>
-          </form>
+        </div>
+        <form action="/carrito/vaciar" method="post">
+          <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
+        </form>
         </div>
       </div>
     </section>            
@@ -100,6 +98,7 @@
   <script src="/js/carritoC.js"></script>
   <script src="/js/client.js"></script>
   <script src="/js/logout.js"></script>
+  <script src="/js/carroDeCompra.js"></script>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

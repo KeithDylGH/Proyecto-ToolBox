@@ -1,11 +1,24 @@
-function mostrarNotificacion(message, type) {
-    const notificationElement = document.createElement('div');
-    notificationElement.className = `alert alert-${type}`;
-    notificationElement.textContent = message;
-    document.body.appendChild(notificationElement);
+document.querySelectorAll('.agregar-carrito').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        const productoId = this.getAttribute('data-producto-id');
   
-    // Opcional: Ocultar la notificación después de un tiempo
-    setTimeout(() => {
-      document.body.removeChild(notificationElement);
-    }, 3000);
-  }  
+        fetch('/carrito/agregar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productoId, cantidad: 1 })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                mostrarNotificacion(data.message, 'success');
+            } else {
+                mostrarNotificacion(data.error, 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error al agregar al carrito:', error);
+            mostrarNotificacion('Error de conexión', 'danger');
+        });
+    });
+});  
