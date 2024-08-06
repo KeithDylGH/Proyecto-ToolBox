@@ -50,18 +50,11 @@
                       </li>
 
                       <li class="nav-item">
-                        <div class="carro">
-                            <a href="/cuenta/carrito" class="carrito">
-                                <img src="/img/icono/carrito de compras.png" alt="carrito" />
-                            </a>
-                            <div class="carro-dropdown">
-                                <div id="carro-productos">
-                                    <p>El carrito está vacío.</p>
-                                </div>
-                                <button id="vaciar-carrito" class="btn btn-danger">Vaciar Carrito</button>
-                            </div>
-                        </div>
-                    </li>                                        
+                        <a class="nav-link" href="/cuenta/carrito">
+                          <i class="fas fa-shopping-cart"></i>
+                          <span class="badge badge-pill badge-danger">{{CUsuario && CUsuario.carrito && CUsuario.carrito.productos.length}}</span>
+                        </a>
+                      </li>                                        
 
                       <% if (CUsuario) { %>
                         <li class="nav-item">
@@ -148,11 +141,11 @@
                   <div class="card-body">
                       <h5 class="card-title"><%= producto.nombre %></h5>
                       <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
+                      <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
                       <!-- Formulario para agregar producto al carrito -->
-                      <form action="/carritos/agregar" method="POST" class="mt-2">
+                      <form action="/carrito/agregar" method="POST">
                         <input type="hidden" name="productoId" value="<%= producto._id %>">
-                        <input type="hidden" name="cantidad" value="1">
-                        <button type="submit" class="btn btn-success">Añadir al carrito</button>
+                        <button type="submit" class="btn btn-primary">Agregar al carrito</button>
                       </form>
                   </div>
               </div>

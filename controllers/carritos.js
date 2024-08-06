@@ -3,7 +3,29 @@ const router = express.Router();
 const Carrito = require('../models/carrito');
 const Producto = require('../models/producto');
 
-// Define las rutas para el carrito aquí
+// Ver carrito
+router.get('/ver', async (req, res) => {
+  try {
+    const usuarioId = req.session.user._id;
+    const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
+
+    if (!carrito || carrito.productos.length === 0) {
+      return res.render('carrito', { productos: [] });
+    }
+
+    const productos = carrito.productos.map(item => ({
+      ...item.productoId.toObject(),
+      cantidad: item.cantidad,
+    }));
+
+    res.render('carrito', { productos });
+  } catch (error) {
+    console.error('Error al obtener el carrito:', error);
+    res.status(500).send('Error al obtener el carrito');
+  }
+});
+
+// Agregar al carrito
 router.post('/agregar', async (req, res) => {
   const { productoId, cantidad = 1 } = req.body;
   const usuarioId = req.session.user._id;
@@ -22,35 +44,12 @@ router.post('/agregar', async (req, res) => {
     }
 
     await carrito.save();
-    res.redirect('/');
+    res.redirect('/cuenta/carrito');
   } catch (error) {
     console.error('Error al agregar al carrito:', error);
     res.status(500).send('Error al agregar al carrito');
   }
 });
-
-// Ver carrito
-router.get('/', async (req, res) => {
-  try {
-    const usuarioId = req.session.user._id;
-    const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
-
-    if (!carrito || carrito.productos.length === 0) {
-      return res.render('carrito', { productos: [] });
-    }
-
-    const productos = carrito.productos.map(item => ({
-      ...item.productoId._doc,
-      cantidad: item.cantidad
-    }));
-
-    res.render('carrito', { productos });
-  } catch (error) {
-    console.error('Error al obtener el carrito:', error);
-    res.status(500).send('Error al obtener el carrito');
-  }
-});
-
 
 // Eliminar producto del carrito
 router.post('/eliminar', async (req, res) => {
@@ -64,10 +63,10 @@ router.post('/eliminar', async (req, res) => {
       await carrito.save();
     }
 
-    res.json({ message: 'Producto eliminado del carrito' });
+    res.redirect('/cuenta/carrito');
   } catch (error) {
     console.error('Error al eliminar del carrito:', error);
-    res.status(500).json({ error: 'Error al eliminar del carrito' });
+    res.status(500).send('Error al eliminar del carrito');
   }
 });
 
@@ -78,10 +77,10 @@ router.post('/vaciar', async (req, res) => {
 
     await Carrito.findOneAndDelete({ usuarioId });
 
-    res.json({ message: 'Carrito vaciado' });
+    res.redirect('/cuenta/carrito');
   } catch (error) {
     console.error('Error al vaciar el carrito:', error);
-    res.status(500).json({ error: 'Error al vaciar el carrito' });
+    res.status(500).send('Error al vaciar el carrito');
   }
 });
 

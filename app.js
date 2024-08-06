@@ -160,26 +160,21 @@ app.get('/cliente', (req, res) => {
     res.render('account/cuenta/cliente');
 });
 
-// Ruta para mostrar el carrito
+// Rutas del carrito
 app.get('/cuenta/carrito', async (req, res) => {
     try {
-        const usuarioId = req.session.user._id;
-        const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
-
-        let productos = [];
-        if (carrito && carrito.productos.length > 0) {
-            productos = carrito.productos.map(item => ({
-                ...item.productoId.toObject(),
-                cantidad: item.cantidad
-            }));
-        }
-
-        res.render('account/cuenta/cliente/carrito/index', { productos });
+      const usuarioId = req.session.user._id;
+      const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
+      const productos = carrito ? carrito.productos.map(item => ({
+        ...item.productoId.toObject(),
+        cantidad: item.cantidad,
+      })) : [];
+      res.render('account/cuenta/cliente/carrito/index', { productos });
     } catch (error) {
-        console.error('Error al obtener el carrito:', error);
-        res.status(500).send('Error al obtener el carrito');
+      console.error('Error al obtener el carrito:', error);
+      res.status(500).send('Error al obtener el carrito');
     }
-});  
+  });  
 
 app.get('/cuenta/configuracion', (req, res) => {
     res.render('account/cuenta/cliente/configuracion');
