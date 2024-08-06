@@ -153,10 +153,12 @@ nav ul li {
   border: 1px solid #ddd;
   border-radius: 5px;
   width: 200px;
+  color: #1f2833;
 }
 
 .carro:hover .carro-dropdown {
   display: block;
+  color: #1f2833;
 }
 
 .carro-dropdown p {
