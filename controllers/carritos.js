@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Carrito = require('../models/carrito');
-const Producto = require('../models/producto');
 
 // Ver carrito
 router.get('/ver', async (req, res) => {
