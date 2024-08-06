@@ -27,7 +27,7 @@ router.get('/ver', async (req, res) => {
 
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
-  // Verificar si el usuario está autenticado
+  console.log('Datos recibidos:', req.body);
   if (!req.session.user) {
     return res.status(401).json({ error: 'Debe iniciar sesión para agregar productos al carrito.' });
   }
