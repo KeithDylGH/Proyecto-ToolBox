@@ -47,41 +47,38 @@
 
     <section class="interfaz">
       <h1>Tu Carrito de Compras</h1>
-    <% if (productos.length === 0) { %>
-        <p>El carrito está vacío.</p>
-    <% } else { %>
-        <div class="row row-cols-4">
-            <% productos.forEach(function(producto) { %>
-              <div class="card" style="width: 15rem;">
-                  <% if (producto.imagen && producto.imagen.data) { %>
-                      <img 
-                          class="card-img-top img-thumbnail mb-3"
-                          src="<%= producto.imagen.data %>" 
-                          alt="<%= producto.nombre %>"
-                          style="max-width: 100%; height: auto;" 
-                      />
-                  <% } else { %>
-                      <p>Sin imagen</p>
-                  <% } %>
-                  <div class="card-body">
-                      <h5 class="card-title"><%= producto.nombre %></h5>
-                      <p>Cantidad: <%= producto.cantidad %></p>
-                      <p>Precio: $<%= producto.precio %></p>
-                      <form action="/carritos/eliminar" method="POST">
-                          <input type="hidden" name="productoId" value="<%= producto._id %>">
-                          <button type="submit" class="btn btn-danger">Eliminar</button>
-                      </form>
+      <% if (productos.length === 0) { %>
+          <p>El carrito está vacío.</p>
+      <% } else { %>
+          <div class="row row-cols-4">
+              <% productos.forEach(function(producto) { %>
+                  <div class="card" style="width: 15rem;">
+                      <% if (producto.imagen && producto.imagen.data) { %>
+                          <img 
+                              class="card-img-top img-thumbnail mb-3"
+                              src="<%= producto.imagen.data %>" 
+                              alt="<%= producto.nombre %>"
+                              style="max-width: 100%; height: auto;" 
+                          />
+                      <% } else { %>
+                          <p>Sin imagen</p>
+                      <% } %>
+                      <div class="card-body">
+                          <h5 class="card-title"><%= producto.nombre %></h5>
+                          <p class="card-text">Cantidad: <%= producto.cantidad %></p>
+                          <form action="/carritos/eliminar" method="POST" class="mt-2">
+                              <input type="hidden" name="productoId" value="<%= producto._id %>">
+                              <button type="submit" class="btn btn-danger">Eliminar del carrito</button>
+                          </form>
+                      </div>
                   </div>
-              </div>
-          <% }); %>                                                 
-        </div>
-        <form action="/carritos/vaciar" method="POST">
-            <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
-        </form>
-    <% } %>
-
-
-    </section>
+              <% }); %>                                                 
+          </div>
+      <% } %>
+      <form action="/carritos/vaciar" method="POST">
+          <button type="submit" class="btn btn-warning mt-3">Vaciar Carrito</button>
+      </form>
+  </section>  
 
   </div>
 
