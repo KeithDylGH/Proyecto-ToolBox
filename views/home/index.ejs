@@ -149,7 +149,7 @@
                       <h5 class="card-title"><%= producto.nombre %></h5>
                       <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
                       <!-- Formulario para agregar producto al carrito -->
-                      <form action="/carrito/agregar" method="POST" class="mt-2">
+                      <form action="/carritos/agregar" method="POST" class="mt-2">
                         <input type="hidden" name="productoId" value="<%= producto._id %>">
                         <input type="hidden" name="cantidad" value="1">
                         <button type="submit" class="btn btn-success">Añadir al carrito</button>
