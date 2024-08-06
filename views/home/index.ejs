@@ -148,7 +148,12 @@
                   <div class="card-body">
                       <h5 class="card-title"><%= producto.nombre %></h5>
                       <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
-                      <button class="btn btn-secondary agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al carrito</button>
+                      <!-- Formulario para agregar producto al carrito -->
+                      <form action="/carrito/agregar" method="POST" class="mt-2">
+                        <input type="hidden" name="productoId" value="<%= producto._id %>">
+                        <input type="hidden" name="cantidad" value="1">
+                        <button type="submit" class="btn btn-success">Añadir al carrito</button>
+                      </form>
                   </div>
               </div>
           <% }); %>                                                 

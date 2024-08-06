@@ -1,7 +1,7 @@
-/* document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const paginaCliente = document.getElementById('client');
 
     paginaCliente.addEventListener('click', function() {
-        window.location.href = '/cliente/';
+        window.location.href = '/cuenta/carrito';
     });
-}); */
+});

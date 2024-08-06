@@ -5,27 +5,27 @@ const Producto = require('../models/producto');
 
 // Agregar producto al carrito
 router.post('/agregar', async (req, res) => {
+  const { productoId, cantidad = 1 } = req.body;
+  const usuarioId = req.session.user._id; // Asegúrate de obtener el ID del usuario autenticado
+
   try {
-    const { productoId, cantidad } = req.body;
-    const usuarioId = req.session.user._id; // Utilizando la sesión para obtener el ID del usuario
+      let carrito = await Carrito.findOne({ usuarioId });
+      if (!carrito) {
+          carrito = new Carrito({ usuarioId, productos: [] });
+      }
 
-    let carrito = await Carrito.findOne({ usuarioId });
-    if (!carrito) {
-      carrito = new Carrito({ usuarioId, productos: [] });
-    }
+      const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
+      if (productoExistente) {
+          productoExistente.cantidad += parseInt(cantidad, 10);
+      } else {
+          carrito.productos.push({ productoId, cantidad });
+      }
 
-    const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
-    if (productoExistente) {
-      productoExistente.cantidad += cantidad;
-    } else {
-      carrito.productos.push({ productoId, cantidad });
-    }
-
-    await carrito.save();
-    res.json({ message: 'Producto agregado al carrito' });
+      await carrito.save();
+      res.redirect('/');
   } catch (error) {
-    console.error('Error al agregar al carrito:', error);
-    res.status(500).json({ error: 'Error al agregar al carrito' });
+      console.error('Error al agregar al carrito:', error);
+      res.status(500).send('Error al agregar al carrito');
   }
 });
 
