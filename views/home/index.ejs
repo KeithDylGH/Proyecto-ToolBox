@@ -124,31 +124,22 @@
       <section class="FeaturedProduct">
         <div>
           <h2>Los mejores productos</h2>
-          <div class="row row-cols-4">
-            <% productos.forEach(function(producto) { %>
-              <div class="card" style="width: 15rem;">
-                  <% if (producto.imagen && producto.imagen.data) { %>
-                      <img 
-                          class="card-img-top img-thumbnail mb-3"
-                          src="<%= producto.imagen.data %>" 
-                          alt="<%= producto.nombre %>"
-                          style="max-width: 100%; height: auto;" 
-                      />
-                  <% } else { %>
-                      <p>Sin imagen</p>
-                  <% } %>
+          <div class="row">
+            <% productos.forEach(producto => { %>
+              <div class="col-md-3 mb-4">
+                <div class="card">
+                  <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>">
                   <div class="card-body">
-                      <h5 class="card-title"><%= producto.nombre %></h5>
-                      <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver detalles</a>
-                      <!-- Formulario para agregar producto al carrito -->
-                      <form action="/carritos/agregar" method="POST" class="mt-2">
-                        <input type="hidden" name="productoId" value="<%= producto._id %>">
-                        <input type="hidden" name="cantidad" value="1">
-                        <button type="submit" class="btn btn-success">Añadir al carrito</button>
-                      </form>
+                    <h5 class="card-title"><%= producto.nombre %></h5>
+                    <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                    <form action="/carrito/agregar" method="POST">
+                      <input type="hidden" name="productoId" value="<%= producto._id %>">
+                      <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+                    </form>
                   </div>
+                </div>
               </div>
-          <% }); %>                                                 
+            <% }); %>
           </div>
       </div>
 
