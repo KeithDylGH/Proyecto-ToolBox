@@ -15,6 +15,7 @@
     
 
     <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/notificacion.css">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -132,10 +133,13 @@
                   <div class="card-body">
                     <h5 class="card-title"><%= producto.nombre %></h5>
                     <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                    <form action="/carrito/agregar" method="POST">
-                      <input type="hidden" name="productoId" value="<%= producto._id %>">
-                      <button type="submit" class="btn btn-primary">Agregar al carrito</button>
-                    </form>
+                    <button 
+                      type="button" 
+                      class="btn btn-primary agregar-carrito" 
+                      data-producto-id="<%= producto._id %>"
+                    >
+                      Agregar al carrito
+                    </button>
                   </div>
                 </div>
               </div>

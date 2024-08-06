@@ -29,38 +29,37 @@ router.get('/ver', async (req, res) => {
 router.post('/agregar', async (req, res) => {
   const { productoId, cantidad = 1 } = req.body;
 
-  // Verificar si el usuario está autenticado
   if (!req.session.user) {
-      console.error('El usuario no está autenticado.');
-      return res.status(401).send('Debe iniciar sesión para agregar productos al carrito.');
+    console.error('El usuario no está autenticado.');
+    return res.status(401).json({ error: 'Debe iniciar sesión para agregar productos al carrito.' });
   }
 
   const usuarioId = req.session.user._id;
 
   if (!usuarioId) {
-      console.error('El usuario no tiene un ID asociado en la sesión.');
-      return res.status(400).send('No se pudo determinar el ID del usuario.');
+    console.error('El usuario no tiene un ID asociado en la sesión.');
+    return res.status(400).json({ error: 'No se pudo determinar el ID del usuario.' });
   }
 
   try {
-      let carrito = await Carrito.findOne({ usuarioId });
+    let carrito = await Carrito.findOne({ usuarioId });
 
-      if (!carrito) {
-          carrito = new Carrito({ usuarioId, productos: [] });
-      }
+    if (!carrito) {
+      carrito = new Carrito({ usuarioId, productos: [] });
+    }
 
-      const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
-      if (productoExistente) {
-          productoExistente.cantidad += parseInt(cantidad, 10);
-      } else {
-          carrito.productos.push({ productoId, cantidad });
-      }
+    const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
+    if (productoExistente) {
+      productoExistente.cantidad += parseInt(cantidad, 10);
+    } else {
+      carrito.productos.push({ productoId, cantidad });
+    }
 
-      await carrito.save();
-      res.redirect('/cuenta/carrito');
+    await carrito.save();
+    res.json({ success: true, message: 'Producto agregado al carrito.' });
   } catch (error) {
-      console.error('Error al agregar al carrito:', error);
-      res.status(500).send('Error al agregar al carrito');
+    console.error('Error al agregar al carrito:', error);
+    res.status(500).json({ error: 'Error al agregar al carrito' });
   }
 });
 

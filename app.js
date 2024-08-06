@@ -170,7 +170,7 @@ app.get('/cuenta/carrito', async (req, res) => {
       console.error('Error al obtener el carrito:', error);
       res.status(500).send('Error al obtener el carrito');
     }
-});  
+}); 
 
 app.get('/cuenta/configuracion', (req, res) => {
     res.render('account/cuenta/cliente/configuracion');
