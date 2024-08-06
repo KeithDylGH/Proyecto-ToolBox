@@ -29,6 +29,29 @@ router.post('/agregar', async (req, res) => {
   }
 });
 
+// Ver carrito
+router.get('/', async (req, res) => {
+  try {
+    const usuarioId = req.session.user._id;
+    const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
+
+    if (!carrito || carrito.productos.length === 0) {
+      return res.render('carrito', { productos: [] });
+    }
+
+    const productos = carrito.productos.map(item => ({
+      ...item.productoId._doc,
+      cantidad: item.cantidad
+    }));
+
+    res.render('carrito', { productos });
+  } catch (error) {
+    console.error('Error al obtener el carrito:', error);
+    res.status(500).send('Error al obtener el carrito');
+  }
+});
+
+
 // Eliminar producto del carrito
 router.post('/eliminar', async (req, res) => {
   try {
