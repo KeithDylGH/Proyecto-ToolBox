@@ -27,19 +27,13 @@ router.get('/ver', async (req, res) => {
 
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
-  const { productoId, cantidad = 1 } = req.body;
-
+  // Verificar si el usuario está autenticado
   if (!req.session.user) {
-    console.error('El usuario no está autenticado.');
     return res.status(401).json({ error: 'Debe iniciar sesión para agregar productos al carrito.' });
   }
 
+  const { productoId, cantidad = 1 } = req.body;
   const usuarioId = req.session.user._id;
-
-  if (!usuarioId) {
-    console.error('El usuario no tiene un ID asociado en la sesión.');
-    return res.status(400).json({ error: 'No se pudo determinar el ID del usuario.' });
-  }
 
   try {
     let carrito = await Carrito.findOne({ usuarioId });
