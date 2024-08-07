@@ -152,7 +152,7 @@
             <% productos.forEach(producto => { %>
             <div class="col-md-3 mb-4">
                 <div class="card">
-                  <img src="<%= producto.imagen %>" class="card-img-top" alt="<%= producto.nombre %>">
+                    <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>">
                     <div class="card-body">
                         <h5 class="card-title"><%= producto.nombre %></h5>
                         <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
