@@ -7,17 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener('click', async (e) => {
             const productoId = e.target.getAttribute('data-producto-id');
             try {
-                const response = await fetch('/api/carrito/agregar', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include', // Añade esta línea
-                    body: JSON.stringify({ productoId })
+                const response = await axios.post('/api/carrito/agregar', { productoId }, {
+                    withCredentials: true // Esto asegura que las cookies se envíen con la petición
                 });
 
-                if (response.ok) {
-                    const resultado = await response.json();
+                if (response.status === 200) {
+                    const resultado = response.data;
                     if (resultado.producto) {
                         carrito.push(resultado.producto);
                         localStorage.setItem('carrito', JSON.stringify(carrito));
@@ -30,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     mostrarNotificacion('Error al agregar el producto al carrito', 'error');
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error al agregar producto al carrito:', error);
                 mostrarNotificacion('Error al agregar el producto al carrito', 'error');
             }
         });
@@ -71,7 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('vaciarCarrito').addEventListener('click', async () => {
         try {
             const response = await fetch('/api/carrito/vaciar', {
-                method: 'POST'
+                method: 'POST',
+                credentials: 'include' // Añade esta línea para asegurar que las cookies se envíen
             });
 
             if (response.ok) {
@@ -83,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mostrarNotificacion('Error al vaciar el carrito', 'error');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error al vaciar el carrito:', error);
             mostrarNotificacion('Error al vaciar el carrito', 'error');
         }
     });
