@@ -30,12 +30,18 @@ router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
         const producto = await Producto.findById(productoId);
+
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
         // Asegúrate de incluir todos los campos necesarios en la respuesta, como imagen, nombre, precio, etc.
-        res.json({ producto });
+        res.json({ producto: {
+            _id: producto._id,
+            nombre: producto.nombre,
+            precio: producto.precio,
+            imagen: producto.imagen?.data || null // Asegúrate de proporcionar un valor adecuado si la imagen no está presente
+        } });
     } catch (error) {
         console.error('Error al agregar producto al carrito:', error);
         res.status(500).json({ message: 'Error al agregar producto al carrito' });
