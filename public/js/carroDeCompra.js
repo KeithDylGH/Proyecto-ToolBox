@@ -47,7 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const carritoItem = document.createElement('div');
             carritoItem.classList.add('carrito-item');
     
-            const imagenSrc = item.imagen ? `/ruta/a/imagenes/${item.imagen}` : '/img/default.png'; // Define correctamente la ruta a las imágenes
+            // Supongamos que item.imagen es una URL o una ruta a la imagen
+            const imagenSrc = item.imagen || '/img/default.png'; 
             carritoItem.innerHTML = `
                 <img src="${imagenSrc}" alt="${item.nombre || 'Producto'}">
                 <div>
@@ -57,5 +58,5 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             carritoItems.appendChild(carritoItem);
         });
-    };            
+    };                
 });
