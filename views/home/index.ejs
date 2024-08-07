@@ -90,8 +90,6 @@
       </nav>
   </header>     
 
-  <div class="notification" style="display: none;"></div>
-
     <div class="container">
       <section class="hero">
         
@@ -129,30 +127,21 @@
           <h2>Los mejores productos</h2>
           <div class="row">
             <% productos.forEach(producto => { %>
-              <div class="col-md-3 mb-4">
+            <div class="col-md-3 mb-4">
                 <div class="card">
-                  <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>">
-                  <div class="card-body">
-                    <h5 class="card-title"><%= producto.nombre %></h5>
-                    <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                    <a
-                      href="#"
-                      class="card-title text-white p-2"
-                      style="border-radius: 5px"
-                      >Ver mas</a
-                    >
-                    <button 
-                      type="button" 
-                      class="btn btn-primary agregar-carrito" 
-                      data-producto-id="<%= producto._id %>"
-                    >
-                      Agregar al carrito
-                    </button>
-                  </div>
+                    <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= producto.nombre %></h5>
+                        <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                        <a href="#" class="card-title text-white p-2" style="border-radius: 5px">Ver mas</a>
+                        <button type="button" class="btn btn-primary agregar-carrito" data-producto-id="<%= producto._id %>">
+                            Agregar al carrito
+                        </button>
+                    </div>
                 </div>
-              </div>
+            </div>
             <% }); %>
-          </div>
+        </div>
       </div>
 
         <section>
@@ -335,6 +324,9 @@
         <p class="text-center">&copy; 2024 <a href="#" class="">ToolBox</a>. Todos los derechos son reservados.</p>
       </div>
     </footer>
+
+    <!--NOTIFICACION-->
+    <div class="notification" style="display: none;"></div>
 
     <script src="/js/home.js"></script>
     <script src="/js/header.js"></script>

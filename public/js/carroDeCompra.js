@@ -1,24 +1,33 @@
-document.querySelectorAll('.agregar-carrito').forEach(button => {
-    button.addEventListener('click', function(event) {
-        event.preventDefault();
-        const productoId = this.getAttribute('data-producto-id');
-  
-        fetch('/carrito/agregar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ productoId, cantidad: 1 })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                mostrarNotificacion(data.message, 'success');
-            } else {
-                mostrarNotificacion(data.error, 'danger');
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.agregar-carrito');
+    buttons.forEach(button => {
+        button.addEventListener('click', async (event) => {
+            const productoId = event.target.dataset.productoId;
+            try {
+                const response = await fetch('/carrito/agregar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ productoId }),
+                });
+
+                const result = await response.json();
+                showNotification(result.message, result.success);
+            } catch (error) {
+                showNotification('Error al agregar el producto al carrito', false);
             }
-        })
-        .catch(error => {
-            console.error('Error al agregar al carrito:', error);
-            mostrarNotificacion('Error de conexión', 'danger');
         });
     });
-});  
+});
+
+function showNotification(message, success) {
+    const notification = document.querySelector('.notification');
+    notification.textContent = message;
+    notification.style.backgroundColor = success ? 'green' : 'red';
+    notification.style.display = 'block';
+
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}

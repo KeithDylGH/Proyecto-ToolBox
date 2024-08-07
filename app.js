@@ -371,6 +371,23 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
     }
 });
 
+// Ruta para agregar al carrito
+app.post('/carrito/agregar', (req, res) => {
+    const { productoId } = req.body;
+    if (!req.session.carrito) {
+        req.session.carrito = [];
+    }
+
+    const productoEnCarrito = req.session.carrito.find(p => p.productoId === productoId);
+    if (productoEnCarrito) {
+        productoEnCarrito.cantidad += 1;
+    } else {
+        req.session.carrito.push({ productoId, cantidad: 1 });
+    }
+
+    res.json({ success: true, message: 'Producto agregado al carrito' });
+});
+
 
 
 app.use('/api/products', productoRouter); // Rutas para productos
