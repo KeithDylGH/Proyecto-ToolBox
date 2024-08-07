@@ -17,6 +17,9 @@ router.get('/ver', async (req, res) => {
         const productos = carrito.productos.map(item => ({
             ...item.productoId.toObject(),
             cantidad: item.cantidad,
+            imagen: item.productoId.imagen.data
+                ? `https://${process.env.bunnyNetPullZone}/${item.productoId.imagen.data}`
+                : '/img/default.png'
         }));
 
         res.render('carrito', { productos });
@@ -26,22 +29,50 @@ router.get('/ver', async (req, res) => {
     }
 });
 
-// Agregar al carrito
+// Agregar productos
 router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
+        console.log('Session in /agregar:', req.session);  // Agrega esta línea
+
+        const usuarioId = req.session.user?._id;
+        console.log('usuarioId:', usuarioId); // Esta línea ya está presente.
+
+        if (!usuarioId) {
+            console.error('Usuario no autenticado o ID no disponible');
+            return res.status(401).json({ message: 'No estás autenticado' });
+        }
+
         const producto = await Producto.findById(productoId);
 
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
+        let carrito = await Carrito.findOne({ usuarioId });
+        if (!carrito) {
+            carrito = new Carrito({ usuarioId, productos: [] });
+        }
+
+        const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
+        if (productoExistente) {
+            productoExistente.cantidad += 1;
+        } else {
+            carrito.productos.push({ productoId, cantidad: 1 });
+        }
+
+        await carrito.save();
+
+        const imagenUrl = producto.imagen.data 
+            ? `https://${process.env.bunnyNetPullZone}/${producto.imagen.data}` 
+            : '/img/default.png';
+
         res.json({
             producto: {
                 _id: producto._id,
                 nombre: producto.nombre,
                 precio: producto.precio,
-                imagen: producto.imagen.data ? `/ruta/al/bucket/${producto.imagen.data}` : '/img/default.png' // URL de imagen o valor predeterminado
+                imagen: imagenUrl
             }
         });
     } catch (error) {
