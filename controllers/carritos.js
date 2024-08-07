@@ -4,6 +4,8 @@ const Carrito = require('../models/carrito');
 const Producto = require('../models/producto');
 require('dotenv').config();
 
+const { bunnyNetPullZone } = process.env;
+
 // Ver carrito
 router.get('/ver', async (req, res) => {
     try {
