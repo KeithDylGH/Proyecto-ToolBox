@@ -44,9 +44,26 @@ router.post('/agregar', async (req, res) => {
                 _id: producto._id,
                 nombre: producto.nombre,
                 precio: producto.precio,
-                imagen: producto.imagen.data ? `/ruta/al/bucket/${producto.imagen.data}` : '/img/default.png' // URL de imagen o valor predeterminado
+                imagen: item.productoId.imagen.data
+                ? `https://${process.env.bunnyNetPullZone}/${item.productoId.imagen.data}`
+                : '/img/default.png' // URL de imagen o valor predeterminado
             }
         });
+
+        let carrito = await Carrito.findOne({ usuarioId });
+        if (!carrito) {
+            carrito = new Carrito({ usuarioId, productos: [] });
+        }
+
+        const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
+        if (productoExistente) {
+            productoExistente.cantidad += 1;
+        } else {
+            carrito.productos.push({ productoId, cantidad: 1 });
+        }
+
+        await carrito.save();
+        
     } catch (error) {
         console.error('Error al agregar producto al carrito:', error);
         res.status(500).json({ message: 'Error al agregar producto al carrito' });
