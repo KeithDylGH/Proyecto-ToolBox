@@ -62,21 +62,10 @@ router.post('/agregar', async (req, res) => {
 
         await carrito.save();
 
-        const imagenUrl = producto.imagen.data 
-            ? `https://${process.env.bunnyNetPullZone}/${producto.imagen.data}` 
-            : '/img/default.png';
-
-        res.json({
-            producto: {
-                _id: producto._id,
-                nombre: producto.nombre,
-                precio: producto.precio,
-                imagen: imagenUrl
-            }
-        });
+        res.status(200).json({ message: 'Producto agregado al carrito', producto });
     } catch (error) {
-        console.error('Error al agregar producto al carrito:', error);
-        res.status(500).json({ message: 'Error al agregar producto al carrito' });
+        console.error('Error al agregar el producto al carrito:', error);
+        res.status(500).json({ error: 'Error al agregar el producto al carrito' });
     }
 });
 

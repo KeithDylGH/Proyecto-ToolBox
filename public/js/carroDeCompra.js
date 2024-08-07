@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     },
                     credentials: 'include', // Añade esta línea
                     body: JSON.stringify({ productoId })
-                });                
+                });
 
                 if (response.ok) {
                     const resultado = await response.json();
