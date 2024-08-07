@@ -33,7 +33,7 @@ router.get('/ver', async (req, res) => {
 router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
-        const usuarioId = req.session.user._id;
+        const usuarioId = req.session.user._id; // Verificar que req.session.user._id esté disponible
         const producto = await Producto.findById(productoId);
 
         if (!producto) {
@@ -46,7 +46,6 @@ router.post('/agregar', async (req, res) => {
         }
 
         const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
-
         if (productoExistente) {
             productoExistente.cantidad += 1;
         } else {
