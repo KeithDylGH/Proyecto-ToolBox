@@ -46,14 +46,16 @@ document.addEventListener("DOMContentLoaded", () => {
         carrito.forEach(item => {
             const carritoItem = document.createElement('div');
             carritoItem.classList.add('carrito-item');
+    
+            const imagenSrc = item.imagen ? item.imagen : '/img/default.png'; // Usa una imagen por defecto si no hay imagen
             carritoItem.innerHTML = `
-                <img src="${item.imagen}" alt="${item.nombre}">
+                <img src="${imagenSrc}" alt="${item.nombre || 'Producto'}">
                 <div>
-                    <h5>${item.nombre}</h5>
-                    <p>${item.precio}</p>
+                    <h5>${item.nombre || 'Producto sin nombre'}</h5>
+                    <p>${item.precio || 'Precio no disponible'}</p>
                 </div>
             `;
             carritoItems.appendChild(carritoItem);
         });
-    };
+    };    
 });

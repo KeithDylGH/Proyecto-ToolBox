@@ -33,8 +33,8 @@ router.post('/agregar', async (req, res) => {
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
-  
-        // Simulando una respuesta con el producto agregado
+
+        // Asegúrate de incluir todos los campos necesarios en la respuesta, como imagen, nombre, precio, etc.
         res.json({ producto });
     } catch (error) {
         console.error('Error al agregar producto al carrito:', error);

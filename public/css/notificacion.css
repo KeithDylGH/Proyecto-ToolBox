@@ -1,18 +1,20 @@
-.alert {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .alert-success {
-    background-color: #d4edda;
-    color: #155724;
-  }
-  
-  .alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-  }  
+/* notificacion.css */
+.notification {
+  position: fixed;
+  top: 20px; /* Ajusta esta propiedad para cambiar la posición vertical */
+  right: 20px; /* Ajusta esta propiedad para cambiar la posición horizontal */
+  z-index: 1000; /* Asegura que la notificación esté sobre otros elementos */
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: none;
+}
+
+.notification.success {
+  background-color: #4caf50; /* Color de fondo para éxito */
+  color: white;
+}
+
+.notification.error {
+  background-color: #f44336; /* Color de fondo para error */
+  color: white;
+}

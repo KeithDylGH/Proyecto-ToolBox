@@ -382,7 +382,14 @@ app.post('/carrito/agregar', (req, res) => {
     if (productoEnCarrito) {
         productoEnCarrito.cantidad += 1;
     } else {
-        req.session.carrito.push({ productoId, cantidad: 1 });
+        // Supón que obtienes el producto desde la base de datos con su imagen y demás detalles
+        const producto = obtenerProductoPorId(productoId); // Debes definir esta función
+        req.session.carrito.push({ 
+            productoId, 
+            cantidad: 1, 
+            nombre: producto.nombre, 
+            imagen: producto.imagen 
+        });
     }
 
     res.json({ success: true, message: 'Producto agregado al carrito' });
