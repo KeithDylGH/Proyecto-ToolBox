@@ -29,12 +29,12 @@ router.get('/ver', async (req, res) => {
     }
 });
 
-// Agregar al carrito
 router.post('/agregar', async (req, res) => {
-    console.log('usuarioId:', usuarioId);
     try {
         const { productoId } = req.body;
         const usuarioId = req.session.user?._id;
+
+        console.log('usuarioId:', usuarioId); // Mueve esta línea aquí.
 
         if (!usuarioId) {
             console.error('Usuario no autenticado o ID no disponible');

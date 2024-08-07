@@ -115,12 +115,10 @@ app.get('/', async (req, res) => {
         // Construir la URL completa de la imagen
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
-                // Verifica si producto.imagen.data es solo el nombre del archivo
                 const fileName = producto.imagen.data.split('/').pop();
                 producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
-                console.log('URL de la imagen:', producto.imagen.data);
             }
-        });
+        });        
 
         const CUsuario = req.session.user;
         res.render('home/index', { CUsuario, productos });
