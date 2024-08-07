@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Carrito = require('../models/carrito');
+const Producto = require('../models/producto');
 
 // Ver carrito
 router.get('/ver', async (req, res) => {
@@ -27,19 +28,17 @@ router.get('/ver', async (req, res) => {
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
     try {
-      // Lógica para agregar producto al carrito
-      const { productoId } = req.body;
-      // Obtener el producto desde la base de datos (asumiendo que tienes un modelo Producto)
-      const producto = await Producto.findById(productoId);
-      if (!producto) {
-        return res.status(404).json({ message: 'Producto no encontrado' });
-      }
+        const { productoId } = req.body;
+        const producto = await Producto.findById(productoId);
+        if (!producto) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
   
-      // Simulando una respuesta con el producto agregado
-      res.json({ producto });
+        // Simulando una respuesta con el producto agregado
+        res.json({ producto });
     } catch (error) {
-      console.error('Error al agregar producto al carrito:', error);
-      res.status(500).json({ message: 'Error al agregar producto al carrito' });
+        console.error('Error al agregar producto al carrito:', error);
+        res.status(500).json({ message: 'Error al agregar producto al carrito' });
     }
 });
 
