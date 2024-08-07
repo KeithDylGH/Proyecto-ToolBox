@@ -9,7 +9,11 @@ const { bunnyNetPullZone } = process.env;
 // Ver carrito
 router.get('/ver', async (req, res) => {
     try {
-        const usuarioId = req.session.user.id;  // Cambio aquí
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).send('Usuario no autenticado');
+        }
+
+        const usuarioId = req.session.user._id;
         const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
 
         if (!carrito || carrito.productos.length === 0) {
@@ -20,7 +24,7 @@ router.get('/ver', async (req, res) => {
             ...item.productoId.toObject(),
             cantidad: item.cantidad,
             imagen: item.productoId.imagen.data
-                ? `https://${process.env.bunnyNetPullZone}/${item.productoId.imagen.data}`
+                ? `https://${bunnyNetPullZone}/${item.productoId.imagen.data}`
                 : '/img/default.png'
         }));
 
@@ -34,8 +38,12 @@ router.get('/ver', async (req, res) => {
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
     try {
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).send('Usuario no autenticado');
+        }
+
         const { productoId } = req.body;
-        const usuarioId = req.session.user._id; // Asegúrate de que estás obteniendo el usuarioId correctamente
+        const usuarioId = req.session.user._id;
 
         const producto = await Producto.findById(productoId);
 
@@ -75,8 +83,12 @@ router.post('/agregar', async (req, res) => {
 // Eliminar producto del carrito
 router.post('/eliminar', async (req, res) => {
     try {
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).send('Usuario no autenticado');
+        }
+
         const { productoId } = req.body;
-        const usuarioId = req.session.user.id;  // Cambio aquí
+        const usuarioId = req.session.user._id;
 
         const carrito = await Carrito.findOne({ usuarioId });
         if (carrito) {
@@ -94,7 +106,11 @@ router.post('/eliminar', async (req, res) => {
 // Vaciar carrito
 router.post('/vaciar', async (req, res) => {
     try {
-        const usuarioId = req.session.user.id;
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).send('Usuario no autenticado');
+        }
+
+        const usuarioId = req.session.user._id;
 
         await Carrito.findOneAndDelete({ usuarioId });
 
