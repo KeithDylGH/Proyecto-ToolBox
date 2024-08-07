@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 document.addEventListener("DOMContentLoaded", () => {
     const carritoBtn = document.querySelectorAll('.agregar-carrito');
     const carritoItems = document.getElementById('carritoItems');
