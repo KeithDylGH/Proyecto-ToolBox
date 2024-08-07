@@ -371,35 +371,9 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
     }
 });
 
-// Ruta para agregar al carrito
-app.post('/carrito/agregar', (req, res) => {
-    const { productoId } = req.body;
-    if (!req.session.carrito) {
-        req.session.carrito = [];
-    }
-
-    const productoEnCarrito = req.session.carrito.find(p => p.productoId === productoId);
-    if (productoEnCarrito) {
-        productoEnCarrito.cantidad += 1;
-    } else {
-        // Supón que obtienes el producto desde la base de datos con su imagen y demás detalles
-        const producto = obtenerProductoPorId(productoId); // Debes definir esta función
-        req.session.carrito.push({ 
-            productoId, 
-            cantidad: 1, 
-            nombre: producto.nombre, 
-            imagen: producto.imagen 
-        });
-    }
-
-    res.json({ success: true, message: 'Producto agregado al carrito' });
-});
-
-
-
 app.use('/api/products', productoRouter); // Rutas para productos
 app.use('/api/upload', subirProducto);   // Rutas para subir productos
-app.use('/carrito', carritoRouter);
+app.use('/api/carrito', authorize(['user', 'admin', 'boss']), carritoRouter);
 app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);

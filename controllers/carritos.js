@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Carrito = require('../models/carrito');
 const Producto = require('../models/producto');
+require('dotenv').config();
 
 // Ver carrito
 router.get('/ver', async (req, res) => {
@@ -35,12 +36,17 @@ router.post('/agregar', async (req, res) => {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
+        // Construir la URL de la imagen usando la variable de entorno
+        const imagenUrl = producto.imagen.data 
+            ? `https://${process.env.bunnyNetPullZone}/${producto.imagen.data}` 
+            : '/img/default.png';
+
         res.json({
             producto: {
                 _id: producto._id,
                 nombre: producto.nombre,
                 precio: producto.precio,
-                imagen: producto.imagen.data || '/img/default.png' // URL de imagen o valor predeterminado
+                imagen: imagenUrl
             }
         });
     } catch (error) {
