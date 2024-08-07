@@ -8,7 +8,7 @@ require('dotenv').config();
 // Ver carrito
 router.get('/ver', async (req, res) => {
     try {
-        const usuarioId = req.session.user._id;
+        const usuarioId = req.session.user.id;  // Cambio aquí
         const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
 
         if (!carrito || carrito.productos.length === 0) {
@@ -34,10 +34,9 @@ router.get('/ver', async (req, res) => {
 router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
-        console.log('Session in /agregar:', req.session);  // Agrega esta línea
+        const usuarioId = req.session.user?.id;  // Cambio aquí
 
-        const usuarioId = req.session.user?._id;
-        console.log('usuarioId:', usuarioId); // Esta línea ya está presente.
+        console.log('usuarioId:', usuarioId); // Mueve esta línea aquí.
 
         if (!usuarioId) {
             console.error('Usuario no autenticado o ID no disponible');
@@ -64,21 +63,10 @@ router.post('/agregar', async (req, res) => {
 
         await carrito.save();
 
-        const imagenUrl = producto.imagen.data 
-            ? `https://${process.env.bunnyNetPullZone}/${producto.imagen.data}` 
-            : '/img/default.png';
-
-        res.json({
-            producto: {
-                _id: producto._id,
-                nombre: producto.nombre,
-                precio: producto.precio,
-                imagen: imagenUrl
-            }
-        });
+        res.status(200).json({ message: 'Producto agregado al carrito', producto });
     } catch (error) {
-        console.error('Error al agregar producto al carrito:', error);
-        res.status(500).json({ message: 'Error al agregar producto al carrito' });
+        console.error('Error al agregar el producto al carrito:', error);
+        res.status(500).json({ error: 'Error al agregar el producto al carrito' });
     }
 });
 
@@ -86,7 +74,7 @@ router.post('/agregar', async (req, res) => {
 router.post('/eliminar', async (req, res) => {
     try {
         const { productoId } = req.body;
-        const usuarioId = req.session.user._id;
+        const usuarioId = req.session.user.id;  // Cambio aquí
 
         const carrito = await Carrito.findOne({ usuarioId });
         if (carrito) {
@@ -104,7 +92,7 @@ router.post('/eliminar', async (req, res) => {
 // Vaciar carrito
 router.post('/vaciar', async (req, res) => {
     try {
-        const usuarioId = req.session.user._id;
+        const usuarioId = req.session.user.id;  // Cambio aquí
 
         await Carrito.findOneAndDelete({ usuarioId });
 
