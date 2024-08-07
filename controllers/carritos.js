@@ -31,6 +31,7 @@ router.get('/ver', async (req, res) => {
 
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
+    console.log('usuarioId:', usuarioId);
     try {
         const { productoId } = req.body;
         const usuarioId = req.session.user?._id;
