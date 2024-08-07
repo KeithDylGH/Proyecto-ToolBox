@@ -17,6 +17,9 @@ router.get('/ver', async (req, res) => {
         const productos = carrito.productos.map(item => ({
             ...item.productoId.toObject(),
             cantidad: item.cantidad,
+            imagen: item.productoId.imagen.data
+                ? `https://${process.env.bunnyNetPullZone}/${item.productoId.imagen.data}`
+                : '/img/default.png'
         }));
 
         res.render('carrito', { productos });
@@ -30,13 +33,28 @@ router.get('/ver', async (req, res) => {
 router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
+        const usuarioId = req.session.user._id;
         const producto = await Producto.findById(productoId);
 
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
-        // Construir la URL de la imagen usando la variable de entorno
+        let carrito = await Carrito.findOne({ usuarioId });
+        if (!carrito) {
+            carrito = new Carrito({ usuarioId, productos: [] });
+        }
+
+        const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
+
+        if (productoExistente) {
+            productoExistente.cantidad += 1;
+        } else {
+            carrito.productos.push({ productoId, cantidad: 1 });
+        }
+
+        await carrito.save();
+
         const imagenUrl = producto.imagen.data 
             ? `https://${process.env.bunnyNetPullZone}/${producto.imagen.data}` 
             : '/img/default.png';

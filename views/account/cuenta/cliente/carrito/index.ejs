@@ -50,36 +50,32 @@
       <div class="container">
         <div class="content">
           <h1>Tu Carrito de Compras</h1>
-          <% if (productos.length > 0) { %>
-            <% productos.forEach(producto => { %>
-              <div class="col-md-4">
-                <div class="card mb-4">
-                  <% if (producto.imagen && producto.imagen.data) { %>
-                    <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>">
-                  <% } else { %>
-                    <img src="/img/default-product.jpg" class="card-img-top" alt="Sin imagen">
-                  <% } %>
-                  <div class="card-body">
-                    <h5 class="card-title"><%= producto.nombre %></h5>
-                    <p class="card-text">Cantidad: <%= producto.cantidad %></p>
-                    <p class="card-text">$<%= producto.precio %></p>
-                    <form action="/carrito/eliminar" method="post">
-                      <input type="hidden" name="productoId" value="<%= producto._id %>">
-                      <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                  </div>
+        <div class="row">
+            <% if (productos.length === 0) { %>
+                <p>Tu carrito está vacío.</p>
+            <% } else { %>
+                <% productos.forEach(producto => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="<%= producto.imagen %>" class="card-img-top" alt="<%= producto.nombre %>">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= producto.nombre %></h5>
+                            <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                            <p class="card-text">Cantidad: <%= producto.cantidad %></p>
+                            <button type="button" class="btn btn-danger eliminar-carrito" data-producto-id="<%= producto._id %>">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            <% }); %>
-          <% } else { %>
-            <p>No hay productos en el carrito.</p>
-          <% } %>
+                <% }); %>
+            <% } %>
         </div>
-        <form action="/carrito/vaciar" method="post">
-          <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
+        <form action="/api/carrito/vaciar" method="POST">
+            <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
         </form>
-        </div>
-      </div>
+        <a href="/checkout" class="btn btn-primary">Proceder al Pago</a>
+    </div>
     </section>            
 
   </div>

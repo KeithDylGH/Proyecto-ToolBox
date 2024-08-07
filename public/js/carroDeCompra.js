@@ -65,4 +65,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Inicializar carrito en la carga de la página
     actualizarCarrito();
+
+    // Manejar clic en el botón de vaciar carrito
+    document.getElementById('vaciarCarrito').addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/carrito/vaciar', {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                localStorage.removeItem('carrito');
+                carrito = [];
+                actualizarCarrito();
+                mostrarNotificacion('Carrito vaciado', 'success');
+            } else {
+                mostrarNotificacion('Error al vaciar el carrito', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarNotificacion('Error al vaciar el carrito', 'error');
+        }
+    });
 });
