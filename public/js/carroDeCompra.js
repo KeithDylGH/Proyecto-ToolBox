@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const carritoBtn = document.querySelectorAll('.agregar-carrito');
     const carritoItems = document.getElementById('carritoItems');
-    let carrito = [];
-  
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
     carritoBtn.forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const productoId = e.target.getAttribute('data-producto-id');
@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const resultado = await response.json();
                     if (resultado.producto) {
                         carrito.push(resultado.producto);
+                        localStorage.setItem('carrito', JSON.stringify(carrito));
                         mostrarNotificacion('Producto agregado al carrito', 'success');
                         actualizarCarrito();
                     } else {
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-  
+
     const mostrarNotificacion = (mensaje, tipo) => {
         const notificacion = document.querySelector('.notification');
         notificacion.innerText = mensaje;
@@ -43,22 +44,25 @@ document.addEventListener("DOMContentLoaded", () => {
             notificacion.style.display = 'none';
         }, 3000);
     };
-  
+
     const actualizarCarrito = () => {
         carritoItems.innerHTML = '';
         carrito.forEach(item => {
             const carritoItem = document.createElement('div');
             carritoItem.classList.add('carrito-item');
-    
+
             const imagenSrc = item.imagen ? item.imagen : '/img/default.png'; 
             carritoItem.innerHTML = `
                 <img src="${imagenSrc}" alt="${item.nombre || 'Producto'}">
                 <div>
                     <h5>${item.nombre || 'Producto sin nombre'}</h5>
-                    <p>${item.precio || 'Precio no disponible'}</p>
+                    <p>$${item.precio || 'Precio no disponible'}</p>
                 </div>
             `;
             carritoItems.appendChild(carritoItem);
         });
-    };                
+    };
+
+    // Inicializar carrito en la carga de la página
+    actualizarCarrito();
 });

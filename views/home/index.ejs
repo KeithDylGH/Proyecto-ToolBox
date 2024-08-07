@@ -63,7 +63,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>
                               <div class="modal-body">
-                                <div id="carritoItems">
+                                <div id="carritoItems" class="text-dark">
                                   <!-- Aquí se cargarán dinámicamente los productos del carrito -->
                                 </div>
                               </div>
@@ -116,20 +116,20 @@
     <div class="container">
       <section class="hero">
         
-        <div id="carouselExampleIndicators" class="carousel slide">
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
           </div>
           <div class="carousel-inner">
-            <div class="carousel-item active">
+            <div class="carousel-item active" data-bs-interval="10000">
               <img src="/img/hero_menu_img/Hero 1.png" class="d-block w-100" alt="First slide">
             </div>
-            <div class="carousel-item">
+            <div class="carousel-item" data-bs-interval="10000">
               <img src="/img/hero_menu_img/hero 2.png" class="d-block w-100" alt="Second slide">
             </div>
-            <div class="carousel-item">
+            <div class="carousel-item" data-bs-interval="10000">
               <img src="/img/hero_menu_img/hero 3.png" class="d-block w-100" alt="Third slide">
             </div>
           </div>
