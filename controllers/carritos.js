@@ -35,21 +35,14 @@ router.get('/ver', async (req, res) => {
 router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
+        const usuarioId = req.session.user._id; // Asegúrate de que estás obteniendo el usuarioId correctamente
+
         const producto = await Producto.findById(productoId);
 
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
-        res.json({
-            producto: {
-                _id: producto._id,
-                nombre: producto.nombre,
-                precio: producto.precio,
-                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${producto.imagen.data}` : '/img/default.png' // URL de imagen desde Bunny Storage o valor predeterminado
-            }
-        });
-        
         let carrito = await Carrito.findOne({ usuarioId });
         if (!carrito) {
             carrito = new Carrito({ usuarioId, productos: [] });
@@ -63,6 +56,15 @@ router.post('/agregar', async (req, res) => {
         }
 
         await carrito.save();
+
+        res.json({
+            producto: {
+                _id: producto._id,
+                nombre: producto.nombre,
+                precio: producto.precio,
+                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${producto.imagen.data}` : '/img/default.png' // URL de imagen desde Bunny Storage o valor predeterminado
+            }
+        });
 
     } catch (error) {
         console.error('Error al agregar producto al carrito:', error);
