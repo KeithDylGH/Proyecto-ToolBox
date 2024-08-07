@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener('click', async (e) => {
             const productoId = e.target.getAttribute('data-producto-id');
             try {
-                // Corregir la ruta a /carrito/agregar
                 const response = await fetch('/carrito/agregar', {
                     method: 'POST',
                     headers: {
@@ -47,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const carritoItem = document.createElement('div');
             carritoItem.classList.add('carrito-item');
     
-            // Supongamos que item.imagen es una URL o una ruta a la imagen
             const imagenSrc = item.imagen || '/img/default.png'; 
             carritoItem.innerHTML = `
                 <img src="${imagenSrc}" alt="${item.nombre || 'Producto'}">

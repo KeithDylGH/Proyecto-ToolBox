@@ -40,7 +40,7 @@ router.post('/agregar', async (req, res) => {
                 _id: producto._id,
                 nombre: producto.nombre,
                 precio: producto.precio,
-                imagen: producto.imagen || '/img/default.png' // URL de imagen o valor predeterminado
+                imagen: producto.imagen.data || '/img/default.png' // URL de imagen o valor predeterminado
             }
         });
     } catch (error) {
