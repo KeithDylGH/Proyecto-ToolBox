@@ -29,12 +29,14 @@ router.get('/ver', async (req, res) => {
     }
 });
 
+// Agregar productos
 router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
-        const usuarioId = req.session.user?._id;
+        console.log('Session in /agregar:', req.session);  // Agrega esta línea
 
-        console.log('usuarioId:', usuarioId); // Mueve esta línea aquí.
+        const usuarioId = req.session.user?._id;
+        console.log('usuarioId:', usuarioId); // Esta línea ya está presente.
 
         if (!usuarioId) {
             console.error('Usuario no autenticado o ID no disponible');
