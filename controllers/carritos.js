@@ -26,37 +26,21 @@ router.get('/ver', async (req, res) => {
 
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
-  if (!req.session.user) {
-      return res.status(401).json({ error: 'Debe iniciar sesión para agregar productos al carrito.' });
-  }
-
-  const { productoId, cantidad = 1 } = req.body;
-  const usuarioId = req.session.user._id;  // Asegúrate de que esto esté definido
-
-  if (!usuarioId) {
-      return res.status(400).json({ error: 'ID de usuario no proporcionado.' });
-  }
-
-  try {
-      let carrito = await Carrito.findOne({ usuarioId });
-
-      if (!carrito) {
-          carrito = new Carrito({ usuarioId, productos: [] });
+    try {
+      // Lógica para agregar producto al carrito
+      const { productoId } = req.body;
+      // Obtener el producto desde la base de datos (asumiendo que tienes un modelo Producto)
+      const producto = await Producto.findById(productoId);
+      if (!producto) {
+        return res.status(404).json({ message: 'Producto no encontrado' });
       }
-
-      const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
-      if (productoExistente) {
-          productoExistente.cantidad += parseInt(cantidad, 10);
-      } else {
-          carrito.productos.push({ productoId, cantidad });
-      }
-
-      await carrito.save();
-      res.json({ success: true, message: 'Producto agregado al carrito.' });
-  } catch (error) {
-      console.error('Error al agregar al carrito:', error);
-      res.status(500).json({ error: 'Error al agregar al carrito' });
-  }
+  
+      // Simulando una respuesta con el producto agregado
+      res.json({ producto });
+    } catch (error) {
+      console.error('Error al agregar producto al carrito:', error);
+      res.status(500).json({ message: 'Error al agregar producto al carrito' });
+    }
 });
 
 // Eliminar producto del carrito

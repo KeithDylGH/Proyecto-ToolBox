@@ -51,9 +51,29 @@
                       </li>
 
                       <li class="nav-item">
-                       <a href="/cuenta/carrito" class="carrito">
+                        <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">
                           <img src="/img/icono/carrito de compras.png" alt="carrito" />
                         </a>
+
+                        <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="carritoModalLabel">Tu Carrito de Compras</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <div id="carritoItems">
+                                  <!-- Aquí se cargarán dinámicamente los productos del carrito -->
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary">Proceder al pago</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </li>                                        
 
                       <% if (CUsuario) { %>
@@ -89,6 +109,9 @@
           </div>
       </nav>
   </header>     
+
+  <!--NOTIFICACION-->
+<div class="notification" style="display: none;"></div>
 
     <div class="container">
       <section class="hero">
@@ -325,13 +348,9 @@
       </div>
     </footer>
 
-    <!--NOTIFICACION-->
-    <div class="notification" style="display: none;"></div>
-
     <script src="/js/home.js"></script>
     <script src="/js/header.js"></script>
     <script src="/js/carrusel.js"></script>
-    <script src="/controllers/log-in.js"></script>
     <script src="/js/logout.js"></script>
     <script src="/js/carroDeCompra.js"></script>
   </body>
