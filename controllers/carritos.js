@@ -33,7 +33,13 @@ router.get('/ver', async (req, res) => {
 router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
-        const usuarioId = req.session.user._id; // Verificar que req.session.user._id esté disponible
+        const usuarioId = req.session.user?._id;
+
+        if (!usuarioId) {
+            console.error('Usuario no autenticado o ID no disponible');
+            return res.status(401).json({ message: 'No estás autenticado' });
+        }
+
         const producto = await Producto.findById(productoId);
 
         if (!producto) {
