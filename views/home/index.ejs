@@ -158,9 +158,7 @@
                         <h5 class="card-title"><%= producto.nombre %></h5>
                         <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
                         <a href="#" class="card-title text-white p-2" style="border-radius: 5px">Ver mas</a>
-                        <button type="button" class="btn btn-primary agregar-carrito" data-producto-id="<%= producto._id %>">
-                            Agregar al carrito
-                        </button>
+                        <button class="btn btn-primary" onclick="agregarAlCarrito('<%= producto._id %>')">Agregar al Carrito</button>
                     </div>
                 </div>
             </div>
@@ -353,5 +351,6 @@
     <script src="/js/header.js"></script>
     <script src="/js/carrusel.js"></script>
     <script src="/js/logout.js"></script>
+    <script src="/js/carroDeCompras.js"></script>
   </body>
 </html>

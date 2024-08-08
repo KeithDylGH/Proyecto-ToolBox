@@ -1,7 +1,6 @@
 // usuarios.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
-//const jwt = require('jsonwebtoken');
 const User = require('../models/usuario'); // Importar el modelo de usuario
 
 const userRouter = express.Router();
@@ -25,6 +24,10 @@ userRouter.post('/registrar', async (req, res) => {
         // Hash de la contraseña antes de guardar el usuario
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Crear nuevo carrito
+        const newCarrito = new Carrito({ usuarioId: null, productos: [] });
+        await newCarrito.save();
+
         // Crear nuevo usuario
         const newUser = new User({
             nombre,
@@ -34,7 +37,8 @@ userRouter.post('/registrar', async (req, res) => {
             password: hashedPassword,
             numero,
             cedula,
-            rol: req.body.rol || 'user'
+            rol: req.body.rol || 'user',
+            carrito: newCarrito._id // Asignar el ID del carrito al usuario
         });
 
         // Guardar el nuevo usuario en la base de datos
