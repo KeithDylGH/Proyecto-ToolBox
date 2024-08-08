@@ -8,9 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const productoId = e.target.getAttribute('data-producto-id');
             try {
                 const response = await axios.post('/api/carrito/agregar', { productoId }, {
-                    withCredentials: true // Esto asegura que las cookies se envíen con la petición
+                    withCredentials: true
                 });
-
+    
                 if (response.status === 200) {
                     const resultado = response.data;
                     if (resultado.producto) {
@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     } else {
                         mostrarNotificacion('Error al agregar el producto al carrito', 'error');
                     }
+                } else if (response.status === 401) {
+                    mostrarNotificacion('Usuario no autenticado. Por favor, inicia sesión.', 'error');
                 } else {
                     mostrarNotificacion('Error al agregar el producto al carrito', 'error');
                 }
@@ -29,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mostrarNotificacion('Error al agregar el producto al carrito', 'error');
             }
         });
-    });
+    });    
 
     const mostrarNotificacion = (mensaje, tipo) => {
         const notificacion = document.querySelector('.notification');
