@@ -14,7 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (response.status === 200) {
                     const resultado = response.data;
                     if (resultado.producto) {
-                        carrito.push(resultado.producto);
+                        const itemIndex = carrito.findIndex(item => item._id === resultado.producto._id);
+                        if (itemIndex !== -1) {
+                            carrito[itemIndex].cantidad = resultado.producto.cantidad;
+                        } else {
+                            carrito.push(resultado.producto);
+                        }
                         localStorage.setItem('carrito', JSON.stringify(carrito));
                         mostrarNotificacion('Producto agregado al carrito', 'success');
                         actualizarCarrito();
@@ -54,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <img src="${imagenSrc}" alt="${item.nombre || 'Producto'}">
                 <div>
                     <h5>${item.nombre || 'Producto sin nombre'}</h5>
-                    <p>$${item.precio || 'Precio no disponible'}</p>
+                    <p>$${item.precio || 'Precio no disponible'} x ${item.cantidad || 1}</p>
                 </div>
             `;
             carritoItems.appendChild(carritoItem);

@@ -38,7 +38,6 @@ router.get('/ver', async (req, res) => {
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
     try {
-        console.log('Sesion del usuario:', req.session.user);
         if (!req.session.user || !req.session.user._id) {
             return res.status(401).send('Usuario no autenticado');
         }
@@ -47,7 +46,6 @@ router.post('/agregar', async (req, res) => {
         const usuarioId = req.session.user._id;
 
         const producto = await Producto.findById(productoId);
-
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
@@ -71,7 +69,8 @@ router.post('/agregar', async (req, res) => {
                 _id: producto._id,
                 nombre: producto.nombre,
                 precio: producto.precio,
-                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${producto.imagen.data}` : '/img/default.png' // URL de imagen desde Bunny Storage o valor predeterminado
+                cantidad: productoExistente ? productoExistente.cantidad : 1,
+                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${producto.imagen.data}` : '/img/default.png'
             }
         });
 
