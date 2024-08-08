@@ -78,7 +78,7 @@ router.post('/eliminar', async (req, res) => {
     }
 });
 
-// Vaciar carrito
+// Vaciar carrito FUNCIONA (NO CAMBIAR)
 router.post('/vaciar', async (req, res) => {
     try {
         const usuarioId = req.session.user._id;
