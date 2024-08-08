@@ -6,13 +6,13 @@ function getImageUrl(imagenPath) {
 }
 
 function agregarAlCarrito(productoId) {
-    console.log({ productoId, cantidad: 1 }); // Verifica los datos enviados
+    console.log({ productoId: String(productoId), cantidad: 1 }); // Verifica los datos enviados
     fetch('/api/carrito/agregar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productoId, cantidad: 1 }),
+        body: JSON.stringify({ productoId: String(productoId), cantidad: 1 }),
     })
     .then(response => {
         console.log('Response status:', response.status); // Agrega esto para depurar

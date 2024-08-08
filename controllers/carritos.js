@@ -5,8 +5,9 @@ const router = express.Router();
 
 // Agregar producto al carrito
 router.post('/agregar', async (req, res) => {
+    console.log('Request body:', req.body); // Agregar este registro
     const { productoId, cantidad } = req.body;
-    const usuarioId = req.session.user ? req.session.user._id : null; // Verifica si req.session.user existe
+    const usuarioId = req.session.user ? req.session.user._id : null;
 
     if (!usuarioId) {
         return res.status(400).json({ error: 'Usuario no autenticado' });
