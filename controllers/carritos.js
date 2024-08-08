@@ -2,11 +2,11 @@ const express = require('express');
 const Carrito = require('../models/carrito');
 const iProducto = require('../models/producto');
 const router = express.Router();
-const ObjectId = mongoose.Types.ObjectId;
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId; // Asegúrate de importar esto
 
 router.post('/agregar', async (req, res) => {
-    console.log('Request body:', req.body);
+    console.log('Request body:', req.body); // Agregar este registro
     const { productoId, cantidad } = req.body;
     const usuarioId = req.session.user ? req.session.user._id : null;
 
