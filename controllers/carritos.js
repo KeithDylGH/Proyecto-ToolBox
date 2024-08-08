@@ -38,6 +38,7 @@ router.get('/ver', async (req, res) => {
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
     try {
+        console.log('Sesion del usuario:', req.session.user);
         if (!req.session.user || !req.session.user._id) {
             return res.status(401).send('Usuario no autenticado');
         }

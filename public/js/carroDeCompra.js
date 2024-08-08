@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const response = await axios.post('/api/carrito/agregar', { productoId }, {
                     withCredentials: true
                 });
-    
+
                 if (response.status === 200) {
                     const resultado = response.data;
                     if (resultado.producto) {
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mostrarNotificacion('Error al agregar el producto al carrito', 'error');
             }
         });
-    });    
+    });
 
     const mostrarNotificacion = (mensaje, tipo) => {
         const notificacion = document.querySelector('.notification');
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const carritoItem = document.createElement('div');
             carritoItem.classList.add('carrito-item');
 
-            const imagenSrc = item.imagen ? item.imagen : '/img/default.png'; 
+            const imagenSrc = item.imagen ? item.imagen : '/img/default.png';
             carritoItem.innerHTML = `
                 <img src="${imagenSrc}" alt="${item.nombre || 'Producto'}">
                 <div>
