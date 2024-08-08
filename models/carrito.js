@@ -24,6 +24,6 @@ const carritoSchema = new Schema({
 });
 
 // Crea el modelo a partir del esquema
-const uCarrito = mongoose.model('uCarrito', carritoSchema);
+const Carrito = mongoose.model('Carrito', carritoSchema);
 
-module.exports = uCarrito;
+module.exports = Carrito;
