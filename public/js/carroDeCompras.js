@@ -7,6 +7,7 @@ function getImageUrl(imagenPath) {
 }
 
 function agregarAlCarrito(productoId) {
+    console.log({ productoId, cantidad: 1 }); // Verifica los datos enviados
     fetch('/api/carrito/agregar', {
         method: 'POST',
         headers: {

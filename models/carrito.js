@@ -4,14 +4,14 @@ const Schema = mongoose.Schema;
 const carritoSchema = new Schema({
     usuarioId: {
         type: Schema.Types.ObjectId,
-        ref: 'CUsuario', // Asegúrate de que 'CUsuario' coincida con el nombre de tu modelo de usuario
+        ref: 'CUsuario', // Nombre correcto del modelo de usuario
         required: true
     },
     productos: [
         {
             productoId: {
                 type: Schema.Types.ObjectId,
-                ref: 'Producto', // Asegúrate de que 'Producto' coincida con el nombre de tu modelo de producto
+                ref: 'Producto',
                 required: true
             },
             cantidad: {

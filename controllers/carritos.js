@@ -6,7 +6,11 @@ const router = express.Router();
 // Agregar producto al carrito
 router.post('/agregar', async (req, res) => {
     const { productoId, cantidad } = req.body;
-    const usuarioId = req.session.user._id;
+    const usuarioId = req.session.user ? req.session.user._id : null; // Verifica si req.session.user existe
+
+    if (!usuarioId) {
+        return res.status(400).json({ error: 'Usuario no autenticado' });
+    }
 
     try {
         let carrito = await Carrito.findOne({ usuarioId });
