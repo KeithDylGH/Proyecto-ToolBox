@@ -1,14 +1,19 @@
-//NUEVO
 /* const express = require('express');
 const router = express.Router();
 const Carrito = require('../models/carrito');
 const Producto = require('../models/producto');
 require('dotenv').config();
 
+const { bunnyNetPullZone } = process.env;
+
 // Ver carrito
 router.get('/ver', async (req, res) => {
     try {
-        const usuarioId = req.session.user.id;  // Cambio aquí
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).send('Usuario no autenticado');
+        }
+
+        const usuarioId = req.session.user._id;
         const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
 
         if (!carrito || carrito.productos.length === 0) {
@@ -19,7 +24,7 @@ router.get('/ver', async (req, res) => {
             ...item.productoId.toObject(),
             cantidad: item.cantidad,
             imagen: item.productoId.imagen.data
-                ? `https://${process.env.bunnyNetPullZone}/${item.productoId.imagen.data}`
+                ? `https://${bunnyNetPullZone}/${item.productoId.imagen.data}`
                 : '/img/default.png'
         }));
 
@@ -30,21 +35,17 @@ router.get('/ver', async (req, res) => {
     }
 });
 
-// Agregar productos
+// Agregar al carrito
 router.post('/agregar', async (req, res) => {
     try {
-        const { productoId } = req.body;
-        const usuarioId = req.session.user?.id;  // Cambio aquí
-
-        console.log('usuarioId:', usuarioId); // Mueve esta línea aquí.
-
-        if (!usuarioId) {
-            console.error('Usuario no autenticado o ID no disponible');
-            return res.status(401).json({ message: 'No estás autenticado' });
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).send('Usuario no autenticado');
         }
 
-        const producto = await Producto.findById(productoId);
+        const { productoId } = req.body;
+        const usuarioId = req.session.user._id;
 
+        const producto = await Producto.findById(productoId);
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
@@ -63,18 +64,31 @@ router.post('/agregar', async (req, res) => {
 
         await carrito.save();
 
-        res.status(200).json({ message: 'Producto agregado al carrito', producto });
+        res.json({
+            producto: {
+                _id: producto._id,
+                nombre: producto.nombre,
+                precio: producto.precio,
+                cantidad: productoExistente ? productoExistente.cantidad : 1,
+                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${producto.imagen.data}` : '/img/default.png'
+            }
+        });
+
     } catch (error) {
-        console.error('Error al agregar el producto al carrito:', error);
-        res.status(500).json({ error: 'Error al agregar el producto al carrito' });
+        console.error('Error al agregar producto al carrito:', error);
+        res.status(500).json({ message: 'Error al agregar producto al carrito' });
     }
 });
 
 // Eliminar producto del carrito
 router.post('/eliminar', async (req, res) => {
     try {
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).send('Usuario no autenticado');
+        }
+
         const { productoId } = req.body;
-        const usuarioId = req.session.user.id;  // Cambio aquí
+        const usuarioId = req.session.user._id;
 
         const carrito = await Carrito.findOne({ usuarioId });
         if (carrito) {
@@ -92,7 +106,11 @@ router.post('/eliminar', async (req, res) => {
 // Vaciar carrito
 router.post('/vaciar', async (req, res) => {
     try {
-        const usuarioId = req.session.user.id;  // Cambio aquí
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).send('Usuario no autenticado');
+        }
+
+        const usuarioId = req.session.user._id;
 
         await Carrito.findOneAndDelete({ usuarioId });
 

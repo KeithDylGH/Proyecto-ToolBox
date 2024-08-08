@@ -38,42 +38,21 @@ router.get('/ver', async (req, res) => {
 // Agregar al carrito
 router.post('/agregar', async (req, res) => {
     try {
-        if (!req.session.user || !req.session.user._id) {
-            return res.status(401).send('Usuario no autenticado');
-        }
-
         const { productoId } = req.body;
-        const usuarioId = req.session.user._id;
-
         const producto = await Producto.findById(productoId);
+
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
-
-        let carrito = await Carrito.findOne({ usuarioId });
-        if (!carrito) {
-            carrito = new Carrito({ usuarioId, productos: [] });
-        }
-
-        const productoExistente = carrito.productos.find(p => p.productoId.toString() === productoId);
-        if (productoExistente) {
-            productoExistente.cantidad += 1;
-        } else {
-            carrito.productos.push({ productoId, cantidad: 1 });
-        }
-
-        await carrito.save();
 
         res.json({
             producto: {
                 _id: producto._id,
                 nombre: producto.nombre,
                 precio: producto.precio,
-                cantidad: productoExistente ? productoExistente.cantidad : 1,
-                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${producto.imagen.data}` : '/img/default.png'
+                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${item.productoId.imagen.data}` : '/img/default.png' // URL de imagen o valor predeterminado
             }
         });
-
     } catch (error) {
         console.error('Error al agregar producto al carrito:', error);
         res.status(500).json({ message: 'Error al agregar producto al carrito' });
@@ -83,10 +62,6 @@ router.post('/agregar', async (req, res) => {
 // Eliminar producto del carrito
 router.post('/eliminar', async (req, res) => {
     try {
-        if (!req.session.user || !req.session.user._id) {
-            return res.status(401).send('Usuario no autenticado');
-        }
-
         const { productoId } = req.body;
         const usuarioId = req.session.user._id;
 
@@ -106,10 +81,6 @@ router.post('/eliminar', async (req, res) => {
 // Vaciar carrito
 router.post('/vaciar', async (req, res) => {
     try {
-        if (!req.session.user || !req.session.user._id) {
-            return res.status(401).send('Usuario no autenticado');
-        }
-
         const usuarioId = req.session.user._id;
 
         await Carrito.findOneAndDelete({ usuarioId });
