@@ -2,10 +2,11 @@ const express = require('express');
 const Carrito = require('../models/carrito');
 const iProducto = require('../models/producto');
 const router = express.Router();
+const ObjectId = mongoose.Types.ObjectId;
+const mongoose = require('mongoose');
 
-// Agregar producto al carrito
 router.post('/agregar', async (req, res) => {
-    console.log('Request body:', req.body); // Agregar este registro
+    console.log('Request body:', req.body);
     const { productoId, cantidad } = req.body;
     const usuarioId = req.session.user ? req.session.user._id : null;
 
@@ -20,16 +21,17 @@ router.post('/agregar', async (req, res) => {
             carrito = new Carrito({ usuarioId, productos: [] });
         }
 
-        const productoExistente = carrito.productos.find(p => p.productoId.equals(productoId));
+        const productoIdObj = ObjectId(productoId);
+        const productoExistente = carrito.productos.find(p => p.productoId.equals(productoIdObj));
 
         if (productoExistente) {
             productoExistente.cantidad += cantidad;
         } else {
-            const producto = await iProducto.findById(productoId);
+            const producto = await iProducto.findById(productoIdObj);
             if (!producto) {
                 return res.status(404).json({ error: 'Producto no encontrado' });
             }
-            carrito.productos.push({ productoId, cantidad });
+            carrito.productos.push({ productoId: productoIdObj, cantidad });
         }
 
         await carrito.save();
