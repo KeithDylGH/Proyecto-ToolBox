@@ -39,18 +39,31 @@ router.get('/ver', async (req, res) => {
 router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
-        const producto = await Producto.findById(productoId);
+        const usuarioId = req.session.user._id;
+        let carrito = await Carrito.findOne({ usuarioId });
 
-        if (!producto) {
-            return res.status(404).json({ message: 'Producto no encontrado' });
+        if (!carrito) {
+            carrito = new Carrito({ usuarioId, productos: [] });
         }
+
+        const productoExistente = carrito.productos.find(item => item.productoId.toString() === productoId);
+
+        if (productoExistente) {
+            productoExistente.cantidad += 1;
+        } else {
+            carrito.productos.push({ productoId, cantidad: 1 });
+        }
+
+        await carrito.save();
+
+        const producto = await Producto.findById(productoId);
 
         res.json({
             producto: {
                 _id: producto._id,
                 nombre: producto.nombre,
                 precio: producto.precio,
-                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${item.productoId.imagen.data}` : '/img/default.png' // URL de imagen o valor predeterminado
+                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${producto.imagen.data}` : '/img/default.png'
             }
         });
     } catch (error) {

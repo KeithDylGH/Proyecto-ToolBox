@@ -16,8 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (resultado.producto) {
                         const itemIndex = carrito.findIndex(item => item._id === resultado.producto._id);
                         if (itemIndex !== -1) {
-                            carrito[itemIndex].cantidad = resultado.producto.cantidad;
+                            carrito[itemIndex].cantidad += 1; // Incrementar cantidad
                         } else {
+                            resultado.producto.cantidad = 1; // Inicializar cantidad
                             carrito.push(resultado.producto);
                         }
                         localStorage.setItem('carrito', JSON.stringify(carrito));
@@ -54,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const carritoItem = document.createElement('div');
             carritoItem.classList.add('carrito-item');
 
-            const imagenSrc = item.imagen ? item.imagen : '/img/default.png';
+            const imagenSrc = item.imagen || '/img/default.png';
             carritoItem.innerHTML = `
                 <img src="${imagenSrc}" alt="${item.nombre || 'Producto'}">
                 <div>
@@ -66,10 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // Inicializar carrito en la carga de la página
     actualizarCarrito();
 
-    // Manejar clic en el botón de vaciar carrito
     document.getElementById('vaciarCarrito').addEventListener('click', async () => {
         try {
             const response = await fetch('/api/carrito/vaciar', {
