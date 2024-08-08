@@ -1,5 +1,5 @@
 const express = require('express');
-const uCarrito = require('../models/carrito');
+const Carrito = require('../models/carrito');
 const iProducto = require('../models/producto');
 const router = express.Router();
 
