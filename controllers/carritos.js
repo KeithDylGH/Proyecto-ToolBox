@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId; // Asegúrate de importar esto
 
 router.post('/agregar', async (req, res) => {
-    console.log('Request body:', req.body); // Agregar este registro
+    console.log('Request body:', req.body);
     const { productoId, cantidad } = req.body;
     const usuarioId = req.session.user ? req.session.user._id : null;
 
@@ -21,7 +21,7 @@ router.post('/agregar', async (req, res) => {
             carrito = new Carrito({ usuarioId, productos: [] });
         }
 
-        const productoIdObj = ObjectId(productoId);
+        const productoIdObj = ObjectId(productoId); // Asegúrate de convertir a ObjectId
         const productoExistente = carrito.productos.find(p => p.productoId.equals(productoIdObj));
 
         if (productoExistente) {
@@ -59,19 +59,24 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Eliminar producto del carrito
 router.post('/eliminar', async (req, res) => {
     const { productoId } = req.body;
-    const usuarioId = req.session.user._id;
+    const usuarioId = req.session.user ? req.session.user._id : null;
+
+    if (!usuarioId) {
+        return res.status(400).json({ error: 'Usuario no autenticado' });
+    }
 
     try {
+        const productoIdObj = ObjectId(productoId); // Asegúrate de convertir a ObjectId
+
         let carrito = await Carrito.findOne({ usuarioId });
 
         if (!carrito) {
             return res.status(404).json({ error: 'Carrito no encontrado' });
         }
 
-        carrito.productos = carrito.productos.filter(p => !p.productoId.equals(productoId));
+        carrito.productos = carrito.productos.filter(p => !p.productoId.equals(productoIdObj));
 
         await carrito.save();
         res.json({ success: true, message: 'Producto eliminado del carrito' });
