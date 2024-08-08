@@ -35,50 +35,40 @@ router.get('/ver', async (req, res) => {
     }
 });
 
-// Agregar al carrito
+// Ruta para agregar un producto al carrito
 router.post('/agregar', async (req, res) => {
+    const { productoId } = req.body;
+
+    if (!req.session.user) {
+        return res.status(401).send('Usuario no autenticado');
+    }
+
+    const usuarioId = req.session.user._id;
+
     try {
-        const { productoId } = req.body;
-        
-        // Asegurarse de que el usuario esté autenticado
-        if (!req.session.user || !req.session.user._id) {
-            return res.status(401).json({ message: 'Usuario no autenticado' });
-        }
-        
-        const usuarioId = req.session.user._id;
         let carrito = await Carrito.findOne({ usuarioId });
 
         if (!carrito) {
-            carrito = new Carrito({ usuarioId, productos: [] });
-        }
-
-        const productoExistente = carrito.productos.find(item => item.productoId.toString() === productoId);
-
-        if (productoExistente) {
-            productoExistente.cantidad += 1;
+            // Crear un nuevo carrito si no existe
+            carrito = new Carrito({ usuarioId, productos: [{ productoId, cantidad: 1 }] });
         } else {
-            carrito.productos.push({ productoId, cantidad: 1 });
+            // Si el carrito ya existe, busca el producto
+            const productoEnCarrito = carrito.productos.find(p => p.productoId.equals(productoId));
+
+            if (productoEnCarrito) {
+                // Incrementar la cantidad si ya existe en el carrito
+                productoEnCarrito.cantidad += 1;
+            } else {
+                // Agregar un nuevo producto al carrito
+                carrito.productos.push({ productoId, cantidad: 1 });
+            }
         }
 
         await carrito.save();
-
-        const producto = await Producto.findById(productoId);
-        
-        if (!producto) {
-            return res.status(404).json({ message: 'Producto no encontrado' });
-        }
-
-        res.json({
-            producto: {
-                _id: producto._id,
-                nombre: producto.nombre,
-                precio: producto.precio,
-                imagen: producto.imagen.data ? `https://${bunnyNetPullZone}/${producto.imagen.data}` : '/img/default.png'
-            }
-        });
+        res.status(200).send('Producto agregado al carrito');
     } catch (error) {
         console.error('Error al agregar producto al carrito:', error);
-        res.status(500).json({ message: 'Error al agregar producto al carrito' });
+        res.status(500).send('Error al agregar producto al carrito');
     }
 });
 
