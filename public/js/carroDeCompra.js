@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const response = await axios.post('/api/carrito/agregar', { productoId }, {
                     withCredentials: true
                 });
-
+    
                 if (response.status === 200) {
                     const resultado = response.data;
                     if (resultado.producto) {
@@ -33,11 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     mostrarNotificacion('Error al agregar el producto al carrito', 'error');
                 }
             } catch (error) {
-                console.error('Error al agregar producto al carrito:', error);
+                console.error('Error al agregar producto al carrito:', error.response ? error.response.data : error.message);
                 mostrarNotificacion('Error al agregar el producto al carrito', 'error');
             }
         });
-    });
+    });    
 
     const mostrarNotificacion = (mensaje, tipo) => {
         const notificacion = document.querySelector('.notification');

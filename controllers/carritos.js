@@ -39,6 +39,12 @@ router.get('/ver', async (req, res) => {
 router.post('/agregar', async (req, res) => {
     try {
         const { productoId } = req.body;
+        
+        // Asegurarse de que el usuario esté autenticado
+        if (!req.session.user || !req.session.user._id) {
+            return res.status(401).json({ message: 'Usuario no autenticado' });
+        }
+        
         const usuarioId = req.session.user._id;
         let carrito = await Carrito.findOne({ usuarioId });
 
@@ -57,6 +63,10 @@ router.post('/agregar', async (req, res) => {
         await carrito.save();
 
         const producto = await Producto.findById(productoId);
+        
+        if (!producto) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
 
         res.json({
             producto: {
