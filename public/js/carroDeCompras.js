@@ -1,7 +1,6 @@
 // Define la base URL de Bunny Storage
-const bunnyBaseUrl = `https://${process.env.bunnyNetPullZone}`;
+const bunnyBaseUrl = 'https://toolboxProject.b-cdn.net'; // Reemplaza esto con tu URL base de Bunny Storage
 
-// Función para construir la URL completa de la imagen
 function getImageUrl(imagenPath) {
     return `${bunnyBaseUrl}/${imagenPath}`;
 }
@@ -15,7 +14,10 @@ function agregarAlCarrito(productoId) {
         },
         body: JSON.stringify({ productoId, cantidad: 1 }),
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status); // Agrega esto para depurar
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             alert('Producto agregado al carrito');
@@ -77,19 +79,24 @@ function eliminarDelCarrito(productoId) {
     .catch(error => console.error('Error:', error));
 }
 
-document.getElementById('vaciarCarrito').addEventListener('click', function() {
-    fetch('/api/carrito/vaciar', {
-        method: 'POST',
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            cargarCarrito();
-        } else {
-            alert('Error al vaciar el carrito');
-        }
-    })
-    .catch(error => console.error('Error:', error));
+document.addEventListener('DOMContentLoaded', function() {
+    const vaciarCarritoButton = document.getElementById('vaciarCarrito');
+    if (vaciarCarritoButton) {
+        vaciarCarritoButton.addEventListener('click', function() {
+            fetch('/api/carrito/vaciar', {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    cargarCarrito();
+                } else {
+                    alert('Error al vaciar el carrito');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    }
 });
 
 // Cargar el carrito cuando se abre el modal
