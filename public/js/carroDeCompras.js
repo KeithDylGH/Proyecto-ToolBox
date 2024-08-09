@@ -1,3 +1,27 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const vaciarCarritoBtn = document.getElementById("vaciarCarrito");
+    const carritoItemsContainer = document.getElementById("carritoItems");
+    const modalCarrito = document.getElementById("carritoModal");
+
+    // Solo agregar el listener si el botón existe en el DOM
+    if (vaciarCarritoBtn) {
+        vaciarCarritoBtn.addEventListener("click", function () {
+            // Lógica para vaciar el carrito
+            console.log("Carrito vaciado");
+            // Aquí agregarías la lógica para vaciar el carrito
+        });
+    }
+
+    // Lógica para cargar el carrito cuando se abre el modal
+    if (modalCarrito) {
+        modalCarrito.addEventListener("show.bs.modal", function () {
+            // Lógica para cargar los elementos del carrito
+            console.log("Modal abierto, cargando carrito...");
+            // Aquí agregarías la lógica para cargar los elementos del carrito
+        });
+    }
+});
+
 const agregarAlCarrito = async (productoId) => {
     try {
         const response = await fetch('/carrito/add-to-cart', {
