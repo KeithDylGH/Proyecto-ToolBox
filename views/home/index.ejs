@@ -56,25 +56,25 @@
                         </a>
                     
                         <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div id="carritoItems" class="text-dark">
-                                            <!-- Aquí se cargarán dinámicamente los productos del carrito -->
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                        <button type="button" class="btn btn-primary">Proceder al pago</button>
-                                        <button type="button" class="btn btn-danger" id="vaciarCarrito">Vaciar carrito</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div id="carritoItems" class="text-dark">
+                                          <!-- Aquí se cargarán dinámicamente los productos del carrito -->
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                      <button type="button" class="btn btn-primary">Proceder al pago</button>
+                                      <button type="button" class="btn btn-danger" id="vaciarCarrito">Vaciar carrito</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
                     </li>                                                            
 
                       <% if (CUsuario) { %>
@@ -157,8 +157,8 @@
                     <div class="card-body">
                         <h5 class="card-title"><%= producto.nombre %></h5>
                         <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                        <a href="#" class="card-title text-white p-2" style="border-radius: 5px">Ver mas</a>
-                        <button class="btn btn-primary" onclick="agregarAlCarrito('<%= producto._id %>')">Agregar al Carrito</button>
+                        <a href="#" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
+                        <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
                     </div>
                 </div>
             </div>
