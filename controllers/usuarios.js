@@ -2,6 +2,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/usuario'); // Importar el modelo de usuario
+const Carrito = require('../models/carrito'); // Importar el modelo de carrito
 
 const userRouter = express.Router();
 
