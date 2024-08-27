@@ -110,7 +110,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
 
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file; // Archivo de imagen recibido
+        const imagen = req.file;
         const id = req.params.id;
 
         console.log('Datos procesados:', { nombre, precio, categoria, descripcion, imagen });
@@ -167,8 +167,8 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 }
 
             } catch (error) {
-                console.error('Error al subir la nueva imagen a Bunny Storage:', error.message);
-                return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
+                console.error('Error al manejar la imagen:', error.message);
+                return res.status(500).json({ error: 'Error al manejar la imagen' });
             }
         }
 
