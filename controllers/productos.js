@@ -81,8 +81,8 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop();
 
-            console.log('Intentando eliminar imagen:', imagenNombre); // Para verificar el nombre de la imagen
-            console.log('Bunny Storage API URL para eliminar:', `${bunnyStorageAPI}${imagenNombre}`); // Verificar la URL completa
+            console.log('Intentando eliminar imagen:', imagenNombre); // Verifica el nombre de la imagen
+            console.log('Bunny Storage API URL para eliminar:', `${bunnyStorageAPI}${imagenNombre}`); // Verifica la URL completa
 
             const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
                 headers: {
@@ -92,7 +92,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 
             console.log('Respuesta de eliminación:', deleteResponse.status, deleteResponse.statusText);
 
-            if (!deleteResponse.status === 200) {
+            if (deleteResponse.status !== 200) {
                 throw new Error(`Error al eliminar la imagen de Bunny Storage: ${deleteResponse.statusText}`);
             }
         }
@@ -102,15 +102,9 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 
         res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
-        if (error.response) {
-            console.error('Error en la respuesta de Bunny Storage:', error.response.data);
-        } else if (error.request) {
-            console.error('No se recibió respuesta de Bunny Storage:', error.request);
-        } else {
-            console.error('Error al configurar la solicitud a Bunny Storage:', error.message);
-        }
+        console.error('Error al eliminar el producto:', error.message);
         res.status(500).json({ message: 'Hubo un error al eliminar el producto' });
-    }    
+    }
 });
 
 // Endpoint para actualizar un producto
