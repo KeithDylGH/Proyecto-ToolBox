@@ -81,27 +81,23 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         if (producto.imagen && typeof producto.imagen === 'string') {
             const imagenUrl = producto.imagen;
             const imagenNombre = imagenUrl.split('/').pop();
+            const deleteUrl = `${bunnyStorageAPI}${imagenNombre}`;
 
             console.log('Intentando eliminar imagen:', imagenNombre);
             console.log('Bunny Storage API URL para eliminar:', `${bunnyStorageAPI}${imagenNombre}`);
 
             try {
-                const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
-                    headers: {
-                        'AccessKey': bunnyAccessKey
-                    }                    
+                const deleteResponse = await axios.delete(deleteUrl, {
+                    headers: { 'AccessKey': bunnyAccessKey }
                 });
-
-                console.log('Respuesta de eliminación:', deleteResponse.status, deleteResponse.statusText);
-                console.log('Datos de la respuesta de eliminación:', deleteResponse.data);
-
+            
                 if (deleteResponse.status !== 200) {
-                    throw new Error(`Error al eliminar la imagen de Bunny Storage: ${deleteResponse.statusText}`);
+                    throw new Error(`Error al eliminar la imagen: ${deleteResponse.statusText}`);
                 }
             } catch (error) {
-                console.error('Error al eliminar la imagen:', error.response ? error.response.data : error.message);
+                console.error('Error al eliminar la imagen:', error.message);
                 return res.status(500).json({ message: 'Error al eliminar la imagen de Bunny Storage' });
-            }                       
+            }                     
         }
 
         // Eliminar el producto de la base de datos
@@ -141,6 +137,27 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
 
         // Verificar si se proporciona una nueva imagen
         if (imagen) {
+            // Eliminar la imagen antigua
+            if (producto.imagen && typeof producto.imagen === 'string') {
+                const imagenUrl = producto.imagen;
+                const imagenNombre = imagenUrl.split('/').pop();
+                const deleteUrl = `${bunnyStorageAPI}${imagenNombre}`;
+
+                try {
+                    const deleteResponse = await axios.delete(deleteUrl, {
+                        headers: { 'AccessKey': bunnyAccessKey }
+                    });
+
+                    if (deleteResponse.status !== 200) {
+                        throw new Error(`Error al eliminar la imagen anterior: ${deleteResponse.statusText}`);
+                    }
+                } catch (error) {
+                    console.error('Error al eliminar la imagen anterior:', error.message);
+                    return res.status(500).json({ error: 'Error al eliminar la imagen anterior de Bunny Storage' });
+                }
+            }
+
+            // Subir la nueva imagen
             try {
                 const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
                 const fileBuffer = await sharp(imagen.buffer)
