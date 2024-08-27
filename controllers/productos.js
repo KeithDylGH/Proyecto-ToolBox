@@ -81,12 +81,12 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop();
 
-            console.log('Intentando eliminar imagen:', imagenNombre); // Verifica el nombre de la imagen
-            console.log('Bunny Storage API URL para eliminar:', `${bunnyStorageAPI}${imagenNombre}`); // Verifica la URL completa
+            console.log('Intentando eliminar imagen:', imagenNombre);
+            console.log('Bunny Storage API URL para eliminar:', `${bunnyStorageAPI}${imagenNombre}`);
 
             const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
                 headers: {
-                    'AccessKey': bunnyAccessKey
+                    'AccessKey': bunnyAccessKey // Asegúrate de que el nombre del encabezado sea correcto
                 }
             });
 
@@ -102,7 +102,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 
         res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
-        console.error('Error al eliminar el producto:', error.message);
+        console.error('Error al eliminar el producto:', error.response ? error.response.data : error.message);
         res.status(500).json({ message: 'Hubo un error al eliminar el producto' });
     }
 });
@@ -125,9 +125,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
             console.log('Producto no encontrado');
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
-
-        // Guardar la URL de la imagen anterior
-        const imagenAnterior = producto.imagen && typeof producto.imagen.data === 'string' ? producto.imagen.data : null;
 
         producto.nombre = nombre;
         producto.precio = precio;
@@ -166,25 +163,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 // Actualizar la URL de la imagen en el producto
                 producto.imagen.data = `${bunnyPullZoneUrl}/${fileName}`;
                 console.log('Imagen subida y URL actualizada en el producto:', producto.imagen.data);
-
-                // Eliminar la imagen anterior si existe
-                if (imagenAnterior) {
-                    const imagenNombreAnterior = imagenAnterior.split('/').pop();
-                    console.log('Intentando eliminar imagen anterior:', imagenNombreAnterior);
-                    console.log('Bunny Storage API URL para eliminar la imagen anterior:', `${bunnyStorageAPI}${imagenNombreAnterior}`);
-
-                    const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombreAnterior}`, {
-                        headers: {
-                            'AccessKey': bunnyAccessKey
-                        }
-                    });
-
-                    console.log('Respuesta de eliminación de imagen anterior:', deleteResponse.status, deleteResponse.statusText);
-
-                    if (deleteResponse.status !== 200) {
-                        throw new Error(`Error al eliminar la imagen anterior de Bunny Storage: ${deleteResponse.statusText}`);
-                    }
-                }
 
             } catch (error) {
                 console.error('Error en la solicitud a Bunny Storage:', error.response ? error.response.data : error.message);
