@@ -4,10 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
-
+        
         const formData = new FormData(form);
         const id = form.getAttribute('action').split('/').pop();
-        console.log('ID del producto:', id);
 
         try {
             const response = await fetch(`/api/products/editar/${id}`, {
@@ -19,8 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Producto actualizado con éxito');
                 window.location.href = '/inventario/verproducto';
             } else {
-                const errorText = await response.text();
-                console.error('Error al actualizar el producto:', errorText);
+                console.error('Error al actualizar el producto', await response.text());
             }
         } catch (error) {
             console.error('Error en el frontend:', error);
