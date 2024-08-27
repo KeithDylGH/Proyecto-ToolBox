@@ -81,20 +81,21 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop();
         
-            console.log('Intentando eliminar imagen:', imagenNombre); // Agregado para depuración
+            console.log('Intentando eliminar imagen:', imagenNombre); // Para verificar el nombre de la imagen
+            console.log('Bunny Storage API URL para eliminar:', `${bunnyStorageAPI}${imagenNombre}`); // Verificar la URL completa
         
             const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
                 method: 'DELETE',
                 headers: {
                     'AccessKey': bunnyAccessKey
                 },
-            });                                    
+            });
         
+            console.log('Respuesta de eliminación:', deleteResponse.status, deleteResponse.statusText);
+            
             if (!deleteResponse.ok) {
                 throw new Error(`Error al eliminar la imagen de Bunny Storage: ${deleteResponse.statusText}`);
-            } else {
-                console.log('Imagen eliminada correctamente'); // Agregado para depuración
-            }
+            }   
         }
         
         // Eliminar el producto de la base de datos
@@ -134,30 +135,14 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         // Verificar si se proporciona una nueva imagen
         if (imagen) {
             try {
-                // Eliminar la imagen antigua de Bunny Storage si existe
-                if (producto.imagen && typeof producto.imagen.data === 'string') {
-                    const imagenUrl = producto.imagen.data;
-                    const imagenNombre = imagenUrl.split('/').pop();
-                    
-                    const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'AccessKey': bunnyAccessKey
-                        },
-                    });
-                    
-                    if (!deleteResponse.ok) {
-                        throw new Error(`Error al eliminar la imagen antigua de Bunny Storage: ${deleteResponse.statusText}`);
-                    }
-                }
-
-                // Convertir la nueva imagen a formato WebP
                 const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
                 const fileBuffer = await sharp(imagen.buffer)
                     .webp()
                     .toBuffer();
-
-                // Subir la nueva imagen a Bunny Storage
+        
+                console.log('URL para subir nueva imagen:', `${bunnyStorageUrl}/${fileName}`); // Verificar la URL completa
+                console.log('Tipo de contenido de la imagen:', 'image/webp'); // Tipo de contenido para confirmar
+        
                 const response = await axios.put(
                     `${bunnyStorageUrl}/${fileName}`,
                     fileBuffer,
@@ -168,17 +153,20 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                         }
                     }
                 );
-            
+        
+                console.log('Estado de la respuesta de subida:', response.status, response.statusText);
+                console.log('Datos de la respuesta de subida:', response.data);
+        
                 if (response.status !== 200 && response.status !== 201) {
                     throw new Error(`Error al subir la nueva imagen a Bunny Storage: ${response.statusText} - Código de estado: ${response.status}`);
                 }
-            
+        
                 console.log('Imagen subida correctamente:', response.data);
             } catch (error) {
                 console.error('Error en la solicitud a Bunny Storage:', error.response ? error.response.data : error.message);
                 return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
             }
-        }
+        }        
 
         // Guardar los cambios en el producto
         await producto.save();
