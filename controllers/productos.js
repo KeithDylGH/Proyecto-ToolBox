@@ -88,7 +88,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
                 headers: {
                     'AccessKey': bunnyAccessKey
                 },
-            });                        
+            });                                    
         
             if (!deleteResponse.ok) {
                 throw new Error(`Error al eliminar la imagen de Bunny Storage: ${deleteResponse.statusText}`);
@@ -167,23 +167,15 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                             'AccessKey': bunnyAccessKey
                         }
                     }
-                );                
-
-                if (response.status === 200 || response.status === 201) {
-                    console.log('Nueva imagen subida a Bunny Storage:', response.data);
-
-                    // Actualizar la URL de la imagen en el producto
-                    producto.imagen = {
-                        data: `${bunnyPullZoneUrl}/${fileName}`,
-                        contentType: 'image/webp'
-                    };
-                } else {
-                    console.error(`Error al subir la nueva imagen a Bunny Storage: ${response.statusText}`);
-                    return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
+                );
+            
+                if (response.status !== 200 && response.status !== 201) {
+                    throw new Error(`Error al subir la nueva imagen a Bunny Storage: ${response.statusText} - Código de estado: ${response.status}`);
                 }
-
+            
+                console.log('Imagen subida correctamente:', response.data);
             } catch (error) {
-                console.error('Error al subir la nueva imagen a Bunny Storage:', error.message);
+                console.error('Error en la solicitud a Bunny Storage:', error.response ? error.response.data : error.message);
                 return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
             }
         }
