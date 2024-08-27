@@ -10,7 +10,7 @@ require('dotenv').config();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const bunnyStorageAPI = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}/`;
+const bunnyStorageAPI = `https://storage.bunnycdn.com/${process.env.bunnyNetZONE}/`;
 const bunnyAccessKey = process.env.bunnyNetAPIKEY;
 const bunnyStorageUrl = `https://${process.env.bunnyNetHOSTNAME}/${process.env.bunnyNetZONE}`;
 const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
@@ -56,7 +56,7 @@ router.get('/verproducto', async (req, res) => {
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
                 // Asegúrate de que `producto.imagen.data` contenga la URL completa
-                producto.imagen.data = `${bunnyPullZoneUrl}/${producto.imagen.data.split('/').pop()}`;
+                producto.imagen.data = `${process.env.bunnyNetPullZone}/${producto.imagen.data.split('/').pop()}`;
                 console.log('URL de la imagen:', producto.imagen.data);
             }
         });
@@ -81,13 +81,15 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop();
             
-            const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
+            const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
+                method: 'DELETE',
                 headers: {
-                    'AccessKey': bunnyAccessKey
-                }
+                    'AccessKey': bunnyAccessKey,
+                    'Content-Type': 'application/json' // Asegúrate de que el tipo de contenido sea correcto
+                },
             });
             
-            if (deleteResponse.status !== 204) { // 204 No Content para borrado exitoso
+            if (!deleteResponse.ok) {
                 throw new Error(`Error al eliminar la imagen de Bunny Storage: ${deleteResponse.statusText}`);
             }
         }
@@ -134,13 +136,15 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                     const imagenUrl = producto.imagen.data;
                     const imagenNombre = imagenUrl.split('/').pop();
                     
-                    const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
+                    const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
+                        method: 'DELETE',
                         headers: {
-                            'AccessKey': bunnyAccessKey
-                        }
+                            'AccessKey': bunnyAccessKey,
+                            'Content-Type': 'application/json' // Asegúrate de que el tipo de contenido sea correcto
+                        },
                     });
                     
-                    if (deleteResponse.status !== 204) { // 204 No Content para borrado exitoso
+                    if (!deleteResponse.ok) {
                         throw new Error(`Error al eliminar la imagen antigua de Bunny Storage: ${deleteResponse.statusText}`);
                     }
                 }
