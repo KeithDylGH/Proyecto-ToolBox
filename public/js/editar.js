@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = form.getAttribute('action').split('/').pop();
 
         try {
-            const response = await fetch(`/admin/inventario/editar/${id}`, {
+            const response = await fetch(`/api/products/editar/${id}`, {
                 method: 'PUT',
                 body: formData
-            });
+            });            
 
             if (response.ok) {
                 console.log('Producto actualizado con éxito');
