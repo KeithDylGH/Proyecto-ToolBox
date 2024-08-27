@@ -84,8 +84,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
                 method: 'DELETE',
                 headers: {
-                    'AccessKey': bunnyAccessKey,
-                    'Content-Type': 'application/json' // Asegúrate de que el tipo de contenido sea correcto
+                    'AccessKey': bunnyAccessKey
                 },
             });
             
