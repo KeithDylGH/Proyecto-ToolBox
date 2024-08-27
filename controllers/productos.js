@@ -138,8 +138,8 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         // Verificar si se proporciona una nueva imagen
         if (imagen) {
             // Eliminar la imagen antigua
-            if (producto.imagen && typeof producto.imagen === 'string') {
-                const imagenUrl = producto.imagen;
+            if (producto.imagen && producto.imagen.data) {
+                const imagenUrl = producto.imagen.data;
                 const imagenNombre = imagenUrl.split('/').pop();
                 const deleteUrl = `${bunnyStorageAPI}${imagenNombre}`;
 
@@ -191,7 +191,10 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 }
 
                 // Actualizar la URL de la imagen en el producto
-                producto.imagen = `${bunnyPullZoneUrl}/${fileName}`;
+                producto.imagen = {
+                    data: `${bunnyPullZoneUrl}/${fileName}`,
+                    contentType: 'image/webp'
+                };
                 console.log('Imagen subida y URL actualizada en el producto:', producto.imagen);
 
             } catch (error) {
