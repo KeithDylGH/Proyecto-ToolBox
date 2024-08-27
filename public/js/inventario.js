@@ -4,11 +4,15 @@ const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate 
 const eliminarProducto = async (id) => {
     try {
         const response = await fetch(`${url}/admin/inventario/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json' // Añadir cabeceras si es necesario
+            }
         });
 
         if (!response.ok) {
-            throw new Error('Error al eliminar el producto');
+            const errorText = await response.text();
+            throw new Error(`Error al eliminar el producto: ${response.status} - ${errorText}`);
         }
 
         alert('Producto eliminado correctamente');

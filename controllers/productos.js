@@ -164,6 +164,25 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 producto.imagen.data = `${bunnyPullZoneUrl}/${fileName}`;
                 console.log('Imagen subida y URL actualizada en el producto:', producto.imagen.data);
 
+                // Eliminar la imagen anterior si existe
+                if (imagenAnterior) {
+                    const imagenNombreAnterior = imagenAnterior.split('/').pop();
+                    console.log('Intentando eliminar imagen anterior:', imagenNombreAnterior);
+                    console.log('Bunny Storage API URL para eliminar la imagen anterior:', `${bunnyStorageAPI}${imagenNombreAnterior}`);
+
+                    const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombreAnterior}`, {
+                        headers: {
+                            'AccessKey': bunnyAccessKey
+                        }
+                    });
+
+                    console.log('Respuesta de eliminación de imagen anterior:', deleteResponse.status, deleteResponse.statusText);
+
+                    if (deleteResponse.status !== 200) {
+                        throw new Error(`Error al eliminar la imagen anterior de Bunny Storage: ${deleteResponse.statusText}`);
+                    }
+                }
+
             } catch (error) {
                 console.error('Error en la solicitud a Bunny Storage:', error.response ? error.response.data : error.message);
                 return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
