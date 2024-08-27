@@ -13,7 +13,7 @@ userRouter.post('/registrar', async (req, res) => {
     try {
         // Verificar si todos los campos obligatorios están presentes
         if (!nombre || !apellido || !usuario || !correo || !password || !numero || !cedula) {
-            res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
         // Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
@@ -25,10 +25,6 @@ userRouter.post('/registrar', async (req, res) => {
         // Hash de la contraseña antes de guardar el usuario
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Crear nuevo carrito
-        const newCarrito = new Carrito({ usuarioId: null, productos: [] });
-        await newCarrito.save();
-
         // Crear nuevo usuario
         const newUser = new User({
             nombre,
@@ -39,13 +35,21 @@ userRouter.post('/registrar', async (req, res) => {
             numero,
             cedula,
             rol: req.body.rol || 'user',
-            carrito: newCarrito._id // Asignar el ID del carrito al usuario
         });
 
         // Guardar el nuevo usuario en la base de datos
-        await newUser.save();
+        const usuarioGuardado = await newUser.save();
 
-        res.status(201).json({ mensaje: 'Usuario creado correctamente' });
+        // Crear nuevo carrito para el usuario recién creado
+        const newCarrito = new Carrito({
+            usuarioId: usuarioGuardado._id, // Usar el ID del usuario recién creado
+            productos: []
+        });
+
+        // Guardar el nuevo carrito en la base de datos
+        await newCarrito.save();
+
+        res.status(201).json({ mensaje: 'Usuario y carrito creados correctamente' });
 
     } catch (error) {
         console.error('Error al crear usuario:', error);
