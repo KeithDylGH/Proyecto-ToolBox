@@ -87,20 +87,20 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             try {
                 const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
                     headers: {
-                        'AccessKey': bunnyAccessKey // Verifica que 'AccessKey' sea correcto
+                        'Access-Token': bunnyAccessKey // Usa el nombre correcto del encabezado
                     }
                 });
-
+            
                 console.log('Respuesta de eliminación:', deleteResponse.status, deleteResponse.statusText);
                 console.log('Datos de la respuesta de eliminación:', deleteResponse.data);
-
+            
                 if (deleteResponse.status !== 200) {
                     throw new Error(`Error al eliminar la imagen de Bunny Storage: ${deleteResponse.statusText}`);
                 }
             } catch (error) {
                 console.error('Error al eliminar la imagen:', error.response ? error.response.data : error.message);
                 return res.status(500).json({ message: 'Error al eliminar la imagen de Bunny Storage' });
-            }
+            }            
         }
 
         // Eliminar el producto de la base de datos
