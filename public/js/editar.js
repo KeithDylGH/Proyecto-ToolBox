@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = form.getAttribute('action').split('/').pop();
 
         try {
-            const response = await fetch(`/api/products/editar/${id}`, {
+            const response = await fetch(`/admin/inventario/editar/${id}`, {
                 method: 'PUT',
                 body: formData
             });

@@ -67,39 +67,37 @@ router.get('/verproducto', async (req, res) => {
     }
 });
 
-// Ruta para eliminar un producto
+// Endpoint para eliminar un producto
 router.delete('/admin/inventario/:id', async (req, res) => {
     try {
         const producto = await Producto.findById(req.params.id);
-        
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
-        
+
         // Eliminar la imagen de Bunny Storage
         if (producto.imagen && typeof producto.imagen.data === 'string') {
             const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop();
-        
-            console.log('Intentando eliminar imagen:', imagenNombre); // Agregado para depuración
-        
-            const deleteResponse = await fetch(`${bunnyStorageAPI}/${imagenNombre}`, {
+
+            console.log('Intentando eliminar imagen:', imagenNombre);
+
+            const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
                 method: 'DELETE',
                 headers: {
                     'AccessKey': bunnyAccessKey
                 },
             });
-        
+
             if (!deleteResponse.ok) {
                 throw new Error(`Error al eliminar la imagen de Bunny Storage: ${deleteResponse.statusText}`);
             } else {
-                console.log('Imagen eliminada correctamente'); // Agregado para depuración
+                console.log('Imagen eliminada correctamente');
             }
         }
-        
+
         // Eliminar el producto de la base de datos
         await Producto.findByIdAndDelete(req.params.id);
-        
         res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
         console.error('Error:', error.message);
@@ -115,7 +113,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
 
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file; // Archivo de imagen recibido
+        const imagen = req.file;
         const id = req.params.id;
 
         console.log('Datos procesados:', { nombre, precio, categoria, descripcion, imagen });
@@ -131,10 +129,8 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         producto.categoria = categoria;
         producto.descripcion = descripcion;
 
-        // Verificar si se proporciona una nueva imagen
         if (imagen) {
             try {
-                // Eliminar la imagen antigua de Bunny Storage si existe
                 if (producto.imagen && typeof producto.imagen.data === 'string') {
                     const imagenUrl = producto.imagen.data;
                     const imagenNombre = imagenUrl.split('/').pop();
@@ -151,13 +147,11 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                     }
                 }
 
-                // Convertir la nueva imagen a formato WebP
                 const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
                 const fileBuffer = await sharp(imagen.buffer)
                     .webp()
                     .toBuffer();
 
-                // Subir la nueva imagen a Bunny Storage
                 const response = await axios.put(
                     `${bunnyStorageUrl}/${fileName}`,
                     fileBuffer,
@@ -172,7 +166,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 if (response.status === 200 || response.status === 201) {
                     console.log('Nueva imagen subida a Bunny Storage:', response.data);
 
-                    // Actualizar la URL de la imagen en el producto
                     producto.imagen = {
                         data: `${bunnyPullZoneUrl}/${fileName}`,
                         contentType: 'image/webp'
@@ -188,7 +181,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
             }
         }
 
-        // Guardar los cambios en el producto
         await producto.save();
         res.status(200).json(producto);
     } catch (error) {
