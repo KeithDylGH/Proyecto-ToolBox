@@ -71,36 +71,35 @@ router.get('/verproducto', async (req, res) => {
 router.delete('/admin/inventario/:id', async (req, res) => {
     try {
         const producto = await Producto.findById(req.params.id);
-        
+
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
-        
+
         // Eliminar la imagen de Bunny Storage
         if (producto.imagen && typeof producto.imagen.data === 'string') {
             const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop();
-        
+
             console.log('Intentando eliminar imagen:', imagenNombre); // Para verificar el nombre de la imagen
             console.log('Bunny Storage API URL para eliminar:', `${bunnyStorageAPI}${imagenNombre}`); // Verificar la URL completa
-        
-            const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
-                method: 'DELETE',
+
+            const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
                 headers: {
                     'AccessKey': bunnyAccessKey
-                },
+                }
             });
-        
+
             console.log('Respuesta de eliminación:', deleteResponse.status, deleteResponse.statusText);
-            
-            if (!deleteResponse.ok) {
+
+            if (!deleteResponse.status === 200) {
                 throw new Error(`Error al eliminar la imagen de Bunny Storage: ${deleteResponse.statusText}`);
-            }   
+            }
         }
-        
+
         // Eliminar el producto de la base de datos
         await Producto.findByIdAndDelete(req.params.id);
-        
+
         res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
         console.error('Error:', error.message);
@@ -139,10 +138,10 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 const fileBuffer = await sharp(imagen.buffer)
                     .webp()
                     .toBuffer();
-        
-                console.log('URL para subir nueva imagen:', `${bunnyStorageUrl}/${fileName}`); // Verificar la URL completa
-                console.log('Tipo de contenido de la imagen:', 'image/webp'); // Tipo de contenido para confirmar
-        
+
+                console.log('URL para subir nueva imagen:', `${bunnyStorageUrl}/${fileName}`);
+                console.log('Tipo de contenido de la imagen:', 'image/webp');
+
                 const response = await axios.put(
                     `${bunnyStorageUrl}/${fileName}`,
                     fileBuffer,
@@ -153,20 +152,23 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                         }
                     }
                 );
-        
+
                 console.log('Estado de la respuesta de subida:', response.status, response.statusText);
                 console.log('Datos de la respuesta de subida:', response.data);
-        
+
                 if (response.status !== 200 && response.status !== 201) {
                     throw new Error(`Error al subir la nueva imagen a Bunny Storage: ${response.statusText} - Código de estado: ${response.status}`);
                 }
-        
-                console.log('Imagen subida correctamente:', response.data);
+
+                // Actualizar la URL de la imagen en el producto
+                producto.imagen.data = `${bunnyPullZoneUrl}/${fileName}`;
+                console.log('Imagen subida y URL actualizada en el producto:', producto.imagen.data);
+
             } catch (error) {
                 console.error('Error en la solicitud a Bunny Storage:', error.response ? error.response.data : error.message);
                 return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
             }
-        }        
+        }
 
         // Guardar los cambios en el producto
         await producto.save();
