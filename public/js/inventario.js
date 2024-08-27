@@ -3,22 +3,24 @@ const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate 
 // Función para eliminar un producto
 const eliminarProducto = async (id) => {
     try {
+        console.log('Eliminando producto con ID:', id);
         const response = await fetch(`${url}/admin/inventario/${id}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json' // Añadir cabeceras si es necesario
+                'Content-Type': 'application/json'
             }
         });
 
         if (!response.ok) {
             const errorText = await response.text();
+            console.error('Error en la respuesta del servidor:', errorText);
             throw new Error(`Error al eliminar el producto: ${response.status} - ${errorText}`);
         }
 
         alert('Producto eliminado correctamente');
-        location.reload(); // Recargar la página después de eliminar
+        location.reload();
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error('Error al eliminar el producto:', error.message);
         alert('Hubo un error al eliminar el producto');
     }
 };

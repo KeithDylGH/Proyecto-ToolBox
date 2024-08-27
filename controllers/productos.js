@@ -70,8 +70,9 @@ router.get('/verproducto', async (req, res) => {
 // Ruta para eliminar un producto
 router.delete('/admin/inventario/:id', async (req, res) => {
     try {
-        const producto = await Producto.findById(req.params.id);
+        console.log('Solicitud DELETE recibida para el producto con ID:', req.params.id);
 
+        const producto = await Producto.findById(req.params.id);
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
@@ -87,7 +88,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             try {
                 const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
                     headers: {
-                        'Access-Token': bunnyAccessKey // Usa el nombre correcto del encabezado
+                        'Authorization': `Bearer ${bunnyAccessKey}`
                     }
                 });
             
