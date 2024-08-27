@@ -126,6 +126,9 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
 
+        // Guardar la URL de la imagen anterior
+        const imagenAnterior = producto.imagen && typeof producto.imagen.data === 'string' ? producto.imagen.data : null;
+
         producto.nombre = nombre;
         producto.precio = precio;
         producto.categoria = categoria;
