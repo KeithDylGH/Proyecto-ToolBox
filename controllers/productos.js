@@ -86,7 +86,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 
             const deleteResponse = await axios.delete(`${bunnyStorageAPI}${imagenNombre}`, {
                 headers: {
-                    'Authorization': `Bearer ${bunnyAccessKey}`
+                    'AccessKey': bunnyAccessKey
                 }
             });
 
