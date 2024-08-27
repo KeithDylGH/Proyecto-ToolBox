@@ -78,8 +78,8 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         }
 
         // Eliminar la imagen de Bunny Storage
-        if (producto.imagen && typeof producto.imagen.data === 'string') {
-            const imagenUrl = producto.imagen.data;
+        if (producto.imagen && typeof producto.imagen === 'string') {
+            const imagenUrl = producto.imagen;
             const imagenNombre = imagenUrl.split('/').pop();
 
             console.log('Intentando eliminar imagen:', imagenNombre);
@@ -91,10 +91,10 @@ router.delete('/admin/inventario/:id', async (req, res) => {
                         'AccessKey': bunnyAccessKey
                     }                    
                 });
-            
+
                 console.log('Respuesta de eliminación:', deleteResponse.status, deleteResponse.statusText);
                 console.log('Datos de la respuesta de eliminación:', deleteResponse.data);
-            
+
                 if (deleteResponse.status !== 200) {
                     throw new Error(`Error al eliminar la imagen de Bunny Storage: ${deleteResponse.statusText}`);
                 }
@@ -113,6 +113,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         res.status(500).json({ message: 'Hubo un error al eliminar el producto' });
     }
 });
+
 
 // Endpoint para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
