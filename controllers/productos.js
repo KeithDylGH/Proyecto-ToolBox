@@ -151,6 +151,11 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                     if (deleteResponse.status !== 200) {
                         throw new Error(`Error al eliminar la imagen anterior: ${deleteResponse.statusText}`);
                     }
+
+                    // Eliminar la URL de la imagen de la base de datos
+                    producto.imagen = null;
+                    console.log('Imagen antigua eliminada de Bunny Storage y URL eliminada de la base de datos');
+
                 } catch (error) {
                     console.error('Error al eliminar la imagen anterior:', error.message);
                     return res.status(500).json({ error: 'Error al eliminar la imagen anterior de Bunny Storage' });
@@ -186,8 +191,8 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 }
 
                 // Actualizar la URL de la imagen en el producto
-                producto.imagen.data = `${bunnyPullZoneUrl}/${fileName}`;
-                console.log('Imagen subida y URL actualizada en el producto:', producto.imagen.data);
+                producto.imagen = `${bunnyPullZoneUrl}/${fileName}`;
+                console.log('Imagen subida y URL actualizada en el producto:', producto.imagen);
 
             } catch (error) {
                 console.error('Error en la solicitud a Bunny Storage:', error.response ? error.response.data : error.message);
