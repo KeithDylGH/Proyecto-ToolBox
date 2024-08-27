@@ -1,110 +1,77 @@
 const express = require('express');
 const Carrito = require('../models/carrito');
-const iProducto = require('../models/producto');
-const router = express.Router();
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId; // Asegúrate de importar esto
+const Producto = require('../models/producto');
 
-router.post('/agregar', async (req, res) => {
-    console.log('Request body:', req.body);
-    const { productoId, cantidad } = req.body;
-    const usuarioId = req.session.user ? req.session.user._id : null;
+const carritoRouter = express.Router();
 
-    if (!usuarioId) {
-        return res.status(400).json({ error: 'Usuario no autenticado' });
+// Obtener el carrito del usuario actual
+carritoRouter.get('/', async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Usuario no autenticado' });
     }
 
     try {
-        let carrito = await Carrito.findOne({ usuarioId });
-
-        if (!carrito) {
-            carrito = new Carrito({ usuarioId, productos: [] });
-        }
-
-        const productoIdObj = ObjectId(productoId); // Asegúrate de convertir a ObjectId
-        const productoExistente = carrito.productos.find(p => p.productoId.equals(productoIdObj));
-
-        if (productoExistente) {
-            productoExistente.cantidad += cantidad;
-        } else {
-            const producto = await iProducto.findById(productoIdObj);
-            if (!producto) {
-                return res.status(404).json({ error: 'Producto no encontrado' });
-            }
-            carrito.productos.push({ productoId: productoIdObj, cantidad });
-        }
-
-        await carrito.save();
-        res.json({ success: true, message: 'Producto agregado al carrito' });
-    } catch (error) {
-        console.error('Error al agregar producto al carrito:', error);
-        res.status(500).json({ error: 'Error al agregar producto al carrito' });
-    }
-});
-
-// Obtener productos del carrito
-router.get('/', async (req, res) => {
-    const usuarioId = req.session.user._id;
-
-    try {
-        const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
-        if (!carrito) {
-            return res.json({ productos: [] });
-        }
-
-        res.json({ productos: carrito.productos });
+        const carrito = await Carrito.findOne({ usuarioId: req.session.user.id }).populate('productos.productoId');
+        res.json(carrito);
     } catch (error) {
         console.error('Error al obtener el carrito:', error);
         res.status(500).json({ error: 'Error al obtener el carrito' });
     }
 });
 
-router.post('/eliminar', async (req, res) => {
-    const { productoId } = req.body;
-    const usuarioId = req.session.user ? req.session.user._id : null;
-
-    if (!usuarioId) {
-        return res.status(400).json({ error: 'Usuario no autenticado' });
+// Agregar producto al carrito
+carritoRouter.post('/agregar', async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Usuario no autenticado' });
     }
 
+    const { productoId, cantidad } = req.body;
+
     try {
-        const productoIdObj = ObjectId(productoId); // Asegúrate de convertir a ObjectId
+        let carrito = await Carrito.findOne({ usuarioId: req.session.user.id });
 
-        let carrito = await Carrito.findOne({ usuarioId });
+        if (!carrito) {
+            carrito = new Carrito({ usuarioId: req.session.user.id, productos: [] });
+        }
 
+        const productoExistente = carrito.productos.find(prod => prod.productoId.toString() === productoId);
+
+        if (productoExistente) {
+            productoExistente.cantidad += cantidad;
+        } else {
+            carrito.productos.push({ productoId, cantidad });
+        }
+
+        await carrito.save();
+        res.status(200).json({ mensaje: 'Producto agregado al carrito' });
+    } catch (error) {
+        console.error('Error al agregar producto al carrito:', error);
+        res.status(500).json({ error: 'Error al agregar producto al carrito' });
+    }
+});
+
+// Eliminar producto del carrito
+carritoRouter.post('/eliminar', async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Usuario no autenticado' });
+    }
+
+    const { productoId } = req.body;
+
+    try {
+        const carrito = await Carrito.findOne({ usuarioId: req.session.user.id });
         if (!carrito) {
             return res.status(404).json({ error: 'Carrito no encontrado' });
         }
 
-        carrito.productos = carrito.productos.filter(p => !p.productoId.equals(productoIdObj));
+        carrito.productos = carrito.productos.filter(prod => prod.productoId.toString() !== productoId);
 
         await carrito.save();
-        res.json({ success: true, message: 'Producto eliminado del carrito' });
+        res.status(200).json({ mensaje: 'Producto eliminado del carrito' });
     } catch (error) {
         console.error('Error al eliminar producto del carrito:', error);
         res.status(500).json({ error: 'Error al eliminar producto del carrito' });
     }
 });
 
-// Vaciar el carrito
-router.post('/vaciar', async (req, res) => {
-    const usuarioId = req.session.user._id;
-
-    try {
-        let carrito = await Carrito.findOne({ usuarioId });
-
-        if (!carrito) {
-            return res.status(404).json({ error: 'Carrito no encontrado' });
-        }
-
-        carrito.productos = [];
-
-        await carrito.save();
-        res.json({ success: true, message: 'Carrito vaciado' });
-    } catch (error) {
-        console.error('Error al vaciar el carrito:', error);
-        res.status(500).json({ error: 'Error al vaciar el carrito' });
-    }
-});
-
-module.exports = router;
+module.exports = carritoRouter;
