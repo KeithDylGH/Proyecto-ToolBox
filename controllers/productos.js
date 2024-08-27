@@ -129,7 +129,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         // Verificar si se proporciona una nueva imagen
         if (imagen) {
             try {
-                // Eliminar la imagen antigua de Bunny Storage si existe
                 if (producto.imagen && typeof producto.imagen.data === 'string') {
                     const imagenUrl = producto.imagen.data;
                     const imagenNombre = imagenUrl.split('/').pop();
@@ -140,40 +139,31 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                         }
                     });
                     
-                    if (deleteResponse.status !== 204) { // 204 No Content para borrado exitoso
+                    if (deleteResponse.status !== 204) {
                         throw new Error(`Error al eliminar la imagen antigua de Bunny Storage: ${deleteResponse.statusText}`);
                     }
                 }
 
                 // Convertir la nueva imagen a formato WebP
                 const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
-                const fileBuffer = await sharp(imagen.buffer)
-                    .webp()
-                    .toBuffer();
+                const fileBuffer = await sharp(imagen.buffer).webp().toBuffer();
+                const uploadUrl = `${bunnyStorageUrl}/${fileName}`;
+                console.log('URL para subir la imagen:', uploadUrl);
 
-                // Subir la nueva imagen a Bunny Storage
-                const response = await axios.put(
-                    `${bunnyStorageUrl}/${fileName}`,
-                    fileBuffer,
-                    {
-                        headers: {
-                            'Content-Type': 'image/webp',
-                            'AccessKey': bunnyAccessKey
-                        }
+                const response = await axios.put(uploadUrl, fileBuffer, {
+                    headers: {
+                        'Content-Type': 'image/webp',
+                        'AccessKey': bunnyAccessKey
                     }
-                );
+                });
 
                 if (response.status === 200 || response.status === 201) {
-                    console.log('Nueva imagen subida a Bunny Storage:', response.data);
-
-                    // Actualizar la URL de la imagen en el producto
                     producto.imagen = {
                         data: `${bunnyPullZoneUrl}/${fileName}`,
                         contentType: 'image/webp'
                     };
                 } else {
-                    console.error(`Error al subir la nueva imagen a Bunny Storage: ${response.statusText}`);
-                    return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
+                    throw new Error(`Error al subir la nueva imagen a Bunny Storage: ${response.statusText}`);
                 }
 
             } catch (error) {
