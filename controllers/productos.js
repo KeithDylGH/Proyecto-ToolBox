@@ -102,9 +102,15 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 
         res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
-        console.error('Error:', error.message);
+        if (error.response) {
+            console.error('Error en la respuesta de Bunny Storage:', error.response.data);
+        } else if (error.request) {
+            console.error('No se recibió respuesta de Bunny Storage:', error.request);
+        } else {
+            console.error('Error al configurar la solicitud a Bunny Storage:', error.message);
+        }
         res.status(500).json({ message: 'Hubo un error al eliminar el producto' });
-    }
+    }    
 });
 
 // Endpoint para actualizar un producto
