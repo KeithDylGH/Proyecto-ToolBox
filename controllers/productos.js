@@ -139,8 +139,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                     const deleteResponse = await fetch(`${bunnyStorageAPI}${imagenNombre}`, {
                         method: 'DELETE',
                         headers: {
-                            'AccessKey': bunnyAccessKey,
-                            'Content-Type': 'application/json' // Asegúrate de que el tipo de contenido sea correcto
+                            'AccessKey': bunnyAccessKey
                         },
                     });
                     
