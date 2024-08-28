@@ -5,10 +5,14 @@ const authorize = require('../middleware/authorize'); // Asegurando que solo usu
 
 const carritoRouter = express.Router();
 
-// Añadir un producto al carrito
+// Ruta para añadir un producto al carrito
 carritoRouter.post('/add', async (req, res) => {
-    const { productoId, cantidad } = req.body;
-    const usuarioId = req.session.user.id;
+    const { productoId, cantidad = 1 } = req.body; // Asegurando un valor predeterminado para cantidad
+    const usuarioId = req.session.user ? req.session.user.id : null;
+
+    if (!usuarioId) {
+        return res.status(401).json({ error: 'Usuario no autenticado' });
+    }
 
     try {
         let carrito = await Carrito.findOne({ usuarioId });
@@ -26,7 +30,7 @@ carritoRouter.post('/add', async (req, res) => {
         }
 
         await carrito.save();
-        res.status(200).json({ message: 'Producto añadido al carrito exitosamente' });
+        res.status(200).json({ mensaje: 'Producto añadido al carrito exitosamente', carrito: carrito.productos });
     } catch (error) {
         console.error('Error al añadir producto al carrito:', error);
         res.status(500).json({ error: 'Error en el servidor' });

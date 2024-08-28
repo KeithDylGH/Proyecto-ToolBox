@@ -30,8 +30,15 @@ $(document).ready(function () {
                 mostrarNotificacion(response.mensaje);
                 actualizarCarrito(response.carrito);
             },
-            error: function () {
-                mostrarNotificacion('Error al agregar el producto al carrito');
+            error: function (xhr, status, error) {
+                if (xhr.status === 404) {
+                    mostrarNotificacion('Ruta no encontrada. Verifica la configuración del servidor.');
+                } else if (xhr.status === 500) {
+                    mostrarNotificacion('Error en el servidor. Por favor intenta más tarde.');
+                } else {
+                    mostrarNotificacion('Error desconocido al agregar el producto al carrito');
+                }
+                console.error('Error en la solicitud AJAX:', status, error);
             }
         });
     });
