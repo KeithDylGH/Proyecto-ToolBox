@@ -358,35 +358,6 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
     }
 });
 
-// Rutas del carrito
-app.post('/api/carrito/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productoId } = req.body;
-    const userId = req.session.user.id;
-
-    try {
-        // Lógica para agregar producto al carrito
-        const carrito = await Carrito.findOne({ usuarioId: userId });
-        if (!carrito) {
-            return res.status(404).json({ error: 'Carrito no encontrado.' });
-        }
-
-        // Lógica para agregar producto al carrito
-        const producto = await iProducto.findById(productoId);
-        if (!producto) {
-            return res.status(404).json({ error: 'Producto no encontrado.' });
-        }
-
-        // Agregar producto al carrito
-        carrito.productos.push({ productoId, cantidad: 1 });
-        await carrito.save();
-
-        res.status(200).json({ mensaje: 'Producto agregado al carrito.', carrito: carrito.productos });
-    } catch (error) {
-        console.error('Error al agregar el producto al carrito:', error);
-        res.status(500).json({ error: 'Error al agregar el producto al carrito' });
-    }
-});
-
 
 app.use('/api/products', productoRouter); // Rutas para productos
 app.use('/api/upload', subirProducto);   // Rutas para subir productos

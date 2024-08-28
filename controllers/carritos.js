@@ -15,7 +15,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
     }
 
     try {
-        let carrito = await Carrito.findOne({ usuarioId });
+        let carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
 
         if (!carrito) {
             carrito = new Carrito({ usuarioId, productos: [] });
@@ -26,7 +26,6 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
         if (productoIndex > -1) {
             carrito.productos[productoIndex].cantidad += cantidad;
         } else {
-            // Obtener información del producto desde el modelo Producto
             const producto = await Producto.findById(productoId);
             if (!producto) {
                 return res.status(404).json({ error: 'Producto no encontrado' });
@@ -36,11 +35,9 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
 
         await carrito.save();
 
-        // Obtener información completa del producto
-        const productos = await carrito.populate('productos.productoId').execPopulate();
         res.status(200).json({
             mensaje: 'Producto añadido al carrito exitosamente',
-            carrito: productos.productos.map(p => ({
+            carrito: carrito.productos.map(p => ({
                 nombre: p.productoId.nombre,
                 imagen: p.productoId.imagen,
                 cantidad: p.cantidad
