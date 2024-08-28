@@ -26,6 +26,9 @@ $(document).ready(function () {
             url: '/api/carrito/add',
             method: 'POST',
             data: { productoId: productoId },
+            xhrFields: {
+                withCredentials: true
+            },
             success: function (response) {
                 mostrarNotificacion(response.mensaje);
                 actualizarCarrito(response.carrito);
@@ -44,7 +47,7 @@ $(document).ready(function () {
                 }
                 console.error('Error en la solicitud AJAX:', status, error);
             }
-        });
+        });        
     });
 
     // Función para mostrar notificación
