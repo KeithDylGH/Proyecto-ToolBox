@@ -1,12 +1,12 @@
 const express = require('express');
 const Carrito = require('../models/carrito');
 const Producto = require('../models/producto');
-const authorize = require('../middleware/authorize'); // Middleware para autenticación
+const authorize = require('../middleware/authorize'); // Middleware para autorización
 
 const carritoRouter = express.Router();
 
-// Ruta para añadir un producto al carrito
-carritoRouter.post('/add', async (req, res) => {
+// Ruta para añadir un producto al carrito, requiere autorización de usuario
+carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { productoId, cantidad = 1 } = req.body;
     const usuarioId = req.session.user ? req.session.user.id : null;
 
@@ -47,8 +47,8 @@ carritoRouter.post('/add', async (req, res) => {
     }
 });
 
-// Obtener productos del carrito
-carritoRouter.get('/', async (req, res) => {
+// Obtener productos del carrito, requiere autorización de usuario
+carritoRouter.get('/', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const usuarioId = req.session.user.id;
 
     try {
@@ -66,8 +66,8 @@ carritoRouter.get('/', async (req, res) => {
     }
 });
 
-// Eliminar un producto del carrito
-carritoRouter.delete('/remove/:productoId', async (req, res) => {
+// Eliminar un producto del carrito, requiere autorización de usuario
+carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { productoId } = req.params;
     const usuarioId = req.session.user.id;
 

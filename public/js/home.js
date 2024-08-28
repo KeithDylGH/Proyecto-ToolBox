@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //CARRITO DE COMPRAS
+// CARRITO DE COMPRAS
 $(document).ready(function () {
     // Evento de clic para el botón "Agregar al Carrito"
     $('.btn-agregar-carrito').click(function () {
@@ -31,7 +32,12 @@ $(document).ready(function () {
                 actualizarCarrito(response.carrito);
             },
             error: function (xhr, status, error) {
-                if (xhr.status === 404) {
+                if (xhr.status === 401) {
+                    mostrarNotificacion('Debes iniciar sesión para agregar productos al carrito.');
+                    window.location.href = '/login'; // Redirigir al login si el usuario no está autenticado
+                } else if (xhr.status === 403) {
+                    mostrarNotificacion('No tienes permiso para agregar productos al carrito.');
+                } else if (xhr.status === 404) {
                     mostrarNotificacion('Ruta no encontrada. Verifica la configuración del servidor.');
                 } else if (xhr.status === 500) {
                     mostrarNotificacion('Error en el servidor. Por favor intenta más tarde.');
