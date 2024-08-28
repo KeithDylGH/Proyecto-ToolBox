@@ -70,37 +70,32 @@ router.get('/verproducto', async (req, res) => {
 // Ruta para eliminar un producto
 router.delete('/admin/inventario/:id', async (req, res) => {
     try {
-        console.log('Solicitud DELETE recibida para el producto con ID:', req.params.id);
-
         const producto = await Producto.findById(req.params.id);
         if (!producto) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
-        // Eliminar la imagen de Bunny Storage
-        if (producto.imagen && typeof producto.imagen === 'string') {
-            const imagenUrl = producto.imagen;
+        // Verifica si el producto tiene una imagen asociada
+        if (producto.imagen && producto.imagen.data) {
+            const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop();
             const deleteUrl = `${bunnyStorageAPI}${imagenNombre}`;
-
-            console.log('Intentando eliminar imagen:', imagenNombre);
-            console.log('Bunny Storage API URL para eliminar:', `${bunnyStorageAPI}${imagenNombre}`);
 
             try {
                 const deleteResponse = await axios.delete(deleteUrl, {
                     headers: { 'AccessKey': bunnyAccessKey }
                 });
-            
+
                 if (deleteResponse.status !== 200) {
                     throw new Error(`Error al eliminar la imagen: ${deleteResponse.statusText}`);
                 }
             } catch (error) {
                 console.error('Error al eliminar la imagen:', error.message);
                 return res.status(500).json({ message: 'Error al eliminar la imagen de Bunny Storage' });
-            }                     
+            }
         }
 
-        // Eliminar el producto de la base de datos
+        // Elimina el producto de la base de datos
         await Producto.findByIdAndDelete(req.params.id);
 
         res.status(200).json({ message: 'Producto eliminado correctamente' });
