@@ -14,7 +14,7 @@ module.exports = function authorize(roles = []) {
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
 
-        if (!roles.includes(user.rol)) {
+        if (roles.length && !roles.includes(user.rol)) {
             console.log('Usuario no autorizado, enviando 403');
             return res.status(403).json({ error: 'No tienes permiso para realizar esta acción' });
         }

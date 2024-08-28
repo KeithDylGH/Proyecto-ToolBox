@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+//carrito de compra
 $(document).ready(function () {
     // Evento de clic para el botón "Agregar al Carrito"
     $('.btn-agregar-carrito').click(function () {
@@ -25,7 +26,7 @@ $(document).ready(function () {
             url: '/api/carrito/add',
             method: 'POST',
             data: { productoId: productoId },
-            xhrFields: {  // Incluye cookies en la solicitud
+            xhrFields: {
                 withCredentials: true
             },
             success: function (response) {
@@ -72,7 +73,7 @@ $(document).ready(function () {
     // Evento para vaciar el carrito
     $('#vaciarCarrito').click(function () {
         $.ajax({
-            url: '/api/carrito/empty',
+            url: '/api/carrito/vaciar',
             method: 'POST',
             xhrFields: {
                 withCredentials: true

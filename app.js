@@ -91,7 +91,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: mongoUri }),
-    cookie: { secure: true, maxAge: 24 * 60 * 60 * 1000 }
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
 app.use(express.json());

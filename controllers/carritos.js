@@ -5,14 +5,12 @@ const authorize = require('../middleware/authorize');
 
 const carritoRouter = express.Router();
 
-//Agregar producto
-carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    console.log('Sesión de usuario en /add:', req.session.user);
+// Agregar producto
+carritoRouter.post('/add', authorize(['user', 'admin']), async (req, res) => {
     const { productoId, cantidad = 1 } = req.body;
     const usuarioId = req.session.user ? req.session.user.id : null;
 
     if (!usuarioId) {
-        console.log('Usuario no autenticado en /add');
         return res.status(401).json({ error: 'Usuario no autenticado' });
     }
 
@@ -43,7 +41,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
                 nombre: p.productoId.nombre,
                 imagen: p.productoId.imagen,
                 cantidad: p.cantidad,
-                precio: p.productoId.precio  // Incluye el precio del producto
+                precio: p.productoId.precio
             }))
         });
     } catch (error) {
@@ -58,6 +56,9 @@ carritoRouter.get('/', authorize(['user', 'admin', 'boss']), async (req, res) =>
 
     try {
         const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
+        if (!carrito) {
+            return res.status(404).json({ error: 'Carrito no encontrado' });
+        }
         res.status(200).json({
             productos: carrito.productos.map(p => ({
                 nombre: p.productoId.nombre,
@@ -78,6 +79,9 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
 
     try {
         const carrito = await Carrito.findOne({ usuarioId });
+        if (!carrito) {
+            return res.status(404).json({ error: 'Carrito no encontrado' });
+        }
 
         carrito.productos = carrito.productos.filter(p => p.productoId.toString() !== productoId);
         await carrito.save();
@@ -89,6 +93,7 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
     }
 });
 
+// Vaciar carrito
 carritoRouter.post('/vaciar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const usuarioId = req.session.user ? req.session.user.id : null;
 
