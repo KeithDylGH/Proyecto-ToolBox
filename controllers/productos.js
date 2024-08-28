@@ -83,7 +83,10 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 
             try {
                 const deleteResponse = await axios.delete(deleteUrl, {
-                    headers: { 'AccessKey': bunnyAccessKey }
+                    headers: {
+                        'AccessKey': bunnyAccessKey,
+                        'Content-Type': 'application/octet-stream' // Asegurar que se envíe este encabezado
+                    }
                 });
 
                 if (deleteResponse.status !== 200) {
@@ -100,11 +103,10 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 
         res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
-        console.error('Error al eliminar el producto:', error.response ? error.response.data : error.message);
+        console.error('Error al eliminar el producto:', error.message);
         res.status(500).json({ message: 'Hubo un error al eliminar el producto' });
     }
 });
-
 
 // Endpoint para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
@@ -114,7 +116,7 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
 
     try {
         const { nombre, precio, categoria, descripcion } = req.body;
-        const imagen = req.file; // Archivo de imagen recibido
+        const imagen = req.file;
         const id = req.params.id;
 
         console.log('Datos procesados:', { nombre, precio, categoria, descripcion, imagen });
@@ -140,7 +142,10 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
 
                 try {
                     const deleteResponse = await axios.delete(deleteUrl, {
-                        headers: { 'AccessKey': bunnyAccessKey }
+                        headers: {
+                            'AccessKey': bunnyAccessKey,
+                            'Content-Type': 'application/octet-stream'
+                        }
                     });
 
                     if (deleteResponse.status !== 200) {
@@ -195,7 +200,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 return res.status(500).json({ error: 'Error al subir la nueva imagen a Bunny Storage' });
             }
         } else {
-            // Si no se proporciona una nueva imagen, no cambies el campo `producto.imagen`
             console.log('No se proporciona una nueva imagen, el campo de imagen no se modifica.');
         }
 
