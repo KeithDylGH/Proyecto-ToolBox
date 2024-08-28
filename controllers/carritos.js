@@ -7,12 +7,12 @@ const carritoRouter = express.Router();
 
 //Agregar producto
 carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    console.log('Llamada AJAX recibida con productoId:', req.body.productoId);
-    
+    console.log('Sesión de usuario en /add:', req.session.user);
     const { productoId, cantidad = 1 } = req.body;
     const usuarioId = req.session.user ? req.session.user.id : null;
 
     if (!usuarioId) {
+        console.log('Usuario no autenticado en /add');
         return res.status(401).json({ error: 'Usuario no autenticado' });
     }
 
