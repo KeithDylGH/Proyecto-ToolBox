@@ -359,7 +359,7 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
 });
 
 // Rutas del carrito
-/* app.post('/api/carrito/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
+app.post('/api/carrito/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { productoId } = req.body;
     const userId = req.session.user.id;
 
@@ -385,7 +385,7 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
         console.error('Error al agregar el producto al carrito:', error);
         res.status(500).json({ error: 'Error al agregar el producto al carrito' });
     }
-}); */
+});
 
 
 app.use('/api/products', productoRouter); // Rutas para productos
