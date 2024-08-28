@@ -1,22 +1,25 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const carritoSchema = new mongoose.Schema({
+const carritoSchema = new Schema({
     usuarioId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'CUsuario',
+        type: Schema.Types.ObjectId,
+        ref: 'CUsuario', // referencia al modelo de usuario
         required: true
     },
-    productos: [{
-        productoId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Producto',
-            required: true
-        },
-        cantidad: {
-            type: Number,
-            required: true
+    productos: [
+        {
+            productoId: {
+                type: Schema.Types.ObjectId,
+                ref: 'Producto', // referencia al modelo de producto
+                required: true
+            },
+            cantidad: {
+                type: Number,
+                default: 1
+            }
         }
-    }]
+    ]
 });
 
 const Carrito = mongoose.model('Carrito', carritoSchema);

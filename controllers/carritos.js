@@ -1,76 +1,66 @@
 const express = require('express');
 const Carrito = require('../models/carrito');
 const Producto = require('../models/producto');
+const authorize = require('../middleware/authorize'); // Asegurando que solo usuarios autenticados accedan a estas rutas
 
 const carritoRouter = express.Router();
 
-// Obtener el carrito del usuario actual
-carritoRouter.get('/', async (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ error: 'Usuario no autenticado' });
-    }
-
-    try {
-        const carrito = await Carrito.findOne({ usuarioId: req.session.user.id }).populate('productos.productoId');
-        res.json(carrito);
-    } catch (error) {
-        console.error('Error al obtener el carrito:', error);
-        res.status(500).json({ error: 'Error al obtener el carrito' });
-    }
-});
-
-// Agregar producto al carrito
-carritoRouter.post('/agregar', async (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ error: 'Usuario no autenticado' });
-    }
-
+// Añadir un producto al carrito
+carritoRouter.post('/add', async (req, res) => {
     const { productoId, cantidad } = req.body;
+    const usuarioId = req.session.user.id;
 
     try {
-        let carrito = await Carrito.findOne({ usuarioId: req.session.user.id });
+        let carrito = await Carrito.findOne({ usuarioId });
 
         if (!carrito) {
-            carrito = new Carrito({ usuarioId: req.session.user.id, productos: [] });
+            carrito = new Carrito({ usuarioId, productos: [] });
         }
 
-        const productoExistente = carrito.productos.find(prod => prod.productoId.toString() === productoId);
+        const productoIndex = carrito.productos.findIndex(p => p.productoId.toString() === productoId);
 
-        if (productoExistente) {
-            productoExistente.cantidad += cantidad;
+        if (productoIndex > -1) {
+            carrito.productos[productoIndex].cantidad += cantidad;
         } else {
             carrito.productos.push({ productoId, cantidad });
         }
 
         await carrito.save();
-        res.status(200).json({ mensaje: 'Producto agregado al carrito' });
+        res.status(200).json({ message: 'Producto añadido al carrito exitosamente' });
     } catch (error) {
-        console.error('Error al agregar producto al carrito:', error);
-        res.status(500).json({ error: 'Error al agregar producto al carrito' });
+        console.error('Error al añadir producto al carrito:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
     }
 });
 
-// Eliminar producto del carrito
-carritoRouter.post('/eliminar', async (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ error: 'Usuario no autenticado' });
-    }
-
-    const { productoId } = req.body;
+// Obtener productos del carrito
+carritoRouter.get('/', async (req, res) => {
+    const usuarioId = req.session.user.id;
 
     try {
-        const carrito = await Carrito.findOne({ usuarioId: req.session.user.id });
-        if (!carrito) {
-            return res.status(404).json({ error: 'Carrito no encontrado' });
-        }
+        const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
+        res.status(200).json(carrito);
+    } catch (error) {
+        console.error('Error al obtener carrito:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
 
-        carrito.productos = carrito.productos.filter(prod => prod.productoId.toString() !== productoId);
+// Eliminar un producto del carrito
+carritoRouter.delete('/remove/:productoId', async (req, res) => {
+    const { productoId } = req.params;
+    const usuarioId = req.session.user.id;
 
+    try {
+        const carrito = await Carrito.findOne({ usuarioId });
+
+        carrito.productos = carrito.productos.filter(p => p.productoId.toString() !== productoId);
         await carrito.save();
-        res.status(200).json({ mensaje: 'Producto eliminado del carrito' });
+
+        res.status(200).json({ message: 'Producto eliminado del carrito' });
     } catch (error) {
         console.error('Error al eliminar producto del carrito:', error);
-        res.status(500).json({ error: 'Error al eliminar producto del carrito' });
+        res.status(500).json({ error: 'Error en el servidor' });
     }
 });
 

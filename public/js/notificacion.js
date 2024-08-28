@@ -35,8 +35,8 @@ function showNotification(message) {
 }
 
 //PAGINA DE ERROR
-document.addEventListener('DOMContentLoaded', function() {
+/* document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
         window.location.href = '/cliente'; // Redirige después de 5 segundos
     }, 5000); // 5000 ms = 5 segundos
-});
+}); */
