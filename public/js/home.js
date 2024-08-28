@@ -23,7 +23,7 @@ $(document).ready(function () {
     $('.btn-agregar-carrito').click(function () {
         var productoId = $(this).data('producto-id');
         $.ajax({
-            url: '/api/carrito/add',  // Actualizar URL a '/api/carrito/add'
+            url: '/api/carrito/add',
             method: 'POST',
             data: { productoId: productoId },
             success: function (response) {
@@ -56,7 +56,10 @@ $(document).ready(function () {
         carritoItems.empty();
         carrito.forEach(function (item) {
             carritoItems.append(
-                '<div>' + item.nombre + ' - Cantidad: ' + item.cantidad + '</div>'
+                '<div>' +
+                '<img src="' + item.imagen + '" alt="' + item.nombre + '" style="width: 50px; height: auto; margin-right: 10px;" />' +
+                item.nombre + ' - Cantidad: ' + item.cantidad +
+                '</div>'
             );
         });
     }

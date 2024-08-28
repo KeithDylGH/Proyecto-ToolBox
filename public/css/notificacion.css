@@ -18,3 +18,16 @@
   background-color: #f44336; /* Color de fondo para error */
   color: white;
 }
+
+/*NOTIFICACION PARA CARRITO*/
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #333; /* Fondo oscuro */
+  color: #fff; /* Texto blanco */
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+}

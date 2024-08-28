@@ -30,7 +30,17 @@ carritoRouter.post('/add', async (req, res) => {
         }
 
         await carrito.save();
-        res.status(200).json({ mensaje: 'Producto añadido al carrito exitosamente', carrito: carrito.productos });
+
+        // Obtener información completa del producto
+        const productos = await carrito.populate('productos.productoId').execPopulate();
+        res.status(200).json({
+            mensaje: 'Producto añadido al carrito exitosamente',
+            carrito: productos.productos.map(p => ({
+                nombre: p.productoId.nombre,
+                imagen: p.productoId.imagen,
+                cantidad: p.cantidad
+            }))
+        });
     } catch (error) {
         console.error('Error al añadir producto al carrito:', error);
         res.status(500).json({ error: 'Error en el servidor' });
@@ -43,7 +53,13 @@ carritoRouter.get('/', async (req, res) => {
 
     try {
         const carrito = await Carrito.findOne({ usuarioId }).populate('productos.productoId');
-        res.status(200).json(carrito);
+        res.status(200).json({
+            productos: carrito.productos.map(p => ({
+                nombre: p.productoId.nombre,
+                imagen: p.productoId.imagen,
+                cantidad: p.cantidad
+            }))
+        });
     } catch (error) {
         console.error('Error al obtener carrito:', error);
         res.status(500).json({ error: 'Error en el servidor' });
