@@ -18,75 +18,129 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //carrito de compra
-$(document).ready(function () {
-    // Evento de clic para el botón "Agregar al Carrito"
-    $('.btn-agregar-carrito').click(function () {
-        var productoId = $(this).data('producto-id');
-        $.ajax({
-            url: '/api/carrito/add',
+// Añadir producto al carrito
+const agregarAlCarrito = async (productoId) => {
+    try {
+        const response = await fetch('/carrito/add', {
             method: 'POST',
-            data: { productoId: productoId },
-            xhrFields: {
-                withCredentials: true
+            headers: {
+                'Content-Type': 'application/json'
             },
-            success: function (response) {
-                console.log('Producto añadido:', response);
-                mostrarNotificacion(response.mensaje);
-                actualizarCarrito(response.carrito);
-            },
-            error: function (xhr, status, error) {
-                console.log('Error:', error, 'Status:', status, 'Response:', xhr.responseText);
-                mostrarNotificacion('Error al agregar el producto al carrito');
+            body: JSON.stringify({ productoId })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            // Mostrar la estrella de like
+            const likeEffect = document.getElementById('likeEffect');
+            likeEffect.style.display = 'block'; // Mostrar el contenedor de la estrella
+
+            // Ocultar la estrella después de la animación
+            setTimeout(() => {
+                likeEffect.style.display = 'none';
+            }, 1000); // La duración de la animación en CSS es de 1 segundo
+
+            const producto = result.producto;
+            const item = document.createElement('li');
+            item.classList.add('list-group-item', 'd-flex', 'align-items-center');
+            item.dataset.productoId = producto._id;
+            item.innerHTML = `
+              <img src="${producto.imagen}" alt="${producto.nombre}" class="img-fluid me-3" style="width: 100px; height: auto;">
+                <div>
+                    <small class="font-weight-bold mb-2">${producto.nombre}</small>
+                    <span class="text-muted">${producto.categoria}</span>
+                    <button class="btn btn-danger btn-sm ms-2 btn-remove" data-producto-id="${producto._id}">Eliminar</button>
+                </div>
+            `;
+            carritoList.appendChild(item);
+
+        } else {
+            showAlert(result.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('Error al añadir producto al carrito');
+    }
+};
+
+// Eliminar producto del carrito
+const eliminarDelCarrito = async (productoId) => {
+    try {
+        const response = await fetch(`/carrito/remove/${productoId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
-    });
 
-    // Función para mostrar notificación
-    function mostrarNotificacion(mensaje) {
-        var notificacion = $('.notification');
-        notificacion.text(mensaje);
-        notificacion.fadeIn().delay(3000).fadeOut();
+        const result = await response.json();
+        if (result.success) {
+            const item = document.querySelector(`li[data-producto-id="${productoId}"]`);
+            if (item) {
+                item.remove();
+            }
+        } else {
+            showAlert(result.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('Error al eliminar producto del carrito');
     }
+};
 
-    // Función para actualizar el contenido del carrito
-    function actualizarCarrito(carrito) {
-        var carritoItems = $('#carritoItems');
-        carritoItems.empty();
-        carrito.forEach(function (item) {
-            carritoItems.append(
-                '<div class="d-flex align-items-center mb-2">' +
-                '<img src="' + item.imagen + '" alt="' + item.nombre + '" style="width: 50px; height: auto; margin-right: 10px;" />' +
-                '<div>' +
-                '<h6>' + item.nombre + '</h6>' +
-                '<p>Precio: $' + item.precio.toFixed(2) + '</p>' +
-                '<p>Cantidad: ' + item.cantidad + '</p>' +
-                '</div>' +
-                '</div>'
-            );
-        });
-
-        // Actualizar la cantidad total en el carrito
-        var cantidadTotal = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-        $('#cantidadTotal').text('Cantidad Total: ' + cantidadTotal);
-    }
-
-    // Evento para vaciar el carrito
-    $('#vaciarCarrito').click(function () {
-        $.ajax({
-            url: '/api/carrito/vaciar',
-            method: 'POST',
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function (response) {
-                mostrarNotificacion(response.mensaje);
-                $('#carritoItems').empty();
-                $('#cantidadTotal').text('Cantidad Total: 0');
-            },
-            error: function (xhr, status, error) {
-                console.log('Error:', error, 'Status:', status, 'Response:', xhr.responseText);
-                mostrarNotificacion('Error al vaciar el carrito.');
+// Cargar productos del carrito
+const cargarCarrito = async () => {
+    try {
+        const response = await fetch('/carrito/getCarrito', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
             }
         });
-    });
+
+        const result = await response.json();
+
+        if (result.success) {
+            carritoList.innerHTML = '';
+
+            result.carrito.forEach(producto => {
+                const item = document.createElement('li');
+                item.classList.add('list-group-item', 'd-flex', 'align-items-center');
+                item.dataset.productoId = producto._id;
+
+                const imagenUrl = producto.imagen; // Asegúrate de que producto.imagen sea una URL válida
+
+                item.innerHTML = `
+                    <img src="${imagenUrl}" alt="${producto.nombre}" class="img-fluid me-3" style="width: 100px; height: auto;">
+                    <div>
+                        <h4 class="font-weight-bold mb-2">${producto.nombre}</h4>
+                        <span class="text-muted">${producto.categoria}</span>
+                        <button class="btn btn-danger btn-sm ms-2 btn-remove" data-producto-id="${producto._id}">Eliminar</button>
+                    </div>
+                `;
+
+                carritoList.appendChild(item);
+            });
+
+            document.querySelectorAll('.btn-remove').forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    event.preventDefault();
+                    const productoId = button.getAttribute('data-producto-id');
+                    await eliminarDelCarrito(productoId);
+                });
+            });
+
+        } else {
+            showAlert('Error al cargar carrito: ' + result.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('Error al cargar carrito');
+    }
+};
+
+// Evento para abrir el modal y cargar el carrito
+document.getElementById('verCarrito').addEventListener('click', () => {
+    cargarCarrito();
+    carritoModal.show();
 });
