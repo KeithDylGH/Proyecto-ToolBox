@@ -23,7 +23,7 @@ $(document).ready(function () {
     $('.btn-agregar-carrito').click(function () {
         var productoId = $(this).data('producto-id');
         $.ajax({
-            url: '/agregar-al-carrito',
+            url: '/carrito/add',
             method: 'POST',
             data: { productoId: productoId },
             success: function (response) {
