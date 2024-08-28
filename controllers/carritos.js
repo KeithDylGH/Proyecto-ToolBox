@@ -1,11 +1,11 @@
 const express = require('express');
 const Carrito = require('../models/carrito');
 const Producto = require('../models/producto');
-const authorize = require('../middleware/authorize'); // Middleware para autorización
+const authorize = require('../middleware/authorize');
 
 const carritoRouter = express.Router();
 
-// Ruta para añadir un producto al carrito, requiere autorización de usuario
+//Agregar producto
 carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { productoId, cantidad = 1 } = req.body;
     const usuarioId = req.session.user ? req.session.user.id : null;
@@ -40,7 +40,8 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             carrito: carrito.productos.map(p => ({
                 nombre: p.productoId.nombre,
                 imagen: p.productoId.imagen,
-                cantidad: p.cantidad
+                cantidad: p.cantidad,
+                precio: p.productoId.precio  // Incluye el precio del producto
             }))
         });
     } catch (error) {
@@ -82,6 +83,29 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
         res.status(200).json({ message: 'Producto eliminado del carrito' });
     } catch (error) {
         console.error('Error al eliminar producto del carrito:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
+
+carritoRouter.post('/vaciar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    const usuarioId = req.session.user ? req.session.user.id : null;
+
+    if (!usuarioId) {
+        return res.status(401).json({ error: 'Usuario no autenticado' });
+    }
+
+    try {
+        let carrito = await Carrito.findOne({ usuarioId });
+
+        if (carrito) {
+            carrito.productos = [];
+            await carrito.save();
+            res.status(200).json({ mensaje: 'Carrito vacío exitosamente' });
+        } else {
+            res.status(404).json({ error: 'Carrito no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al vaciar el carrito:', error);
         res.status(500).json({ error: 'Error en el servidor' });
     }
 });
