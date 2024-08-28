@@ -7,6 +7,8 @@ const carritoRouter = express.Router();
 
 //Agregar producto
 carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    console.log('Llamada AJAX recibida con productoId:', req.body.productoId);
+    
     const { productoId, cantidad = 1 } = req.body;
     const usuarioId = req.session.user ? req.session.user.id : null;
 
