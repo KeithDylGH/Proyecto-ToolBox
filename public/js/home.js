@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 $(document).ready(function () {
     // Evento de clic para el botón "Agregar al Carrito"
     $('.btn-agregar-carrito').click(function () {
-        var productoId = $(this).data('producto-id');
+        let productoId = $(this).data('producto-id');
         $.ajax({
             url: '/carrito/add',
             method: 'POST',
@@ -45,14 +45,14 @@ $(document).ready(function () {
 
     // Función para mostrar notificación
     function mostrarNotificacion(mensaje) {
-        var notificacion = $('.notification');
+        let notificacion = $('.notification');
         notificacion.text(mensaje);
         notificacion.fadeIn().delay(3000).fadeOut();
     }
 
     // Función para actualizar el contenido del carrito
     function actualizarCarrito(carrito) {
-        var carritoItems = $('#carritoItems');
+        let carritoItems = $('#carritoItems');
         carritoItems.empty();
         carrito.forEach(function (item) {
             carritoItems.append(

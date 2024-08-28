@@ -1,13 +1,13 @@
 const express = require('express');
 const Carrito = require('../models/carrito');
 const Producto = require('../models/producto');
-const authorize = require('../middleware/authorize'); // Asegurando que solo usuarios autenticados accedan a estas rutas
+const authorize = require('../middleware/authorize'); // Middleware para autenticación
 
 const carritoRouter = express.Router();
 
 // Ruta para añadir un producto al carrito
 carritoRouter.post('/add', async (req, res) => {
-    const { productoId, cantidad = 1 } = req.body; // Asegurando un valor predeterminado para cantidad
+    const { productoId, cantidad = 1 } = req.body;
     const usuarioId = req.session.user ? req.session.user.id : null;
 
     if (!usuarioId) {
