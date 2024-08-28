@@ -80,7 +80,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
         if (producto.imagen && producto.imagen.data) {
             const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop();
-            const deleteUrl = `${bunnyStorageAPI}${imagenNombre}`;
+            const deleteUrl = `${bunnyStorageAPI}/${imagenNombre}`;
 
             try {
                 const deleteResponse = await axios.delete(deleteUrl, {
