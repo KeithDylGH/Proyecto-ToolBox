@@ -26,6 +26,11 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
         if (productoIndex > -1) {
             carrito.productos[productoIndex].cantidad += cantidad;
         } else {
+            // Obtener información del producto desde el modelo Producto
+            const producto = await Producto.findById(productoId);
+            if (!producto) {
+                return res.status(404).json({ error: 'Producto no encontrado' });
+            }
             carrito.productos.push({ productoId, cantidad });
         }
 
