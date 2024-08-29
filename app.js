@@ -16,7 +16,6 @@ const categoriaRouter = require('./controllers/categorias');
 const carritoRouter = require('./controllers/carritos');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
-const Carrito = require('./models/carrito');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');

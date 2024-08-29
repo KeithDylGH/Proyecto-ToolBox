@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Añadir producto al carrito
 const agregarAlCarrito = async (productoId) => {
     try {
-        const response = await fetch('/carrito/add', {
+        const response = await fetch('/api/carrito/add', {  // Actualizado
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const mostrarNotificacion = (mensaje, tipo = 'success') => {
 // Actualizar el carrito
 const actualizarCarrito = async () => {
     try {
-        const response = await fetch('/carrito/getCarrito');
+        const response = await fetch('/api/carrito/getCarrito');  // Actualizado
         const result = await response.json();
         if (result.success) {
             const carritoList = document.getElementById('carritoList');
@@ -79,7 +79,7 @@ const actualizarCarrito = async () => {
                 button.addEventListener('click', async (e) => {
                     const productoId = e.target.dataset.productoId;
                     try {
-                        const response = await fetch(`/carrito/remove/${productoId}`, {
+                        const response = await fetch(`/api/carrito/remove/${productoId}`, {  // Actualizado
                             method: 'DELETE'
                         });
                         const result = await response.json();
@@ -106,7 +106,7 @@ const actualizarCarrito = async () => {
 // Vaciar el carrito
 const vaciarCarrito = async () => {
     try {
-        const response = await fetch('/carrito/clear', {
+        const response = await fetch('/api/carrito/clear', {  // Actualizado
             method: 'DELETE'
         });
         const result = await response.json();
