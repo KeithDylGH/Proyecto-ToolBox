@@ -76,12 +76,24 @@ async function cargarCarrito() {
             mostrarCarrito(data.carrito);
         } else {
             console.error('Error al obtener el carrito:', data.message);
+            // Maneja el caso de no autenticado sin redirigir
             if (data.message === 'No estás autenticado') {
-                window.location.href = '/login'; // Redirige a la página de login si no está autenticado
+                console.warn('Usuario no autenticado. Por favor, inicia sesión para ver el carrito.');
+                // Opcional: puedes mostrar un mensaje en la interfaz indicando al usuario que no está autenticado
+                mostrarMensajeDeError('No estás autenticado. Por favor, inicia sesión para ver el carrito.');
             }
         }
     } catch (error) {
         console.error('Error al intentar cargar el carrito:', error);
+    }
+}
+
+// Función opcional para mostrar un mensaje de error en la interfaz
+function mostrarMensajeDeError(mensaje) {
+    const mensajeElemento = document.getElementById('mensaje-error');
+    if (mensajeElemento) {
+        mensajeElemento.textContent = mensaje;
+        mensajeElemento.style.display = 'block';
     }
 }
 
