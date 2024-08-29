@@ -27,7 +27,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
         }
 
         // Asegúrate de que el carrito sea un array
-        if (!Array.isArray(usuario.carrito)) {
+        if (!usuario.carrito || !Array.isArray(usuario.carrito)) {
             usuario.carrito = [];
         }
 
