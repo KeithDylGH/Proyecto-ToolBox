@@ -64,16 +64,16 @@ const actualizarCarrito = async () => {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            credentials: 'same-origin' // Asegúrate de enviar las cookies de sesión
+            credentials: 'same-origin'
         });
 
         const result = await response.json();
+        console.log(result); // Depuración: Mostrar el resultado en consola
 
         if (result.success) {
             const carritoList = document.getElementById('carritoList');
-            carritoList.innerHTML = ''; // Limpiar la lista actual
+            carritoList.innerHTML = '';
 
-            // Iterar sobre los productos del carrito y agregarlos al DOM
             result.carrito.forEach(producto => {
                 const listItem = document.createElement('li');
                 listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
