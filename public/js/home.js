@@ -59,29 +59,6 @@ const mostrarNotificacion = (mensaje, tipo = 'success') => {
 document.addEventListener("DOMContentLoaded", () => {
     // Cargar productos en el carrito al iniciar la página
     cargarCarrito();
-
-    // Manejar el botón de logout si existe
-    const logoutButton = document.getElementById("logout-button");
-    if (logoutButton) {
-        logoutButton.addEventListener("click", async () => {
-            try {
-                const response = await fetch('/api/usuarios/logout', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.ok) {
-                    window.location.href = '/login'; // Redireccionar al login
-                } else {
-                    console.error('Error al cerrar sesión');
-                }
-            } catch (error) {
-                console.error('Error de red al intentar cerrar sesión:', error);
-            }
-        });
-    }
 });
 
 async function cargarCarrito() {
