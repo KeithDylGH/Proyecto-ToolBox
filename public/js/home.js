@@ -98,7 +98,7 @@ function mostrarMensajeDeError(mensaje) {
 }
 
 function mostrarCarrito(carrito) {
-    const carritoContainer = document.getElementById("carritoModal");
+    const carritoContainer = document.getElementById("carritoList");
     carritoContainer.innerHTML = ""; // Limpiar el contenedor antes de mostrar los productos
 
     carrito.forEach(producto => {
