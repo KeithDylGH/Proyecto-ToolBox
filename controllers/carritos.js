@@ -55,19 +55,19 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
 
 // Obtener productos del carrito
 carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    console.log('Usuario en la sesión:', req.session.user); // Log para depuración
     try {
         const user = req.session.user;
         if (!user) {
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        // Encuentra al usuario por su ID y popula el carrito
-        const usuario = await Usuario.findById(user._id).populate('carrito');
+        // Cambia de user._id a user.id para buscar en la base de datos
+        const usuario = await Usuario.findById(user.id).populate('carrito');
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Mapeamos el carrito para solo enviar los datos necesarios al frontend
         const carrito = usuario.carrito.map(producto => ({
             _id: producto._id,
             nombre: producto.nombre,
