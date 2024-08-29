@@ -58,12 +58,22 @@ const mostrarNotificacion = (mensaje, tipo = 'success') => {
 // Actualizar el carrito
 const actualizarCarrito = async () => {
     try {
-        const response = await fetch('/api/carrito/getCarrito', { credentials: 'same-origin' });
+        const response = await fetch('/api/carrito/getCarrito', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            credentials: 'same-origin' // Asegúrate de enviar las cookies de sesión
+        });
+
         const result = await response.json();
+
         if (result.success) {
             const carritoList = document.getElementById('carritoList');
             carritoList.innerHTML = ''; // Limpiar la lista actual
 
+            // Iterar sobre los productos del carrito y agregarlos al DOM
             result.carrito.forEach(producto => {
                 const listItem = document.createElement('li');
                 listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
@@ -80,7 +90,15 @@ const actualizarCarrito = async () => {
                 button.addEventListener('click', async (e) => {
                     const productoId = e.target.dataset.productoId;
                     try {
-                        const response = await fetch(`/api/carrito/remove/${productoId}`, { method: 'DELETE', credentials: 'same-origin' });
+                        const response = await fetch(`/api/carrito/remove/${productoId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            credentials: 'same-origin'
+                        });
+
                         const result = await response.json();
                         if (result.success) {
                             mostrarNotificacion('Producto eliminado del carrito');
@@ -95,7 +113,7 @@ const actualizarCarrito = async () => {
                 });
             });
         } else {
-            console.error(result.message);
+            console.error('Error al obtener el carrito:', result.message);
         }
     } catch (error) {
         console.error('Error al obtener el carrito:', error);
@@ -134,5 +152,5 @@ document.getElementById('vaciarCarrito').addEventListener('click', vaciarCarrito
 
 // Inicializar el carrito al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
-    actualizarCarrito();
+    actualizarCarrito();  // Llamar a la función para cargar los productos del carrito
 });
