@@ -62,8 +62,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        // Cambia de user._id a user.id para buscar en la base de datos
-        const usuario = await Usuario.findById(user.id).populate('carrito');
+        const usuario = await Usuario.findById(user._id).populate('carrito');
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
