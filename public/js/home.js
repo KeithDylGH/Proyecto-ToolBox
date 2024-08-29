@@ -56,69 +56,96 @@ const mostrarNotificacion = (mensaje, tipo = 'success') => {
 };
 
 // Actualizar el carrito
-const actualizarCarrito = async () => {
+document.addEventListener("DOMContentLoaded", () => {
+    // Cargar productos en el carrito al iniciar la página
+    cargarCarrito();
+
+    // Manejar el botón de logout si existe
+    const logoutButton = document.getElementById("logout-button");
+    if (logoutButton) {
+        logoutButton.addEventListener("click", async () => {
+            try {
+                const response = await fetch('/api/usuarios/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    window.location.href = '/login'; // Redireccionar al login
+                } else {
+                    console.error('Error al cerrar sesión');
+                }
+            } catch (error) {
+                console.error('Error de red al intentar cerrar sesión:', error);
+            }
+        });
+    }
+});
+
+async function cargarCarrito() {
     try {
         const response = await fetch('/api/carrito/getCarrito', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
             },
-            credentials: 'same-origin' // Importante para enviar cookies
+            credentials: 'include' // Importante para enviar cookies de sesión
         });
 
-        const result = await response.json();
-        console.log(result); // Depuración: Mostrar el resultado en consola
-
-        if (result.success) {
-            const carritoList = document.getElementById('carritoList');
-            carritoList.innerHTML = '';
-
-            result.carrito.forEach(producto => {
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
-                listItem.innerHTML = `
-                    <img src="${producto.imagen}" alt="${producto.nombre}" class="img-thumbnail" style="width: 50px; height: 50px;"/>
-                    <span>${producto.nombre}</span>
-                    <button class="btn btn-danger btn-sm" data-producto-id="${producto._id}">Eliminar</button>
-                `;
-                carritoList.appendChild(listItem);
-            });
-
-            // Agregar eventos de eliminación de productos
-            carritoList.querySelectorAll('button').forEach(button => {
-                button.addEventListener('click', async (e) => {
-                    const productoId = e.target.dataset.productoId;
-                    try {
-                        const response = await fetch(`/api/carrito/remove/${productoId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            },
-                            credentials: 'same-origin'
-                        });
-
-                        const result = await response.json();
-                        if (result.success) {
-                            mostrarNotificacion('Producto eliminado del carrito');
-                            actualizarCarrito(); // Actualiza la lista de productos en el carrito
-                        } else {
-                            mostrarNotificacion(result.message, 'error');
-                        }
-                    } catch (error) {
-                        console.error('Error al eliminar del carrito:', error);
-                        mostrarNotificacion('Error al eliminar del carrito', 'error');
-                    }
-                });
-            });
+        const data = await response.json();
+        if (response.ok) {
+            mostrarCarrito(data.carrito);
         } else {
-            console.error('Error al obtener el carrito:', result.message);
+            console.error('Error al obtener el carrito:', data.message);
+            if (data.message === 'No estás autenticado') {
+                window.location.href = '/login'; // Redirige a la página de login si no está autenticado
+            }
         }
     } catch (error) {
-        console.error('Error al obtener el carrito:', error);
+        console.error('Error al intentar cargar el carrito:', error);
     }
-};
+}
+
+function mostrarCarrito(carrito) {
+    const carritoContainer = document.getElementById("carrito-container");
+    carritoContainer.innerHTML = ""; // Limpiar el contenedor antes de mostrar los productos
+
+    carrito.forEach(producto => {
+        const productoElement = document.createElement("div");
+        productoElement.classList.add("producto");
+        productoElement.innerHTML = `
+            <img src="${producto.imagen}" alt="${producto.nombre}" />
+            <h3>${producto.nombre}</h3>
+            <p>Categoría: ${producto.categoria}</p>
+            <button onclick="eliminarDelCarrito('${producto._id}')">Eliminar</button>
+        `;
+        carritoContainer.appendChild(productoElement);
+    });
+}
+
+async function eliminarDelCarrito(productoId) {
+    try {
+        const response = await fetch(`/api/carrito/remove/${productoId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include' // Importante para enviar cookies de sesión
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert('Producto eliminado del carrito');
+            cargarCarrito(); // Actualizar el carrito después de eliminar un producto
+        } else {
+            console.error('Error al eliminar del carrito:', data.message);
+        }
+    } catch (error) {
+        console.error('Error de red al intentar eliminar del carrito:', error);
+    }
+}
 
 // Vaciar el carrito
 const vaciarCarrito = async () => {
@@ -149,8 +176,3 @@ document.querySelectorAll('.btn-agregar-carrito').forEach(button => {
 
 // Evento de clic para el botón "Vaciar Carrito"
 document.getElementById('vaciarCarrito').addEventListener('click', vaciarCarrito);
-
-// Inicializar el carrito al cargar la página
-document.addEventListener('DOMContentLoaded', () => {
-    actualizarCarrito();  // Llamar a la función para cargar los productos del carrito
-});

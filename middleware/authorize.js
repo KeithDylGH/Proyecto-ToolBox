@@ -2,6 +2,7 @@ module.exports = (rolesPermitidos) => {
     return (req, res, next) => {
         if (!req.session || !req.session.user) {
             console.log('Sesión no encontrada o usuario no autenticado');
+            console.log('Detalles de la sesión:', req.session);
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 

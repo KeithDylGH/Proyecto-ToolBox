@@ -15,7 +15,7 @@ async function buscarUsuarioPorNombre(nombreUsuario) {
     }
 }
 
-//Agregar al carrito
+// Agregar al carrito
 carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const { productoId } = req.body;
@@ -90,7 +90,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
     }
 });
 
-// Eliminar un producto del carrito, requiere autorización de usuario
+// Eliminar un producto del carrito
 carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const { productoId } = req.params;
@@ -105,17 +105,8 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Asegúrate de que el carrito sea un array
-        if (!Array.isArray(usuario.carrito)) {
-            usuario.carrito = [];
-        }
-
-        const productoIndex = usuario.carrito.indexOf(productoId);
-        if (productoIndex === -1) {
-            return res.status(400).json({ success: false, message: 'El producto no está en el carrito' });
-        }
-
-        usuario.carrito.splice(productoIndex, 1);
+        // Usar pull para eliminar el producto del carrito
+        usuario.carrito.pull(productoId);
         await usuario.save();
 
         res.json({ success: true, message: 'Producto eliminado del carrito' });
