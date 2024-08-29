@@ -11,6 +11,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
     try {
         const { productoId } = req.body;
         const user = req.session.user;
+        console.log('User in session before authorization:', req.session.user);
 
         if (!user) {
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
@@ -112,6 +113,30 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
         res.json({ success: true, message: 'Producto eliminado del carrito' });
     } catch (error) {
         console.error('Error al eliminar del carrito:', error);
+        res.status(500).json({ success: false, message: 'Error del servidor' });
+    }
+});
+
+// Vaciar el carrito de compras
+carritoRouter.delete('/clear', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    try {
+        const user = req.session.user;
+
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'No estás autenticado' });
+        }
+
+        const usuario = await Usuario.findById(user._id);
+        if (!usuario) {
+            return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+        }
+
+        usuario.carrito = [];
+        await usuario.save();
+
+        res.json({ success: true, message: 'Carrito vaciado' });
+    } catch (error) {
+        console.error('Error al vaciar el carrito:', error);
         res.status(500).json({ success: false, message: 'Error del servidor' });
     }
 });
