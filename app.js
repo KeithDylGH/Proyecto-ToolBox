@@ -110,17 +110,30 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     try {
         const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
-
         // Construir la URL completa de la imagen
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
                 const fileName = producto.imagen.data.split('/').pop();
                 producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
             }
-        });        
+        });
 
-        const CUsuario = req.session.user;
-        res.render('home/index', { CUsuario, productos });
+        const user = req.session.user;
+        let carrito = [];
+        if (user) {
+            const usuario = await CUsuario.findById(user._id).populate('carrito.producto');
+            if (usuario) {
+                carrito = usuario.carrito.map(item => ({
+                    _id: item.producto._id,
+                    nombre: item.producto.nombre,
+                    categoria: item.producto.categoria,
+                    imagen: item.producto.imagen,
+                    cantidad: item.cantidad
+                }));
+            }
+        }
+
+        res.render('home/index', { CUsuario: user, productos, carrito });
     } catch (error) {
         console.error('Error al obtener productos aleatorios:', error);
         res.status(500).send('Error al obtener productos');

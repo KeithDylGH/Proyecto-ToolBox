@@ -64,7 +64,7 @@ const actualizarCarrito = async () => {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            credentials: 'same-origin'
+            credentials: 'same-origin' // Importante para enviar cookies
         });
 
         const result = await response.json();
