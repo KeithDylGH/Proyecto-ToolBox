@@ -1,5 +1,6 @@
 const express = require('express');
 const Usuario = require('../models/usuario');
+const buscarUsuario = require('./buscarUsuario');
 const Producto = require('../models/producto');
 const authorize = require('../middleware/authorize');
 
@@ -15,7 +16,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await Usuario.findById(user._id);
+        const usuario = await buscarUsuario.buscarUsuarioPorNombre(user.usuario);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
