@@ -21,19 +21,20 @@ document.addEventListener('DOMContentLoaded', function() {
 // Añadir producto al carrito
 const agregarAlCarrito = async (productoId) => {
     try {
-        const response = await fetch('/api/carrito/add', {  // Actualizado
+        const response = await fetch('/api/carrito/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ productoId })
+            body: JSON.stringify({ productoId }),
+            credentials: 'same-origin' // Asegura que las cookies de sesión se envíen con la solicitud
         });
 
         const result = await response.json();
         if (result.success) {
             mostrarNotificacion('Producto agregado al carrito');
-            actualizarCarrito(); // Actualiza la lista de productos en el carrito
+            actualizarCarrito();
         } else {
             mostrarNotificacion(result.message, 'error');
         }

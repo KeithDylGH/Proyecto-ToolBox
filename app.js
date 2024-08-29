@@ -363,4 +363,4 @@ app.use('/api/upload', subirProducto);   // Rutas para subir productos
 app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
-app.use('/api/carrito', carritoRouter);
+app.use('/api/carrito', authorize(['user', 'admin', 'boss']), carritoRouter);
