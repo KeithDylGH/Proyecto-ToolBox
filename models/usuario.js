@@ -38,14 +38,7 @@ const usuarioSchema = new mongoose.Schema({
         enum: ['user', 'admin', 'boss'],
         default: 'user' // Asegúrate de que el valor por defecto sea correcto
     },
-    carrito: {
-        productos: [
-            {
-                producto: { type: mongoose.Schema.Types.ObjectId, ref: 'Producto' },
-                cantidad: { type: Number, default: 1 }
-            }
-        ]
-    }
+    carrito: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Producto' }]
 });
 
 // Opcional: configurar opciones adicionales del esquema

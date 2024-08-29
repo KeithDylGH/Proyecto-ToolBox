@@ -15,12 +15,11 @@ async function buscarUsuarioPorNombre(nombreUsuario) {
     }
 }
 
-// Agregar producto al carrito
+//Agregar al carrito
 carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const { productoId } = req.body;
         const user = req.session.user;
-        console.log('User in session before authorization:', req.session.user);
 
         if (!user) {
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
@@ -37,7 +36,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
         }
 
         // Asegúrate de que el carrito sea un array
-        if (!usuario.carrito || !Array.isArray(usuario.carrito)) {
+        if (!Array.isArray(usuario.carrito)) {
             usuario.carrito = [];
         }
 
@@ -55,7 +54,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             _id: producto._id,
             nombre: producto.nombre,
             categoria: producto.categoria,
-            imagen: producto.imagen // Usa la URL directamente si es un string
+            imagen: producto.imagen
         }});
     } catch (error) {
         console.error('Error al agregar al carrito:', error);
@@ -101,7 +100,7 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await Usuario.findById(user._id); // Cambiado de buscarUsuarioPorNombre a findById
+        const usuario = await Usuario.findById(user._id);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
