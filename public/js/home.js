@@ -86,7 +86,7 @@ async function cargarCarrito() {
 }
 
 function mostrarCarrito(carrito) {
-    const carritoContainer = document.getElementById("carrito-container");
+    const carritoContainer = document.getElementById("carritoModal");
     carritoContainer.innerHTML = ""; // Limpiar el contenedor antes de mostrar los productos
 
     carrito.forEach(producto => {
