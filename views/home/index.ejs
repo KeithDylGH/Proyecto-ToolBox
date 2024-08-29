@@ -63,14 +63,9 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>
                               <div class="modal-body">
-                                <ul id="carritoList">
-                                  <% carrito.forEach(item => { %>
-                                      <li>
-                                          <img src="<%= item.imagen %>" alt="<%= item.nombre %>" class="img-thumbnail" style="width: 50px; height: 50px;">
-                                          <span><%= item.nombre %> (x<%= item.cantidad %>)</span>
-                                      </li>
-                                  <% }) %>
-                              </ul>
+                                <ul id="carritoList" class="list-group">
+                                  <!-- Aquí se cargarán dinámicamente los productos del carrito -->
+                                </ul>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
