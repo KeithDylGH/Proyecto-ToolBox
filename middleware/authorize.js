@@ -4,7 +4,7 @@ module.exports = function authorize(roles = []) {
     }
 
     return (req, res, next) => {
-        console.log('Session object:', req.session);  // Log completo de la sesión
+        console.log('Session object:', req.session);
         console.log('Session user:', req.session.user);
 
         const user = req.session.user;
