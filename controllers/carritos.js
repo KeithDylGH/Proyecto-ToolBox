@@ -53,7 +53,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-// Obtener productos del carrito, requiere autorización de usuario
+// Obtener productos del carrito
 carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const user = req.session.user;
@@ -61,6 +61,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
+        // Cambia esto para asegurar que estás usando `_id`
         const usuario = await Usuario.findById(user._id).populate('carrito');
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
@@ -70,7 +71,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             _id: producto._id,
             nombre: producto.nombre,
             categoria: producto.categoria,
-            imagen: producto.imagen // Usa la URL directamente si es un string
+            imagen: producto.imagen
         }));
 
         res.json({ success: true, carrito });

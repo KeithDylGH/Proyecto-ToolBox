@@ -58,7 +58,7 @@ const mostrarNotificacion = (mensaje, tipo = 'success') => {
 // Actualizar el carrito
 const actualizarCarrito = async () => {
     try {
-        const response = await fetch('/api/carrito/getCarrito');  // Actualizado
+        const response = await fetch('/api/carrito/getCarrito', { credentials: 'same-origin' });
         const result = await response.json();
         if (result.success) {
             const carritoList = document.getElementById('carritoList');
@@ -80,9 +80,7 @@ const actualizarCarrito = async () => {
                 button.addEventListener('click', async (e) => {
                     const productoId = e.target.dataset.productoId;
                     try {
-                        const response = await fetch(`/api/carrito/remove/${productoId}`, {  // Actualizado
-                            method: 'DELETE'
-                        });
+                        const response = await fetch(`/api/carrito/remove/${productoId}`, { method: 'DELETE', credentials: 'same-origin' });
                         const result = await response.json();
                         if (result.success) {
                             mostrarNotificacion('Producto eliminado del carrito');
