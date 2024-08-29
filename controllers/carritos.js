@@ -1,10 +1,19 @@
 const express = require('express');
 const Usuario = require('../models/usuario');
-const buscarUsuario = require('./buscarUsuario');
 const Producto = require('../models/producto');
 const authorize = require('../middleware/authorize');
 
 const carritoRouter = express.Router();
+
+// Función para buscar usuario por nombre
+async function buscarUsuarioPorNombre(nombreUsuario) {
+    try {
+        const usuario = await Usuario.findOne({ usuario: nombreUsuario });
+        return usuario;
+    } catch (error) {
+        throw new Error('Error al buscar usuario por nombre de usuario');
+    }
+}
 
 // Agregar producto al carrito
 carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
@@ -17,7 +26,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await buscarUsuario.buscarUsuarioPorNombre(user.usuario);
+        const usuario = await buscarUsuarioPorNombre(user.usuario);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
@@ -59,7 +68,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
     console.log('Usuario en la sesión:', req.session.user); // Log para depuración
     try {
         const user = req.session.user;
-        if (!user) {
+        if (!user || !user._id) {
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
@@ -92,7 +101,7 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await Usuario.findById(user._id);
+        const usuario = await Usuario.findById(user._id); // Cambiado de buscarUsuarioPorNombre a findById
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
