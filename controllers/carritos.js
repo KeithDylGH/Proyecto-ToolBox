@@ -9,7 +9,7 @@ const carritoRouter = express.Router();
 carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const { productoId } = req.body;
-        const user = res.locals.usuario;
+        const user = req.session.user;
 
         if (!user) {
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
@@ -55,7 +55,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
 // Obtener productos del carrito, requiere autorización de usuario
 carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const user = res.locals.usuario;
+        const user = req.session.user;
         if (!user) {
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
@@ -83,7 +83,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
 carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const { productoId } = req.params;
-        const user = res.locals.usuario;
+        const user = req.session.user;
 
         if (!user) {
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
