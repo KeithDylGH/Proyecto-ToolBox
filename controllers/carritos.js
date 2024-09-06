@@ -73,8 +73,13 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        await usuario.populate('carrito.producto').execPopulate();
-        const carrito = usuario.carrito.map(item => ({
+        // Usa populate directamente en la consulta
+        const usuarioConCarrito = await usuario.populate({
+            path: 'carrito.producto',
+            model: 'Producto'
+        }).execPopulate();
+
+        const carrito = usuarioConCarrito.carrito.map(item => ({
             _id: item.producto._id,
             nombre: item.producto.nombre,
             categoria: item.producto.categoria,
