@@ -108,6 +108,7 @@ function mostrarCarrito(carrito) {
             <img src="${producto.imagen}" alt="${producto.nombre}" />
             <h3>${producto.nombre}</h3>
             <p>Categoría: ${producto.categoria}</p>
+            <p>Cantidad: ${producto.cantidad}</p>
             <button onclick="eliminarDelCarrito('${producto._id}')">Eliminar</button>
         `;
         carritoContainer.appendChild(productoElement);
