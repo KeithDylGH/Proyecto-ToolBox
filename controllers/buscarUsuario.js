@@ -1,4 +1,3 @@
-// controllers/buscarUsuario.js
 const CUsuario = require('../models/usuario');
 
 async function buscarUsuarioPorCorreo(correo) {

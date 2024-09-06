@@ -91,74 +91,16 @@ function mostrarMensajeDeError(mensaje) {
 
 function mostrarCarrito(carrito) {
     const carritoContainer = document.getElementById("carritoList");
-    carritoContainer.innerHTML = "";
-
-    carrito.forEach(producto => {
-        const productoElement = document.createElement("li");
-        productoElement.classList.add("list-group-item");
-        productoElement.innerHTML = `
-            <img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: auto;" />
-            <h5>${producto.nombre}</h5>
-            <p>Categoría: ${producto.categoria}</p>
-            <p>Cantidad: ${producto.cantidad}</p>
-            <button class="btn btn-danger" onclick="eliminarDelCarrito('${producto._id}')">Eliminar</button>
+    carritoContainer.innerHTML = '';
+    carrito.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.classList.add('carrito-item');
+        itemElement.innerHTML = `
+            <img src="${item.imagen}" alt="${item.nombre}" />
+            <p>${item.nombre}</p>
+            <p>${item.categoria}</p>
+            <p>Cantidad: ${item.cantidad}</p>
         `;
-        carritoContainer.appendChild(productoElement);
+        carritoContainer.appendChild(itemElement);
     });
-}
-
-async function eliminarDelCarrito(productoId) {
-    try {
-        const response = await fetch(`/api/carrito/remove/${productoId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include'
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            mostrarNotificacion('Producto eliminado del carrito');
-            cargarCarrito();
-        } else {
-            console.error('Error al eliminar del carrito:', data.message);
-        }
-    } catch (error) {
-        console.error('Error de red al intentar eliminar del carrito:', error);
-    }
-}
-
-// Vaciar el carrito
-const vaciarCarrito = async () => {
-    try {
-        const response = await fetch('/api/carrito/clear', {
-            method: 'DELETE',
-            credentials: 'include'
-        });
-        const result = await response.json();
-        if (result.success) {
-            mostrarNotificacion('Carrito vaciado');
-            cargarCarrito();
-        } else {
-            mostrarNotificacion(result.message, 'error');
-        }
-    } catch (error) {
-        console.error('Error al vaciar el carrito:', error);
-        mostrarNotificacion('Error al vaciar el carrito', 'error');
-    }
-};
-
-// Evento de clic para los botones "Agregar al Carrito"
-document.querySelectorAll('.btn-agregar-carrito').forEach(button => {
-    button.addEventListener('click', (e) => {
-        const productoId = e.target.dataset.productoId;
-        agregarAlCarrito(productoId);
-    });
-});
-
-// Evento de clic para el botón "Vaciar Carrito"
-const botonVaciarCarrito = document.getElementById('vaciarCarrito');
-if (botonVaciarCarrito) {
-    botonVaciarCarrito.addEventListener('click', vaciarCarrito);
 }

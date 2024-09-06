@@ -1,7 +1,7 @@
 const express = require('express');
 const Producto = require('../models/producto');
 const authorize = require('../middleware/authorize');
-const { buscarUsuarioPorCorreo } = require('./buscarUsuario'); // Importamos la función
+const { buscarUsuarioPorCorreo } = require('./buscarUsuario');
 
 const carritoRouter = express.Router();
 
@@ -11,7 +11,6 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
         const { productoId } = req.body;
         const user = req.session.user;
 
-        // Verifica si el usuario está autenticado
         if (!user) {
             console.log('No hay usuario en la sesión.');
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
@@ -19,30 +18,24 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
 
         console.log('Correo del usuario en sesión:', user.correo);
 
-        // Buscar al usuario por correo
         const usuario = await buscarUsuarioPorCorreo(user.correo);
         if (!usuario) {
             console.log('Usuario no encontrado:', user.correo);
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Buscar el producto
         const producto = await Producto.findById(productoId);
         if (!producto) {
             return res.status(404).json({ success: false, message: 'Producto no encontrado' });
         }
 
-        // Verificar si el producto ya está en el carrito
         const productoEnCarrito = usuario.carrito.find(p => p.producto.toString() === productoId);
         if (productoEnCarrito) {
-            // Incrementa la cantidad si el producto ya está en el carrito
             productoEnCarrito.cantidad += 1;
         } else {
-            // Agrega el producto al carrito si no está presente
             usuario.carrito.push({ producto: productoId, cantidad: 1 });
         }
 
-        // Guardar los cambios en el usuario
         await usuario.save();
 
         res.json({
@@ -69,13 +62,11 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        // Buscar al usuario por correo
         const usuario = await buscarUsuarioPorCorreo(user.correo);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Poblar productos del carrito
         await usuario.populate('carrito.producto').execPopulate();
         const carrito = usuario.carrito.map(item => ({
             _id: item.producto._id,
@@ -102,13 +93,11 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        // Buscar al usuario por correo
         const usuario = await buscarUsuarioPorCorreo(user.correo);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Filtrar productos del carrito
         usuario.carrito = usuario.carrito.filter(p => p.producto.toString() !== productoId);
         await usuario.save();
 
@@ -128,7 +117,6 @@ carritoRouter.delete('/clear', authorize(['user', 'admin', 'boss']), async (req,
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        // Buscar al usuario por correo
         const usuario = await buscarUsuarioPorCorreo(user.correo);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
