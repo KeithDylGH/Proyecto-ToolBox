@@ -1,16 +1,14 @@
-// notificacion.js
-
 function showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
+    const notification = document.querySelector('.notification');
+    notification.className = `notification ${type}`;
     notification.textContent = message;
-    notification.className = `notification ${type}`; // Cambiar clase según el tipo de notificación
-    notification.style.display = 'block'; // Asegurarse de que la notificación sea visible
+    notification.style.display = 'block';
     setTimeout(() => {
-        notification.style.display = 'none'; // Ocultar notificación después de 3 segundos
+        notification.style.display = 'none';
     }, 3000);
 }
 
-// Mostrar notificación de éxito o error basado en parámetros de la URL
+// Mostrar notificación al cargar la página basado en parámetros de URL
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const successMessage = urlParams.get('success');

@@ -1,5 +1,4 @@
 /* notificacion.css */
-
 .notification {
   position: fixed;
   top: 10px;
@@ -13,9 +12,9 @@
 }
 
 .notification.success {
-  background-color: #4CAF50; /* Verde */
+  background-color: #4CAF50; /* Verde para éxito */
 }
 
 .notification.error {
-  background-color: #F44336; /* Rojo */
+  background-color: #F44336; /* Rojo para error */
 }
