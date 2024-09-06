@@ -154,6 +154,10 @@ app.get('/cliente', (req, res) => {
 
 // Rutas del carrito
 app.get('/cuenta/carrito', async (req, res) => {
+    
+    if (!req.session.user) {
+        return res.redirect('/login'); // Redirige si el usuario no está autenticado
+      }
       res.render('account/cuenta/cliente/carrito/index');
 }); 
 
