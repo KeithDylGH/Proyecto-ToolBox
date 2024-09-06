@@ -40,24 +40,16 @@
           <h1>Tu Carrito</h1>
 
           <!-- Lista de productos en el carrito -->
-          <% if (user.carrito.length > 0) { %>
+          <% if (user && user.carrito && user.carrito.length > 0) { %>
             <ul>
               <% user.carrito.forEach(producto => { %>
                 <li>
-                  <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>" width="50">
-                  <h3><%= producto.nombre %></h3>
-                  <p>Categoría: <%= producto.categoria %></p>
-                  <p>Cantidad: <%= producto.cantidad %></p>
-                  <p>Precio: $<%= producto.precio %></p>
-                  <!-- Botón para eliminar una unidad del producto -->
-                  <form action="/carrito/eliminar/<%= producto._id %>" method="post">
-                    <button type="submit" class="btn btn-danger">Eliminar 1 Unidad</button>
-                  </form>
+                  <%= producto.nombre %> - <%= producto.cantidad %> unidades
                 </li>
-              <% }) %>
+              <% }); %>
             </ul>
           <% } else { %>
-            <p>Tu carrito está vacío.</p>
+            <p>No hay productos en el carrito.</p>
           <% } %>
 
           <!-- Botón para vaciar el carrito -->
