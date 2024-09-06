@@ -77,7 +77,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
         const usuarioConCarrito = await usuario.populate({
             path: 'carrito.producto',
             model: 'Producto'
-        }).execPopulate();
+        });
 
         const carrito = usuarioConCarrito.carrito.map(item => ({
             _id: item.producto._id,
