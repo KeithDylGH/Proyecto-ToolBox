@@ -42,24 +42,12 @@
           <!-- Mostrar el carrito en cualquier página -->
           <% if (user && user.carrito && user.carrito.length > 0) { %>
             <ul id="carritoList" class="list-group">
-              <% user.carrito.forEach(item => { %>
-                <li class="list-group-item">
-                  <div class="d-flex align-items-center">
-                    <img src="<%= item.imagen.data %>" alt="<%= item.nombre %>" class="img-thumbnail me-3" style="width: 80px; height: auto;" />
-                    <div>
-                      <h5 class="mb-1 text-black"><%= item.nombre %></h5>
-                      <p class="mb-1 text-black"><%= item.categoria %></p>
-                      <p class="mb-1 text-black">Cantidad: <%= item.cantidad %></p>
-                    </div>
-                    <button class="btn btn-danger ms-auto btn-eliminar-producto" data-producto-id="<%= item._id %>">X</button>
-                  </div>
-                </li>
-              <% }); %>
+              <!-- Aquí se llenará dinámicamente con JavaScript -->
             </ul>
             <button id="vaciarCarrito" class="btn btn-danger">Vaciar Carrito</button>
           <% } else { %>
             <p>No hay productos en el carrito.</p>
-          <% } %>          
+          <% } %>         
 
           <!-- Botón para vaciar el carrito -->
           <% if (user && user.carrito && user.carrito.length > 0) { %>
