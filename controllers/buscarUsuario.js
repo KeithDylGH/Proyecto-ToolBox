@@ -6,6 +6,7 @@ async function buscarUsuarioPorCorreo(correo) {
         const usuario = await CUsuario.findOne({ correo });
         return usuario;
     } catch (error) {
+        console.error('Error al buscar usuario por correo:', error);
         throw new Error('Error al buscar usuario por correo');
     }
 }
