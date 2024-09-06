@@ -29,6 +29,7 @@ const agregarAlCarrito = async (productoId) => {
         });
 
         const result = await response.json();
+        console.log('Respuesta al agregar al carrito:', result);
         if (result.success) {
             mostrarNotificacion('Producto agregado al carrito');
             cargarCarrito();
@@ -68,6 +69,7 @@ async function cargarCarrito() {
         });
 
         const data = await response.json();
+        console.log('Respuesta al cargar carrito:', data);
         if (response.ok) {
             mostrarCarrito(data.carrito);
         } else {

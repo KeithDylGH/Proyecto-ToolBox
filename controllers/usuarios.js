@@ -13,11 +13,14 @@ userRouter.post('/registrar', async (req, res) => {
     try {
         // Verificar si todos los campos obligatorios están presentes
         if (!nombre || !apellido || !usuario || !correo || !password || !numero || !cedula) {
+            console.log('Campos obligatorios faltantes:', { nombre, apellido, usuario, correo, password, numero, cedula });
             return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
         // Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
         const existingUser = await User.findOne({ $or: [{ usuario }, { correo }] });
+        console.log('Usuario existente:', existingUser);
+
         if (existingUser) {
             return res.status(400).json({ error: 'Usuario o correo electrónico ya registrado.' });
         }
@@ -39,6 +42,7 @@ userRouter.post('/registrar', async (req, res) => {
 
         // Guardar el nuevo usuario en la base de datos
         const usuarioGuardado = await newUser.save();
+        console.log('Usuario guardado:', usuarioGuardado);
 
         // Crear nuevo carrito para el usuario recién creado
         const newCarrito = new Carrito({
@@ -48,6 +52,7 @@ userRouter.post('/registrar', async (req, res) => {
 
         // Guardar el nuevo carrito en la base de datos
         await newCarrito.save();
+        console.log('Carrito creado:', newCarrito);
 
         res.status(201).json({ mensaje: 'Usuario y carrito creados correctamente' });
 
@@ -63,15 +68,20 @@ userRouter.post('/login', async (req, res) => {
 
     try {
         if (!usuario || !password) {
+            console.log('Campos obligatorios faltantes:', { usuario, password });
             return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
         const user = await User.findOne({ usuario });
+        console.log('Usuario encontrado:', user);
+
         if (!user) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
 
         const passwordCorrecto = await bcrypt.compare(password, user.password);
+        console.log('Contraseña correcta:', passwordCorrecto);
+
         if (!passwordCorrecto) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
@@ -82,6 +92,8 @@ userRouter.post('/login', async (req, res) => {
             usuario: user.usuario,
             rol: user.rol
         };
+
+        console.log('Usuario autenticado y sesión creada:', req.session.user);
 
         res.json({
             success: true,
@@ -97,6 +109,7 @@ userRouter.post('/login', async (req, res) => {
 userRouter.get('/', async (req, res) => {
     try {
         const users = await User.find();
+        console.log('Usuarios encontrados:', users);
         res.json(users);
     } catch (error) {
         console.error('Error al buscar usuarios:', error);
@@ -104,17 +117,16 @@ userRouter.get('/', async (req, res) => {
     }
 });
 
-
+// Endpoint para cerrar sesión
 userRouter.post('/logout', (req, res) => {
-    // Aquí puedes destruir la sesión del usuario
     req.session.destroy(err => {
         if (err) {
+            console.error('Error al cerrar sesión:', err);
             return res.redirect('/'); // o manejar el error como desees
         }
         res.clearCookie('connect.sid'); // opcional, dependiendo de cómo manejes las cookies
         res.redirect('/login'); // redirige a la página de inicio de sesión después de cerrar sesión
     });
 });
-
 
 module.exports = userRouter;

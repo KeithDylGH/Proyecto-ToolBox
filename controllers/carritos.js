@@ -11,6 +11,8 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
         const { productoId } = req.body;
         const user = req.session.user;
 
+        console.log('Usuario en sesión:', user);
+
         if (!user) {
             console.log('No hay usuario en la sesión.');
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
@@ -19,6 +21,8 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
         console.log('Correo del usuario en sesión:', user.correo);
 
         const usuario = await buscarUsuarioPorCorreo(user.correo);
+        console.log('Usuario encontrado:', usuario);
+
         if (!usuario) {
             console.log('Usuario no encontrado:', user.correo);
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
@@ -62,7 +66,11 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
+        console.log('Correo del usuario en sesión:', user.correo);
+
         const usuario = await buscarUsuarioPorCorreo(user.correo);
+        console.log('Usuario encontrado:', usuario);
+
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
@@ -93,7 +101,11 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
+        console.log('Correo del usuario en sesión:', user.correo);
+
         const usuario = await buscarUsuarioPorCorreo(user.correo);
+        console.log('Usuario encontrado:', usuario);
+
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
@@ -117,7 +129,11 @@ carritoRouter.delete('/clear', authorize(['user', 'admin', 'boss']), async (req,
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
+        console.log('Correo del usuario en sesión:', user.correo);
+
         const usuario = await buscarUsuarioPorCorreo(user.correo);
+        console.log('Usuario encontrado:', usuario);
+
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
