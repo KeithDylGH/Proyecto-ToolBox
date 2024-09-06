@@ -1,7 +1,6 @@
-//Entrar a la pagina Log-in
+// Entrar a la página Log-in
 document.addEventListener('DOMContentLoaded', function() {
     const botonIniciarSesion = document.getElementById('login');
-    console.log(botonIniciarSesion); // Asegúrate de que no sea null
     if (botonIniciarSesion) {
         botonIniciarSesion.addEventListener('click', function() {
             window.location.href = '/login/';
@@ -9,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const tienda = document.getElementById('categoria1');
-    console.log(tienda); // Asegúrate de que no sea null
     if (tienda) {
         tienda.addEventListener('click', function() {
             window.location.href = '/tienda/';
@@ -17,8 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-//carrito de compra
-// Añadir producto al carrito
+// Agregar producto al carrito
 const agregarAlCarrito = async (productoId) => {
     try {
         const response = await fetch('/api/carrito/add', {
@@ -28,13 +25,13 @@ const agregarAlCarrito = async (productoId) => {
                 'Accept': 'application/json'
             },
             body: JSON.stringify({ productoId }),
-            credentials: 'same-origin' // Asegura que las cookies de sesión se envíen con la solicitud
+            credentials: 'same-origin'
         });
 
         const result = await response.json();
         if (result.success) {
             mostrarNotificacion('Producto agregado al carrito');
-            actualizarCarrito();
+            cargarCarrito();
         } else {
             mostrarNotificacion(result.message, 'error');
         }
@@ -55,9 +52,8 @@ const mostrarNotificacion = (mensaje, tipo = 'success') => {
     }, 3000);
 };
 
-// Actualizar el carrito
+// Cargar productos en el carrito al iniciar la página
 document.addEventListener("DOMContentLoaded", () => {
-    // Cargar productos en el carrito al iniciar la página
     cargarCarrito();
 });
 
@@ -68,7 +64,7 @@ async function cargarCarrito() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            credentials: 'include' // Importante para enviar cookies de sesión
+            credentials: 'include'
         });
 
         const data = await response.json();
@@ -76,10 +72,7 @@ async function cargarCarrito() {
             mostrarCarrito(data.carrito);
         } else {
             console.error('Error al obtener el carrito:', data.message);
-            // Maneja el caso de no autenticado sin redirigir
             if (data.message === 'No estás autenticado') {
-                console.warn('Usuario no autenticado. Por favor, inicia sesión para ver el carrito.');
-                // Opcional: puedes mostrar un mensaje en la interfaz indicando al usuario que no está autenticado
                 mostrarMensajeDeError('No estás autenticado. Por favor, inicia sesión para ver el carrito.');
             }
         }
@@ -88,7 +81,6 @@ async function cargarCarrito() {
     }
 }
 
-// Función opcional para mostrar un mensaje de error en la interfaz
 function mostrarMensajeDeError(mensaje) {
     const mensajeElemento = document.getElementById('mensaje-error');
     if (mensajeElemento) {
@@ -99,17 +91,17 @@ function mostrarMensajeDeError(mensaje) {
 
 function mostrarCarrito(carrito) {
     const carritoContainer = document.getElementById("carritoList");
-    carritoContainer.innerHTML = ""; // Limpiar el contenedor antes de mostrar los productos
+    carritoContainer.innerHTML = "";
 
     carrito.forEach(producto => {
-        const productoElement = document.createElement("div");
-        productoElement.classList.add("producto");
+        const productoElement = document.createElement("li");
+        productoElement.classList.add("list-group-item");
         productoElement.innerHTML = `
-            <img src="${producto.imagen}" alt="${producto.nombre}" />
-            <h3>${producto.nombre}</h3>
+            <img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: auto;" />
+            <h5>${producto.nombre}</h5>
             <p>Categoría: ${producto.categoria}</p>
             <p>Cantidad: ${producto.cantidad}</p>
-            <button onclick="eliminarDelCarrito('${producto._id}')">Eliminar</button>
+            <button class="btn btn-danger" onclick="eliminarDelCarrito('${producto._id}')">Eliminar</button>
         `;
         carritoContainer.appendChild(productoElement);
     });
@@ -122,13 +114,13 @@ async function eliminarDelCarrito(productoId) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            credentials: 'include' // Importante para enviar cookies de sesión
+            credentials: 'include'
         });
 
         const data = await response.json();
         if (response.ok) {
-            alert('Producto eliminado del carrito');
-            cargarCarrito(); // Actualizar el carrito después de eliminar un producto
+            mostrarNotificacion('Producto eliminado del carrito');
+            cargarCarrito();
         } else {
             console.error('Error al eliminar del carrito:', data.message);
         }
@@ -140,13 +132,14 @@ async function eliminarDelCarrito(productoId) {
 // Vaciar el carrito
 const vaciarCarrito = async () => {
     try {
-        const response = await fetch('/api/carrito/clear', {  // Actualizado
-            method: 'DELETE'
+        const response = await fetch('/api/carrito/clear', {
+            method: 'DELETE',
+            credentials: 'include'
         });
         const result = await response.json();
         if (result.success) {
             mostrarNotificacion('Carrito vaciado');
-            actualizarCarrito(); // Actualiza la lista de productos en el carrito
+            cargarCarrito();
         } else {
             mostrarNotificacion(result.message, 'error');
         }
@@ -165,4 +158,7 @@ document.querySelectorAll('.btn-agregar-carrito').forEach(button => {
 });
 
 // Evento de clic para el botón "Vaciar Carrito"
-document.getElementById('vaciarCarrito').addEventListener('click', vaciarCarrito);
+const botonVaciarCarrito = document.getElementById('vaciarCarrito');
+if (botonVaciarCarrito) {
+    botonVaciarCarrito.addEventListener('click', vaciarCarrito);
+}
