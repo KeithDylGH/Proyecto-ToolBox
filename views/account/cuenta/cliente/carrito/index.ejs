@@ -7,18 +7,11 @@
   <title>ToolBox - Cuenta/Cliente Carrito</title>
 
   <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png">
-
   <link rel="stylesheet" href="/css/cuenta.css">
   <link rel="stylesheet" href="/css/carrito.css">
   <link rel="stylesheet" href="/css/notificacion.css">
-
-  <!--BOOTSTRAP-->
-   <!--  <link rel="stylesheet" href="/bootstrap-5.3.3-dist/css/bootstrap.rtl.min.css">
-    <script src="/bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script> -->
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap"
@@ -30,50 +23,53 @@
   <div>
     <section>
       <!--Sidebar-->
-
       <div class="sidebar">
         <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
-
         <a href="#" id="client">Inicio</a>
         <a href="#general" id="pagBtn">Ir a la Pág. Principal</a>
         <a class="active sidebar_btn " href="#carrito" id="carritoBtn">Carrito</a>
         <a href="#contacto" id="contactoBtn">Servicio al Cliente</a>
         <a href="#configuracion" id="configuracionBtn">Configuración</a>
-
-        <button class="Log-Out" id="logout"><a href="#">Cerrar sesion
-          </a></button>
+        <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>
       </div>
-
     </section>
 
     <section class="interfaz">
       <div class="container">
         <div class="content">
-          <!-- index.ejs dentro de views/account/cuenta/cliente/carrito -->
           <h1>Tu Carrito</h1>
-          <% if (carrito && carrito.productos.length > 0) { %>
-              <ul>
-                  <% carrito.productos.forEach(item => { %>
-                      <li>
-                          <h3><%= item.productoId.nombre %></h3>
-                          <p>Cantidad: <%= item.cantidad %></p>
-                          <p>Precio: <%= item.productoId.precio %></p>
-                          <form action="/api/carrito/remove/<%= item.productoId._id %>" method="post">
-                              <button type="submit">Eliminar</button>
-                          </form>
-                      </li>
-                  <% }); %>
-              </ul>
+
+          <!-- Lista de productos en el carrito -->
+          <% if (user.carrito.length > 0) { %>
+            <ul>
+              <% user.carrito.forEach(producto => { %>
+                <li>
+                  <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>" width="50">
+                  <h3><%= producto.nombre %></h3>
+                  <p>Categoría: <%= producto.categoria %></p>
+                  <p>Cantidad: <%= producto.cantidad %></p>
+                  <p>Precio: $<%= producto.precio %></p>
+                  <!-- Botón para eliminar una unidad del producto -->
+                  <form action="/carrito/eliminar/<%= producto._id %>" method="post">
+                    <button type="submit" class="btn btn-danger">Eliminar 1 Unidad</button>
+                  </form>
+                </li>
+              <% }) %>
+            </ul>
           <% } else { %>
-              <p>Tu carrito está vacío.</p>
+            <p>Tu carrito está vacío.</p>
+          <% } %>
+
+          <!-- Botón para vaciar el carrito -->
+          <% if (user.carrito.length > 0) { %>
+            <form action="/carrito/vaciar" method="POST">
+              <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
+            </form>
+            <a href="/checkout" class="btn btn-primary">Proceder al Pago</a>
           <% } %>
         </div>
-        <form action="/api/carrito/vaciar" method="POST">
-            <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
-        </form>
-        <a href="/checkout" class="btn btn-primary">Proceder al Pago</a>
-    </div>
-    </section>            
+      </div>
+    </section>
 
   </div>
 
@@ -84,20 +80,16 @@
     </div>
   </footer>
 
-  </div>
-
-
   <script src="/js/cuenta.js"></script>
   <script src="/js/carritoC.js"></script>
   <script src="/js/client.js"></script>
   <script src="/js/logout.js"></script>
-  <script src="/js/carroDeCompra.js"></script>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7Hfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
