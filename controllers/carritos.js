@@ -64,9 +64,9 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        console.log('Correo del usuario en sesión:', user.correo);
-
-        const usuario = await buscarUsuarioPorCorreo(user.correo);
+        console.log('Username del usuario en sesión:', user.usuario);
+        
+        const usuario = await buscarUsuarioPorNombre(user.usuario);
         console.log('Usuario encontrado:', usuario);
 
         if (!usuario) {
@@ -99,9 +99,9 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        console.log('Correo del usuario en sesión:', user.correo);
+        console.log('Username del usuario en sesión:', user.usuario);
 
-        const usuario = await buscarUsuarioPorCorreo(user.correo);
+        const usuario = await buscarUsuarioPorNombre(user.usuario);
         console.log('Usuario encontrado:', usuario);
 
         if (!usuario) {
@@ -127,9 +127,9 @@ carritoRouter.delete('/clear', authorize(['user', 'admin', 'boss']), async (req,
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        console.log('Correo del usuario en sesión:', user.correo);
+        console.log('Username del usuario en sesión:', user.usuario);
 
-        const usuario = await buscarUsuarioPorCorreo(user.correo);
+        const usuario = await buscarUsuarioPorNombre(user.usuario);
         console.log('Usuario encontrado:', usuario);
 
         if (!usuario) {
