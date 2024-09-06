@@ -161,3 +161,33 @@ function mostrarCarrito(carrito) {
         });
     });
 }
+
+// Escuchar el clic en el botón de vaciar carrito
+document.addEventListener('DOMContentLoaded', function() {
+    const botonVaciarCarrito = document.getElementById('vaciarCarrito');
+    if (botonVaciarCarrito) {
+        botonVaciarCarrito.addEventListener('click', async function() {
+            try {
+                const response = await fetch('/api/carrito/vaciar', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin'
+                });
+
+                const result = await response.json();
+                console.log('Respuesta al vaciar el carrito:', result);
+                if (result.success) {
+                    mostrarNotificacion('Carrito vaciado exitosamente');
+                    cargarCarrito(); // Actualiza el carrito en la interfaz
+                } else {
+                    mostrarNotificacion(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error al vaciar el carrito:', error);
+                mostrarNotificacion('Error al vaciar el carrito', 'error');
+            }
+        });
+    }
+});

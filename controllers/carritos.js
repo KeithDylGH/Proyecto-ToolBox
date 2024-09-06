@@ -134,4 +134,31 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
     }
 });
 
+// Vaciar el carrito
+carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    try {
+        const user = req.session.user;
+
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'No estás autenticado' });
+        }
+
+        console.log('Vaciando el carrito para:', user.usuario); // Log del usuario
+        const usuario = await CUsuario.findOne({ usuario: user.usuario });
+        if (!usuario) {
+            return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+        }
+
+        // Vaciar el carrito
+        usuario.carrito = [];
+        await usuario.save();
+        console.log('Carrito vaciado correctamente'); // Log de carrito vaciado
+
+        res.json({ success: true, message: 'Carrito vaciado exitosamente' });
+    } catch (error) {
+        console.error('Error al vaciar el carrito:', error); // Log de error
+        res.status(500).json({ success: false, message: 'Error del servidor' });
+    }
+});
+
 module.exports = carritoRouter;
