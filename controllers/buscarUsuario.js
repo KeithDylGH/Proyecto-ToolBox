@@ -2,7 +2,7 @@ const CUsuario = require('../models/usuario');
 
 async function buscarUsuarioPorCorreo(correo) {
     try {
-        const usuario = await User.findOne({ correo });
+        const usuario = await CUsuario.findOne({ correo });
         return usuario;
     } catch (error) {
         console.error('Error al buscar usuario por correo:', error);
