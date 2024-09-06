@@ -23,7 +23,6 @@ const multer = require('multer');
 const formData = require('form-data');
 const axios = require('axios');
 const authorize = require('./middleware/authorize');
-const carritoMiddleware = require('./middleware/carritoMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -369,4 +368,3 @@ app.use('/api/carrito', carritoRouter);
 
 // Middleware de autorización
 app.use(authorize(['user', 'admin', 'boss']));
-app.use(carritoMiddleware);
