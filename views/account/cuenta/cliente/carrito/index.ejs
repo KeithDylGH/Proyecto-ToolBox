@@ -53,7 +53,7 @@
           <% } %>
 
           <!-- Botón para vaciar el carrito -->
-          <% if (user.carrito.length > 0) { %>
+          <% if (user && user.carrito && user.carrito.length > 0) { %>
             <form action="/carrito/vaciar" method="POST">
               <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
             </form>
