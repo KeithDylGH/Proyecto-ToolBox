@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Agregar producto al carrito
 const agregarAlCarrito = async (productoId) => {
+    console.log('Producto ID enviado al backend:', productoId); // Log para verificar el ID del producto
     try {
         const response = await fetch('/api/carrito/add', {
             method: 'POST',
@@ -29,7 +30,7 @@ const agregarAlCarrito = async (productoId) => {
         });
 
         const result = await response.json();
-        console.log('Respuesta al agregar al carrito:', result);
+        console.log('Respuesta del servidor al agregar al carrito:', result); // Log de la respuesta del servidor
         if (result.success) {
             mostrarNotificacion('Producto agregado al carrito');
             cargarCarrito(); // Actualiza el carrito en la interfaz
@@ -37,7 +38,7 @@ const agregarAlCarrito = async (productoId) => {
             mostrarNotificacion(result.message, 'error');
         }
     } catch (error) {
-        console.error('Error al agregar al carrito:', error);
+        console.error('Error al agregar el producto al carrito:', error); // Log de errores
         mostrarNotificacion('Error al agregar al carrito', 'error');
     }
 };
@@ -59,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function cargarCarrito() {
+    console.log('Iniciando carga del carrito...'); // Log al iniciar la carga del carrito
     try {
         const response = await fetch('/api/carrito/getCarrito', {
             method: 'GET',
@@ -69,7 +71,7 @@ async function cargarCarrito() {
         });
 
         const data = await response.json();
-        console.log('Respuesta al cargar carrito:', data);
+        console.log('Respuesta del servidor al cargar el carrito:', data); // Log de la respuesta del servidor
         if (response.ok) {
             mostrarCarrito(data.carrito);
         } else {
@@ -79,7 +81,7 @@ async function cargarCarrito() {
             }
         }
     } catch (error) {
-        console.error('Error al intentar cargar el carrito:', error);
+        console.error('Error al intentar cargar el carrito:', error); // Log de errores
     }
 }
 
@@ -93,6 +95,7 @@ function mostrarMensajeDeError(mensaje) {
 
 // Mostrar carrito
 function mostrarCarrito(carrito) {
+    console.log('Mostrando carrito en la interfaz:', carrito); // Log de los productos que se muestran en el carrito
     const carritoContainer = document.getElementById("carritoList");
     carritoContainer.innerHTML = '';
     carrito.forEach(item => {

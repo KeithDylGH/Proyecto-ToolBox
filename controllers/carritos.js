@@ -15,13 +15,13 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        // Buscar el usuario por nombre de usuario en vez de por correo
+        console.log('Buscando usuario:', user.usuario); // Log del usuario
         const usuario = await CUsuario.findOne({ usuario: user.usuario });
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Buscar el producto
+        console.log('Buscando producto por ID:', productoId); // Log del producto
         const producto = await Producto.findById(productoId);
         if (!producto) {
             return res.status(404).json({ success: false, message: 'Producto no encontrado' });
@@ -31,11 +31,14 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
         const index = usuario.carrito.findIndex(p => p.producto.toString() === productoId);
         if (index !== -1) {
             usuario.carrito[index].cantidad += 1;
+            console.log(`Actualizando cantidad del producto en el carrito: ${usuario.carrito[index].cantidad}`); // Log de la cantidad
         } else {
             usuario.carrito.push({ producto: productoId, cantidad: 1 });
+            console.log('Producto añadido al carrito:', producto); // Log de nuevo producto añadido
         }
 
         await usuario.save();
+        console.log('Carrito actualizado en la base de datos'); // Log del carrito guardado
 
         res.json({
             success: true,
@@ -48,7 +51,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             }
         });
     } catch (error) {
-        console.error('Error al agregar al carrito:', error);
+        console.error('Error al agregar al carrito:', error); // Log de error
         res.status(500).json({ success: false, message: 'Error del servidor' });
     }
 });
@@ -61,6 +64,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
+        console.log('Buscando usuario y cargando carrito para:', user.usuario); // Log del usuario autenticado
         const usuario = await CUsuario.findOne({ usuario: user.usuario }).populate('carrito.producto');
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
@@ -74,9 +78,10 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             cantidad: item.cantidad
         }));
 
+        console.log('Productos del carrito devueltos:', carrito); // Log de los productos en el carrito
         res.json({ success: true, carrito });
     } catch (error) {
-        console.error('Error al obtener el carrito:', error);
+        console.error('Error al obtener el carrito:', error); // Log de error
         res.status(500).json({ success: false, message: 'Error del servidor' });
     }
 });
@@ -91,6 +96,7 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
+        console.log('Eliminando producto del carrito. Producto ID:', productoId); // Log del producto a eliminar
         const usuario = await CUsuario.findOne({ usuario: user.usuario });
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
@@ -99,34 +105,11 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
         // Filtrar el carrito para eliminar el producto
         usuario.carrito = usuario.carrito.filter(p => p.producto.toString() !== productoId);
         await usuario.save();
+        console.log('Producto eliminado del carrito'); // Log de confirmación
 
         res.json({ success: true, message: 'Producto eliminado del carrito' });
     } catch (error) {
-        console.error('Error al eliminar del carrito:', error);
-        res.status(500).json({ success: false, message: 'Error del servidor' });
-    }
-});
-
-// Vaciar el carrito de compras
-carritoRouter.delete('/clear', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    try {
-        const user = req.session.user;
-
-        if (!user) {
-            return res.status(401).json({ success: false, message: 'No estás autenticado' });
-        }
-
-        const usuario = await CUsuario.findOne({ usuario: user.usuario });
-        if (!usuario) {
-            return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
-        }
-
-        usuario.carrito = [];
-        await usuario.save();
-
-        res.json({ success: true, message: 'Carrito vaciado' });
-    } catch (error) {
-        console.error('Error al vaciar el carrito:', error);
+        console.error('Error al eliminar del carrito:', error); // Log de error
         res.status(500).json({ success: false, message: 'Error del servidor' });
     }
 });
