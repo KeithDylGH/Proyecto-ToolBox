@@ -153,10 +153,19 @@ app.get('/cliente', (req, res) => {
 });
 
 // Rutas del carrito
-// Ejemplo en tu controlador
-app.get('/cuenta/carrito', (req, res) => {
-    console.log('Usuario:', req.session.user); // Verifica si el usuario tiene datos
-    res.render('account/cuenta/cliente/carrito/index', { user: req.session.user });
+app.get('/cuenta/carrito', async (req, res) => {
+    if (!req.session.user) {
+      return res.redirect('/login');
+    }
+  
+    try {
+      const usuarioConCarrito = await Usuario.findById(req.session.user._id).populate('carrito.producto');
+      console.log('Carrito del usuario:', usuarioConCarrito.carrito); // Log para verificar el carrito
+      res.render('account/cuenta/cliente/carrito/index', { user: usuarioConCarrito });
+    } catch (error) {
+      console.error('Error al cargar el carrito:', error);
+      res.status(500).send('Error al cargar el carrito');
+    }
   });  
 
 app.get('/cuenta/configuracion', (req, res) => {
