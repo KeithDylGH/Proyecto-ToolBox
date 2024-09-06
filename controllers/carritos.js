@@ -25,7 +25,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             return res.status(404).json({ success: false, message: 'Producto no encontrado' });
         }
 
-        const productoEnCarrito = usuario.carrito.find(p => p.producto.toString() === productoId);
+        let productoEnCarrito = usuario.carrito.find(p => p.producto.toString() === productoId);
         if (productoEnCarrito) {
             productoEnCarrito.cantidad += 1;
         } else {

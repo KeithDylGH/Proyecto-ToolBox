@@ -32,7 +32,7 @@ const agregarAlCarrito = async (productoId) => {
         console.log('Respuesta al agregar al carrito:', result);
         if (result.success) {
             mostrarNotificacion('Producto agregado al carrito');
-            cargarCarrito();
+            cargarCarrito(); // Actualiza el carrito en la interfaz
         } else {
             mostrarNotificacion(result.message, 'error');
         }
@@ -100,7 +100,7 @@ function mostrarCarrito(carrito) {
         itemElement.classList.add('list-group-item');
         itemElement.innerHTML = `
             <div class="d-flex align-items-center">
-                <img src="${item.imagen}" alt="${item.nombre}" class="img-thumbnail me-3" style="width: 80px; height: auto;" />
+                <img src="${item.imagen.data}" alt="${item.nombre}" class="img-thumbnail me-3" style="width: 80px; height: auto;" />
                 <div>
                     <h5 class="mb-1 text-black">${item.nombre}</h5>
                     <p class="mb-1 text-black">${item.categoria}</p>
