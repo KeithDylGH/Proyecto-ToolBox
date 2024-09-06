@@ -1,19 +1,10 @@
+// controllers/carritos.js
 const express = require('express');
-const Usuario = require('../models/usuario');
 const Producto = require('../models/producto');
 const authorize = require('../middleware/authorize');
+const { buscarUsuarioPorCorreo } = require('./buscarUsuario'); // Importamos la función
 
 const carritoRouter = express.Router();
-
-// Función para buscar usuario por nombre
-async function buscarUsuarioPorNombre(nombreUsuario) {
-    try {
-        const usuario = await Usuario.findOne({ usuario: nombreUsuario });
-        return usuario;
-    } catch (error) {
-        throw new Error('Error al buscar usuario por nombre de usuario');
-    }
-}
 
 // Agregar al carrito
 carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
@@ -25,7 +16,8 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await Usuario.findById(user._id);
+        // Buscar al usuario por correo usando la función importada
+        const usuario = await buscarUsuarioPorCorreo(user.correo);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
@@ -47,13 +39,16 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
 
         await usuario.save();
 
-        res.json({ success: true, producto: {
-            _id: producto._id,
-            nombre: producto.nombre,
-            categoria: producto.categoria,
-            imagen: producto.imagen,
-            cantidad: productoEnCarrito ? productoEnCarrito.cantidad : 1
-        }});
+        res.json({
+            success: true,
+            producto: {
+                _id: producto._id,
+                nombre: producto.nombre,
+                categoria: producto.categoria,
+                imagen: producto.imagen,
+                cantidad: productoEnCarrito ? productoEnCarrito.cantidad : 1
+            }
+        });
     } catch (error) {
         console.error('Error al agregar al carrito:', error);
         res.status(500).json({ success: false, message: 'Error del servidor' });
@@ -68,11 +63,14 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await Usuario.findById(user._id).populate('carrito.producto');
+        // Buscar al usuario por correo
+        const usuario = await buscarUsuarioPorCorreo(user.correo);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
+        // Poblar productos del carrito
+        await usuario.populate('carrito.producto').execPopulate();
         const carrito = usuario.carrito.map(item => ({
             _id: item.producto._id,
             nombre: item.producto.nombre,
@@ -98,11 +96,13 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await Usuario.findById(user._id);
+        // Buscar al usuario por correo
+        const usuario = await buscarUsuarioPorCorreo(user.correo);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
+        // Filtrar productos del carrito
         usuario.carrito = usuario.carrito.filter(p => p.producto.toString() !== productoId);
         await usuario.save();
 
@@ -122,7 +122,8 @@ carritoRouter.delete('/clear', authorize(['user', 'admin', 'boss']), async (req,
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await Usuario.findById(user._id);
+        // Buscar al usuario por correo
+        const usuario = await buscarUsuarioPorCorreo(user.correo);
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
