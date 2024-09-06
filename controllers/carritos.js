@@ -11,18 +11,12 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
         const { productoId } = req.body;
         const user = req.session.user;
 
-        console.log('Session user:', user);  // Agrega este log para verificar el contenido de la sesión
-
         if (!user) {
-            console.log('No hay usuario en la sesión.');
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
         const usuario = await buscarUsuarioPorNombre(user.usuario);
-        console.log('Usuario autenticado:', usuario);  // Agrega este log para verificar el usuario encontrado
-
         if (!usuario) {
-            console.log('Usuario no encontrado:', user.usuario);
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 

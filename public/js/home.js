@@ -91,17 +91,22 @@ function mostrarMensajeDeError(mensaje) {
     }
 }
 
+// Mostrar carrito
 function mostrarCarrito(carrito) {
     const carritoContainer = document.getElementById("carritoList");
     carritoContainer.innerHTML = '';
     carrito.forEach(item => {
-        const itemElement = document.createElement('div');
-        itemElement.classList.add('carrito-item');
+        const itemElement = document.createElement('li');
+        itemElement.classList.add('list-group-item');
         itemElement.innerHTML = `
-            <img src="${item.imagen}" alt="${item.nombre}" />
-            <p>${item.nombre}</p>
-            <p>${item.categoria}</p>
-            <p>Cantidad: ${item.cantidad}</p>
+            <div class="d-flex align-items-center">
+                <img src="${item.imagen}" alt="${item.nombre}" class="img-thumbnail me-3" style="width: 80px; height: auto;" />
+                <div>
+                    <h5 class="mb-1 text-black">${item.nombre}</h5>
+                    <p class="mb-1 text-black">${item.categoria}</p>
+                    <p class="mb-1 text-black">Cantidad: ${item.cantidad}</p>
+                </div>
+            </div>
         `;
         carritoContainer.appendChild(itemElement);
     });
