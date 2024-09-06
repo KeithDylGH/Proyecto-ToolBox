@@ -94,7 +94,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
     }
 });
 
-// Eliminar un producto del carrito
+// Eliminar una unidad del producto en el carrito
 carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const { productoId } = req.params;
@@ -104,18 +104,30 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        console.log('Eliminando producto del carrito. Producto ID:', productoId); // Log del producto a eliminar
+        console.log('Eliminando una unidad del producto en el carrito. Producto ID:', productoId); // Log del producto a eliminar
         const usuario = await CUsuario.findOne({ usuario: user.usuario });
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Filtrar el carrito para eliminar el producto
-        usuario.carrito = usuario.carrito.filter(p => p.producto.toString() !== productoId);
-        await usuario.save();
-        console.log('Producto eliminado del carrito'); // Log de confirmación
+        // Buscar el producto en el carrito
+        const index = usuario.carrito.findIndex(p => p.producto.toString() === productoId);
+        if (index !== -1) {
+            if (usuario.carrito[index].cantidad > 1) {
+                // Disminuir la cantidad del producto
+                usuario.carrito[index].cantidad -= 1;
+                console.log(`Cantidad actualizada: ${usuario.carrito[index].cantidad}`);
+            } else {
+                // Eliminar el producto si la cantidad es 1
+                usuario.carrito.splice(index, 1);
+                console.log('Producto eliminado del carrito');
+            }
+        } else {
+            return res.status(404).json({ success: false, message: 'Producto no encontrado en el carrito' });
+        }
 
-        res.json({ success: true, message: 'Producto eliminado del carrito' });
+        await usuario.save();
+        res.json({ success: true, message: 'Producto actualizado en el carrito' });
     } catch (error) {
         console.error('Error al eliminar del carrito:', error); // Log de error
         res.status(500).json({ success: false, message: 'Error del servidor' });
