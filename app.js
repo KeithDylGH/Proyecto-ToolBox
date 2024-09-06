@@ -154,12 +154,15 @@ app.get('/cliente', (req, res) => {
 
 // Rutas del carrito
 app.get('/cuenta/carrito', async (req, res) => {
-    
     if (!req.session.user) {
         return res.redirect('/login'); // Redirige si el usuario no está autenticado
-      }
-      res.render('account/cuenta/cliente/carrito/index');
-}); 
+    }
+
+    console.log('Session user:', req.session.user); // Verifica que `req.session.user` está disponible
+
+    // Pasar el usuario a la vista
+    res.render('account/cuenta/cliente/carrito/index', { user: req.session.user });
+});
 
 app.get('/cuenta/configuracion', (req, res) => {
     res.render('account/cuenta/cliente/configuracion');
