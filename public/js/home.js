@@ -1,20 +1,20 @@
 //Entrar a la pagina Log-in
 document.addEventListener('DOMContentLoaded', function() {
-
     const botonIniciarSesion = document.getElementById('login');
-
-    botonIniciarSesion.addEventListener('click', function() {
-        window.location.href = '/login/';
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
+    console.log(botonIniciarSesion); // Asegúrate de que no sea null
+    if (botonIniciarSesion) {
+        botonIniciarSesion.addEventListener('click', function() {
+            window.location.href = '/login/';
+        });
+    }
 
     const tienda = document.getElementById('categoria1');
-
-    tienda.addEventListener('click', function() {
-        window.location.href = '/tienda/';
-    });
+    console.log(tienda); // Asegúrate de que no sea null
+    if (tienda) {
+        tienda.addEventListener('click', function() {
+            window.location.href = '/tienda/';
+        });
+    }
 });
 
 //carrito de compra
