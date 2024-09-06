@@ -65,7 +65,15 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
         }
 
         console.log('Buscando usuario y cargando carrito para:', user.usuario); // Log del usuario autenticado
-        const usuario = await CUsuario.findOne({ usuario: user.usuario }).populate('carrito.producto');
+        const usuario = await CUsuario.findOne({ usuario: user.usuario })
+            .populate({
+                path: 'carrito.producto',
+                populate: {
+                    path: 'categoria', // Asume que 'categoria' es una referencia a otro modelo
+                    select: 'nombre'  // Selecciona solo el nombre de la categoría
+                }
+            });
+
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
@@ -73,7 +81,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
         const carrito = usuario.carrito.map(item => ({
             _id: item.producto._id,
             nombre: item.producto.nombre,
-            categoria: item.producto.categoria,
+            categoria: item.producto.categoria.nombre, // Mostrar el nombre de la categoría
             imagen: item.producto.imagen,
             cantidad: item.cantidad
         }));

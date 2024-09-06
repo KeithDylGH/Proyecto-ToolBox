@@ -104,7 +104,33 @@ function mostrarMensajeDeError(mensaje) {
     }
 }
 
-// Mostrar carrito
+// Función para eliminar producto del carrito
+const eliminarDelCarrito = async (productoId) => {
+    console.log('Eliminando producto ID:', productoId); // Log del producto que se eliminará
+    try {
+        const response = await fetch(`/api/carrito/remove/${productoId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin'
+        });
+
+        const result = await response.json();
+        console.log('Respuesta al eliminar del carrito:', result);
+        if (result.success) {
+            mostrarNotificacion('Producto eliminado del carrito');
+            cargarCarrito(); // Actualiza el carrito en la interfaz
+        } else {
+            mostrarNotificacion(result.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error al eliminar del carrito:', error);
+        mostrarNotificacion('Error al eliminar del carrito', 'error');
+    }
+};
+
+// Mostrar carrito con opción para eliminar
 function mostrarCarrito(carrito) {
     console.log('Mostrando carrito en la interfaz:', carrito); // Log de los productos que se muestran en el carrito
     const carritoContainer = document.getElementById("carritoList");
@@ -120,8 +146,18 @@ function mostrarCarrito(carrito) {
                     <p class="mb-1 text-black">${item.categoria}</p>
                     <p class="mb-1 text-black">Cantidad: ${item.cantidad}</p>
                 </div>
+                <button class="btn btn-danger ms-auto btn-eliminar-producto" data-producto-id="${item._id}">X</button>
             </div>
         `;
         carritoContainer.appendChild(itemElement);
+    });
+
+    // Añadir evento para los botones de eliminar
+    const botonesEliminar = document.querySelectorAll('.btn-eliminar-producto');
+    botonesEliminar.forEach(boton => {
+        boton.addEventListener('click', function() {
+            const productoId = boton.getAttribute('data-producto-id');
+            eliminarDelCarrito(productoId);
+        });
     });
 }
