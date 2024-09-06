@@ -44,8 +44,7 @@ mongoose.connect(mongoUri).then(() => {
 
     mongoose.connection.once('open', async () => {
         try {
-            await CUsuario.deleteMany({});
-            console.log('Colección usuarios limpia.');
+            console.log('Base de datos inicializada.');
 
             const filePath = path.join(__dirname, 'db.json');
             const data = fs.readFileSync(filePath, 'utf-8');
