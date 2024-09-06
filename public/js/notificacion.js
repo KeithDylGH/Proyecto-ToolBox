@@ -1,42 +1,26 @@
-// CATEGORIAS
-function showNotification(message) {
+// notificacion.js
+
+function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
     notification.textContent = message;
-    notification.classList.remove('d-none');
+    notification.className = `notification ${type}`; // Cambiar clase según el tipo de notificación
+    notification.style.display = 'block'; // Asegurarse de que la notificación sea visible
     setTimeout(() => {
-        notification.classList.add('d-none');
-    }, 3000); // Mostrar durante 3 segundos
+        notification.style.display = 'none'; // Ocultar notificación después de 3 segundos
+    }, 3000);
 }
 
-// Mostrar notificación de éxito al cargar la página
-const urlParams = new URLSearchParams(window.location.search);
-const successMessage = urlParams.get('success');
-if (successMessage) {
-    showNotification(successMessage);
-    history.replaceState({}, document.title, window.location.pathname); // Limpiar parámetros de la URL
-}
-
+// Mostrar notificación de éxito o error basado en parámetros de la URL
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const successMessage = urlParams.get('success');
+    const errorMessage = urlParams.get('error');
+
     if (successMessage) {
-        showNotification(successMessage);
+        showNotification(successMessage, 'success');
+        history.replaceState({}, document.title, window.location.pathname); // Limpiar parámetros de la URL
+    } else if (errorMessage) {
+        showNotification(errorMessage, 'error');
         history.replaceState({}, document.title, window.location.pathname); // Limpiar parámetros de la URL
     }
 });
-
-function showNotification(message) {
-    const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.classList.remove('d-none');
-    setTimeout(() => {
-        notification.classList.add('d-none');
-    }, 3000); // Mostrar durante 3 segundos
-}
-
-//PAGINA DE ERROR
-/* document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-        window.location.href = '/cliente'; // Redirige después de 5 segundos
-    }, 5000); // 5000 ms = 5 segundos
-}); */

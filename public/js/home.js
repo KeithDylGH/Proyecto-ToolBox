@@ -15,48 +15,37 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Agregar producto al carrito
-const agregarAlCarrito = async (productoId) => {
+// Función para agregar un producto al carrito
+async function agregarAlCarrito(productoId) {
     try {
         const response = await fetch('/api/carrito/add', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ productoId }),
-            credentials: 'same-origin'
+            body: JSON.stringify({ productoId })
         });
 
         const result = await response.json();
-        console.log('Respuesta al agregar al carrito:', result);
+        
         if (result.success) {
-            mostrarNotificacion('Producto agregado al carrito');
-            cargarCarrito();
+            window.location.href = `?success=${encodeURIComponent('Producto agregado al carrito exitosamente')}`;
         } else {
-            mostrarNotificacion(result.message, 'error');
+            window.location.href = `?error=${encodeURIComponent('Error al agregar el producto al carrito')}`;
         }
     } catch (error) {
-        console.error('Error al agregar al carrito:', error);
-        mostrarNotificacion('Error al agregar al carrito', 'error');
+        window.location.href = `?error=${encodeURIComponent('Error al agregar el producto al carrito')}`;
     }
-};
+}
 
-// Mostrar notificación
-const mostrarNotificacion = (mensaje, tipo = 'success') => {
-    const notification = document.querySelector('.notification');
-    notification.className = `notification ${tipo}`;
-    notification.textContent = mensaje;
-    notification.style.display = 'block';
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 3000);
-};
-
-// Cargar productos en el carrito al iniciar la página
-document.addEventListener("DOMContentLoaded", () => {
-    cargarCarrito();
+// Asociar la función al evento click del botón
+document.querySelectorAll('.btn-agregar-carrito').forEach(button => {
+    button.addEventListener('click', () => {
+        const productoId = button.getAttribute('data-producto-id');
+        agregarAlCarrito(productoId);
+    });
 });
+
 
 async function cargarCarrito() {
     try {
