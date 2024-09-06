@@ -15,9 +15,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Agregar producto al carrito
+// Escuchar el clic en los botones de agregar al carrito
+document.addEventListener('DOMContentLoaded', function() {
+    const botonesAgregarCarrito = document.querySelectorAll('.btn-agregar-carrito');
+    botonesAgregarCarrito.forEach(boton => {
+        boton.addEventListener('click', function() {
+            const productoId = boton.getAttribute('data-producto-id');
+            agregarAlCarrito(productoId);
+        });
+    });
+});
+
+// Función para agregar producto al carrito (ya definida)
 const agregarAlCarrito = async (productoId) => {
-    console.log('Producto ID enviado al backend:', productoId); // Log para verificar el ID del producto
+    console.log('Producto ID:', productoId); // Log para verificar el producto
     try {
         const response = await fetch('/api/carrito/add', {
             method: 'POST',
@@ -30,7 +41,7 @@ const agregarAlCarrito = async (productoId) => {
         });
 
         const result = await response.json();
-        console.log('Respuesta del servidor al agregar al carrito:', result); // Log de la respuesta del servidor
+        console.log('Respuesta al agregar al carrito:', result);
         if (result.success) {
             mostrarNotificacion('Producto agregado al carrito');
             cargarCarrito(); // Actualiza el carrito en la interfaz
@@ -38,7 +49,7 @@ const agregarAlCarrito = async (productoId) => {
             mostrarNotificacion(result.message, 'error');
         }
     } catch (error) {
-        console.error('Error al agregar el producto al carrito:', error); // Log de errores
+        console.error('Error al agregar al carrito:', error);
         mostrarNotificacion('Error al agregar al carrito', 'error');
     }
 };
