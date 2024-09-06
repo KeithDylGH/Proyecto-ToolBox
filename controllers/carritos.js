@@ -1,7 +1,7 @@
 const express = require('express');
 const Producto = require('../models/producto');
 const authorize = require('../middleware/authorize');
-const { buscarUsuarioPorNombre } = require('../controllers/buscarUsuario'); // Verifica la ruta
+const CUsuario = require('../models/usuario'); // Asegúrate de que esta sea la ruta correcta para el modelo Usuario
 
 const carritoRouter = express.Router();
 
@@ -15,19 +15,22 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await buscarUsuarioPorNombre(user.usuario);
+        // Buscar el usuario por nombre de usuario en vez de por correo
+        const usuario = await CUsuario.findOne({ usuario: user.usuario });
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
+        // Buscar el producto
         const producto = await Producto.findById(productoId);
         if (!producto) {
             return res.status(404).json({ success: false, message: 'Producto no encontrado' });
         }
 
-        let productoEnCarrito = usuario.carrito.find(p => p.producto.toString() === productoId);
-        if (productoEnCarrito) {
-            productoEnCarrito.cantidad += 1;
+        // Actualizar la cantidad del producto en el carrito
+        const index = usuario.carrito.findIndex(p => p.producto.toString() === productoId);
+        if (index !== -1) {
+            usuario.carrito[index].cantidad += 1;
         } else {
             usuario.carrito.push({ producto: productoId, cantidad: 1 });
         }
@@ -41,7 +44,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
                 nombre: producto.nombre,
                 categoria: producto.categoria,
                 imagen: producto.imagen,
-                cantidad: productoEnCarrito ? productoEnCarrito.cantidad : 1
+                cantidad: usuario.carrito[index]?.cantidad || 1
             }
         });
     } catch (error) {
@@ -58,22 +61,12 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        console.log('Username del usuario en sesión:', user.usuario);
-        
-        const usuario = await buscarUsuarioPorNombre(user.usuario);
-        console.log('Usuario encontrado:', usuario);
-
+        const usuario = await CUsuario.findOne({ usuario: user.usuario }).populate('carrito.producto');
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Usa populate directamente en la consulta
-        const usuarioConCarrito = await usuario.populate({
-            path: 'carrito.producto',
-            model: 'Producto'
-        });
-
-        const carrito = usuarioConCarrito.carrito.map(item => ({
+        const carrito = usuario.carrito.map(item => ({
             _id: item.producto._id,
             nombre: item.producto.nombre,
             categoria: item.producto.categoria,
@@ -98,15 +91,12 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        console.log('Username del usuario en sesión:', user.usuario);
-
-        const usuario = await buscarUsuarioPorNombre(user.usuario);
-        console.log('Usuario encontrado:', usuario);
-
+        const usuario = await CUsuario.findOne({ usuario: user.usuario });
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
+        // Filtrar el carrito para eliminar el producto
         usuario.carrito = usuario.carrito.filter(p => p.producto.toString() !== productoId);
         await usuario.save();
 
@@ -126,11 +116,7 @@ carritoRouter.delete('/clear', authorize(['user', 'admin', 'boss']), async (req,
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        console.log('Username del usuario en sesión:', user.usuario);
-
-        const usuario = await buscarUsuarioPorNombre(user.usuario);
-        console.log('Usuario encontrado:', usuario);
-
+        const usuario = await CUsuario.findOne({ usuario: user.usuario });
         if (!usuario) {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
