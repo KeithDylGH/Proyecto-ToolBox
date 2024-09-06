@@ -68,20 +68,15 @@ userRouter.post('/login', async (req, res) => {
 
     try {
         if (!usuario || !password) {
-            console.log('Campos obligatorios faltantes:', { usuario, password });
             return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
         const user = await User.findOne({ usuario });
-        console.log('Usuario encontrado:', user);
-
         if (!user) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
 
         const passwordCorrecto = await bcrypt.compare(password, user.password);
-        console.log('Contraseña correcta:', passwordCorrecto);
-
         if (!passwordCorrecto) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
@@ -90,10 +85,9 @@ userRouter.post('/login', async (req, res) => {
             id: user._id,
             nombre: user.nombre,
             usuario: user.usuario,
+            correo: user.correo,  // Asegúrate de que esta línea esté presente
             rol: user.rol
         };
-
-        console.log('Usuario autenticado y sesión creada:', req.session.user);
 
         res.json({
             success: true,
