@@ -1,7 +1,7 @@
 const express = require('express');
 const Producto = require('../models/producto');
 const authorize = require('../middleware/authorize');
-const { buscarUsuarioPorCorreo } = require('./buscarUsuario');
+const { buscarUsuarioPorNombre } = require('../controllers/buscarUsuario'); // Verifica la ruta
 
 const carritoRouter = express.Router();
 
@@ -18,11 +18,11 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        const usuario = await buscarUsuarioPorCorreo(user.correo);
+        const usuario = await buscarUsuarioPorNombre(user.usuario);
         console.log('Usuario autenticado:', usuario);  // Agrega este log para verificar el usuario encontrado
 
         if (!usuario) {
-            console.log('Usuario no encontrado:', user.correo);
+            console.log('Usuario no encontrado:', user.usuario);
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 

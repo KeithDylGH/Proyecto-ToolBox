@@ -12,12 +12,13 @@ async function buscarUsuarioPorCorreo(correo) {
 
 async function buscarUsuarioPorNombre(nombreUsuario) {
     try {
-        const usuario = await CUsuario.findOne({ usuario: nombreUsuario });
+        const usuario = await User.findOne({ usuario: nombreUsuario });
         return usuario;
     } catch (error) {
+        console.error('Error al buscar usuario por nombre de usuario:', error);
         throw new Error('Error al buscar usuario por nombre de usuario');
     }
-}
+};
 
 module.exports = {
     buscarUsuarioPorCorreo,

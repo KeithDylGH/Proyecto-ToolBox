@@ -84,8 +84,8 @@ userRouter.post('/login', async (req, res) => {
         req.session.user = {
             id: user._id,
             nombre: user.nombre,
-            usuario: user.usuario,
-            correo: user.correo,  // Asegúrate de que esta línea esté presente
+            usuario: user.usuario,  // Asegúrate de que esta línea esté presente
+            correo: user.correo,
             rol: user.rol
         };
 
@@ -98,6 +98,7 @@ userRouter.post('/login', async (req, res) => {
         res.status(500).json({ error: 'Error en el servidor' });
     }
 });
+
 
 // Endpoint para obtener todos los usuarios
 userRouter.get('/', async (req, res) => {
