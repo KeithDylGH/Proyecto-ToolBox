@@ -23,6 +23,7 @@ const multer = require('multer');
 const formData = require('form-data');
 const axios = require('axios');
 const authorize = require('./middleware/authorize');
+const carritoMiddleware = require('./middleware/carritoMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -153,16 +154,11 @@ app.get('/cliente', (req, res) => {
 });
 
 // Rutas del carrito
-app.get('/cuenta/carrito', async (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login'); // Redirige si el usuario no está autenticado
-    }
-
-    console.log('Session user:', req.session.user); // Verifica que `req.session.user` está disponible
-
-    // Pasar el usuario a la vista
+// Ejemplo en tu controlador
+app.get('/cuenta/carrito', (req, res) => {
+    console.log('Usuario:', req.session.user); // Verifica si el usuario tiene datos
     res.render('account/cuenta/cliente/carrito/index', { user: req.session.user });
-});
+  });  
 
 app.get('/cuenta/configuracion', (req, res) => {
     res.render('account/cuenta/cliente/configuracion');
@@ -373,3 +369,4 @@ app.use('/api/carrito', carritoRouter);
 
 // Middleware de autorización
 app.use(authorize(['user', 'admin', 'boss']));
+app.use(carritoMiddleware);

@@ -1,12 +1,13 @@
 const express = require('express');
 const Producto = require('../models/producto');
 const authorize = require('../middleware/authorize');
+const carritoMiddleware = require('../middlewares/carritoMiddleware');
 const CUsuario = require('../models/usuario'); // Asegúrate de que esta sea la ruta correcta para el modelo Usuario
 
 const carritoRouter = express.Router();
 
 // Agregar al carrito
-carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res) => {
+carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), carritoMiddleware, async (req, res) => {
     try {
         const { productoId } = req.body;
         const user = req.session.user;
@@ -57,7 +58,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
 });
 
 // Obtener productos del carrito
-carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
+carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), carritoMiddleware, async (req, res) => {
     try {
         const user = req.session.user;
         if (!user) {
@@ -95,7 +96,7 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
 });
 
 // Eliminar una unidad del producto en el carrito
-carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss']), async (req, res) => {
+carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss']), carritoMiddleware, async (req, res) => {
     try {
         const { productoId } = req.params;
         const user = req.session.user;
@@ -135,7 +136,7 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
 });
 
 // Vaciar el carrito
-carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), carritoMiddleware, async (req, res) => {
     try {
         const user = req.session.user;
 
