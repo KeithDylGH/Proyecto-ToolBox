@@ -31,29 +31,25 @@
         <div class="content">
           <h1>Tu Carrito</h1>
 
-          <% if (user && user.carrito && user.carrito.length > 0) { %>
-            <ul id="carritoList" class="list-group">
-              <% user.carrito.forEach(item => { %>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <div>
-                    <img src="<%= item.producto.imagen %>" alt="<%= item.producto.nombre %>" class="img-thumbnail" style="width: 50px; height: 50px;">
-                    <strong><%= item.producto.nombre %></strong> - <%= item.producto.categoria %>
-                  </div>
-                  <span class="badge badge-primary badge-pill">Cantidad: <%= item.cantidad %></span>
-                  <span>Precio: $<%= item.producto.precio %></span>
-                  <form action="/carrito/eliminar/<%= item.producto._id %>" method="POST" style="display:inline;">
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
-                  </form>
-                </li>
-              <% }) %>
+          <% if (user.carrito.length > 0) { %>
+            <ul id="carritoList">
+                <% user.carrito.forEach(item => { %>
+                    <li>
+                        <img src="<%= item.producto.imagen %>" alt="<%= item.producto.nombre %>" style="width: 50px; height: 50px;">
+                        <strong><%= item.producto.nombre %></strong> - <%= item.producto.categoria %> - Cantidad: <%= item.cantidad %>
+                        Precio: $<%= item.producto.precio %>
+                        <form action="/carrito/eliminar/<%= item.producto._id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </li>
+                <% }); %>
             </ul>
             <form action="/carrito/vaciar" method="POST">
-              <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
+                <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
             </form>
-            <a href="/checkout" class="btn btn-primary">Proceder al Pago</a>
-          <% } else { %>
-            <p>No hay productos en el carrito.</p>
-          <% } %>
+        <% } else { %>
+            <p>Tu carrito está vacío.</p>
+        <% } %>
         </div>
       </div>
     </section>
