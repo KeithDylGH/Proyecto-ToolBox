@@ -42,20 +42,24 @@
           <!-- Mostrar el carrito en cualquier página -->
           <% if (user && user.carrito && user.carrito.length > 0) { %>
             <ul id="carritoList" class="list-group">
-              <% user.carrito.forEach(item => { %>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <div>
-                    <img src="<%= item.producto.imagenUrl %>" alt="<%= item.producto.nombre %>" class="img-thumbnail" style="width: 50px; height: 50px;">
-                    <strong><%= item.producto.nombre %></strong> - <%= item.producto.categoria %>
-                  </div>
-                  <span class="badge badge-primary badge-pill">Cantidad: <%= item.cantidad %></span>
-                  <span>Precio: $<%= item.producto.precio %></span>
-                  <form action="/carrito/eliminar/<%= item.producto._id %>" method="POST" style="display:inline;">
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
-                  </form>
-                </li>
-              <% }) %>
-            </ul>
+              <% if (user && user.carrito && user.carrito.length > 0) { %>
+                <% user.carrito.forEach(item => { %>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <img src="<%= item.producto.imagenUrl %>" alt="<%= item.producto.nombre %>" class="img-thumbnail" style="width: 50px; height: 50px;">
+                      <strong><%= item.producto.nombre %></strong> - <%= item.producto.categoria %>
+                    </div>
+                    <span class="badge badge-primary badge-pill">Cantidad: <%= item.cantidad %></span>
+                    <span>Precio: $<%= item.producto.precio %></span>
+                    <form action="/carrito/eliminar/<%= item.producto._id %>" method="POST" style="display:inline;">
+                      <button class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                  </li>
+                <% }) %>
+              <% } else { %>
+                <li class="list-group-item">No hay productos en el carrito.</li>
+              <% } %>
+            </ul>            
             <form action="/carrito/vaciar" method="POST">
               <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
             </form>
