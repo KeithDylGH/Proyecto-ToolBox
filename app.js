@@ -153,19 +153,16 @@ app.get('/cliente', (req, res) => {
 });
 
 // Rutas del carrito
-app.get('/cuenta/carrito', async (req, res) => {
-    if (!req.session.user) {
-      return res.redirect('/login'); // Redirige si el usuario no está autenticado
+app.get('/cuenta/carrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    const user = req.session.user;
+
+    if (!user) {
+        return res.redirect('/login');
     }
-  
-    try {
-      const usuarioConCarrito = await CUsuario.findById(req.session.user._id).populate('carrito.producto');
-      res.render('account/cuenta/cliente/carrito/index', { user: usuarioConCarrito });
-    } catch (error) {
-      console.error('Error al cargar el carrito:', error);
-      res.status(500).send('Error al cargar el carrito');
-    }
-  });
+
+    const usuario = await CUsuario.findOne({ usuario: user.usuario }).populate('carrito.producto');
+    res.render('index', { user: usuario });
+});
 
 app.get('/cuenta/configuracion', (req, res) => {
     res.render('account/cuenta/cliente/configuracion');
