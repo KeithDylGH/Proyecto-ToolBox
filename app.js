@@ -159,7 +159,7 @@ app.get('/cuenta/carrito', async (req, res) => {
     }
   
     try {
-      const usuarioConCarrito = await Usuario.findById(req.session.user._id).populate('carrito.producto');
+      const usuarioConCarrito = await CUsuario.findById(req.session.user._id).populate('carrito.producto');
       res.render('account/cuenta/cliente/carrito/index', { user: usuarioConCarrito });
     } catch (error) {
       console.error('Error al cargar el carrito:', error);
