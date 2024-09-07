@@ -55,14 +55,14 @@
                         </form>
                     </li>
                 <% }) %>
-            </ul>            
+            </ul>
             <form action="/carrito/vaciar" method="POST">
                 <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
             </form>
             <a href="/checkout" class="btn btn-primary">Proceder al Pago</a>
-        <% } else { %>
+          <% } else { %>
             <p>No hay productos en el carrito.</p>
-        <% } %>                                
+          <% } %>                                
 
           <!-- Botón para vaciar el carrito -->
           <% if (user && user.carrito && user.carrito.length > 0) { %>

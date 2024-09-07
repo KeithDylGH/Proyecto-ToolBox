@@ -160,8 +160,17 @@ app.get('/cuenta/carrito', authorize(['user', 'admin', 'boss']), async (req, res
         return res.redirect('/login');
     }
 
-    const usuario = await CUsuario.findOne({ usuario: user.usuario }).populate('carrito.producto');
-    res.render('index', { user: usuario });
+    try {
+        const usuario = await CUsuario.findOne({ usuario: user.usuario }).populate('carrito.producto');
+        if (!usuario) {
+            return res.redirect('/login');
+        }
+
+        res.render('carrito', { user: usuario }); // Asegúrate de que 'carrito.ejs' esté en la carpeta views
+    } catch (error) {
+        console.error('Error al cargar el carrito:', error);
+        res.status(500).send('Error del servidor');
+    }
 });
 
 app.get('/cuenta/configuracion', (req, res) => {
