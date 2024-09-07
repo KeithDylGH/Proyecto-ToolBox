@@ -162,7 +162,7 @@ app.get('/cuenta/carrito', authorize(['user', 'admin', 'boss']), async (req, res
 
     try {
         const usuario = await CUsuario.findOne({ usuario: user.usuario }).populate('carrito.producto');
-        res.render('carrito', { user: usuario }); // Asegúrate de que 'carrito' es el nombre del archivo .ejs
+        res.render('account/cuenta/cliente/carrito', { user: usuario }); // Asegúrate de que 'carrito' es el nombre del archivo .ejs
     } catch (error) {
         console.error('Error al cargar el carrito:', error);
         res.status(500).send('Error del servidor');
