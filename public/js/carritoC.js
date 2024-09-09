@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     cargarCarrito();
 
-    // Agregar producto al carrito (sin cambios)
+    // Agregar producto al carrito
     document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
@@ -46,12 +46,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         const li = document.createElement('li');
                         li.className = 'list-group-item d-flex justify-content-between align-items-center';
                         li.innerHTML = `
-                            <div>
+                            <div class="d-flex align-items-center">
                                 <img src="${item.imagen.data}" alt="${item.nombre}" class="img-thumbnail" style="width: 100px; height: 100px;">
-                                <strong>${item.nombre}</strong> - ${item.categoria}
+                                <div class="ms-3">
+                                    <strong>${item.nombre}</strong> - ${item.categoria}<br>
+                                    <span class="badge badge-primary badge-pill">Cantidad: ${item.cantidad}</span><br>
+                                    <span>Precio unitario: $${item.precio}</span><br>
+                                    <span>Total: $${(item.precio * item.cantidad).toFixed(2)}</span>
+                                </div>
                             </div>
-                            <span class="badge badge-primary badge-pill">Cantidad: ${item.cantidad}</span>
-                            <span>Precio: $${item.precio}</span>
                             <button class="btn btn-danger btn-sm btn-eliminar" data-producto-id="${item._id}">Eliminar</button>
                         `;
                         carritoList.appendChild(li);
@@ -70,10 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     },
                                     credentials: 'same-origin'
                                 });
-                        
-                                const result = await response.json();
-                                console.log('Respuesta al eliminar producto del carrito:', result);
                                 
+                                const result = await response.json();
                                 if (result.success) {
                                     mostrarNotificacion('Producto eliminado del carrito', 'success');
                                     cargarCarrito(); // Actualiza el carrito en la interfaz
@@ -99,14 +100,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                     },
                                     credentials: 'same-origin'
                                 });
-                
+
                                 const result = await response.json();
-                                console.log('Respuesta al vaciar el carrito:', result);
                                 if (result.success) {
-                                    mostrarNotificacion('Carrito vaciado exitosamente');
+                                    mostrarNotificacion('Carrito vaciado exitosamente', 'success');
                                     cargarCarrito(); // Actualiza el carrito en la interfaz
                                 } else {
-                                    mostrarNotificacion(result.message, 'error');
+                                    mostrarNotificacion(result.message || 'Error al vaciar el carrito', 'error');
                                 }
                             } catch (error) {
                                 console.error('Error al vaciar el carrito:', error);
