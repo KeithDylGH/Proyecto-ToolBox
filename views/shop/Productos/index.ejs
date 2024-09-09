@@ -24,7 +24,7 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-            <a href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
+            <a href="/"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
                 aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -32,7 +32,7 @@
             <div class="collapse navbar-collapse" id="navbarScroll">
                 <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                     <li class="nav-item">
-                        <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
+                        <a class="nav-link active link-light" aria-current="page" href="/">Inicio</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle link-light" href="#" role="button"
@@ -105,34 +105,65 @@
     </nav>
 </header>
 
-  <main>
-
-    <div class="notification" style="display: none;"></div>
-
-    <div class="container mt-4">
-      <div class="row">
-        <div class="col-md-4">
-          <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-fluid">
-        </div>
-        <div class="col-md-8">
-          <h3><%= producto.nombre %></h3>
-          <p><b>Marca:</b> <%= producto.marca %></p>
-          <p><b>Material:</b> <%= producto.material %></p>
-          <hr>
-          <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
-          <button class="btn btn-danger btn-lg btn-block mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
-            Agregar al Carrito
-          </button>          
-          <button class="btn btn-success btn-lg btn-block mt-2" id="comprarBtn" data-producto-id="<%= producto._id %>">Comprar</button>
-          
-          <% if (!producto.disponible) { %>
-            <p class="mt-3"><strong>No disponible.</strong></p>
-            <p>Este producto no está disponible en stock actualmente.</p>
-          <% } %>
-        </div>
-      </div>
+<main class="container mt-4">
+  <div class="row">
+    <div class="col-md-4">
+      <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-fluid">
     </div>
-  </main>
+    <div class="col-md-8">
+      <h3><%= producto.nombre %></h3>
+      <p><b>Marca:</b> <%= producto.marca %></p>
+      <p><b>Material:</b> <%= producto.material %></p>
+      <hr>
+      <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
+      <button class="btn btn-danger btn-lg btn-block mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
+        Agregar al Carrito
+      </button>
+      <button class="btn btn-success btn-lg btn-block mt-2" id="comprarBtn" data-producto-id="<%= producto._id %>">Comprar</button>
+      <% if (!producto.disponible) { %>
+        <p class="mt-3"><strong>No disponible.</strong></p>
+        <p>Este producto no está disponible en stock actualmente.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Carrusel de productos aleatorios -->
+  <section class="mt-5">
+    <h2>Productos Relacionados</h2>
+    <div id="carouselProductos" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <% for (let i = 0; i < productosAleatorios.length; i += 6) { %>
+          <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+            <div class="row">
+              <% productosAleatorios.slice(i, i + 6).forEach(producto => { %>
+                <div class="col-md-2">
+                  <div class="card">
+                    <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= producto.nombre %></h5>
+                      <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                      <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver Producto</a>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+      <% if (productosAleatorios.length > 6) { %>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselProductos" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselProductos" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Siguiente</span>
+        </button>
+      <% } %>
+    </div>
+  </section>
+</main>
 
   <footer class="mt-5 px-4 pt-3 pb-1">
     <div class="row">
