@@ -28,31 +28,17 @@
 
     <section class="interfaz">
       <div class="container">
-        <div class="content">
-          <h1>Tu Carrito</h1>
-
-          <% if (user.carrito.length > 0) { %>
-            <ul id="carritoList">
-                <% user.carrito.forEach(item => { %>
-                    <li>
-                        <img src="<%= item.producto.imagen.data %>" alt="<%= item.producto.nombre %>" style="width: 50px; height: 50px;">
-                        <strong><%= item.producto.nombre %></strong> - <%= item.producto.categoria %> - Cantidad: <%= item.cantidad %>
-                        Precio: $<%= item.producto.precio %>
-                        <form action="/carrito/eliminar/<%= item.producto._id %>" method="POST" style="display:inline;">
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                        </form>
-                    </li>
-                <% }); %>
-            </ul>
-            <form action="/carrito/vaciar" method="POST">
-                <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
-            </form>
-        <% } else { %>
-            <p>Tu carrito está vacío.</p>
-        <% } %>
-        </div>
+          <div class="content">
+              <h1>Tu Carrito</h1>
+              <ul id="carritoList">
+                  <!-- El carrito se cargará dinámicamente mediante CARRITOC.js -->
+              </ul>
+              <form action="/carrito/vaciar" method="POST">
+                  <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
+              </form>
+          </div>
       </div>
-    </section>
+  </section>  
   </div>
 
   <footer>
