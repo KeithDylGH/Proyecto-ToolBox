@@ -20,7 +20,17 @@ const bunnyPullZoneUrl = `https://${process.env.bunnyNetPullZone}`;
 // Endpoint para agregar un nuevo producto
 router.post('/admin/inventario', async (req, res) => {
     try {
-        const nuevoProducto = new Producto(req.body);
+        const { nombre, precio, categoria, descripcion, marca, stock } = req.body;
+
+        const nuevoProducto = new Producto({
+            nombre,
+            precio,
+            categoria,
+            descripcion,
+            marca,
+            stockDisponible: stock
+        });
+
         await nuevoProducto.save();
         res.status(201).json(nuevoProducto);
     } catch (error) {
@@ -112,21 +122,19 @@ router.delete('/admin/inventario/:id', async (req, res) => {
 // Endpoint para actualizar un producto
 router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
     try {
-        const { nombre, precio, categoria, descripcion } = req.body;
+        const { nombre, precio, categoria, descripcion, marca, stock } = req.body;
         const imagen = req.file;
         const id = req.params.id;
 
-        // Buscar el producto por su ID
         const producto = await Producto.findById(id);
-        if (!producto) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
+        if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
 
-        // Actualizar los campos del producto
         producto.nombre = nombre;
         producto.precio = precio;
         producto.categoria = categoria;
         producto.descripcion = descripcion;
+        producto.marca = marca;  // Actualizamos la marca
+        producto.stockDisponible = stock;  // Actualizamos el stock
 
         // Verificar si se proporciona una nueva imagen
         if (imagen) {
