@@ -120,9 +120,9 @@
           <p><b>Material:</b> <%= producto.material %></p>
           <hr>
           <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
-          <button class="btn btn-danger btn-lg btn-block mt-2" data-producto-id="<%= producto._id %>">
+          <button class="btn btn-danger btn-lg btn-block mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
             Agregar al Carrito
-          </button>
+          </button>          
           <button class="btn btn-success btn-lg btn-block mt-2" id="comprarBtn" data-producto-id="<%= producto._id %>">Comprar</button>
           
           <% if (!producto.disponible) { %>
