@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (data.carrito.length > 0) {
                     data.carrito.forEach(item => {
+                        console.log('Elemento del carrito:', item); // Depuración
                         const li = document.createElement('li');
                         li.className = 'list-group-item d-flex justify-content-between align-items-center';
                         li.innerHTML = `
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <img src="${item.imagen.data}" alt="${item.nombre}" class="img-thumbnail" style="width: 100px; height: 100px;">
                                 <div class="ms-3">
                                     <strong>${item.nombre}</strong> - ${item.categoria}<br>
-                                    <span class="badge badge-primary badge-pill">Cantidad: ${item.cantidad}</span><br>
+                                    <span class="badge badge-primary badge-pill cantidad-texto">Cantidad: ${item.cantidad}</span><br>
                                     <span>Precio unitario: $${item.precio}</span><br>
                                     <span>Total: $${(item.precio * item.cantidad).toFixed(2)}</span>
                                 </div>
