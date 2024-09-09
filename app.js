@@ -148,15 +148,8 @@ app.get('/tienda/producto/:id', async (req, res) => {
     try {
         const productoId = req.params.id;
         const producto = await iProducto.findById(productoId);
-
         if (producto) {
-            // Obtener productos aleatorios excluyendo el producto actual
-            const randomProducts = await iProducto.aggregate([
-                { $match: { _id: { $ne: productoId } } },
-                { $sample: { size: 4 } } // Cambia el tamaño según tus necesidades
-            ]);
-
-            res.render('shop/Productos', { producto, randomProducts });
+            res.render('shop/Productos', { producto });
         } else {
             res.status(404).send('Producto no encontrado');
         }
