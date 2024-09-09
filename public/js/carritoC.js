@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     cargarCarrito();
 
-    // Agregar producto al carrito
+    // Agregar producto al carrito (sin cambios)
     document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
             const productoId = this.getAttribute('data-producto-id');
-            const cantidad = 1; // O el valor que determines
+            const cantidad = 1;
 
             try {
                 const response = await fetch('/carrito/agregar', {
@@ -36,11 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch('/api/carrito/getCarrito');
             const data = await response.json();
-    
+
             if (data.success) {
                 const carritoList = document.getElementById('carritoList');
-                carritoList.innerHTML = '';  // Limpiar la lista actual
-    
+                carritoList.innerHTML = '';
+
                 if (data.carrito.length > 0) {
                     data.carrito.forEach(item => {
                         const li = document.createElement('li');
@@ -52,14 +52,36 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <span class="badge badge-primary badge-pill">Cantidad: ${item.cantidad}</span>
                             <span>Precio: $${item.precio}</span>
-                            <form action="/carrito/eliminar/${item._id}" method="POST" style="display:inline;">
-                                <button class="btn btn-danger btn-sm">Eliminar</button>
-                            </form>
+                            <button class="btn btn-danger btn-sm btn-eliminar" data-producto-id="${item._id}">Eliminar</button>
                         `;
                         carritoList.appendChild(li);
                     });
+
+                    // Añadir event listener para eliminar producto
+                    document.querySelectorAll('.btn-eliminar').forEach(btn => {
+                        btn.addEventListener('click', async function() {
+                            const productoId = this.getAttribute('data-producto-id');
+
+                            try {
+                                const response = await fetch(`/carrito/remove/${productoId}`, {
+                                    method: 'DELETE'
+                                });
+                                const data = await response.json();
+
+                                if (data.success) {
+                                    cargarCarrito();
+                                    mostrarNotificacion('Producto eliminado del carrito', 'success');
+                                } else {
+                                    mostrarNotificacion('Error al eliminar producto del carrito', 'error');
+                                }
+                            } catch (error) {
+                                console.error('Error en la solicitud:', error);
+                                mostrarNotificacion('Error al eliminar producto del carrito', 'error');
+                            }
+                        });
+                    });
                 } else {
-                    carritoList.innerHTML = '<p>Tu carrito está vacío.</p>';  // Mostrar mensaje de carrito vacío
+                    carritoList.innerHTML = '<p>Tu carrito está vacío.</p>';
                 }
             } else {
                 console.error('Error al cargar el carrito:', data.message);
@@ -69,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error en la solicitud:', error);
             mostrarNotificacion('Error en la solicitud', 'error');
         }
-    } 
+    }
 
     // Mostrar notificaciones
     function mostrarNotificacion(mensaje, tipo) {
