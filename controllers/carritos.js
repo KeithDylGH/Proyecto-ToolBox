@@ -45,6 +45,7 @@ carritoRouter.post('/add', authorize(['user', 'admin', 'boss']), async (req, res
             producto: {
                 _id: producto._id,
                 nombre: producto.nombre,
+                precio: producto.precio,
                 categoria: producto.categoria,
                 imagen: producto.imagen,
                 cantidad: usuario.carrito[index]?.cantidad || 1
@@ -81,7 +82,8 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
         const carrito = usuario.carrito.map(item => ({
             _id: item.producto._id,
             nombre: item.producto.nombre,
-            categoria: item.producto.categoria.nombre, // Mostrar el nombre de la categoría
+            precio: item.producto.precio,
+            categoria: item.producto.categoria.nombre,
             imagen: item.producto.imagen,
             cantidad: item.cantidad
         }));
