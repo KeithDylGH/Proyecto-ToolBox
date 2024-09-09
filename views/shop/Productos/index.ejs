@@ -151,16 +151,30 @@
           </div>
         <% } %>
       </div>
-      <% if (productosAleatorios.length > 6) { %>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselProductos" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Anterior</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselProductos" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Siguiente</span>
-        </button>
-      <% } %>
+      <% if (productosAleatorios && productosAleatorios.length > 0) { %>
+        <div id="carouselProductos" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <% for (let i = 0; i < productosAleatorios.length; i += 6) { %>
+              <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                <div class="row">
+                  <% productosAleatorios.slice(i, i + 6).forEach(producto => { %>
+                    <div class="col-md-2">
+                      <div class="card">
+                        <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>">
+                        <div class="card-body">
+                          <h5 class="card-title"><%= producto.nombre %></h5>
+                          <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                          <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver Producto</a>
+                        </div>
+                      </div>
+                    </div>
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      <% } %>      
     </div>
   </section>
 </main>
