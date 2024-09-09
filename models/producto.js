@@ -30,11 +30,11 @@ const productoSchema = new mongoose.Schema({
         },
     },
     marca: {
-        type: String,  // Nuevo campo
+        type: String,
         required: true,
     },
-    stockDisponible: {
-        type: Number,  // Nuevo campo
+    stock: {
+        type: Number,
         required: true,
         min: 0  // No se permite stock negativo
     }

@@ -22,13 +22,17 @@ router.post('/admin/inventario', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion, marca, stock } = req.body;
 
+        if (stock < 0) {
+            return res.status(400).json({ error: 'El stock no puede ser negativo' });
+        }
+
         const nuevoProducto = new Producto({
             nombre,
             precio,
             categoria,
             descripcion,
             marca,
-            stockDisponible: stock
+            stock
         });
 
         await nuevoProducto.save();
@@ -63,12 +67,9 @@ router.get('/admin/inventario/:id', async (req, res) => {
 router.get('/verproducto', async (req, res) => {
     try {
         const productos = await Producto.find();
-        // Asegúrate de que la URL de la imagen se pase correctamente
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
-                // Asegúrate de que `producto.imagen.data` contenga la URL completa
                 producto.imagen.data = `${process.env.bunnyNetPullZone}/${producto.imagen.data.split('/').pop()}`;
-                console.log('URL de la imagen:', producto.imagen.data);
             }
         });
         res.render('account/cuenta/admin/seeP/index', { productos });
@@ -86,7 +87,6 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
-        // Verifica si el producto tiene una imagen asociada
         if (producto.imagen && producto.imagen.data) {
             const imagenUrl = producto.imagen.data;
             const imagenNombre = imagenUrl.split('/').pop();
@@ -96,7 +96,7 @@ router.delete('/admin/inventario/:id', async (req, res) => {
                 const deleteResponse = await axios.delete(deleteUrl, {
                     headers: {
                         'AccessKey': bunnyAccessKey,
-                        'Content-Type': 'application/octet-stream' // Asegurar que se envíe este encabezado
+                        'Content-Type': 'application/octet-stream'
                     }
                 });
 
@@ -109,7 +109,6 @@ router.delete('/admin/inventario/:id', async (req, res) => {
             }
         }
 
-        // Elimina el producto de la base de datos
         await Producto.findByIdAndDelete(req.params.id);
 
         res.status(200).json({ message: 'Producto eliminado correctamente' });
@@ -126,6 +125,10 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         const imagen = req.file;
         const id = req.params.id;
 
+        if (stock < 0) {
+            return res.status(400).json({ error: 'El stock no puede ser negativo' });
+        }
+
         const producto = await Producto.findById(id);
         if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
 
@@ -133,12 +136,10 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         producto.precio = precio;
         producto.categoria = categoria;
         producto.descripcion = descripcion;
-        producto.marca = marca;  // Actualizamos la marca
-        producto.stockDisponible = stock;  // Actualizamos el stock
+        producto.marca = marca;
+        producto.stock = stock;
 
-        // Verificar si se proporciona una nueva imagen
         if (imagen) {
-            // Eliminar la imagen antigua si existe
             if (producto.imagen && producto.imagen.data) {
                 const imagenUrl = producto.imagen.data;
                 const imagenNombre = imagenUrl.split('/').pop();
@@ -157,7 +158,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                 }
             }
 
-            // Subir la nueva imagen a Bunny Storage
             try {
                 const fileName = imagen.originalname.replace(/\.[^/.]+$/, '') + '.webp';
                 const fileBuffer = await sharp(imagen.buffer)
@@ -173,7 +173,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
                     }
                 });
 
-                // Actualizar la URL de la imagen en el producto
                 producto.imagen = {
                     data: `${bunnyPullZoneUrl}/${fileName}`,
                     contentType: 'image/webp'
@@ -185,7 +184,6 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
             }
         }
 
-        // Guardar los cambios en el producto
         await producto.save();
         res.status(200).json(producto);
     } catch (error) {
