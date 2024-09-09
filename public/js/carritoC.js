@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <img src="${item.imagen.data}" alt="${item.nombre}" class="img-thumbnail" style="width: 100px; height: 100px;">
                                 <div class="ms-3">
                                     <strong>${item.nombre}</strong> - ${item.categoria}<br>
-                                    <span class="badge badge-primary badge-pill cantidad-texto">Cantidad: ${item.cantidad}</span><br>
+                                    <span class="text-dark badge badge-primary badge-pill cantidad-texto">Cantidad: ${item.cantidad}</span><br>
                                     <span>Precio unitario: $${item.precio}</span><br>
                                     <span>Total: $${(item.precio * item.cantidad).toFixed(2)}</span>
                                 </div>
