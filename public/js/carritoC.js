@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const carritoList = document.getElementById('carritoList');
                 carritoList.innerHTML = '';
 
+                let montoTotal = 0; // Variable para el monto total
+
                 if (data.carrito.length > 0) {
                     data.carrito.forEach(item => {
                         console.log('Elemento del carrito:', item); // Depuración
@@ -59,7 +61,16 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button class="btn btn-danger btn-sm btn-eliminar" data-producto-id="${item._id}">Eliminar</button>
                         `;
                         carritoList.appendChild(li);
+
+                        // Acumulando el monto total
+                        montoTotal += item.precio * item.cantidad;
                     });
+
+                    // Mostrar monto total
+                    const montoTotalElement = document.getElementById('totalMonto');
+                    if (montoTotalElement) {
+                        montoTotalElement.textContent = `Monto Total: $${montoTotal.toFixed(2)}`;
+                    }
 
                     // Añadir event listener para eliminar producto
                     document.querySelectorAll('.btn-eliminar').forEach(btn => {

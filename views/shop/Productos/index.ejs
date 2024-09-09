@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToolBox - Producto</title>
+    <title><%= producto.nombre %> - ToolBox</title>
 
     <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png" />
     <link rel="stylesheet" href="/css/producto.css" />
     
     <!--BOOTSTRAP-->
-   <!--  <link rel="stylesheet" href="/bootstrap-5.3.3-dist/css/bootstrap.rtl.min.css">
-    <script src="/bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script> -->
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -24,8 +21,7 @@
 </head>
 <body>
   <header>
-      
-    <nav class="navbar navbar-expand-lg ">
+    <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <a class="navbar-brand" href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
         <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,13 +30,13 @@
         <div class="collapse navbar-collapse" id="navbarScroll">
           <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
             <li class="nav-item">
-              <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
+              <a class="nav-link active link-light" aria-current="page" href="/">Inicio</a>
             </li>
             <li class="nav-item">
               <a class="nav-link link-light" href="#">Cuenta</a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle link-light " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Categoria
               </a>
               <ul class="dropdown-menu">
@@ -56,7 +52,6 @@
               </ul>
             </li>
             <li class="nav-item">
-              
               <div class="carro">
                 <a href="#" class="carrito">
                   <img src="/img/icono/carrito de compras.png" alt="carrito" />
@@ -65,7 +60,6 @@
                   <button>Vaciar Carrito</button>
                 </div>
               </div>
-
             </li>
           </ul>
           <form class="d-flex" role="search">
@@ -75,173 +69,108 @@
         </div>
       </div>
     </nav>
-
   </header>
 
-      <main>
-        <div class="container mt-4">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="/public/img/cuerpo/cinturon porta herramientas 5 bolsillos.webp" alt="producto" class="img-fluid">
-                    <div class="d-flex justify-content-center mt-2">
-                        <img src="/public/img/cuerpo/cinturon porta herramientas 5 bolsillos.webp" alt="producto-thumbnail" class="img-thumbnail mx-1 w-25">
-                        <img src="/public/img/cuerpo/cinutron porta herramientas 5 bolsillos frontal.webp" alt="producto-thumbnail" class="img-thumbnail mx-1 w-25">
-                    </div>
+  <main>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Asumiendo que las imágenes están en una carpeta pública accesible -->
+                <img src="<%= producto.imagenPrincipal %>" alt="<%= producto.nombre %>" class="img-fluid">
+                <div class="d-flex justify-content-center mt-2">
+                    <% producto.imagenesSecundarias.forEach(imagen => { %>
+                        <img src="<%= imagen %>" alt="<%= producto.nombre %>-thumbnail" class="img-thumbnail mx-1 w-25">
+                    <% }); %>
                 </div>
-                <div class="col-md-8">
-                    <h3>Cinturon porta herramientas (5 bolsillos)</h3>
-                    <p><b>Marca:</b> ToolBox</p>
-                    <p><b>Color:</b> Negro</p>
-                    <p><b>Capacidad:</b> 5 bolsillos</p>
-                    <p><b>Dimensiones del producto:</b> 30cm x 10cm x 5cm</p>
-                    <p><b>Material:</b> Cuero</p>
-                    <hr>
-                    <h4>Precio: $999.99</h4>
-                    <button class="btn btn-danger btn-lg btn-block mt-2">Añadir al carrito</button>
+            </div>
+            <div class="col-md-8">
+                <h3><%= producto.nombre %></h3>
+                <p><b>Marca:</b> <%= producto.marca %></p>
+                <p><b>Color:</b> <%= producto.color %></p>
+                <p><b>Capacidad:</b> <%= producto.capacidad %></p>
+                <p><b>Dimensiones del producto:</b> <%= producto.dimensiones %></p>
+                <p><b>Material:</b> <%= producto.material %></p>
+                <hr>
+                <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
+                <button class="btn btn-danger btn-lg btn-block mt-2" id="agregarCarritoBtn">Añadir al carrito</button>
+                <% if (!producto.disponible) { %>
                     <p class="mt-3"><strong>No disponible.</strong></p>
                     <p>Este producto no está disponible en stock actualmente.</p>
-                </div>
+                <% } %>
             </div>
-
-            <div class="container mt-5 mb-5">
-              <h3>Te puede interesar</h3>
-
-              <div class="d-flex">
-
-                <div class="card shadow-sm bg-body-tertiary" style="width: 10rem;">
-                  <img src="/public/img/cuerpo/chaleco_web.webp" class="card-img-top" alt="...">
-                  <div class="card-body text-center">
-                    <a class="card-text link-underline-primary fs-6" href="/views/shop/Productos/index.html">Chaleco de seguridad naranja</a>
-                  </div>
-                </div>
-
-                <div class="card shadow-sm bg-body-tertiary" style="width: 10rem;">
-                  <img src="/public/img/cuerpo/chaleco_web.webp" class="card-img-top" alt="...">
-                  <div class="card-body text-center">
-                    <a class="card-text link-underline-primary fs-6" href="/views/shop/Productos/index.html">Chaleco de seguridad naranja</a>
-                  </div>
-                </div>
-
-                <div class="card shadow-sm bg-body-tertiary" style="width: 10rem;">
-                  <img src="/public/img/cuerpo/chaleco_web.webp" class="card-img-top" alt="...">
-                  <div class="card-body text-center">
-                    <a class="card-text link-underline-primary fs-6" href="/views/shop/Productos/index.html">Chaleco de seguridad naranja</a>
-                  </div>
-                </div>
-
-                <div class="card shadow-sm bg-body-tertiary" style="width: 10rem;">
-                  <img src="/public/img/cuerpo/chaleco_web.webp" class="card-img-top" alt="...">
-                  <div class="card-body text-center">
-                    <a class="card-text link-underline-primary fs-6" href="/views/shop/Productos/index.html">Chaleco de seguridad naranja</a>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
         </div>
 
-
-      </main>
-
-
-      <footer class="mt-5 px-4 pt-3 pb-1">
-        <div class="row">
-          <div class="col-5 col-md-2 mb-3">
-            <h5>Acerca de</h5>
-            <ul class="list-unstyled mb-0">
-              <li class="text-light">
-                <a href="#!">Nosotros</a>
-              </li>
-              <li>
-                <a href="#!">Servicios</a>
-              </li>
-              <li>
-                <a href="#!">Productos</a>
-              </li>
-              <li>
-                <a href="#!">Inventarios</a>
-              </li>
-            </ul>
+        <div class="container mt-5 mb-5">
+          <h3>Te puede interesar</h3>
+          <div class="d-flex">
+            <% productosRelacionados.forEach(productoRelacionado => { %>
+                <div class="card shadow-sm bg-body-tertiary" style="width: 10rem;">
+                  <img src="<%= productoRelacionado.imagen %>" class="card-img-top" alt="<%= productoRelacionado.nombre %>">
+                  <div class="card-body text-center">
+                    <a class="card-text link-underline-primary fs-6" href="/producto/<%= productoRelacionado._id %>"><%= productoRelacionado.nombre %></a>
+                  </div>
+                </div>
+            <% }); %>
           </div>
-    
-          <div class="col-5 col-md-2 mb-3">
-            <h5>Pagos</h5>
-            <ul class="list-unstyled mb-0">
-              <li>
-                <a href="#!">Metodos de Pago</a>
-              </li>
-              <li>
-                <a href="#!">Cuenta</a>
-              </li>
-              <li>
-                <a href="#!">Crear cuenta</a>
-              </li>
-            </ul>
-          </div>
-    
-          <div class="col-5 col-md-2 mb-3">
-            <h5>Contactos</h5>
-            <ul class="list-unstyled">
-              <li>
-                <a href="https://www.whatsapp.com/?lang=es_LA"
-                >WhatsApp
-                <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="icon icon-tabler icon-tabler-brand-whatsapp"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="#00b341"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
-                <path
-                d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1"
-                />
-              </svg>
-            </a>
+        </div>
+    </div>
+  </main>
+
+  <footer class="mt-5 px-4 pt-3 pb-1">
+    <div class="row">
+      <div class="col-5 col-md-2 mb-3">
+        <h5>Acerca de</h5>
+        <ul class="list-unstyled mb-0">
+          <li class="text-light">
+            <a href="#!">Nosotros</a>
           </li>
           <li>
-            <a
-            href="https://www.google.com/intl/es-419/gmail/about/"
-            >Gmail
-            <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="icon icon-tabler icon-tabler-brand-gmail"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="#ff4500"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path
-            d="M16 20h3a1 1 0 0 0 1 -1v-14a1 1 0 0 0 -1 -1h-3v16z"
-            />
-            <path d="M5 20h3v-16h-3a1 1 0 0 0 -1 1v14a1 1 0 0 0 1 1z" />
-            <path d="M16 4l-4 4l-4 -4" />
-            <path d="M4 6.5l8 7.5l8 -7.5" />
-          </svg>
-        </a>
-      </li>
-    </ul>
-          </div>
-        </div>
-    
-        <div class="d-flex flex-column justify-content-between py-4 my-4 border-top">
-          <p class="text-center">&copy; 2024 <a href="#" class="">ToolBox</a>. Todos los derechos son reservados.</p>
-        </div>
-      </footer>
+            <a href="#!">Servicios</a>
+          </li>
+          <li>
+            <a href="#!">Productos</a>
+          </li>
+          <li>
+            <a href="#!">Inventarios</a>
+          </li>
+        </ul>
+      </div>
 
+      <div class="col-5 col-md-2 mb-3">
+        <h5>Pagos</h5>
+        <ul class="list-unstyled mb-0">
+          <li>
+            <a href="#!">Metodos de Pago</a>
+          </li>
+          <li>
+            <a href="#!">Cuenta</a>
+          </li>
+          <li>
+            <a href="#!">Crear cuenta</a>
+          </li>
+        </ul>
+      </div>
 
+      <div class="col-5 col-md-2 mb-3">
+        <h5>Contactos</h5>
+        <ul class="list-unstyled">
+          <li>
+            <a href="https://www.whatsapp.com/?lang=es" class="link-light">WhatsApp</a>
+          </li>
+          <li>
+            <a href="#!" class="link-light">Llamada</a>
+          </li>
+          <li>
+            <a href="#!" class="link-light">Email</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="my-3" />
+    <p class="text-center text-light mb-0">© 2024 ToolBox, Inc. All rights reserved.</p>
+  </footer>
+
+  <script src="/js/productoP.js"></script>
 </body>
 </html>
