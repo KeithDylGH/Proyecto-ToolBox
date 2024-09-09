@@ -64,22 +64,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             try {
                                 const response = await fetch(`/api/carrito/remove/${productoId}`, {
-                                    method: 'DELETE'
-                                });                                
-                                const data = await response.json();
-
-                                if (data.success) {
-                                    cargarCarrito();
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    credentials: 'same-origin'
+                                });
+                        
+                                const result = await response.json();
+                                console.log('Respuesta al eliminar producto del carrito:', result);
+                                
+                                if (result.success) {
                                     mostrarNotificacion('Producto eliminado del carrito', 'success');
+                                    cargarCarrito(); // Actualiza el carrito en la interfaz
                                 } else {
-                                    mostrarNotificacion('Error al eliminar producto del carrito', 'error');
+                                    mostrarNotificacion(result.message || 'Error al eliminar producto del carrito', 'error');
                                 }
                             } catch (error) {
-                                console.error('Error en la solicitud:', error);
+                                console.error('Error al eliminar producto del carrito:', error);
                                 mostrarNotificacion('Error al eliminar producto del carrito', 'error');
                             }
                         });
                     });
+
+                    // Escuchar el clic en el botón de vaciar carrito
+                    const botonVaciarCarrito = document.getElementById('vaciarCarrito');
+                    if (botonVaciarCarrito) {
+                        botonVaciarCarrito.addEventListener('click', async function() {
+                            try {
+                                const response = await fetch('/api/carrito/vaciar', {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    credentials: 'same-origin'
+                                });
+
+                                const result = await response.json();
+                                if (result.success) {
+                                    cargarCarrito(); // Actualiza el carrito en la interfaz
+                                    mostrarNotificacion('Carrito vaciado exitosamente', 'success');
+                                } else {
+                                    mostrarNotificacion(result.message || 'Error al vaciar el carrito', 'error');
+                                }
+                            } catch (error) {
+                                console.error('Error al vaciar el carrito:', error);
+                                mostrarNotificacion('Error al vaciar el carrito', 'error');
+                            }
+                        });
+                    }
+
                 } else {
                     carritoList.innerHTML = '<p>Tu carrito está vacío.</p>';
                 }
@@ -89,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
-            mostrarNotificacion('Error en la solicitud', 'error');
+            mostrarNotificacion('Error al cargar el carrito', 'error');
         }
     }
 
