@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
     if (agregarCarritoBtn) {
       agregarCarritoBtn.addEventListener('click', async function() {
-        const productoId = '<%= producto._id %>'; // Esta línea se eliminará de aquí
-        const cantidad = 1;
+        const productoId = agregarCarritoBtn.getAttribute('data-producto-id'); // Obtener productoId del atributo data-producto-id
+        const cantidad = 1; // Puedes ajustar la cantidad si es necesario
   
         try {
           const response = await fetch('/carrito/agregar', {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (response.ok) {
             alert('Producto añadido al carrito');
           } else {
-            alert('Error al añadir el producto al carrito');
+            alert('Error al añadir el producto al carrito: ' + result.message);
           }
         } catch (error) {
           console.error('Error:', error);
@@ -27,5 +27,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-  });
-  
+  });  

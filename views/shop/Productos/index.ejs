@@ -20,80 +20,31 @@
     />
 </head>
 <body>
-  <header>
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
-        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon bg-light"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarScroll">
-          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-            <li class="nav-item">
-              <a class="nav-link active link-light" aria-current="page" href="/">Inicio</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link link-light" href="#">Cuenta</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Categoria
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Cabeza</a></li>
-                <li><a class="dropdown-item" href="#">Candados</a></li>
-                <li><a class="dropdown-item" href="#">Cuerpo</a></li>
-                <li><a class="dropdown-item" href="#">Escaleras</a></li>
-                <li><a class="dropdown-item" href="#">Herramientas</a></li>
-                <li><a class="dropdown-item" href="#">Luces</a></li>
-                <li><a class="dropdown-item" href="#">Maquinas</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Pinturas</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <div class="carro">
-                <a href="#" class="carrito">
-                  <img src="/img/icono/carrito de compras.png" alt="carrito" />
-                </a>
-                <div class="carro-dropdown">
-                  <button>Vaciar Carrito</button>
-                </div>
-              </div>
-            </li>
-          </ul>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
-          </form>
-        </div>
-      </div>
-    </nav>
+  <%- include('partials/header') %> <!-- Incluir el header -->
   </header>
 
   <main>
     <div class="container mt-4">
       <div class="row">
-          <div class="col-md-4">
-              <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-fluid">
-          </div>
-          <div class="col-md-8">
-              <h3><%= producto.nombre %></h3>
-              <p><b>Marca:</b> <%= producto.marca %></p>
-              <p><b>Color:</b> <%= producto.color %></p>
-              <p><b>Capacidad:</b> <%= producto.capacidad %></p>
-              <!-- <p><b>Dimensiones del producto:</b> <%= producto.dimensiones %></p>
-              <p><b>Material:</b> <%= producto.material %></p> -->
-              <hr>
-              <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
-              <button class="btn btn-danger btn-lg btn-block mt-2" id="agregarCarritoBtn">Añadir al carrito</button>
-              <% if (!producto.disponible) { %>
-                  <p class="mt-3"><strong>No disponible.</strong></p>
-                  <p>Este producto no está disponible en stock actualmente.</p>
-              <% } %>
-          </div>
+        <div class="col-md-4">
+          <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-fluid">
+        </div>
+        <div class="col-md-8">
+          <h3><%= producto.nombre %></h3>
+          <p><b>Marca:</b> <%= producto.marca %></p>
+          <p><b>Material:</b> <%= producto.material %></p>
+          <hr>
+          <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
+          <button class="btn btn-danger btn-lg btn-block mt-2" id="agregarCarritoBtn" data-producto-id="<%= producto._id %>">Añadir al carrito</button>
+          <button class="btn btn-success btn-lg btn-block mt-2" id="comprarBtn" data-producto-id="<%= producto._id %>">Comprar</button>
+          
+          <% if (!producto.disponible) { %>
+            <p class="mt-3"><strong>No disponible.</strong></p>
+            <p>Este producto no está disponible en stock actualmente.</p>
+          <% } %>
+        </div>
       </div>
-  </div>  
+    </div>
   </main>
 
   <footer class="mt-5 px-4 pt-3 pb-1">
@@ -152,5 +103,6 @@
   </footer>
 
   <script src="/js/productoP.js"></script>
+  <script src="/js/home.js"></script>
 </body>
 </html>
