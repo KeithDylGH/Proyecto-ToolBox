@@ -126,57 +126,31 @@
     </div>
   </div>
 
-  <!-- Carrusel de productos aleatorios -->
-  <section class="mt-5">
-    <h2>Productos Relacionados</h2>
-    <div id="carouselProductos" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <% if (productosAleatorios && productosAleatorios.length > 0) { %>
-          <% for (let i = 0; i < productosAleatorios.length; i += 6) { %>
-            <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-              <div class="row">
-                <% productosAleatorios.slice(i, i + 6).forEach(producto => { %>
-                  <div class="col-md-2">
-                    <div class="card">
-                      <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>">
-                      <div class="card-body">
-                        <h5 class="card-title"><%= producto.nombre %></h5>
-                        <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                        <a href="/producto/<%= producto._id %>" class="btn btn-primary">Ver Producto</a>
-                      </div>
-                    </div>
-                  </div>
-                <% }); %>
-              </div>
+  <!-- Sección de productos aleatorios -->
+  <section class="random-products mt-5">
+    <h2>Productos Aleatorios</h2>
+    <div class="row">
+        <% randomProducts.forEach(producto => { %>
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" />
+                <div class="card-body">
+                    <h5 class="card-title"><%= producto.nombre %></h5>
+                    <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                    <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
+                    <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">
+                        Agregar al Carrito
+                    </button>
+                </div>
             </div>
-          <% } %>
-        <% } else { %>
-          <p>No se encontraron productos.</p>
-        <% } %>
-      </div>
-      <% if (productosAleatorios.length > 6) { %>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselProductos" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselProductos" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      <% } %>
+        </div>
+        <% }); %>
     </div>
   </section>
 </main>
 
-<footer class="mt-5 px-4 pt-3 pb-1">
-    <div class="row">
-        <div class="col">
-            <p class="text-center">&copy; 2024 ToolBox. Todos los derechos reservados.</p>
-        </div>
-    </div>
-</footer>
-
-<script src="/js/producto.js"></script>
+<script src="/js/productoC.js"></script>
 <script src="/js/notificacion.js"></script>
+<script src="/js/carritoC.js"></script>
 </body>
 </html>
