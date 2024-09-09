@@ -68,23 +68,6 @@ router.get('/verproducto', async (req, res) => {
     }
 });
 
-// Ruta para mostrar productos aleatorios
-router.get('/productos', async (req, res) => {
-    try {
-        const productos = await Producto.find();
-        const productosAleatorios = productos.sort(() => 0.5 - Math.random()).slice(0, 20); // Obtén los primeros 20 productos aleatorios
-        productosAleatorios.forEach(producto => {
-            if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
-                producto.imagen.data = `${process.env.bunnyNetPullZone}/${producto.imagen.data.split('/').pop()}`;
-            }
-        });
-        res.render('shop/Productos/index', { productosAleatorios });
-    } catch (error) {
-        console.error('Error al obtener productos aleatorios:', error);
-        res.status(500).send('Error al obtener productos aleatorios');
-    }
-});
-
 // Ruta para eliminar un producto
 router.delete('/admin/inventario/:id', async (req, res) => {
     try {
