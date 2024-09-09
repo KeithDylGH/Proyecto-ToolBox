@@ -46,13 +46,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.carrito.length > 0) {
                     data.carrito.forEach(item => {
                         console.log('Elemento del carrito:', item); // Depuración
+                
                         const li = document.createElement('li');
                         li.className = 'list-group-item d-flex justify-content-between align-items-center';
                         li.innerHTML = `
                             <div class="d-flex align-items-center">
-                                <img src="${item.imagen.data}" alt="${item.nombre}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                <a href="/producto/${item._id}" class="d-flex align-items-center text-decoration-none">
+                                    <img src="${item.imagen.data}" alt="${item.nombre}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                </a>
                                 <div class="ms-3">
-                                    <strong>${item.nombre}</strong> - ${item.categoria}<br>
+                                    <a href="/producto/${item._id}" class="text-dark text-decoration-none">
+                                        <strong>${item.nombre}</strong>
+                                    </a>
+                                    - ${item.categoria}<br>
                                     <span class="text-dark badge badge-primary badge-pill cantidad-texto">Cantidad: ${item.cantidad}</span><br>
                                     <span>Precio unitario: $${item.precio}</span><br>
                                     <span>Total: $${(item.precio * item.cantidad).toFixed(2)}</span>
@@ -61,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button class="btn btn-danger btn-sm btn-eliminar" data-producto-id="${item._id}">Eliminar</button>
                         `;
                         carritoList.appendChild(li);
-
+                
                         // Acumulando el monto total
                         montoTotal += item.precio * item.cantidad;
-                    });
+                    });                
 
                     // Mostrar monto total
                     const montoTotalElement = document.getElementById('totalMonto');

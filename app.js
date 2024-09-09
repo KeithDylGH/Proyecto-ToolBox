@@ -144,8 +144,18 @@ app.get('/tienda', (req, res) => {
     res.render('shop/Catalogo');
 });
 
-app.get('/tienda/producto', (req, res) => {
-    res.render('shop/Productos');
+app.get('/tienda/producto/:id', async (req, res) => {
+    try {
+        const productoId = req.params.id;
+        const producto = await iProducto.findById(productoId);
+        if (producto) {
+            res.render('shop/Productos', { producto });
+        } else {
+            res.status(404).send('Producto no encontrado');
+        }
+    } catch (error) {
+        res.status(500).send('Error al obtener el producto');
+    }
 });
 
 app.get('/cliente', (req, res) => {

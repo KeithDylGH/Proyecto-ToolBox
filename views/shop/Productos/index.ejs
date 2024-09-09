@@ -105,13 +105,13 @@
           <div class="d-flex">
             <% productosRelacionados.forEach(productoRelacionado => { %>
                 <div class="card shadow-sm bg-body-tertiary" style="width: 10rem;">
-                  <img src="<%= productoRelacionado.imagen %>" class="card-img-top" alt="<%= productoRelacionado.nombre %>">
-                  <div class="card-body text-center">
-                    <a class="card-text link-underline-primary fs-6" href="/producto/<%= productoRelacionado._id %>"><%= productoRelacionado.nombre %></a>
-                  </div>
+                    <img src="<%= productoRelacionado.imagen.data %>" class="card-img-top" alt="<%= productoRelacionado.nombre %>">
+                    <div class="card-body text-center">
+                        <a class="card-text link-underline-primary fs-6" href="/tienda/producto/<%= productoRelacionado._id %>"><%= productoRelacionado.nombre %></a>
+                    </div>
                 </div>
             <% }); %>
-          </div>
+        </div>                  
         </div>
     </div>
   </main>
