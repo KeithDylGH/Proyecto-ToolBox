@@ -63,9 +63,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             const productoId = this.getAttribute('data-producto-id');
 
                             try {
-                                const response = await fetch(`/carrito/remove/${productoId}`, {
+                                const response = await fetch(`/api/carrito/remove/${productoId}`, {
                                     method: 'DELETE'
-                                });
+                                });                                
                                 const data = await response.json();
 
                                 if (data.success) {
