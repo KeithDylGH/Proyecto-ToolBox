@@ -90,7 +90,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Escuchar el clic en el botón de vaciar carrito
                     const botonVaciarCarrito = document.getElementById('vaciarCarrito');
                     if (botonVaciarCarrito) {
-                        botonVaciarCarrito.addEventListener('click', async function() {
+                        botonVaciarCarrito.addEventListener('click', async function(e) {
+                            e.preventDefault(); // Evitar el comportamiento por defecto del formulario
                             try {
                                 const response = await fetch('/api/carrito/vaciar', {
                                     method: 'DELETE',
@@ -130,9 +131,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mostrar notificaciones
     function mostrarNotificacion(mensaje, tipo) {
         const notificacion = document.createElement('div');
-        notificacion.className = `alert alert-${tipo === 'success' ? 'success' : 'danger'}`;
+        notificacion.className = `notification ${tipo === 'success' ? 'success' : 'error'}`;
         notificacion.textContent = mensaje;
         document.body.appendChild(notificacion);
+
+        // Mostrar notificación
+        notificacion.style.display = 'block';
+
+        // Ocultar notificación después de 3 segundos
         setTimeout(() => {
             notificacion.remove();
         }, 3000);
