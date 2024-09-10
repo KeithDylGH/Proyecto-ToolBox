@@ -153,7 +153,7 @@ app.get('/tienda/producto/:id', async (req, res) => {
             // Obtener productos aleatorios excluyendo el producto actual
             const randomProducts = await iProducto.aggregate([
                 { $match: { _id: { $ne: productoId } } },
-                { $sample: { size: 5 } } // Cambia el tamaño según tus necesidades
+                { $sample: { size: 10 } } // Cambia el tamaño según tus necesidades
             ]);
 
             res.render('shop/Productos', { producto, randomProducts });
