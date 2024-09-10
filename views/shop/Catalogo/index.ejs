@@ -8,12 +8,8 @@
     <link rel="icon" type="image/x-icon" href="/img/logo/logo Saturn.png">
     
     <!--BOOTSTRAP-->
-   <!--  <link rel="stylesheet" href="/bootstrap-5.3.3-dist/css/bootstrap.rtl.min.css">
-    <script src="/bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script> -->
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -97,10 +93,6 @@
                   <% } %>                    
                                                                                                     
                 </ul>
-                <!-- <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Buscar</button>
-                </form> -->
             </div>
         </div>
     </nav>
@@ -108,7 +100,7 @@
 
 
 <div class="mainContainer">
-  <div class="container-fluid">
+  <div class="container">
     <section class="product-listing">
         <div class="contenedor">
             <div class="row pb-5 mb-4">
@@ -120,7 +112,10 @@
                             <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-fluid d-block mx-auto mb-3">
                             <h5><a href="#" class="text-dark"><%= producto.nombre %></a></h5>
                             <p class="small">Precio: <%= producto.precio %> $</p>
-                            <button class="button-1" role="button">Ver más</button>
+                            <button class="btn btn-primary" role="button">Ver más</button>
+                            <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>" data-producto-nombre="<%= producto.nombre %>" data-producto-precio="<%= producto.precio %>">
+                              Agregar al Carrito
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -132,85 +127,101 @@
 </div>
 
  
-<footer class="bg-body-tertiary text-center text-lg-start">
-    <!-- Grid container -->
-    <div class="container p-4">
-      <!--Grid row-->
-      <div class="row">
-  
-        <!--Grid column-->
-        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-          <h5 class="text-uppercase">Acerca de</h5>
-  
-          <ul class="mb-0">
-            <li>
-              <a href="#!" class="text-body">Nosotros</a>
-            </li>
-            <li>
-              <a href="#!" class="text-body">Servicios</a>
-            </li>
-            <li>
-              <a href="#!" class="text-body">Productos</a>
-            </li>
-            <li>
-              <a href="#!" class="text-body">Inventarios</a>
-            </li>
-          </ul>
-        </div>
-        <!--Grid column-->
-  
-        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-          <h5 class="text-uppercase">Pagos</h5>
-  
-          <ul class="mb-0">
-            <li>
-              <a href="#!" class="text-body">Metodos de Pago</a>
-            </li>
-            <li>
-              <a href="#!" class="text-body">Cuenta</a>
-            </li>
-            <li>
-              <a href="#!" class="text-body">Crear cuenta</a>
-            </li>
-          </ul>
-        </div>
+<footer class="px-4 py-4">
+  <div class="row">
+    <div class="col-5 col-md-2 mb-3">
+      <h5>Acerca de</h5>
+      <ul class="list-unstyled mb-0">
+        <li class="text-light">
+          <a href="#!">Nosotros</a>
+        </li>
+        <li>
+          <a href="#!">Servicios</a>
+        </li>
+        <li>
+          <a href="#!">Productos</a>
+        </li>
+        <li>
+          <a href="#!">Inventarios</a>
+        </li>
+      </ul>
+    </div>
 
-        <!--Grid column-->
-        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-          <h5 class="text-uppercase mb-0">Contactos</h5>
-  
-          <ul>
-            <li>
-              <a href="https://www.whatsapp.com/?lang=es_LA" class="text-body">WhatsApp
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-whatsapp" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#00b341" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
-                    <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" />
-                  </svg>
-              </a>
-            </li>
-            <li>
-              <a href="https://www.google.com/intl/es-419/gmail/about/" class="text-body">Gmail
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-gmail" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff4500" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M16 20h3a1 1 0 0 0 1 -1v-14a1 1 0 0 0 -1 -1h-3v16z" />
-                    <path d="M5 20h3v-16h-3a1 1 0 0 0 -1 1v14a1 1 0 0 0 1 1z" />
-                    <path d="M16 4l-4 4l-4 -4" />
-                    <path d="M4 6.5l8 7.5l8 -7.5" />
-                  </svg>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+    <div class="col-5 col-md-2 mb-3">
+      <h5>Pagos</h5>
+      <ul class="list-unstyled mb-0">
+        <li>
+          <a href="#!">Metodos de Pago</a>
+        </li>
+        <li>
+          <a href="#!">Cuenta</a>
+        </li>
+        <li>
+          <a href="#!">Crear cuenta</a>
+        </li>
+      </ul>
     </div>
-  
-    <!-- Copyright -->
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
-      © 2024 Copyright:
-      <a class="text-body" href="/">ToolBox</a>
+
+    <div class="col-5 col-md-2 mb-3">
+      <h5>Contactos</h5>
+      <ul class="list-unstyled">
+        <li>
+          <a href="https://www.whatsapp.com/?lang=es_LA"
+          >WhatsApp
+          <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-brand-whatsapp"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="#00b341"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
+          <path
+          d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1"
+          />
+        </svg>
+      </a>
+    </li>
+    <li>
+      <a
+      href="https://www.google.com/intl/es-419/gmail/about/"
+      >Gmail
+      <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="icon icon-tabler icon-tabler-brand-gmail"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="#ff4500"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path
+      d="M16 20h3a1 1 0 0 0 1 -1v-14a1 1 0 0 0 -1 -1h-3v16z"
+      />
+      <path d="M5 20h3v-16h-3a1 1 0 0 0 -1 1v14a1 1 0 0 0 1 1z" />
+      <path d="M16 4l-4 4l-4 -4" />
+      <path d="M4 6.5l8 7.5l8 -7.5" />
+    </svg>
+  </a>
+</li>
+</ul>
     </div>
-    <!-- Copyright -->
-  </footer>
+  </div>
+
+  <div class="d-flex flex-column justify-content-between py-4 my-4 border-top">
+    <p class="text-center">&copy; 2024 <a href="/" class="">ToolBox</a>. Todos los derechos son reservados.</p>
+  </div>
+</footer>
+  <script src="/js/carritoC.js"></script>
 </body>
 </html>
