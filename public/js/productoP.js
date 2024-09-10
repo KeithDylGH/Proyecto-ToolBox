@@ -1,31 +1,28 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const agregarCarritoBtn = document.getElementById('agregarCarritoBtn');
+document.addEventListener('DOMContentLoaded', function() {
+  const botonesAgregarCarrito = document.querySelectorAll('.btn-agregar-carrito');
 
-  if (agregarCarritoBtn) {
-      agregarCarritoBtn.addEventListener('click', async function() {
-          const productoId = '<%= producto._id %>'; // Esta línea se eliminará de aquí
-          const cantidad = 1;
-
-          try {
-              const response = await fetch('/api/carrito/add', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ productoId, cantidad }),
-                  credentials: 'same-origin'
-              });
-
-              const result = await response.json();
-              if (response.ok) {
-                  alert('Producto añadido al carrito');
+  botonesAgregarCarrito.forEach(boton => {
+      boton.addEventListener('click', function() {
+          const productoId = this.getAttribute('data-producto-id');
+          
+          fetch(`/api/carrito/add`, { // Ajustar ruta aquí
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ productoId: productoId })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  mostrarNotificacion('Producto agregado al carrito', 'success');
               } else {
-                  alert('Error al añadir el producto al carrito');
+                  mostrarNotificacion('Error al agregar producto al carrito', 'error');
               }
-          } catch (error) {
-              console.error('Error:', error);
-              alert('Error al añadir el producto al carrito');
-          }
+          })
+          .catch(error => {
+              mostrarNotificacion('Error de red', 'error');
+          });
       });
-  }
+  });
 });
