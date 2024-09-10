@@ -143,7 +143,7 @@
               <h5 class="card-title"><%= producto.nombre %></h5>
               <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
               <a href="/tienda/producto/<%= producto._id %>" class="btn btn-primary">Ver más</a>
-              <button class="btn btn-secondary mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
+              <button class="btn btn-danger btn-lg btn-block mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
                 Agregar al Carrito
               </button>
             </div>
