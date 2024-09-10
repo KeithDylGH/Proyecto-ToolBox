@@ -111,34 +111,28 @@
     </div>
     <div class="col-md-8">
       <h3><%= producto.nombre %></h3>
-      <!-- <p><b>Marca:</b> <%= producto.marca %></p>
-      <p><b>Material:</b> <%= producto.material %></p> -->
       <hr>
       <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
       <button class="btn btn-danger btn-lg btn-block mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
         Agregar al Carrito
       </button>
       <button class="btn btn-success btn-lg btn-block mt-2" id="comprarBtn" data-producto-id="<%= producto._id %>">Comprar</button>
-      <!-- <% if (!producto.disponible) { %>
-        <p class="mt-3"><strong>No disponible.</strong></p>
-        <p>Este producto no está disponible en stock actualmente.</p>
-      <% } %> -->
     </div>
   </div>
 
   <!-- Sección de productos aleatorios -->
   <section class="random-products mt-5">
-    <h2>Productos Aleatorios</h2>
-    <div class="row">
+    <h2>Productos que te pueden interesar</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         <% randomProducts.forEach(producto => { %>
-        <div class="col-md-3 mb-4">
+        <div class="col">
             <div class="card">
                 <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" />
                 <div class="card-body">
                     <h5 class="card-title"><%= producto.nombre %></h5>
                     <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                    <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
-                    <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">
+                    <a href="/tienda/producto/<%= producto._id %>" class="btn btn-primary">Ver más</a>
+                    <button class="btn btn-secondary mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
                       Agregar al Carrito
                     </button>
                 </div>
