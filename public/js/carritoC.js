@@ -9,13 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const cantidad = 1;
 
             try {
-                const response = await fetch('/carrito/agregar', {
+                const response = await fetch('/api/carrito/agregar', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ productoId, cantidad })
-                });
+                });                
                 const data = await response.json();
 
                 if (data.success) {
