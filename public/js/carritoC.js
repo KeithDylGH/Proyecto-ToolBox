@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
             const productoId = this.getAttribute('data-producto-id');
-            const cantidad = 1;
+            const cantidad = 1; // Cambia esto si deseas manejar cantidades dinámicas
 
             try {
                 const response = await fetch('/api/carrito/agregar', {
@@ -14,12 +14,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ productoId, cantidad })
-                });                
+                    body: JSON.stringify({ productoId, cantidad }),
+                    credentials: 'same-origin'
+                });
+
                 const data = await response.json();
 
                 if (data.success) {
-                    cargarCarrito();
+                    cargarCarrito(); // Actualiza el carrito en la interfaz
                     mostrarNotificacion('Producto agregado al carrito', 'success');
                 } else {
                     mostrarNotificacion('Error al agregar al carrito', 'error');
