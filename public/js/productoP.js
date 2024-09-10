@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cantidad = 1;
   
         try {
-          const response = await fetch('/carrito/agregar', {
+          const response = await fetch('/carrito/add', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
