@@ -98,6 +98,7 @@
     </nav>
 </header>
 
+<div class="notification d-none"></div>
 
 <div class="mainContainer">
   <div class="container">
@@ -112,7 +113,7 @@
                             <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-fluid d-block mx-auto mb-3">
                             <h5><a href="#" class="text-dark"><%= producto.nombre %></a></h5>
                             <p class="small">Precio: <%= producto.precio %> $</p>
-                            <button class="btn btn-primary" role="button">Ver más</button>
+                            <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
                             <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>" data-producto-nombre="<%= producto.nombre %>" data-producto-precio="<%= producto.precio %>">
                               Agregar al Carrito
                             </button>
