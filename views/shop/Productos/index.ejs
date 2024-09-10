@@ -122,24 +122,34 @@
   </div>
 
   <!-- Sección de productos aleatorios -->
-  <section class="random-products mt-5">
-    <h2>Productos que te pueden interesar</h2>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+  <section>
+    <h2>Te puede interesar</h2>
+    <div
+      class="MultiCarousel"
+      data-items="1,3,5,6"
+      data-slide="1"
+      id="MultiCarousel"
+      data-interval="1000"
+    >
+      <div class="MultiCarousel-inner">
         <% randomProducts.forEach(producto => { %>
-        <div class="col">
-            <div class="card" style="max-width: 200px;">
-                <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" style="height: 150px; object-fit: cover;" />
-                <div class="card-body">
-                    <h6 class="card-title"><%= producto.nombre %></h6>
-                    <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                    <a href="/tienda/producto/<%= producto._id %>" class="btn btn-primary btn-sm">Ver más</a>
-                    <button class="btn btn-secondary mt-2 btn-sm btn-agregar-carrito" data-producto-id="<%= producto._id %>">
-                      Agregar al Carrito
-                    </button>
-                </div>
+        <div class="item">
+          <div class="card" style="width: 100%">
+            <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" />
+            <div class="card-body">
+              <h5 class="card-title"><%= producto.nombre %></h5>
+              <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+              <a href="/tienda/producto/<%= producto._id %>" class="btn btn-primary">Ver más</a>
+              <button class="btn btn-secondary mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
+                Agregar al Carrito
+              </button>
             </div>
+          </div>
         </div>
         <% }); %>
+      </div>
+      <button class="btn leftLst bg-light text-dark"><</button>
+      <button class="btn rightLst bg-light text-dark">></button>
     </div>
   </section>
 </main>
