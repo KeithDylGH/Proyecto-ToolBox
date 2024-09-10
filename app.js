@@ -150,10 +150,10 @@ app.get('/logout', (req, res) => {
 app.get('/tienda/:categoriaId?', async (req, res) => {
     try {
         const { categoriaId } = req.params;
-        
+
         // Obtener todas las categorías para el menú de categorías
         const categorias = await Categoria.find();
-        
+
         // Filtrar productos por categoría si se proporciona el ID de la categoría
         const query = categoriaId ? { categoria: categoriaId } : {}; // Ajusta el campo 'categoria' según tu modelo
         const productos = await iProducto.find(query);
@@ -166,7 +166,7 @@ app.get('/tienda/:categoriaId?', async (req, res) => {
             }
         });
 
-        // Obtener el usuario desde la sesión
+        // Obtener el usuario desde la sesión (esto no afecta la funcionalidad, solo el renderizado)
         const CUsuario = req.session.user;
 
         // Renderizar la vista con productos, categorías y usuario
