@@ -111,18 +111,18 @@
     </div>
     <div class="col-md-8">
       <h3><%= producto.nombre %></h3>
-      <p><b>Marca:</b> <%= producto.marca %></p>
-      <p><b>Material:</b> <%= producto.material %></p>
+      <!-- <p><b>Marca:</b> <%= producto.marca %></p>
+      <p><b>Material:</b> <%= producto.material %></p> -->
       <hr>
       <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
       <button class="btn btn-danger btn-lg btn-block mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
         Agregar al Carrito
       </button>
       <button class="btn btn-success btn-lg btn-block mt-2" id="comprarBtn" data-producto-id="<%= producto._id %>">Comprar</button>
-      <% if (!producto.disponible) { %>
+      <!-- <% if (!producto.disponible) { %>
         <p class="mt-3"><strong>No disponible.</strong></p>
         <p>Este producto no está disponible en stock actualmente.</p>
-      <% } %>
+      <% } %> -->
     </div>
   </div>
 

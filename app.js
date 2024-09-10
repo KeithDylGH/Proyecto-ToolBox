@@ -343,8 +343,8 @@ app.get('/api/descargar-inventario', async (req, res) => {
 // Maneja la subida de productos con imágenes
 app.post('/api/productos/agregar', upload.single('imagen'), async (req, res) => {
     try {
-        const { nombre, precio, categoria, descripcion, marca, stock } = req.body; // Incluye stock y marca
-        const imagen = req.file;
+        const { nombre, precio, categoria, descripcion } = req.body;
+        const imagen = req.file; // Cambiado de req.files.imagen a req.file
 
         // Guarda el archivo en el servidor
         if (imagen) {
@@ -352,15 +352,7 @@ app.post('/api/productos/agregar', upload.single('imagen'), async (req, res) => 
             fs.writeFileSync(ruta, imagen.buffer);
         }
 
-        const nuevoProducto = new iProducto({
-            nombre,
-            precio,
-            categoria,
-            descripcion,
-            marca, // Añadido marca
-            stock // Añadido stock
-        });
-
+        const nuevoProducto = new iProducto({ nombre, precio, categoria, descripcion });
         if (imagen) {
             nuevoProducto.imagen = imagen.originalname; // Guarda el nombre del archivo en el modelo de producto
         }
@@ -377,10 +369,6 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
     try {
         const producto = await iProducto.findById(req.params.id);
 
-        if (!producto) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
-
         if (req.file) {
             producto.imagen = await subirImagen(req.file);
         }
@@ -389,13 +377,10 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
         producto.precio = req.body.precio;
         producto.categoria = req.body.categoria;
         producto.descripcion = req.body.descripcion;
-        producto.marca = req.body.marca; // Incluye marca
-        producto.stock = req.body.stock; // Incluye stock
 
         await producto.save();
         res.redirect(`/inventario/verproducto/${producto._id}`);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: 'Error al actualizar el producto' });
     }
 });

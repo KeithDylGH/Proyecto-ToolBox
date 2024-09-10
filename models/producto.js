@@ -28,16 +28,7 @@ const productoSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-    },
-    marca: {
-        type: String,
-        required: true,
-    },
-    stock: {
-        type: Number,
-        required: true,
-        min: 0  // No se permite stock negativo
-    }
+    },    
 });
 
 const Producto = mongoose.model('Producto', productoSchema);

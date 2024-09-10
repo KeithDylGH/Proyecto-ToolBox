@@ -38,7 +38,6 @@
                 <div class="w-75">
                     <div class="card shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
                         <form id="formulario" action="/inventario/editar/<%= producto._id %>" method="POST" enctype="multipart/form-data">
-                            <!-- Campo Nombre -->
                             <div class="mb-4">
                                 <label class="form-label" for="nombre">Nombre</label>
                                 <input 
@@ -50,8 +49,6 @@
                                     placeholder="Nombre Producto"
                                 />
                             </div>
-
-                            <!-- Campo Precio -->
                             <div class="mb-4">
                                 <label class="form-label" for="precio">Precio</label>
                                 <input 
@@ -63,22 +60,6 @@
                                     placeholder="Precio Producto"
                                 />
                             </div>
-
-                            <!-- Campo Stock -->
-                            <div class="mb-4">
-                                <label class="form-label" for="stock">Stock</label>
-                                <input 
-                                    class="form-control"
-                                    id="stock"
-                                    name="stock"
-                                    type="number"
-                                    value="<%= producto.stock %>"
-                                    placeholder="Cantidad en Stock"
-                                    required
-                                />
-                            </div>
-
-                            <!-- Campo Categoría -->
                             <div class="mb-4">
                                 <label class="form-label" for="categoria">Categoría</label>
                                 <select class="form-control" id="categoria" name="categoria" required>
@@ -88,21 +69,7 @@
                                         </option>
                                     <% }); %>
                                 </select>                                                                
-                            </div>
-
-                            <!-- Campo Marca -->
-                            <div class="mb-4">
-                                <label class="form-label" for="marca">Marca</label>
-                                <select class="form-control" id="marca" name="marca" required>
-                                    <% marcas.forEach(function(marca) { %>
-                                        <option value="<%= marca._id %>" <%= producto.marca && producto.marca.equals(marca._id) ? 'selected' : '' %>>
-                                            <%= marca.nombre %>
-                                        </option>
-                                    <% }); %>
-                                </select>
-                            </div>
-
-                            <!-- Campo Descripción -->
+                            </div>                                                        
                             <div class="mb-4">
                                 <label class="form-label" for="descripcion">Descripción</label>
                                 <textarea 
@@ -112,8 +79,7 @@
                                     placeholder="Descripción del producto"
                                 ><%= producto.descripcion %></textarea>
                             </div>
-
-                            <!-- Imagen actual -->
+                            
                             <div class="mb-4">
                                 <label class="form-label" for="imagen">Imagen actual</label>
                                 <% if (producto.imagen && producto.imagen.data !== '') { %>
