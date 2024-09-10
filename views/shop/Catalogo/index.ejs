@@ -34,15 +34,16 @@
                         <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle link-light" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Categoría
-                        </a>
-                        <ul class="dropdown-menu">
-                          <!-- EJEMPLO -->
-                            <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
-                        </ul>
-                    </li>
+                      <a class="nav-link dropdown-toggle link-light" href="#" role="button"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                          Categoría
+                      </a>
+                      <ul class="dropdown-menu">
+                          <% categorias.forEach(categoria => { %>
+                              <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
+                          <% }) %>
+                      </ul>
+                  </li>
 
                     <li class="nav-item">
                       <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">
@@ -107,43 +108,26 @@
 
 
 <div class="mainContainer">
-    <div class="sidebar">
-        <aside>
-        
-            <ul>
-                <li><h5>Productos</h5></li>
-                <li class="sidebar-Li sidebarspace"><input type="checkbox" name="" id="checkTag">Cascos</li>
-                <li class="sidebar-Li sidebarspace"><input type="checkbox" name="" id="checkTag">Lentes</li>
-                <li class="sidebar-Li sidebarspace"><input type="checkbox" name="" id="checkTag">Gafas</li>
-                <li class="sidebar-Li sidebarspace"><input type="checkbox" name="" id="checkTag">Caretas</li>
-                <li class="sidebar-Li sidebarspace"><input type="checkbox" name="" id="checkTag">Cubrebocas</li>
-                <li class="sidebar-Li sidebarspace"><input type="checkbox" name="" id="checkTag">Mascarillas</li>
-            </ul>
-
-        </aside>
-    </div>
-
-
-    <div class="container-fluid">
-      <section class="product-listing">
-          <div class="contenedor">
-              <div class="row pb-5 mb-4">
-                  <% productos.forEach(function(producto) { %>
-                  <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                      <!-- Card -->
-                      <div class="card rounded shadow-sm border-0">
-                          <div class="card-body p-4">
-                              <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>" class="img-fluid d-block mx-auto mb-3">
-                              <h5><a href="#" class="text-dark"><%= producto.nombre %></a></h5>
-                              <p class="small">Precio: <%= producto.precio %> $</p>
-                              <button class="button-1" role="button">Ver más</button>
-                          </div>
-                      </div>
-                  </div>
-                  <% }); %>
-              </div>
-          </div>
-      </section>
+  <div class="container-fluid">
+    <section class="product-listing">
+        <div class="contenedor">
+            <div class="row pb-5 mb-4">
+                <% productos.forEach(function(producto) { %>
+                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                    <!-- Card -->
+                    <div class="card rounded shadow-sm border-0">
+                        <div class="card-body p-4">
+                            <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>" class="img-fluid d-block mx-auto mb-3">
+                            <h5><a href="#" class="text-dark"><%= producto.nombre %></a></h5>
+                            <p class="small">Precio: <%= producto.precio %> $</p>
+                            <button class="button-1" role="button">Ver más</button>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+        </div>
+    </section>
   </div>  
 </div>
 

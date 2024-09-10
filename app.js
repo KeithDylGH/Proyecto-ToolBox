@@ -147,8 +147,34 @@ app.get('/logout', (req, res) => {
     });
 });
 
-app.get('/tienda', (req, res) => {
-    res.render('shop/Catalogo');
+app.get('/tienda/:categoriaId?', async (req, res) => {
+    try {
+        const { categoriaId } = req.params;
+        
+        // Obtener todas las categorías para el menú de categorías
+        const categorias = await Categoria.find();
+        
+        // Filtrar productos por categoría si se proporciona el ID de la categoría
+        const query = categoriaId ? { categoria: categoriaId } : {}; // Ajusta el campo 'categoria' según tu modelo
+        const productos = await iProducto.find(query);
+
+        // Construir la URL completa de la imagen
+        productos.forEach(producto => {
+            if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                const fileName = producto.imagen.data.split('/').pop();
+                producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+            }
+        });
+
+        // Obtener el usuario desde la sesión
+        const CUsuario = req.session.user;
+
+        // Renderizar la vista con productos, categorías y usuario
+        res.render('shop/Catalogo', { CUsuario, productos, categorias });
+    } catch (error) {
+        console.error('Error al obtener productos y categorías:', error);
+        res.status(500).send('Error al obtener productos y categorías');
+    }
 });
 
 app.get('/tienda/producto/:id', async (req, res) => {
