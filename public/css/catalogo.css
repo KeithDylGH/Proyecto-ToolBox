@@ -235,46 +235,19 @@ h3{
     padding: 0 .5rem;
 }
 
-.card{
-    margin: .5rem;
-}
 
-
-
-.button-1 {
-  background-color: #FF6347;
-  border-radius: 8px;
-  border-style: none;
-  box-sizing: border-box;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: inline-block;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  height: 40px;
-  line-height: 20px;
-  list-style: none;
-  margin: 0;
-  outline: none;
-  padding: 10px 22px;
-  position: relative;
+.card {
+  margin: 0.6rem 0;
   text-align: center;
-  text-decoration: none;
-  transition: color 100ms;
-  vertical-align: baseline;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
 }
-
-.button-1:hover,
-.button-1:focus {
-  background-color: #E57368;
-  transition: ease-in-out .2s;
+.card a {
+  background-color: #f44336;
+  border: none;
 }
-
-
+.card a:hover {
+  background-color: #d32f2f;
+  border: none;
+}
 
 /*FOOTER*/
 footer {

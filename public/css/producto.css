@@ -211,6 +211,18 @@ header {
   }
 
 
+  .card {
+    margin: 0.6rem 0;
+    text-align: center;
+  }
+  .card a {
+    background-color: #f44336;
+    border: none;
+  }
+  .card a:hover {
+    background-color: #d32f2f;
+    border: none;
+  }
 
 /*FOOTER*/
 footer {
