@@ -181,6 +181,7 @@ app.get('/tienda/producto/:id', async (req, res) => {
     try {
         const productoId = req.params.id;
         const producto = await iProducto.findById(productoId);
+        const categorias = await Categoria.find(); // Obtener todas las categorías
 
         if (producto) {
             // Obtener productos aleatorios excluyendo el producto actual
@@ -189,7 +190,7 @@ app.get('/tienda/producto/:id', async (req, res) => {
                 { $sample: { size: 10 } } // Cambia el tamaño según tus necesidades
             ]);
 
-            res.render('shop/Productos', { producto, randomProducts });
+            res.render('shop/Productos', { producto, randomProducts, categorias });
         } else {
             res.status(404).send('Producto no encontrado');
         }
