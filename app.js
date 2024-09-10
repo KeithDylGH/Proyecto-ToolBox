@@ -108,6 +108,7 @@ app.use((req, res, next) => {
 
 app.get('/', async (req, res) => {
     try {
+        // Obtener productos aleatorios
         const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
 
         // Construir la URL completa de la imagen
@@ -116,13 +117,19 @@ app.get('/', async (req, res) => {
                 const fileName = producto.imagen.data.split('/').pop();
                 producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
             }
-        });        
+        });
 
+        // Obtener todas las categorías
+        const categorias = await Categoria.find();
+
+        // Obtener el usuario desde la sesión
         const CUsuario = req.session.user;
-        res.render('home/index', { CUsuario, productos });
+
+        // Renderizar la vista con productos, categorías y usuario
+        res.render('home/index', { CUsuario, productos, categorias });
     } catch (error) {
-        console.error('Error al obtener productos aleatorios:', error);
-        res.status(500).send('Error al obtener productos');
+        console.error('Error al obtener productos y categorías:', error);
+        res.status(500).send('Error al obtener productos y categorías');
     }
 });
 
