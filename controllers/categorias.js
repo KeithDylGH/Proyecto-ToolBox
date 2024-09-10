@@ -2,12 +2,23 @@ const express = require('express');
 const router = express.Router();
 const Categoria = require('../models/categoria');
 
-// Obtener todas las categorías
+// Obtener todas las categorías para la administración
 router.get('/', async (req, res) => {
     try {
         const categorias = await Categoria.find();
         res.render('account/cuenta/admin/category', { categorias });
     } catch (error) {
+        res.status(500).json({ error: 'Error al obtener categorías' });
+    }
+});
+
+// Obtener todas las categorías para la página de inicio (home)
+router.get('/home', async (req, res) => {
+    try {
+        const categorias = await Categoria.find();
+        res.render('HOME', { categorias }); // Renderiza la vista HOME.ejs con las categorías
+    } catch (error) {
+        console.error('Error al obtener categorías para el inicio:', error);
         res.status(500).json({ error: 'Error al obtener categorías' });
     }
 });

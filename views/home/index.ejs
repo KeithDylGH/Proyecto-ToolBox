@@ -41,15 +41,17 @@
                       <li class="nav-item">
                           <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
                       </li>
+                      
                       <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle link-light" href="#" role="button"
-                              data-bs-toggle="dropdown" aria-expanded="false">
-                              Categoría
-                          </a>
-                          <ul class="dropdown-menu">
-                              <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
-                          </ul>
-                      </li>
+                        <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categoría
+                        </a>
+                        <ul class="dropdown-menu">
+                            <% categorias.forEach(categoria => { %>
+                                <li><a id="categoria<%= categoria.numero %>" class="dropdown-item" href="/tienda/categoria/<%= categoria._id %>"><%= categoria.nombre %></a></li>
+                            <% }) %>
+                        </ul>
+                    </li>                    
 
                       <li class="nav-item">
                         <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">
@@ -103,10 +105,10 @@
                     <% } %>                    
                                                                                                       
                   </ul>
-                  <form class="d-flex" role="search">
+                  <!-- <form class="d-flex" role="search">
                       <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
                       <button class="btn btn-outline-success" type="submit">Buscar</button>
-                  </form>
+                  </form> -->
               </div>
           </div>
       </nav>

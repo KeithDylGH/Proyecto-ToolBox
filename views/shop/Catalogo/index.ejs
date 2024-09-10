@@ -21,59 +21,89 @@
 </head>
 <body>
   <header>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarScroll">
+                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
+                    <li class="nav-item">
+                        <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle link-light" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Categoría
+                        </a>
+                        <ul class="dropdown-menu">
+                          <!-- EJEMPLO -->
+                            <li><a id="categoria1" class="dropdown-item" href="#">Cabeza</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                      <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">
+                        <img src="/img/icono/carrito de compras.png" alt="carrito" />
+                      </a>
       
-    <nav class="navbar navbar-expand-lg ">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
-        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon bg-light"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarScroll">
-          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-            <li class="nav-item">
-              <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link link-light" href="#">Cuenta</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle link-light " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Categoria
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Cabeza</a></li>
-                <li><a class="dropdown-item" href="#">Candados</a></li>
-                <li><a class="dropdown-item" href="#">Cuerpo</a></li>
-                <li><a class="dropdown-item" href="#">Escaleras</a></li>
-                <li><a class="dropdown-item" href="#">Herramientas</a></li>
-                <li><a class="dropdown-item" href="#">Luces</a></li>
-                <li><a class="dropdown-item" href="#">Maquinas</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Pinturas</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              
-              <div class="carro">
-                <a href="#" class="carrito">
-                  <img src="/img/icono/carrito de compras.png" alt="carrito" />
-                </a>
-                <div class="carro-dropdown">
-                  <button>Vaciar Carrito</button>
-                </div>
-              </div>
+                      <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <ul id="carritoList" class="list-group">
+                                <!-- Aquí se cargarán dinámicamente los productos del carrito -->
+                              </ul>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                              <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
+                              <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>                                                            
 
-            </li>
-          </ul>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
-          </form>
+                    <% if (CUsuario) { %>
+                      <li class="nav-item">
+                          <% if (CUsuario.rol === 'admin') { %>
+                              <a class="nav-link link-light" href="/admin">
+                                  <%= CUsuario.nombre %>
+                              </a>
+                          <% } else { %>
+                              <a class="nav-link link-light" href="/cliente">
+                                  <%= CUsuario.nombre %>
+                              </a>
+                          <% } %>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
+                      </li>
+                  <% } else { %>
+                      <li class="nav-item">
+                          <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
+                      </li>
+                  <% } %>                    
+                                                                                                    
+                </ul>
+                <!-- <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                </form> -->
+            </div>
         </div>
-      </div>
     </nav>
-
-  </header>
+</header>
 
 
 <div class="mainContainer">
@@ -95,189 +125,26 @@
 
 
     <div class="container-fluid">
-
-        <section class="product-listing">
-
-            <div class="contenedor">            
-
-                <div class="row pb-5 mb-4">
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card-->
-                    <div class="card rounded shadow-sm border-0">
-                    <div class="card-body p-4"><img src="/img/cabeza/Casco de Seg tipo 1.webp" alt="" class="img-fluid d-block mx-auto mb-3">
-                        <h5> <a href="#" class="text-dark">Casco de Seguridad Tipo 1</a></h5>
-                        <p class="small">Precio: 10$</p>
-
-                        <button class="button-1" role="button">Ver más</button>
-
-                        <ul class="list-inline small">
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-            
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card-->
-                    <div class="card rounded shadow-sm border-0">
-                    <div class="card-body p-4"><img src="/img/cabeza/Gafas de seguridad.webp" alt="" class="img-fluid d-block mx-auto mb-3">
-                        <h5> <a href="#" class="text-dark">Gafas de seguridad</a></h5>
-                        <p class="small">Precio: 8$</p>
-
-                        <button class="button-1" role="button">Ver más</button>
-                        <ul class="list-inline small">
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-            
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card-->
-                    <div class="card rounded shadow-sm border-0">
-                    <div class="card-body p-4"><img src="/img/cabeza/Casco de Seg tipo 2.webp" alt="" class="img-fluid d-block mx-auto mb-3">
-                        <h5> <a href="#" class="text-dark">Casco de Seguridad tipo 2</a></h5>
-                        <p class="small">Precio: 13$</p>
-
-                        <button class="button-1" role="button">Ver más</button>
-                        <ul class="list-inline small">
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-            
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card-->
-                    <div class="card rounded shadow-sm border-0">
-                    <div class="card-body p-4"><img src="/img/cabeza/cascos para soldar.webp" alt="" class="img-fluid d-block mx-auto mb-3">
-                        <h5> <a href="#" class="text-dark">Careta para soldar</a></h5>
-                        <p class="small">Precio: 20$</p>
-
-                        <button class="button-1" role="button">Ver más</button>
-                        <ul class="list-inline small">
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card-->
-                    <div class="card rounded shadow-sm border-0">
-                    <div class="card-body p-4"><img src="/img/cabeza/cubrebocas.webp" alt="" class="img-fluid d-block mx-auto mb-3">
-                        <h5> <a href="#" class="text-dark">Cubrebocas</a></h5>
-                        <p class="small">Precio: 4$</p>
-
-                        <button class="button-1" role="button">Ver más</button>
-                        <ul class="list-inline small">
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card-->
-                    <div class="card rounded shadow-sm border-0">
-                    <div class="card-body p-4"><img src="/img/cabeza/lentes de seguridad.webp" alt="" class="img-fluid d-block mx-auto mb-3">
-                        <h5> <a href="#" class="text-dark">Lentes de seguridad</a></h5>
-                        <p class="small">Precio: 5$</p>
-
-                        <button class="button-1" role="button">Ver más</button>
-                        <ul class="list-inline small">
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card-->
-                    <div class="card rounded shadow-sm border-0">
-                    <div class="card-body p-4"><img src="/img/cabeza/Linterna cabez 8 led.webp" alt="" class="img-fluid d-block mx-auto mb-3">
-                        <h5> <a href="#" class="text-dark">Linterna Cabeza 8lm</a></h5>
-                        <p class="small">Precio: 8$</p>
-
-                        <button class="button-1" role="button">Ver más</button>
-                        <ul class="list-inline small">
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card-->
-                    <div class="card rounded shadow-sm border-0">
-                    <div class="card-body p-4"><img src="/img/cabeza/Linterna cabeza 19 led.webp" alt="" class="img-fluid d-block mx-auto mb-3">
-                        <h5> <a href="#" class="text-dark">Linterna Cabeza 19lm</a></h5>
-                        <p class="small">Precio: 10$</p>
-
-                        <button class="button-1" role="button">Ver más</button>
-                        <ul class="list-inline small">
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card-->
-                    <div class="card rounded shadow-sm border-0">
-                    <div class="card-body p-4"><img src="/img/cabeza/mascarilla respidarod dos filtros.webp" alt="" class="img-fluid d-block mx-auto mb-3">
-                        <h5> <a href="#" class="text-dark">Mascarilla respirador dos filtros</a></h5>
-                        <p class="small">Precio: 16$</p>
-
-                        <button class="button-1" role="button">Ver más</button>
-                        <ul class="list-inline small">
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-
-                </div>
-                
-            </div>
-        </section>
-    </div>
+      <section class="product-listing">
+          <div class="contenedor">
+              <div class="row pb-5 mb-4">
+                  <% productos.forEach(function(producto) { %>
+                  <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                      <!-- Card -->
+                      <div class="card rounded shadow-sm border-0">
+                          <div class="card-body p-4">
+                              <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>" class="img-fluid d-block mx-auto mb-3">
+                              <h5><a href="#" class="text-dark"><%= producto.nombre %></a></h5>
+                              <p class="small">Precio: <%= producto.precio %> $</p>
+                              <button class="button-1" role="button">Ver más</button>
+                          </div>
+                      </div>
+                  </div>
+                  <% }); %>
+              </div>
+          </div>
+      </section>
+  </div>  
 </div>
 
  
