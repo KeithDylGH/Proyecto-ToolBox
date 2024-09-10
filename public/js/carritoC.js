@@ -51,11 +51,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         li.className = 'list-group-item d-flex justify-content-between align-items-center';
                         li.innerHTML = `
                             <div class="d-flex align-items-center">
-                                <a href="/producto/${item._id}" class="d-flex align-items-center text-decoration-none">
+                                <a href="/tienda/producto/${item._id}" class="d-flex align-items-center text-decoration-none">
                                     <img src="${item.imagen.data}" alt="${item.nombre}" class="img-thumbnail" style="width: 100px; height: 100px;">
                                 </a>
                                 <div class="ms-3">
-                                    <a href="/producto/${item._id}" class="text-dark text-decoration-none">
+                                    <a href="/tienda/producto/${item._id}" class="text-dark text-decoration-none">
                                         <strong>${item.nombre}</strong>
                                     </a>
                                     - ${item.categoria}<br>
