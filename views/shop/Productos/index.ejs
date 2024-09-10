@@ -105,12 +105,13 @@
 </header>
 
 <main class="container mt-4">
-  <div class="row">
+  <div class="row mb-4">
     <div class="col-md-4">
       <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-fluid">
     </div>
     <div class="col-md-8">
       <h3><%= producto.nombre %></h3>
+      <p><%= producto.descripcion %></p>
       <hr>
       <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
       <button class="btn btn-danger btn-lg btn-block mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
@@ -126,13 +127,13 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         <% randomProducts.forEach(producto => { %>
         <div class="col">
-            <div class="card">
-                <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" />
+            <div class="card" style="max-width: 200px;">
+                <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" style="height: 150px; object-fit: cover;" />
                 <div class="card-body">
-                    <h5 class="card-title"><%= producto.nombre %></h5>
+                    <h6 class="card-title"><%= producto.nombre %></h6>
                     <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                    <a href="/tienda/producto/<%= producto._id %>" class="btn btn-primary">Ver más</a>
-                    <button class="btn btn-secondary mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
+                    <a href="/tienda/producto/<%= producto._id %>" class="btn btn-primary btn-sm">Ver más</a>
+                    <button class="btn btn-secondary mt-2 btn-sm btn-agregar-carrito" data-producto-id="<%= producto._id %>">
                       Agregar al Carrito
                     </button>
                 </div>
