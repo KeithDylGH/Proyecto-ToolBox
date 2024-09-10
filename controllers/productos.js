@@ -22,6 +22,10 @@ router.post('/admin/inventario', async (req, res) => {
     try {
         const { nombre, precio, categoria, descripcion, marca, stock } = req.body;
 
+        if (!nombre || !precio || !categoria || !descripcion || !marca || !stock) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        }
+
         if (stock < 0) {
             return res.status(400).json({ error: 'El stock no puede ser negativo' });
         }
@@ -38,6 +42,7 @@ router.post('/admin/inventario', async (req, res) => {
         await nuevoProducto.save();
         res.status(201).json(nuevoProducto);
     } catch (error) {
+        console.error('Error al agregar producto:', error.message);
         res.status(400).json({ error: error.message });
     }
 });
@@ -124,6 +129,10 @@ router.put('/editar/:id', upload.single('inputImagen'), async (req, res) => {
         const { nombre, precio, categoria, descripcion, marca, stock } = req.body;
         const imagen = req.file;
         const id = req.params.id;
+
+        if (!nombre || !precio || !categoria || !descripcion || !marca || !stock) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        }
 
         if (stock < 0) {
             return res.status(400).json({ error: 'El stock no puede ser negativo' });
