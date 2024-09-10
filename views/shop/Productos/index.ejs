@@ -117,9 +117,9 @@
       <p><%= producto.descripcion %></p>
       <hr>
       <h4>Precio: $<%= producto.precio.toFixed(2) %></h4>
-      <button class="btn btn-danger btn-lg btn-block mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
+      <button class="btn btn-primary btn-lg btn-agregar-carrito" data-producto-id="<%= producto._id %>">
         Agregar al Carrito
-      </button>
+    </button>
       <button class="btn btn-success btn-lg btn-block mt-2" id="comprarBtn" data-producto-id="<%= producto._id %>">Comprar</button>
     </div>
   </div>
@@ -143,9 +143,9 @@
               <h5 class="card-title"><%= producto.nombre %></h5>
               <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
               <a href="/tienda/producto/<%= producto._id %>" class="btn btn-primary">Ver más</a>
-              <button class="btn btn-danger btn-block mt-2 btn-agregar-carrito" data-producto-id="<%= producto._id %>">
+              <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">
                 Agregar al Carrito
-              </button>
+            </button>
             </div>
           </div>
         </div>
