@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    cargarCarrito();
-
-    // Agregar producto al carrito
+    // Escuchar el clic en los botones de agregar al carrito
     document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
@@ -15,12 +13,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ productoId, cantidad })
-                });                
+                });
                 const data = await response.json();
 
                 if (data.success) {
-                    cargarCarrito();
                     mostrarNotificacion('Producto agregado al carrito', 'success');
+                    cargarCarrito();
                 } else {
                     mostrarNotificacion('Error al agregar al carrito', 'error');
                 }
