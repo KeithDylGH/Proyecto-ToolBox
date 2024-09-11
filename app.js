@@ -199,6 +199,10 @@ app.get('/tienda/producto/:id', async (req, res) => {
     }
 });
 
+app.get('/compra', (req, res) => {
+    res.render('shop/Compra');
+});
+
 app.get('/cliente', (req, res) => {
     res.render('account/cuenta/cliente');
 });
