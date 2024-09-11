@@ -213,14 +213,24 @@
   <div class="categoria_items row row-cols-4">
       <% categoriasRecomendadas.forEach(categoria => { %>
           <div class="card" style="width: 15rem; background-color: #5e3b3b; color: #fff">
-              <img
-                  class="card-img-top"
-                  src="<%= categoria.productoDestacado.imagen.data %>"
-                  alt="<%= categoria.productoDestacado.nombre %>"
-              />
+              <% if (categoria.productoDestacado && categoria.productoDestacado.imagen && categoria.productoDestacado.imagen.data) { %>
+                  <img
+                      class="card-img-top"
+                      src="<%= categoria.productoDestacado.imagen.data %>"
+                      alt="<%= categoria.productoDestacado.nombre %>"
+                  />
+              <% } else { %>
+                  <img
+                      class="card-img-top"
+                      src="/ruta/a/imagen/por/defecto.jpg"
+                      alt="Imagen no disponible"
+                  />
+              <% } %>
               <div class="card-body">
-                  <h5 class="card-title"><%= categoria.nombre %></h5>
-                  <a href="/tienda/categoria/<%= categoria._id %>" class="btn btn-primary">Entrar al catálogo</a>
+                  <h5 class="card-title">
+                      <%= categoria.productoDestacado ? `${categoria.productoDestacado.nombre} - ${categoria.nombre}` : categoria.nombre %>
+                  </h5>
+                  <a href="/catalogo/<%= categoria._id %>" class="btn btn-primary">Entrar al catálogo</a>
               </div>
           </div>
       <% }); %>

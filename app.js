@@ -123,18 +123,29 @@ app.get('/', async (req, res) => {
         const categoriasRecomendadas = [];
         for (const categoria of categoriasSeleccionadas) {
             // Buscar productos por ObjectId de categoría
-            const productoDestacado = await iProducto.findOne({ categoria: categoria._id }).exec();
+            const productosPorCategoria = await iProducto.find({ categoria: categoria._id }).exec();
 
-            // Construir la URL completa de la imagen para el producto destacado
-            if (productoDestacado && productoDestacado.imagen && typeof productoDestacado.imagen === 'object' && productoDestacado.imagen.data) {
-                const fileName = productoDestacado.imagen.data.split('/').pop();
-                productoDestacado.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+            if (productosPorCategoria.length > 0) {
+                // Seleccionar un producto aleatorio de la categoría
+                const productoDestacado = productosPorCategoria[Math.floor(Math.random() * productosPorCategoria.length)];
+
+                // Construir la URL completa de la imagen para el producto destacado
+                if (productoDestacado.imagen && typeof productoDestacado.imagen === 'object' && productoDestacado.imagen.data) {
+                    const fileName = productoDestacado.imagen.data.split('/').pop();
+                    productoDestacado.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+                }
+
+                categoriasRecomendadas.push({
+                    ...categoria.toObject(),
+                    productoDestacado
+                });
+            } else {
+                // Si no hay productos en la categoría, incluir la categoría sin producto destacado
+                categoriasRecomendadas.push({
+                    ...categoria.toObject(),
+                    productoDestacado: null
+                });
             }
-
-            categoriasRecomendadas.push({
-                ...categoria.toObject(),
-                productoDestacado
-            });
         }
 
         // Construir la URL completa de la imagen para productos generales
