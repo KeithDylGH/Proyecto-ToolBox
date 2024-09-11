@@ -216,7 +216,7 @@ app.get('/compra', async (req, res) => {
         // Verificar si el producto fue encontrado
         if (producto) {
             const total = producto.precio * cantidad;
-            res.render('shop/compra', { producto, cantidad, total });
+            res.render('shop/Compra', { producto, cantidad, total });
         } else {
             res.status(404).send('Producto no encontrado');
         }
