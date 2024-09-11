@@ -199,8 +199,27 @@ app.get('/tienda/producto/:id', async (req, res) => {
     }
 });
 
-app.get('/compra', (req, res) => {
-    res.render('shop/Compra');
+app.get('/compra', async (req, res) => {
+    try {
+        // Aquí obtén el producto y la cantidad desde la sesión o base de datos
+        const productoId = req.query.productoId; // O usa otro método para obtener el producto
+        const cantidad = req.query.cantidad || 1; // Valor por defecto si no se proporciona cantidad
+
+        // Obtener el producto desde la base de datos
+        const producto = await iProducto.findById(productoId);
+
+        if (producto) {
+            const total = producto.precio * cantidad;
+
+            // Renderiza la vista con los datos del producto
+            res.render('shop/Compra', { producto, cantidad, total });
+        } else {
+            res.status(404).send('Producto no encontrado');
+        }
+    } catch (error) {
+        console.error('Error al obtener el producto:', error);
+        res.status(500).send('Error al obtener el producto');
+    }
 });
 
 app.get('/cliente', (req, res) => {
