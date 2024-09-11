@@ -37,17 +37,16 @@
 
       <div class="col-md-6">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body text-center">
             <a class="btn btn-primary btn-lg btn-block" href="#" id="siguienteBtn">Siguiente</a>
             <a class="btn btn-secondary btn-lg btn-block mt-2" href="/" id="cancelarBtn">Cancelar</a>
+            <div id="metodosPago" class="d-none mt-3">
+              <h3>Selecciona el Método de Pago</h3>
+              <button class="btn btn-success btn-lg" id="pagoMovilBtn">Pago Móvil</button>
+              <button class="btn btn-primary btn-lg" id="paypalBtn">PayPal</button>
+              <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
+            </div>
           </div>
-        </div>
-
-        <div id="metodosPago" class="d-none mt-3 text-center">
-          <h3>Selecciona el Método de Pago</h3>
-          <button class="btn btn-success btn-lg" id="pagoMovilBtn">Pago Móvil</button>
-          <button class="btn btn-primary btn-lg" id="paypalBtn">PayPal</button>
-          <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
         </div>
       </div>
     </div>
@@ -61,17 +60,36 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <ol>
-              <li>Ingresa a la página de <a href="https://www.bancodevenezuela.com" target="_blank">Banco de Venezuela</a>.</li>
-              <li>Selecciona "Pago Móvil" e ingresa los siguientes datos:
+            <!-- Pestañas con el tutorial de pago móvil -->
+            <ul class="nav nav-tabs" id="pagoMovilTabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="paso1-tab" data-bs-toggle="tab" href="#paso1" role="tab">Paso 1</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="paso2-tab" data-bs-toggle="tab" href="#paso2" role="tab">Paso 2</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="paso3-tab" data-bs-toggle="tab" href="#paso3" role="tab">Paso 3</a>
+              </li>
+            </ul>
+            <div class="tab-content mt-3">
+              <div class="tab-pane fade show active" id="paso1" role="tabpanel" aria-labelledby="paso1-tab">
+                <h4>Paso 1: Ingresa a Banco de Venezuela</h4>
+                <p>Ve a la página de <a href="https://www.bancodevenezuela.com" target="_blank">Banco de Venezuela</a> y selecciona "Pago Móvil".</p>
+              </div>
+              <div class="tab-pane fade" id="paso2" role="tabpanel" aria-labelledby="paso2-tab">
+                <h4>Paso 2: Datos de Pago Móvil</h4>
+                <p>Ingresa los siguientes datos:</p>
                 <ul>
                   <li>Teléfono de la Empresa: <strong>+0412-6378817</strong></li>
                   <li>Cédula de la Empresa: <strong>V-30815482</strong></li>
                 </ul>
-              </li>
-              <li>Realiza el pago y toma una captura del comprobante.</li>
-              <li>Comunica el pago a la empresa a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</li>
-            </ol>
+              </div>
+              <div class="tab-pane fade" id="paso3" role="tabpanel" aria-labelledby="paso3-tab">
+                <h4>Paso 3: Confirmar Pago</h4>
+                <p>Realiza el pago, toma una captura del comprobante, y comunícate con nosotros vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

@@ -2,13 +2,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
     const metodosPago = document.getElementById('metodosPago');
-    const card = document.querySelector('.card');
+    const card = document.querySelector('.card-body');
 
     siguienteBtn.addEventListener('click', function () {
-        metodosPago.classList.remove('d-none');
-        card.style.display = 'none'; // Ocultar la información del producto
-        siguienteBtn.style.display = 'none'; // Ocultar el botón "Siguiente"
-        cancelarBtn.style.display = 'none'; // Ocultar el botón "Cancelar"
+        metodosPago.classList.remove('d-none'); // Mostrar los métodos de pago
+        siguienteBtn.style.display = 'none';    // Ocultar el botón "Siguiente"
+        cancelarBtn.style.display = 'none';     // Ocultar el botón "Cancelar"
     });
 
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
