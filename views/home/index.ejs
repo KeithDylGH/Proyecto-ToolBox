@@ -172,38 +172,41 @@
           </div>
       </div>             
 
-      <section>
-        <h2>Te puede interesar</h2>
-        <div class="MultiCarousel"
+        <section>
+          <h2>Te puede interesar</h2>
+<!--EJEMPLO-->
+          <div
+            class="MultiCarousel"
             data-items="1,3,5,6"
             data-slide="1"
             id="MultiCarousel"
-            data-interval="1000">
+            data-interval="1000"
+          >
             <div class="MultiCarousel-inner">
-                <% Object.keys(productosPorCategoria).forEach(categoria => { %>
-                    <% productosPorCategoria[categoria].forEach(producto => { %>
-                        <div class="item">
-                            <div class="card" style="width: 100%">
-                                <img
-                                    class="card-img-top"
-                                    src="<%= producto.imagen.data %>"
-                                    alt="<%= producto.nombre %>"/>
-                                <div class="card-body">
-                                    <h5 class="card-title"><%= producto.nombre %></h5>
-                                    <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                                    <p class="card-text">Categoría: <%= categoria %></p>
-                                    <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
-                                    <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
-                                </div>
-                            </div>
-                        </div>
-                    <% }); %>
-                <% }); %>
+              <div class="item">
+                <div class="card" style="width: 100%">
+                  <img
+                    class="card-img-top"
+                    src="/img/cabeza/Casco de Seg tipo 1.webp"
+                    alt="Card image cap"
+                  />
+                  <div class="card-body">
+                    <a
+                      href="#"
+                      class="card-title text-white p-2"
+                      style="border-radius: 5px"
+                      >Ver mas</a
+                    >
+                  </div>
+                </div>
+              </div>
+
+
             </div>
             <button class="btn leftLst bg-light text-dark"><</button>
             <button class="btn rightLst bg-light text-dark">></button>
-        </div>
-    </section>    
+          </div>
+        </section>
 
         <div class="categoria">
           <h2>Categoria de nuestros productos disponibles</h2>
