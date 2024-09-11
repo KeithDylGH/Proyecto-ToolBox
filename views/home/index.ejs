@@ -207,30 +207,26 @@
         </div>
     </section>        
 
-        <div class="categoria">
-          <h2>Categoria de nuestros productos disponibles</h2>
-<!--EJEMPLO-->
-          <div class="categoria_items row row-cols-4">
-            <div
-              class="card"
-              style="width: 15rem; background-color: #5e3b3b; color: #fff"
-            >
+        <!-- Categorías recomendadas -->
+<div class="categoria">
+  <h2>Categorías Recomendadas</h2>
+  <div class="categoria_items row row-cols-4">
+      <% categoriasRecomendadas.forEach(categoria => { %>
+          <div class="card" style="width: 15rem; background-color: #5e3b3b; color: #fff">
               <img
-                class="card-img-top"
-                src="/img/cabeza/cubrebocas con valvula.webp"
-                alt="Card image cap"
+                  class="card-img-top"
+                  src="<%= categoria.productoDestacado.imagen.data %>"
+                  alt="<%= categoria.productoDestacado.nombre %>"
               />
               <div class="card-body">
-                <h5 class="card-title">Cubrebocas</h5>
-                <a href="/views/shop/Cabeza/index.html" class="btn btn-primary"
-                  >Entrar al catalogo</a
-                >
+                  <h5 class="card-title"><%= categoria.nombre %></h5>
+                  <a href="/tienda/categoria/<%= categoria._id %>" class="btn btn-primary">Entrar al catálogo</a>
               </div>
-            </div>
-
-            </div>
           </div>
-        </div>
+      <% }); %>
+  </div>
+</div>
+
       </section>
 
       <section class="sobre">

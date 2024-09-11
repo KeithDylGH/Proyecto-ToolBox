@@ -109,30 +109,34 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     try {
         // Obtener productos aleatorios (generales)
-        const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
+        const productos = await iProducto.aggregate([{ $sample: { size: 10 } }]);
 
         // Obtener todas las categorías
         const categorias = await Categoria.find();
 
-        // Obtener productos aleatorios para cada una de las categorías seleccionadas
-        const productosPorCategoria = {};
-        for (const categoria of categorias) {
-            const productosCategoria = await iProducto.aggregate([
-                { $match: { categoria: categoria.nombre } },
-                { $sample: { size: 4 } }
-            ]);
+        // Seleccionar cuatro categorías aleatorias
+        const categoriasSeleccionadas = categorias
+            .sort(() => 0.5 - Math.random()) // Mezclar categorías
+            .slice(0, 4); // Seleccionar las primeras 4 categorías
 
-            // Construir la URL completa de la imagen
-            productosCategoria.forEach(producto => {
-                if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
-                    const fileName = producto.imagen.data.split('/').pop();
-                    producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
-                }
+        // Obtener un producto destacado para cada categoría
+        const categoriasRecomendadas = [];
+        for (const categoria of categoriasSeleccionadas) {
+            const productoDestacado = await iProducto.findOne({ categoria: categoria.nombre }).exec();
+
+            // Construir la URL completa de la imagen para el producto destacado
+            if (productoDestacado && productoDestacado.imagen && typeof productoDestacado.imagen === 'object' && productoDestacado.imagen.data) {
+                const fileName = productoDestacado.imagen.data.split('/').pop();
+                productoDestacado.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+            }
+
+            categoriasRecomendadas.push({
+                ...categoria.toObject(),
+                productoDestacado
             });
-
-            productosPorCategoria[categoria.nombre] = productosCategoria;
         }
 
+        // Construir la URL completa de la imagen para productos generales
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
                 const fileName = producto.imagen.data.split('/').pop();
@@ -143,8 +147,8 @@ app.get('/', async (req, res) => {
         // Obtener el usuario desde la sesión
         const CUsuario = req.session.user;
 
-        // Renderizar la vista con productos generales, productos por categoría, categorías y usuario
-        res.render('home/index', { CUsuario, productos, productosPorCategoria, categorias });
+        // Renderizar la vista con productos generales, productos por categoría, categorías recomendadas y usuario
+        res.render('home/index', { CUsuario, productos, categoriasRecomendadas });
     } catch (error) {
         console.error('Error al obtener productos y categorías:', error);
         res.status(500).send('Error al obtener productos y categorías');
@@ -160,7 +164,7 @@ app.get('/buscarProductos', async (req, res) => {
 
         // Construir la URL completa de la imagen para productos encontrados
         productos.forEach(producto => {
-            if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+            if (producto.imagen && producto.imagen.data) {
                 const fileName = producto.imagen.data.split('/').pop();
                 producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
             }
@@ -170,7 +174,7 @@ app.get('/buscarProductos', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Error al buscar productos' });
     }
-});  
+});
 
 app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
 app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
@@ -352,6 +356,30 @@ app.get('/admin', authorize(['admin', 'boss']), (req, res) => {
 
 app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
     res.render('account/cuenta/admin/inventory');
+});
+
+// Ruta para la página del BOSS
+app.get('/jefe', authorize(['boss']), async (req, res) => {
+    try {
+        // Obtén la lista de usuarios
+        const usuarios = await CUsuario.find({});
+        res.render('boss', { usuarios });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error en el servidor');
+    }
+});
+
+// Ruta para actualizar el rol del usuario
+app.post('/jefe/actualizarRol', authorize(['boss']), async (req, res) => {
+    try {
+        const { userId, rol } = req.body;
+        await CUsuario.findByIdAndUpdate(userId, { rol });
+        res.redirect('/jefe');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error en el servidor');
+    }
 });
 
 app.get('/inventario/agregarproduto', authorize(['admin', 'boss']), async (req, res) => {

@@ -52,9 +52,9 @@
               <a class="btn btn-secondary btn-lg btn-block mt-2" href="/" id="cancelarBtn">Cancelar</a>
               <div id="metodosPago" class="d-none mt-3">
                 <h3>Selecciona el Método de Pago</h3>
-                <button class="btn btn-success btn-lg mb-2" data-bs-toggle="modal" data-bs-target="#pagoMovilModal">Pago Móvil</button>
-                <button class="btn btn-primary btn-lg mb-2" data-bs-toggle="modal" data-bs-target="#transferenciaModal">Transferencia</button>
-                <button class="btn btn-info btn-lg mb-2" data-bs-toggle="modal" data-bs-target="#zinliModal">Zinli</button>
+                <button class="btn btn-success btn-lg mb-2" id="pagoMovilBtn">Pago Móvil</button>
+                <button class="btn btn-primary btn-lg mb-2" id="transferenciaBtn">Transferencia</button>
+                <button class="btn btn-info btn-lg mb-2" id="zinliBtn">Zinli</button>
                 <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
               </div>
             </div>
@@ -139,16 +139,19 @@
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="zinliModalLabel">Instrucciones para Pago con Zinli</h5>
+              <h5 class="modal-title" id="zinliModalLabel">Instrucciones para Zinli</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <h4>Datos de Zinli</h4>
-              <p>Realiza el pago a través de Zinli con los siguientes datos:</p>
+              <h4>Datos para Pago con Zinli</h4>
+              <p>Abre la aplicación Zinli y sigue estos pasos:</p>
               <ul>
-                <li>Usuario Zinli: <strong>KD@zinli.com</strong></li>
+                <li>Selecciona la opción "Pagar a través de QR".</li>
+                <li>Escanea el siguiente código QR:</li>
+                <img src="/img/qr_zinli.png" alt="Código QR Zinli" class="img-fluid">
+                <li>Introduce el monto total de la compra y confirma el pago.</li>
               </ul>
-              <p>Luego de realizar el pago, por favor envía el comprobante a nuestro <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+              <p>Si tienes alguna duda, contáctanos a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -156,11 +159,10 @@
           </div>
         </div>
       </div>
-      
     <% } else { %>
       <p>No hay productos en el carrito.</p>
     <% } %>
-</main>
+  </main>
 
   <script src="/js/compra.js"></script>
 </body>

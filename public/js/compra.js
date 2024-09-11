@@ -24,17 +24,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if (pagoMovilBtn && transferenciaBtn && zinliBtn && cancelarPagoBtn) {
         pagoMovilBtn.addEventListener('click', function () {
             // Muestra las instrucciones para Pago Móvil
-            mostrarInstruccionesPago('instruccionPagoMovil');
+            mostrarInstruccionesPago('pagoMovilModal');
         });
 
         transferenciaBtn.addEventListener('click', function () {
             // Muestra las instrucciones para Transferencia
-            mostrarInstruccionesPago('instruccionTransferencia');
+            mostrarInstruccionesPago('transferenciaModal');
         });
 
         zinliBtn.addEventListener('click', function () {
             // Muestra las instrucciones para Zinli
-            mostrarInstruccionesPago('instruccionZinli');
+            mostrarInstruccionesPago('zinliModal');
         });
 
         cancelarPagoBtn.addEventListener('click', function () {
@@ -44,17 +44,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Función para mostrar las instrucciones de pago y ocultar las demás
-    function mostrarInstruccionesPago(instruccionId) {
+    function mostrarInstruccionesPago(modalId) {
         // Oculta todas las instrucciones de pago
-        const instrucciones = document.querySelectorAll('#instruccionesPago > div');
-        instrucciones.forEach(function (instruccion) {
-            instruccion.classList.add('d-none');
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(function (modal) {
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
         });
 
-        // Muestra las instrucciones del método seleccionado
-        const seleccionada = document.getElementById(instruccionId);
-        if (seleccionada) {
-            seleccionada.classList.remove('d-none');
+        // Muestra el modal del método seleccionado
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
         }
     }
 });
