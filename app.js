@@ -108,8 +108,11 @@ app.use((req, res, next) => {
 
 app.get('/', async (req, res) => {
     try {
-        // Obtener productos aleatorios (generales)
-        const productos = await iProducto.aggregate([{ $sample: { size: 10 } }]);
+        // Obtener 10 productos aleatorios para la sección de "Te puede interesar"
+        const productosParaCarousel = await iProducto.aggregate([{ $sample: { size: 10 } }]);
+
+        // Obtener 4 productos destacados para la sección de "Los mejores productos"
+        const productosDestacados = await iProducto.aggregate([{ $sample: { size: 4 } }]);
 
         // Obtener todas las categorías
         const categorias = await Categoria.find();
@@ -148,8 +151,8 @@ app.get('/', async (req, res) => {
             }
         }
 
-        // Construir la URL completa de la imagen para productos generales
-        productos.forEach(producto => {
+        // Construir la URL completa de la imagen para los productos del carrusel y destacados
+        [...productosParaCarousel, ...productosDestacados].forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
                 const fileName = producto.imagen.data.split('/').pop();
                 producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
@@ -160,7 +163,7 @@ app.get('/', async (req, res) => {
         const CUsuario = req.session.user;
 
         // Renderizar la vista con productos generales, categorías recomendadas, todas las categorías y usuario
-        res.render('home/index', { CUsuario, productos, categoriasRecomendadas, categorias });
+        res.render('home/index', { CUsuario, productosParaCarousel, productosDestacados, categoriasRecomendadas, categorias });
     } catch (error) {
         console.error('Error al obtener productos y categorías:', error);
         res.status(500).send('Error al obtener productos y categorías');
