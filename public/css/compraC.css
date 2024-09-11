@@ -1,14 +1,9 @@
-/* CompraC.css */
-
 /* Ajusta el estilo para mantener la posición de los botones de método de pago */
 #metodosPago {
-    position: fixed;
+    position: absolute;
     top: 10px;
     right: 10px;
     z-index: 1000; /* Asegúrate de que esté por encima del contenido */
-}
-
-#metodosPago .card {
     width: 250px; /* Ajusta el tamaño según tu diseño */
 }
 
