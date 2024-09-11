@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     paypalBtn.addEventListener('click', function () {
         // Redirigir al usuario a la página de PayPal o a la API de PayPal
-        window.location.href = '/paypal'; // Cambia esta URL según la configuración de tu API de PayPal
+        window.location.href = '/compra/paypal'; // Cambia esta URL según la configuración de tu API de PayPal
     });
 
     cancelarPagoBtn.addEventListener('click', function () {

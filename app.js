@@ -226,13 +226,11 @@ app.get('/compra', async (req, res) => {
     }
 });
 
-// Ruta para la compra de productos en el carrito
-app.get('/comprasCarrito', async (req, res) => {
+app.get('/comprasCarrito', (req, res) => {
     try {
-        const carritoProductos = []; // Aquí debes obtener los productos del carrito del usuario
+        const carritoProductos = req.session.carrito || []; // Obtener los productos del carrito de la sesión
         
-        // Depuración
-        console.log('Productos en el carrito:', carritoProductos);
+        console.log('Productos en el carrito:', carritoProductos); // Depuración
         
         const totalCarrito = carritoProductos.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
         res.render('shop/Compra/compraCarrito', { productos: carritoProductos, totalCarrito });
