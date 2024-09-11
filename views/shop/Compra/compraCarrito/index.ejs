@@ -29,7 +29,7 @@
           <ul id="carritoList" class="list-group">
             <% productos.forEach(producto => { %>
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>" class="img-thumbnail" style="max-width: 100px; margin-right: 20px;">
+                <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-thumbnail" style="max-width: 100px; margin-right: 20px;">
                 <div>
                   <h6><%= producto.nombre %></h6>
                   <p>Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
@@ -66,21 +66,34 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <div class="row">
-                <div class="col-md-4">
-                  <h4>1. Ingresa</h4>
-                  <p>Accede a la página de <a href="https://www.bancodevenezuela.com" target="_blank">BDV</a>.</p>
+              <!-- Pestañas con el tutorial de pago móvil -->
+              <ul class="nav nav-tabs" id="pagoMovilTabs" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="paso1-tab" data-bs-toggle="tab" href="#paso1" role="tab">Paso 1</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="paso2-tab" data-bs-toggle="tab" href="#paso2" role="tab">Paso 2</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="paso3-tab" data-bs-toggle="tab" href="#paso3" role="tab">Paso 3</a>
+                </li>
+              </ul>
+              <div class="tab-content mt-3">
+                <div class="tab-pane fade show active" id="paso1" role="tabpanel" aria-labelledby="paso1-tab">
+                  <h4>Paso 1: Ingresa a Banco de Venezuela</h4>
+                  <p>Ve a la página de <a href="https://www.bancodevenezuela.com" target="_blank">Banco de Venezuela</a> y selecciona "Pago Móvil".</p>
                 </div>
-                <div class="col-md-4">
-                  <h4>2. Datos</h4>
+                <div class="tab-pane fade" id="paso2" role="tabpanel" aria-labelledby="paso2-tab">
+                  <h4>Paso 2: Datos de Pago Móvil</h4>
+                  <p>Ingresa los siguientes datos:</p>
                   <ul>
-                    <li>Teléfono: <strong>+0412-6378817</strong></li>
-                    <li>Cédula: <strong>V-30815482</strong></li>
+                    <li>Teléfono de la Empresa: <strong>+0412-6378817</strong></li>
+                    <li>Cédula de la Empresa: <strong>V-30815482</strong></li>
                   </ul>
                 </div>
-                <div class="col-md-4">
-                  <h4>3. Pago</h4>
-                  <p>Realiza el pago y envía el comprobante vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+                <div class="tab-pane fade" id="paso3" role="tabpanel" aria-labelledby="paso3-tab">
+                  <h4>Paso 3: Confirmar Pago</h4>
+                  <p>Realiza el pago, toma una captura del comprobante, y comunícate con nosotros vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
                 </div>
               </div>
             </div>
