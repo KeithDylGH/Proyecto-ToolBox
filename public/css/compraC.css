@@ -1,16 +1,24 @@
-/* Añadir estilo personalizado si es necesario */
-.card-body {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-.btn-group {
-    display: flex;
-    justify-content: flex-end;
-}
-.btn-group .btn {
-    margin-left: 10px;
-}
+/* CompraC.css */
+
+/* Ajusta el estilo para mantener la posición de los botones de método de pago */
 #metodosPago {
-    margin-top: 20px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000; /* Asegúrate de que esté por encima del contenido */
+}
+
+#metodosPago .card {
+    width: 250px; /* Ajusta el tamaño según tu diseño */
+}
+
+/* Ajusta el estilo para el contenedor de productos */
+.card-body {
+    position: relative;
+}
+
+.btn-group {
+    position: absolute;
+    right: 0;
+    top: 0;
 }
