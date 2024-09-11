@@ -55,65 +55,72 @@
         </div>
       </div>
 
+      <!--Modal for Pago Movil-->
       <div id="metodosPago" class="d-none mt-4">
         <div class="card position-relative">
           <div class="card-body">
             <h3>Selecciona el Método de Pago</h3>
             <div class="position-absolute top-0 end-0 p-3">
               <button class="btn btn-success d-block mb-2" id="pagoMovilBtn">Pago Móvil</button>
-              <button class="btn btn-primary d-block mb-2" id="paypalBtn">PayPal</button>
+              <button class="btn btn-primary d-block mb-2" id="transferenciaBtn">Transferencia</button>
+              <button class="btn btn-info d-block mb-2" id="zinliBtn">Zinli</button>
               <a class="btn btn-secondary" href="/" id="cancelarPagoBtn">Cancelar</a>
             </div>
           </div>
         </div>
-      </div>
+    </div>
 
-      <!-- Modal for Pago Móvil -->
-      <div id="pagoMovilModal" class="modal fade" tabindex="-1" aria-labelledby="pagoMovilModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="pagoMovilModalLabel">Instrucciones para Pago Móvil</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <!-- Pestañas con el tutorial de pago móvil -->
-              <ul class="nav nav-tabs" id="pagoMovilTabs" role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active" id="paso1-tab" data-bs-toggle="tab" href="#paso1" role="tab">Paso 1</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="paso2-tab" data-bs-toggle="tab" href="#paso2" role="tab">Paso 2</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="paso3-tab" data-bs-toggle="tab" href="#paso3" role="tab">Paso 3</a>
-                </li>
-              </ul>
-              <div class="tab-content mt-3">
-                <div class="tab-pane fade show active" id="paso1" role="tabpanel" aria-labelledby="paso1-tab">
-                  <h4>Paso 1: Ingresa a Banco de Venezuela</h4>
-                  <p>Ve a la página de <a href="https://www.bancodevenezuela.com" target="_blank">Banco de Venezuela</a> y selecciona "Pago Móvil".</p>
-                </div>
-                <div class="tab-pane fade" id="paso2" role="tabpanel" aria-labelledby="paso2-tab">
-                  <h4>Paso 2: Datos de Pago Móvil</h4>
-                  <p>Ingresa los siguientes datos:</p>
-                  <ul>
-                    <li>Teléfono de la Empresa: <strong>+0412-6378817</strong></li>
-                    <li>Cédula de la Empresa: <strong>V-30815482</strong></li>
-                  </ul>
-                </div>
-                <div class="tab-pane fade" id="paso3" role="tabpanel" aria-labelledby="paso3-tab">
-                  <h4>Paso 3: Confirmar Pago</h4>
-                  <p>Realiza el pago, toma una captura del comprobante, y comunícate con nosotros vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
+    <!-- Modal for Transferencia -->
+    <div id="transferenciaModal" class="modal fade" tabindex="-1" aria-labelledby="transferenciaModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="transferenciaModalLabel">Instrucciones para Transferencia</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h4>Paso 1: Realiza la Transferencia</h4>
+            <p>Datos de la cuenta bancaria:</p>
+            <ul>
+              <li>Banco: <strong>Banesco</strong></li>
+              <li>Número de cuenta: <strong>0134-5678-9123-4567</strong></li>
+              <li>Nombre del titular: <strong>ToolBox S.A.</strong></li>
+              <li>RIF: <strong>J-12345678-9</strong></li>
+            </ul>
+            <h4>Paso 2: Confirmar Transferencia</h4>
+            <p>Envía el comprobante vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
       </div>
+    </div>
+    
+    <!-- Modal for Zinli -->
+    <div id="zinliModal" class="modal fade" tabindex="-1" aria-labelledby="zinliModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="zinliModalLabel">Instrucciones para Zinli</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h4>Paso 1: Realiza el Pago en Zinli</h4>
+            <p>Datos para el pago:</p>
+            <ul>
+              <li>Número de cuenta Zinli: <strong>0412-6378817</strong></li>
+              <li>Nombre del titular: <strong>ToolBox S.A.</strong></li>
+            </ul>
+            <h4>Paso 2: Confirmar Pago</h4>
+            <p>Envía el comprobante vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>    
     <% } else { %>
       <p>No hay productos en el carrito.</p>
     <% } %>

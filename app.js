@@ -108,10 +108,37 @@ app.use((req, res, next) => {
 
 app.get('/', async (req, res) => {
     try {
-        // Obtener productos aleatorios
+        // Obtener productos aleatorios (generales)
         const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
 
-        // Construir la URL completa de la imagen
+        // Obtener todas las categorías
+        const categorias = await Categoria.find();
+        
+        // Seleccionar cuatro categorías aleatorias
+        const categoriasSeleccionadas = categorias
+            .sort(() => 0.5 - Math.random()) // Mezclar categorías
+            .slice(0, 4); // Seleccionar las primeras 4 categorías
+
+        // Obtener productos aleatorios para cada una de las cuatro categorías seleccionadas
+        const productosPorCategoria = {};
+        for (const categoria of categoriasSeleccionadas) {
+            const productosCategoria = await iProducto.aggregate([
+                { $match: { categoria: categoria.nombre } }, // Ajustar según tu modelo
+                { $sample: { size: 4 } } // Número de productos que quieres mostrar por categoría
+            ]);
+
+            // Construir la URL completa de la imagen
+            productosCategoria.forEach(producto => {
+                if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                    const fileName = producto.imagen.data.split('/').pop();
+                    producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+                }
+            });
+
+            productosPorCategoria[categoria.nombre] = productosCategoria;
+        }
+
+        // Construir la URL completa de la imagen para productos generales
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
                 const fileName = producto.imagen.data.split('/').pop();
@@ -119,14 +146,11 @@ app.get('/', async (req, res) => {
             }
         });
 
-        // Obtener todas las categorías
-        const categorias = await Categoria.find();
-
         // Obtener el usuario desde la sesión
         const CUsuario = req.session.user;
 
-        // Renderizar la vista con productos, categorías y usuario
-        res.render('home/index', { CUsuario, productos, categorias });
+        // Renderizar la vista con productos generales, productos por categoría, categorías y usuario
+        res.render('home/index', { CUsuario, productos, productosPorCategoria, categorias });
     } catch (error) {
         console.error('Error al obtener productos y categorías:', error);
         res.status(500).send('Error al obtener productos y categorías');

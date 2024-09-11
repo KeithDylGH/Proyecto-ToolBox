@@ -42,8 +42,9 @@
             <a class="btn btn-secondary btn-lg btn-block mt-2" href="/" id="cancelarBtn">Cancelar</a>
             <div id="metodosPago" class="d-none mt-3">
               <h3>Selecciona el Método de Pago</h3>
-              <button class="btn btn-success btn-lg" id="pagoMovilBtn">Pago Móvil</button>
-              <button class="btn btn-primary btn-lg" id="paypalBtn">PayPal</button>
+              <button class="btn btn-success btn-lg mb-2" id="pagoMovilBtn">Pago Móvil</button>
+              <button class="btn btn-primary btn-lg mb-2" id="transferenciaBtn">Transferencia</button>
+              <button class="btn btn-info btn-lg mb-2" id="zinliBtn">Zinli</button>
               <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
             </div>
           </div>
@@ -90,6 +91,55 @@
                 <p>Realiza el pago, toma una captura del comprobante, y comunícate con nosotros vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
               </div>
             </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Transferencia -->
+    <div id="transferenciaModal" class="modal fade" tabindex="-1" aria-labelledby="transferenciaModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="transferenciaModalLabel">Instrucciones para Transferencia Bancaria</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h4>Datos Bancarios</h4>
+            <p>Realiza la transferencia a la siguiente cuenta bancaria:</p>
+            <ul>
+              <li>Banco: <strong>Banco de Venezuela</strong></li>
+              <li>Cuenta: <strong>0102-0123-4567-8901</strong></li>
+              <li>Nombre: <strong>ToolBox S.A.</strong></li>
+              <li>RIF: <strong>J-12345678-9</strong></li>
+            </ul>
+            <p>Una vez realizada la transferencia, por favor envía el comprobante a nuestro <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Zinli -->
+    <div id="zinliModal" class="modal fade" tabindex="-1" aria-labelledby="zinliModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="zinliModalLabel">Instrucciones para Pago con Zinli</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h4>Datos de Zinli</h4>
+            <p>Realiza el pago a través de Zinli con los siguientes datos:</p>
+            <ul>
+              <li>Usuario Zinli: <strong>toolbox@zinli.com</strong></li>
+            </ul>
+            <p>Luego de realizar el pago, por favor envía el comprobante a nuestro <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
