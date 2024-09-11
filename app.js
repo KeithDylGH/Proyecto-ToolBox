@@ -378,7 +378,7 @@ app.get('/jefe', authorize(['boss']), async (req, res) => {
     try {
         // Obtén la lista de usuarios
         const usuarios = await CUsuario.find({});
-        res.render('boss', { usuarios });
+        res.render('account/cuenta/boss', { usuarios });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error en el servidor');
