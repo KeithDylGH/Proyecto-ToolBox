@@ -205,12 +205,15 @@ app.get('/compra', async (req, res) => {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
 
+        // Verificar si el productoId está presente
         if (!productoId) {
             return res.status(400).send('ID del producto no proporcionado');
         }
 
+        // Obtener el producto desde la base de datos
         const producto = await iProducto.findById(productoId);
 
+        // Verificar si el producto fue encontrado
         if (producto) {
             const total = producto.precio * cantidad;
             res.render('shop/compra', { producto, cantidad, total });
