@@ -385,6 +385,10 @@ app.get('/jefe', authorize(['boss']), async (req, res) => {
     }
 });
 
+app.get('/jefe/permisos', (req, res) => {
+    res.render('account/cuenta/boss/adminPage');
+});
+
 // Ruta para actualizar el rol del usuario
 app.post('/jefe/actualizarRol', authorize(['boss']), async (req, res) => {
     try {

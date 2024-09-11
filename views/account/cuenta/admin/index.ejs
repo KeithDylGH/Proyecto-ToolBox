@@ -10,9 +10,6 @@
     <link rel="stylesheet" href="/css/cuenta.css">
     
     <!--BOOTSTRAP-->
-   <!--  <link rel="stylesheet" href="/bootstrap-5.3.3-dist/css/bootstrap.rtl.min.css">
-    <script src="/bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script> -->
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -24,103 +21,89 @@
 
     <div>
         <section>
-            <!--Sidebar-->
-
+            <!-- Sidebar -->
             <div class="sidebar">
                 <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
-
                 <a class="active sidebar_btn" href="#" id="client">Inicio</a>
                 <a href="#general" id="pagBtn">Ir a la Pág. Principal</a>
-                <!--RUTA DE CARRITO AQUI-->
                 <a href="#carrito" id="carritoBtn">Carrito</a>
                 <a href="#contacto" id="contactoBtn">Servicio al Cliente</a>
                 <a href="#inventario" id="inventarioBtn">Inventario</a>
                 <a href="#configuracion" id="configuracionBtn">Configuración</a>
-
+                <% if (user.rol === 'boss') { %>
+                  <a href="/jefe/permisos" id="permisosBtn">Permisos</a>
+                <% } %>
                 <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>
-              </div>
-
+            </div>
         </section>
 
         <section class="interfaz">
             <div class="container">
-              <div class="content">
-      
-      
-      
-      
-      
-                <!--INICIO-->
-      
-                <div class="inicio">
-                  <div class="card bg-dark text-white shadow-lg" style="padding: 5rem;">
-                    <div class="card-img-overlay" style="background-color: #5e3b3b;
-                                          background: rgb(94,59,59);
-                                          background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
-                      <div class="welcomeMsg">
-                        
-                          <h3 class="card-title text-light">Bienvenido Admin!</h3>
-                        
-                        
-                        <p class="card-text-overlay">Administra productos, usuarios y más con el modo Admin</p>
-                      </div>
-                    </div>
-                  </div>
-      
-      
-                  <div class="d-flex justify-content-center">
-                    <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                      <div class="card-body">
-                        <h5 class="card-subtitle mb-2 mt-2">
-                          <img src="/img/icono/carrito de comprasN.png" alt="" width="50px">
-                          Carrito
-                        </h5>
-                        <p class="card-text">Mira los productos que añadiste a tu carrito</p>
-                        <!--RUTA DE CARRITO AQUI-->
-                        <a href="#" class="card-link">Entrar al carrito</a>
-                      </div>
-                    </div>
-      
-                    <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                      <div class="card-body">
-                        <h5 class="card-subtitle mb-2 mt-2">
-                          <img src="/img/icono/contactosN.png" alt="" width="50px">
-                          Contáctos
-                        </h5>
-                        <p class="card-text">Contáctanos en nuestro servicio al cliente</p>
-                        <a href="#" class="card-link">Entrar a contactos</a>
-                      </div>
-                    </div>
-      
-                    <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                      <div class="card-body">
-                        <h5 class="card-subtitle mb-2 mt-2">
-                          <img src="/img/icono/configuracionN.png" alt="" width="50px">
-                          Configuración
-                        </h5>
-                        <p class="card-text">Configura tu cuenta, si quieres cambiar algo</p>
-                        <a href="#" class="card-link">Entrar a configuración</a>
-                      </div>
-                    </div>
-
-                    <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                        <div class="card-body">
-                          <h5 class="card-subtitle mb-2 mt-2">
-                            <img src="/img/icono/alt-de-inventario.png" alt="" width="50px">
-                            Inventario
-                          </h5>
-                          <p class="card-text">Agrega, edita y elimina tus productos</p>
-                          <a href="#" class="card-link">Entrar a Inventario</a>
+                <div class="content">
+                    <!-- INICIO -->
+                    <div class="inicio">
+                        <div class="card bg-dark text-white shadow-lg" style="padding: 5rem;">
+                            <div class="card-img-overlay" style="background-color: #5e3b3b;
+                                background: rgb(94,59,59);
+                                background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
+                                <div class="welcomeMsg">
+                                    <h3 class="card-title text-light">Bienvenido <%= user.nombre %>!</h3>
+                                    <p class="card-text-overlay">Administra productos, usuarios y más con el modo <%= user.rol.charAt(0).toUpperCase() + user.rol.slice(1) %></p>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-      
-                  </div>
-      
-      
-          </section>
+
+                        <div class="d-flex justify-content-center">
+                            <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
+                                <div class="card-body">
+                                    <h5 class="card-subtitle mb-2 mt-2">
+                                        <img src="/img/icono/carrito de comprasN.png" alt="" width="50px">
+                                        Carrito
+                                    </h5>
+                                    <p class="card-text">Mira los productos que añadiste a tu carrito</p>
+                                    <a href="#" class="card-link">Entrar al carrito</a>
+                                </div>
+                            </div>
+
+                            <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
+                                <div class="card-body">
+                                    <h5 class="card-subtitle mb-2 mt-2">
+                                        <img src="/img/icono/contactosN.png" alt="" width="50px">
+                                        Contáctos
+                                    </h5>
+                                    <p class="card-text">Contáctanos en nuestro servicio al cliente</p>
+                                    <a href="#" class="card-link">Entrar a contactos</a>
+                                </div>
+                            </div>
+
+                            <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
+                                <div class="card-body">
+                                    <h5 class="card-subtitle mb-2 mt-2">
+                                        <img src="/img/icono/configuracionN.png" alt="" width="50px">
+                                        Configuración
+                                    </h5>
+                                    <p class="card-text">Configura tu cuenta, si quieres cambiar algo</p>
+                                    <a href="#" class="card-link">Entrar a configuración</a>
+                                </div>
+                            </div>
+
+                            <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
+                                <div class="card-body">
+                                    <h5 class="card-subtitle mb-2 mt-2">
+                                        <img src="/img/icono/alt-de-inventario.png" alt="" width="50px">
+                                        Inventario
+                                    </h5>
+                                    <p class="card-text">Agrega, edita y elimina tus productos</p>
+                                    <a href="#" class="card-link">Entrar a Inventario</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-
-
 
     <script src="/js/cuenta.js"></script>
     <script src="/js/admin.js"></script>

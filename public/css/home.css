@@ -382,7 +382,15 @@ footer p a{
 
 /*BUSQUEDA*/
 #suggestions {
-  max-height: 200px;
+  max-height: 300px;
   overflow-y: auto;
   z-index: 1000;
+}
+
+#suggestions .list-group-item {
+  cursor: pointer;
+}
+
+#suggestions .list-group-item:hover {
+  background-color: #f8f9fa;
 }

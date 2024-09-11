@@ -192,51 +192,51 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-//BUSQUEDA
-document.addEventListener('DOMContentLoaded', function() {
+//BUSCADOR
+document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
-    const suggestions = document.getElementById('suggestions');
-    const form = document.getElementById('productSearchForm');
+    const suggestionsContainer = document.getElementById('suggestions');
 
-    searchInput.addEventListener('input', async function() {
+    searchInput.addEventListener('input', async function () {
         const query = searchInput.value.trim();
-        if (query.length > 2) {
+
+        if (query.length > 0) {
             try {
-                const response = await fetch(`/buscarProductos?nombre=${query}`);
-                const products = await response.json();
+                const response = await fetch(`/buscarProductos?nombre=${encodeURIComponent(query)}`);
+                const productos = await response.json();
 
-                suggestions.innerHTML = '';
-                products.forEach(product => {
+                // Limpiar sugerencias anteriores
+                suggestionsContainer.innerHTML = '';
+
+                // Mostrar nuevas sugerencias
+                productos.forEach(producto => {
                     const suggestionItem = document.createElement('a');
-                    suggestionItem.href = `/producto/${product._id}`;  // Asegúrate de que esta ruta existe
+                    suggestionItem.href = `/producto/${producto._id}`; // Enlazar al producto específico
                     suggestionItem.className = 'list-group-item list-group-item-action';
-                    suggestionItem.textContent = product.nombre;
-
-                    // Mostrar imagen del producto en la sugerencia
-                    if (product.imagen && product.imagen.data) {
-                        const img = document.createElement('img');
-                        img.src = product.imagen.data;
-                        img.style.width = '50px'; // Tamaño de la imagen
-                        img.style.height = 'auto'; // Mantener la proporción
-                        suggestionItem.prepend(img);
-                    }
-
-                    suggestions.appendChild(suggestionItem);
+                    suggestionItem.innerHTML = `
+                        <img src="${producto.imagen ? producto.imagen.data : '/path/to/default-image.jpg'}" alt="${producto.nombre}" class="img-thumbnail me-2" style="width: 50px;">
+                        ${producto.nombre}
+                    `;
+                    suggestionsContainer.appendChild(suggestionItem);
                 });
+
+                // Mostrar el contenedor de sugerencias
+                suggestionsContainer.classList.add('show');
             } catch (error) {
-                console.error('Error al obtener sugerencias:', error);
-                suggestions.innerHTML = '<div class="list-group-item">Error al obtener sugerencias</div>';
+                console.error('Error al buscar productos:', error);
             }
         } else {
-            suggestions.innerHTML = '';
+            // Ocultar sugerencias si la búsqueda está vacía
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.classList.remove('show');
         }
     });
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío del formulario
-        const firstSuggestion = suggestions.querySelector('a');
-        if (firstSuggestion) {
-            window.location.href = firstSuggestion.href;
+    // Ocultar sugerencias cuando se haga clic fuera del formulario
+    document.addEventListener('click', function (event) {
+        if (!searchInput.contains(event.target) && !suggestionsContainer.contains(event.target)) {
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.classList.remove('show');
         }
     });
 });
