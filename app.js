@@ -227,37 +227,43 @@ app.get('/compra', async (req, res) => {
 });
 
 // Ruta para la compra de productos en el carrito
+// Ruta para la compra de productos en el carrito
 app.get('/comprasCarrito', async (req, res) => {
     try {
-        // Obtener los productos del carrito desde la sesión
-        const carrito = req.session.carrito || [];
-        
-        if (carrito.length === 0) {
-            return res.render('shop/Compra/compraCarrito', { productos: [], totalCarrito: 0 });
+        // Verificar si el usuario está autenticado
+        const user = req.session.user;
+        if (!user) {
+            return res.redirect('/'); // Redirigir si el usuario no está autenticado
         }
 
-        // Crear un arreglo de IDs de productos
-        const productoIds = carrito.map(item => item.productoId);
+        // Obtener los productos del carrito desde la base de datos
+        const usuario = await CUsuario.findOne({ usuario: user.usuario })
+            .populate({
+                path: 'carrito.producto',
+                populate: {
+                    path: 'categoria',
+                    select: 'nombre'
+                }
+            });
 
-        // Buscar los productos en la base de datos
-        const productos = await iProducto.find({ _id: { $in: productoIds } });
+        if (!usuario) {
+            return res.status(404).send('Usuario no encontrado');
+        }
 
-        // Calcular el total y la cantidad de cada producto en el carrito
-        const carritoProductos = productos.map(producto => {
-            const itemCarrito = carrito.find(item => item.productoId.toString() === producto._id.toString());
-            const cantidad = itemCarrito ? itemCarrito.cantidad : 1;
-            return {
-                ...producto.toObject(),
-                cantidad,
-                totalProducto: producto.precio * cantidad
-            };
-        });
+        // Obtener los productos del carrito
+        const carrito = usuario.carrito.map(item => ({
+            _id: item.producto._id,
+            nombre: item.producto.nombre,
+            precio: item.producto.precio,
+            imagen: item.producto.imagen,
+            cantidad: item.cantidad
+        }));
 
         // Calcular el total del carrito
-        const totalCarrito = carritoProductos.reduce((total, producto) => total + producto.totalProducto, 0);
+        const totalCarrito = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
 
         // Renderizar la vista con los productos del carrito
-        res.render('shop/Compra/compraCarrito', { productos: carritoProductos, totalCarrito });
+        res.render('shop/Compra/compraCarrito', { productos: carrito, totalCarrito });
     } catch (error) {
         console.error('Error al obtener los productos del carrito:', error);
         res.status(500).send('Error al obtener los productos del carrito');
