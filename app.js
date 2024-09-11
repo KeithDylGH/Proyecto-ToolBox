@@ -148,8 +148,8 @@ app.get('/', async (req, res) => {
         // Obtener el usuario desde la sesión
         const CUsuario = req.session.user;
 
-        // Renderizar la vista con productos generales, productos por categoría, categorías recomendadas y usuario
-        res.render('home/index', { CUsuario, productos, categoriasRecomendadas });
+        // Renderizar la vista con productos generales, categorías recomendadas, todas las categorías y usuario
+        res.render('home/index', { CUsuario, productos, categoriasRecomendadas, categorias });
     } catch (error) {
         console.error('Error al obtener productos y categorías:', error);
         res.status(500).send('Error al obtener productos y categorías');
