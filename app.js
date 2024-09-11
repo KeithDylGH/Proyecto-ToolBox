@@ -199,29 +199,39 @@ app.get('/tienda/producto/:id', async (req, res) => {
     }
 });
 
+// Ruta para la compra de un producto individual
 app.get('/compra', async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
 
-        if (productoId) {
-            // Compra de un producto individual
-            const producto = await iProducto.findById(productoId);
-            if (producto) {
-                const total = producto.precio * cantidad;
-                res.render('shop/Compra/index', { producto, cantidad, total });
-            } else {
-                res.status(404).send('Producto no encontrado');
-            }
+        if (!productoId) {
+            return res.status(400).send('ID del producto no proporcionado');
+        }
+
+        const producto = await iProducto.findById(productoId);
+
+        if (producto) {
+            const total = producto.precio * cantidad;
+            res.render('shop/compra', { producto, cantidad, total });
         } else {
-            // Compra del carrito
-            const carritoProductos = await getCarritoProductos(req); // Implementa esta función
-            const totalCarrito = carritoProductos.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
-            res.render('shop/Compra/carrito', { productos: carritoProductos, totalCarrito });
+            res.status(404).send('Producto no encontrado');
         }
     } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).send('Error al obtener los productos');
+        console.error('Error al obtener el producto:', error);
+        res.status(500).send('Error al obtener el producto');
+    }
+});
+
+// Ruta para la compra de productos en el carrito
+app.get('/comprasCarrito', async (req, res) => {
+    try {
+        const carritoProductos = []; // Aquí debes obtener los productos del carrito del usuario
+        const totalCarrito = carritoProductos.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
+        res.render('shop/comprasCarrito', { productos: carritoProductos, totalCarrito });
+    } catch (error) {
+        console.error('Error al obtener los productos del carrito:', error);
+        res.status(500).send('Error al obtener los productos del carrito');
     }
 });
 
