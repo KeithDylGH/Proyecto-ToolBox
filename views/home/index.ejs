@@ -44,15 +44,19 @@
 
                       <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle link-light" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                           data-bs-toggle="dropdown" aria-expanded="false">
                             Categoría
                         </a>
                         <ul class="dropdown-menu">
-                            <% categorias.forEach(categoria => { %>
-                                <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
-                            <% }) %>
+                            <% if (categorias && categorias.length > 0) { %>
+                                <% categorias.forEach(categoria => { %>
+                                    <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
+                                <% }) %>
+                            <% } else { %>
+                                <li><a class="dropdown-item" href="#">No hay categorías disponibles</a></li>
+                            <% } %>
                         </ul>
-                    </li>
+                    </li>                    
                                      
                       <li class="nav-item">
                         <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">

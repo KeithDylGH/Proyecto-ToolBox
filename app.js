@@ -109,25 +109,45 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     try {
         // Obtener productos aleatorios (generales)
-        const productos = await iProducto.aggregate([{ $sample: { size: 8 } }]); // Obtener más productos para mostrar en el carrusel y en la sección de productos
+        const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
 
-        // Construir la URL completa de la imagen para productos
+        // Obtener todas las categorías
+        const categorias = await Categoria.find();
+
+        // Obtener productos aleatorios para cada una de las categorías seleccionadas
+        const productosPorCategoria = {};
+        for (const categoria of categorias) {
+            const productosCategoria = await iProducto.aggregate([
+                { $match: { categoria: categoria.nombre } },
+                { $sample: { size: 4 } }
+            ]);
+
+            // Construir la URL completa de la imagen
+            productosCategoria.forEach(producto => {
+                if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                    const fileName = producto.imagen.data.split('/').pop();
+                    producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+                }
+            });
+
+            productosPorCategoria[categoria.nombre] = productosCategoria;
+        }
+
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
                 const fileName = producto.imagen.data.split('/').pop();
                 producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
-                console.log(`Imagen generada: ${producto.imagen.data}`); // Verificar la URL de la imagen
             }
         });
 
         // Obtener el usuario desde la sesión
         const CUsuario = req.session.user;
 
-        // Renderizar la vista con productos generales y usuario
-        res.render('home/index', { CUsuario, productos });
+        // Renderizar la vista con productos generales, productos por categoría, categorías y usuario
+        res.render('home/index', { CUsuario, productos, productosPorCategoria, categorias });
     } catch (error) {
-        console.error('Error al obtener productos:', error);
-        res.status(500).send('Error al obtener productos');
+        console.error('Error al obtener productos y categorías:', error);
+        res.status(500).send('Error al obtener productos y categorías');
     }
 });
 
