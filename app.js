@@ -132,10 +132,14 @@ app.get('/', async (req, res) => {
                 if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
                     const fileName = producto.imagen.data.split('/').pop();
                     producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+                    console.log(`Imagen generada: ${producto.imagen.data}`); // Verificar la URL de la imagen
                 }
             });
 
-            productosPorCategoria[categoria.nombre] = productosCategoria;
+            // Solo agregar la categoría si tiene productos
+            if (productosCategoria.length > 0) {
+                productosPorCategoria[categoria.nombre] = productosCategoria;
+            }
         }
 
         // Construir la URL completa de la imagen para productos generales
@@ -157,6 +161,17 @@ app.get('/', async (req, res) => {
     }
 });
 
+app.get('/buscarProductos', async (req, res) => {
+    const { nombre } = req.query;
+    try {
+      const productos = await Producto.find({ 
+        nombre: { $regex: nombre, $options: 'i' }  // Busca coincidencias parciales (case-insensitive)
+      }).limit(5);  // Limita el número de resultados
+      res.json(productos);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al buscar productos' });
+    }
+  });  
 
 app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
 app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));

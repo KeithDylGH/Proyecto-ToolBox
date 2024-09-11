@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
     const metodosPago = document.getElementById('metodosPago');
-    
+
     // Verifica si los elementos existen antes de agregar los eventos
     if (siguienteBtn && cancelarBtn && metodosPago) {
         siguienteBtn.addEventListener('click', function () {
@@ -14,26 +14,47 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Botones de métodos de pago
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
-    const paypalBtn = document.getElementById('paypalBtn');
+    const transferenciaBtn = document.getElementById('transferenciaBtn');
+    const zinliBtn = document.getElementById('zinliBtn');
     const cancelarPagoBtn = document.getElementById('cancelarPagoBtn');
 
     // Verifica si los botones de métodos de pago existen antes de agregar los eventos
-    if (pagoMovilBtn && paypalBtn && cancelarPagoBtn) {
+    if (pagoMovilBtn && transferenciaBtn && zinliBtn && cancelarPagoBtn) {
         pagoMovilBtn.addEventListener('click', function () {
-            // Muestra el modal para Pago Móvil
-            const pagoMovilModal = new bootstrap.Modal(document.getElementById('pagoMovilModal'));
-            pagoMovilModal.show();
+            // Muestra las instrucciones para Pago Móvil
+            mostrarInstruccionesPago('instruccionPagoMovil');
         });
 
-        paypalBtn.addEventListener('click', function () {
-            // Redirige al usuario a la página de PayPal
-            window.location.href = '/compra/paypal'; // Asegúrate de que esta URL es correcta
+        transferenciaBtn.addEventListener('click', function () {
+            // Muestra las instrucciones para Transferencia
+            mostrarInstruccionesPago('instruccionTransferencia');
+        });
+
+        zinliBtn.addEventListener('click', function () {
+            // Muestra las instrucciones para Zinli
+            mostrarInstruccionesPago('instruccionZinli');
         });
 
         cancelarPagoBtn.addEventListener('click', function () {
             // Redirige al usuario a la página principal o una página de cancelación
             window.location.href = '/';
         });
+    }
+
+    // Función para mostrar las instrucciones de pago y ocultar las demás
+    function mostrarInstruccionesPago(instruccionId) {
+        // Oculta todas las instrucciones de pago
+        const instrucciones = document.querySelectorAll('#instruccionesPago > div');
+        instrucciones.forEach(function (instruccion) {
+            instruccion.classList.add('d-none');
+        });
+
+        // Muestra las instrucciones del método seleccionado
+        const seleccionada = document.getElementById(instruccionId);
+        if (seleccionada) {
+            seleccionada.classList.remove('d-none');
+        }
     }
 });

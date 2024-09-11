@@ -106,10 +106,11 @@
                     <% } %>                    
                                                                                                       
                   </ul>
-                  <!-- <form class="d-flex" role="search">
-                      <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
-                      <button class="btn btn-outline-success" type="submit">Buscar</button>
-                  </form> -->
+                  <form class="d-flex position-relative" id="productSearchForm">
+                    <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
+                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                    <div id="suggestions" class="list-group position-absolute w-100"></div>
+                  </form>                  
               </div>
           </div>
       </nav>
@@ -180,30 +181,38 @@
             id="MultiCarousel"
             data-interval="1000">
             <div class="MultiCarousel-inner">
-                <% Object.keys(productosPorCategoria).forEach(categoria => { %>
-                    <% productosPorCategoria[categoria].forEach(producto => { %>
-                        <div class="item">
-                            <div class="card" style="width: 100%">
-                                <img
-                                    class="card-img-top"
-                                    src="<%= producto.imagen.data %>"
-                                    alt="<%= producto.nombre %>"/>
-                                <div class="card-body">
-                                    <h5 class="card-title"><%= producto.nombre %></h5>
-                                    <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                                    <p class="card-text">Categoría: <%= categoria %></p>
-                                    <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
-                                    <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
+                <% if (Object.keys(productosPorCategoria).length > 0) { %>
+                    <% Object.keys(productosPorCategoria).forEach(categoria => { %>
+                        <% if (productosPorCategoria[categoria].length > 0) { %>
+                            <% productosPorCategoria[categoria].forEach(producto => { %>
+                                <div class="item">
+                                    <div class="card" style="width: 100%">
+                                        <img
+                                            class="card-img-top"
+                                            src="<%= producto.imagen.data %>"
+                                            alt="<%= producto.nombre %>"/>
+                                        <div class="card-body">
+                                            <h5 class="card-title"><%= producto.nombre %></h5>
+                                            <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                                            <p class="card-text">Categoría: <%= categoria %></p>
+                                            <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
+                                            <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            <% }); %>
+                        <% } else { %>
+                            <p>No hay productos disponibles en la categoría <%= categoria %>.</p>
+                        <% } %>
                     <% }); %>
-                <% }); %>
+                <% } else { %>
+                    <p>No hay productos disponibles para mostrar.</p>
+                <% } %>
             </div>
             <button class="btn leftLst bg-light text-dark"><</button>
             <button class="btn rightLst bg-light text-dark">></button>
         </div>
-    </section>    
+    </section>        
 
         <div class="categoria">
           <h2>Categoria de nuestros productos disponibles</h2>

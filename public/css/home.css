@@ -379,3 +379,10 @@ footer p a{
   pointer-events: none;
   background: #bababa;
 }
+
+/*BUSQUEDA*/
+#suggestions {
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}

@@ -191,3 +191,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+//BUSQUEDA
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const suggestions = document.getElementById('suggestions');
+    const form = document.getElementById('productSearchForm');
+  
+    searchInput.addEventListener('input', async function() {
+      const query = searchInput.value.trim();
+      if (query.length > 2) {
+        const response = await fetch(`/buscarProductos?nombre=${query}`);
+        const products = await response.json();
+  
+        suggestions.innerHTML = '';
+        products.forEach(product => {
+          const suggestionItem = document.createElement('a');
+          suggestionItem.href = `/producto/${product._id}`;
+          suggestionItem.className = 'list-group-item list-group-item-action';
+          suggestionItem.textContent = product.nombre;
+          suggestions.appendChild(suggestionItem);
+        });
+      } else {
+        suggestions.innerHTML = '';
+      }
+    });
+  
+    form.addEventListener('submit', function(event) {
+      const firstSuggestion = suggestions.querySelector('a');
+      if (firstSuggestion) {
+        event.preventDefault();
+        window.location.href = firstSuggestion.href;
+      }
+    });
+  });  

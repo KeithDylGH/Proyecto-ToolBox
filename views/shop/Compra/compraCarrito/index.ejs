@@ -68,18 +68,24 @@
             </div>
           </div>
         </div>
-    </div>
 
-    <!-- Modal for Transferencia -->
-    <div id="transferenciaModal" class="modal fade" tabindex="-1" aria-labelledby="transferenciaModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="transferenciaModalLabel">Instrucciones para Transferencia</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Sección de instrucciones de pago -->
+        <div id="instruccionesPago" class="mt-4">
+          <!-- Instrucciones de Pago Móvil -->
+          <div id="instruccionPagoMovil" class="d-none">
+            <h4>Instrucciones para Pago Móvil</h4>
+            <p>Datos para el pago:</p>
+            <ul>
+              <li>Teléfono: <strong>0412-6378817</strong></li>
+              <li>Cédula/RIF: <strong>J-12345678-9</strong></li>
+              <li>Banco: <strong>Banesco</strong></li>
+            </ul>
+            <p>Envía el comprobante vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
           </div>
-          <div class="modal-body">
-            <h4>Paso 1: Realiza la Transferencia</h4>
+
+          <!-- Instrucciones de Transferencia -->
+          <div id="instruccionTransferencia" class="d-none">
+            <h4>Instrucciones para Transferencia</h4>
             <p>Datos de la cuenta bancaria:</p>
             <ul>
               <li>Banco: <strong>Banesco</strong></li>
@@ -87,44 +93,78 @@
               <li>Nombre del titular: <strong>ToolBox S.A.</strong></li>
               <li>RIF: <strong>J-12345678-9</strong></li>
             </ul>
-            <h4>Paso 2: Confirmar Transferencia</h4>
             <p>Envía el comprobante vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Modal for Zinli -->
-    <div id="zinliModal" class="modal fade" tabindex="-1" aria-labelledby="zinliModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="zinliModalLabel">Instrucciones para Zinli</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <h4>Paso 1: Realiza el Pago en Zinli</h4>
+
+          <!-- Instrucciones para Zinli -->
+          <div id="instruccionZinli" class="d-none">
+            <h4>Instrucciones para Zinli</h4>
             <p>Datos para el pago:</p>
             <ul>
               <li>Número de cuenta Zinli: <strong>0412-6378817</strong></li>
               <li>Nombre del titular: <strong>ToolBox S.A.</strong></li>
             </ul>
-            <h4>Paso 2: Confirmar Pago</h4>
             <p>Envía el comprobante vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
       </div>
-    </div>    
+
+      <!-- Modal for Transferencia -->
+      <div id="transferenciaModal" class="modal fade" tabindex="-1" aria-labelledby="transferenciaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="transferenciaModalLabel">Instrucciones para Transferencia</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h4>Paso 1: Realiza la Transferencia</h4>
+              <p>Datos de la cuenta bancaria:</p>
+              <ul>
+                <li>Banco: <strong>Banesco</strong></li>
+                <li>Número de cuenta: <strong>0134-5678-9123-4567</strong></li>
+                <li>Nombre del titular: <strong>ToolBox S.A.</strong></li>
+                <li>RIF: <strong>J-12345678-9</strong></li>
+              </ul>
+              <h4>Paso 2: Confirmar Transferencia</h4>
+              <p>Envía el comprobante vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal for Zinli -->
+      <div id="zinliModal" class="modal fade" tabindex="-1" aria-labelledby="zinliModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="zinliModalLabel">Instrucciones para Zinli</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h4>Paso 1: Realiza el Pago en Zinli</h4>
+              <p>Datos para el pago:</p>
+              <ul>
+                <li>Número de cuenta Zinli: <strong>0412-6378817</strong></li>
+                <li>Nombre del titular: <strong>ToolBox S.A.</strong></li>
+              </ul>
+              <h4>Paso 2: Confirmar Pago</h4>
+              <p>Envía el comprobante vía <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
     <% } else { %>
       <p>No hay productos en el carrito.</p>
     <% } %>
-  </main>
+</main>
 
   <script src="/js/compra.js"></script>
 </body>
