@@ -40,7 +40,7 @@
           <h5 class="card-title">Productos en tu Carrito</h5>
           <% productos.forEach(producto => { %>
             <div class="producto-item">
-              <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" />
+              <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>" />
               <div>
                 <h6><%= producto.nombre %></h6>
                 <p>Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
@@ -59,6 +59,7 @@
         <h3>Selecciona el Método de Pago</h3>
         <button class="btn btn-success" id="pagoMovilBtn">Pago Móvil</button>
         <button class="btn btn-primary" id="paypalBtn">PayPal</button>
+        <a class="btn btn-secondary" id="cancelarPagoBtn">Cancelar</a>
       </div>
 
       <!-- Modal for Pago Móvil -->
@@ -74,12 +75,12 @@
                 <li>Ingresa a la página de <a href="https://www.bancodevenezuela.com" target="_blank">BDV</a>.</li>
                 <li>Selecciona "Pago Móvil" e ingresa los siguientes datos:
                   <ul>
-                    <li>Teléfono de la Empresa: <strong>+123456789</strong></li>
-                    <li>Cédula de la Empresa: <strong>V-12345678</strong></li>
+                    <li>Teléfono de la Empresa: <strong>+4126378817</strong></li>
+                    <li>Cédula de la Empresa: <strong>V-30815842</strong></li>
                   </ul>
                 </li>
                 <li>Realiza el pago y toma una captura del comprobante.</li>
-                <li>Comunica el pago a la empresa a través de <a href="https://wa.me/+412-6378817" target="_blank" class="btn btn-success">WhatsApp</a>.</li>
+                <li>Comunica el pago a la empresa a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</li>
               </ol>
             </div>
             <div class="modal-footer">
