@@ -122,7 +122,8 @@ app.get('/', async (req, res) => {
         // Obtener un producto destacado para cada categoría
         const categoriasRecomendadas = [];
         for (const categoria of categoriasSeleccionadas) {
-            const productoDestacado = await iProducto.findOne({ categoria: categoria.nombre }).exec();
+            // Buscar productos por ObjectId de categoría
+            const productoDestacado = await iProducto.findOne({ categoria: categoria._id }).exec();
 
             // Construir la URL completa de la imagen para el producto destacado
             if (productoDestacado && productoDestacado.imagen && typeof productoDestacado.imagen === 'object' && productoDestacado.imagen.data) {
