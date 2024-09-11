@@ -201,18 +201,16 @@ app.get('/tienda/producto/:id', async (req, res) => {
 
 app.get('/compra', async (req, res) => {
     try {
-        // Aquí obtén el producto y la cantidad desde la sesión o base de datos
-        const productoId = req.query.productoId; // O usa otro método para obtener el producto
-        const cantidad = req.query.cantidad || 1; // Valor por defecto si no se proporciona cantidad
+        const productoId = req.query.productoId;
+        const cantidad = parseInt(req.query.cantidad, 10) || 1;
 
-        // Obtener el producto desde la base de datos
         const producto = await iProducto.findById(productoId);
 
         if (producto) {
             const total = producto.precio * cantidad;
 
-            // Renderiza la vista con los datos del producto
-            res.render('shop/Compra', { producto, cantidad, total });
+            console.log({ producto, cantidad, total }); // Depuración
+            res.render('shop/Compra/index', { producto, cantidad, total });
         } else {
             res.status(404).send('Producto no encontrado');
         }
