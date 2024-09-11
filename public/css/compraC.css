@@ -1,0 +1,16 @@
+/* Añadir estilo personalizado si es necesario */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.btn-group {
+    display: flex;
+    justify-content: flex-end;
+}
+.btn-group .btn {
+    margin-left: 10px;
+}
+#metodosPago {
+    margin-top: 20px;
+}
