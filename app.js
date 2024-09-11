@@ -109,40 +109,36 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
     try {
         // Obtener productos aleatorios (generales)
-        const productos = await iProducto.aggregate([{ $sample: { size: 4 } }]);
+        const productos = await iProducto.aggregate([{ $sample: { size: 8 } }]); // Obtener más productos para mostrar en el carrusel y en la sección de productos
 
-        // Obtener todas las categorías
-        const categorias = await Categoria.find();
-        
-        // Seleccionar cuatro categorías aleatorias
-        const categoriasSeleccionadas = categorias
-            .sort(() => 0.5 - Math.random()) // Mezclar categorías
-            .slice(0, 4); // Seleccionar las primeras 4 categorías
-
-        // Obtener productos aleatorios para cada una de las cuatro categorías seleccionadas
-        const productosPorCategoria = {};
-        for (const categoria of categoriasSeleccionadas) {
-            const productosCategoria = await iProducto.aggregate([
-                { $match: { categoria: categoria.nombre } }, // Ajustar según tu modelo
-                { $sample: { size: 4 } } // Número de productos que quieres mostrar por categoría
-            ]);
-
-            // Construir la URL completa de la imagen
-            productosCategoria.forEach(producto => {
-                if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
-                    const fileName = producto.imagen.data.split('/').pop();
-                    producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
-                    console.log(`Imagen generada: ${producto.imagen.data}`); // Verificar la URL de la imagen
-                }
-            });
-
-            // Solo agregar la categoría si tiene productos
-            if (productosCategoria.length > 0) {
-                productosPorCategoria[categoria.nombre] = productosCategoria;
+        // Construir la URL completa de la imagen para productos
+        productos.forEach(producto => {
+            if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                const fileName = producto.imagen.data.split('/').pop();
+                producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+                console.log(`Imagen generada: ${producto.imagen.data}`); // Verificar la URL de la imagen
             }
-        }
+        });
 
-        // Construir la URL completa de la imagen para productos generales
+        // Obtener el usuario desde la sesión
+        const CUsuario = req.session.user;
+
+        // Renderizar la vista con productos generales y usuario
+        res.render('home/index', { CUsuario, productos });
+    } catch (error) {
+        console.error('Error al obtener productos:', error);
+        res.status(500).send('Error al obtener productos');
+    }
+});
+
+app.get('/buscarProductos', async (req, res) => {
+    const { nombre } = req.query;
+    try {
+        const productos = await iProducto.find({
+            nombre: { $regex: nombre, $options: 'i' }  // Busca coincidencias parciales (case-insensitive)
+        }).limit(5);  // Limita el número de resultados
+
+        // Construir la URL completa de la imagen para productos encontrados
         productos.forEach(producto => {
             if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
                 const fileName = producto.imagen.data.split('/').pop();
@@ -150,28 +146,11 @@ app.get('/', async (req, res) => {
             }
         });
 
-        // Obtener el usuario desde la sesión
-        const CUsuario = req.session.user;
-
-        // Renderizar la vista con productos generales, productos por categoría, categorías y usuario
-        res.render('home/index', { CUsuario, productos, productosPorCategoria, categorias });
+        res.json(productos);
     } catch (error) {
-        console.error('Error al obtener productos y categorías:', error);
-        res.status(500).send('Error al obtener productos y categorías');
+        res.status(500).json({ error: 'Error al buscar productos' });
     }
-});
-
-app.get('/buscarProductos', async (req, res) => {
-    const { nombre } = req.query;
-    try {
-      const productos = await Producto.find({ 
-        nombre: { $regex: nombre, $options: 'i' }  // Busca coincidencias parciales (case-insensitive)
-      }).limit(5);  // Limita el número de resultados
-      res.json(productos);
-    } catch (error) {
-      res.status(500).json({ error: 'Error al buscar productos' });
-    }
-  });  
+});  
 
 app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
 app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));

@@ -181,33 +181,22 @@
             id="MultiCarousel"
             data-interval="1000">
             <div class="MultiCarousel-inner">
-                <% if (Object.keys(productosPorCategoria).length > 0) { %>
-                    <% Object.keys(productosPorCategoria).forEach(categoria => { %>
-                        <% if (productosPorCategoria[categoria].length > 0) { %>
-                            <% productosPorCategoria[categoria].forEach(producto => { %>
-                                <div class="item">
-                                    <div class="card" style="width: 100%">
-                                        <img
-                                            class="card-img-top"
-                                            src="<%= producto.imagen.data %>"
-                                            alt="<%= producto.nombre %>"/>
-                                        <div class="card-body">
-                                            <h5 class="card-title"><%= producto.nombre %></h5>
-                                            <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                                            <p class="card-text">Categoría: <%= categoria %></p>
-                                            <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
-                                            <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            <% }); %>
-                        <% } else { %>
-                            <p>No hay productos disponibles en la categoría <%= categoria %>.</p>
-                        <% } %>
-                    <% }); %>
-                <% } else { %>
-                    <p>No hay productos disponibles para mostrar.</p>
-                <% } %>
+                <% productos.forEach(producto => { %>
+                    <div class="item">
+                        <div class="card" style="width: 100%">
+                            <img
+                                class="card-img-top"
+                                src="<%= producto.imagen.data %>"
+                                alt="<%= producto.nombre %>"/>
+                            <div class="card-body">
+                                <h5 class="card-title"><%= producto.nombre %></h5>
+                                <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                                <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
+                                <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
             </div>
             <button class="btn leftLst bg-light text-dark"><</button>
             <button class="btn rightLst bg-light text-dark">></button>

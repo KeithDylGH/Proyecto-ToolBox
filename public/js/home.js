@@ -197,31 +197,46 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const suggestions = document.getElementById('suggestions');
     const form = document.getElementById('productSearchForm');
-  
+
     searchInput.addEventListener('input', async function() {
-      const query = searchInput.value.trim();
-      if (query.length > 2) {
-        const response = await fetch(`/buscarProductos?nombre=${query}`);
-        const products = await response.json();
-  
-        suggestions.innerHTML = '';
-        products.forEach(product => {
-          const suggestionItem = document.createElement('a');
-          suggestionItem.href = `/producto/${product._id}`;
-          suggestionItem.className = 'list-group-item list-group-item-action';
-          suggestionItem.textContent = product.nombre;
-          suggestions.appendChild(suggestionItem);
-        });
-      } else {
-        suggestions.innerHTML = '';
-      }
+        const query = searchInput.value.trim();
+        if (query.length > 2) {
+            try {
+                const response = await fetch(`/buscarProductos?nombre=${query}`);
+                const products = await response.json();
+
+                suggestions.innerHTML = '';
+                products.forEach(product => {
+                    const suggestionItem = document.createElement('a');
+                    suggestionItem.href = `/producto/${product._id}`;  // Asegúrate de que esta ruta existe
+                    suggestionItem.className = 'list-group-item list-group-item-action';
+                    suggestionItem.textContent = product.nombre;
+
+                    // Mostrar imagen del producto en la sugerencia
+                    if (product.imagen && product.imagen.data) {
+                        const img = document.createElement('img');
+                        img.src = product.imagen.data;
+                        img.style.width = '50px'; // Tamaño de la imagen
+                        img.style.height = 'auto'; // Mantener la proporción
+                        suggestionItem.prepend(img);
+                    }
+
+                    suggestions.appendChild(suggestionItem);
+                });
+            } catch (error) {
+                console.error('Error al obtener sugerencias:', error);
+                suggestions.innerHTML = '<div class="list-group-item">Error al obtener sugerencias</div>';
+            }
+        } else {
+            suggestions.innerHTML = '';
+        }
     });
-  
+
     form.addEventListener('submit', function(event) {
-      const firstSuggestion = suggestions.querySelector('a');
-      if (firstSuggestion) {
-        event.preventDefault();
-        window.location.href = firstSuggestion.href;
-      }
+        event.preventDefault(); // Prevenir el envío del formulario
+        const firstSuggestion = suggestions.querySelector('a');
+        if (firstSuggestion) {
+            window.location.href = firstSuggestion.href;
+        }
     });
-  });  
+});
