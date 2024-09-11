@@ -22,21 +22,33 @@
 
   <main class="container mt-4">
     <h2>Confirmar Compra</h2>
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">Producto: <%= producto.nombre %></h5>
-        <p class="card-text">Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
-        <p class="card-text">Cantidad: <%= cantidad %></p>
-        <h4>Total: $<%= total.toFixed(2) %></h4>
-        <a class="btn btn-primary" href="#" id="siguienteBtn">Siguiente</a>
-        <a class="btn btn-secondary" href="/" id="cancelarBtn">Cancelar</a>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title"><%= producto.nombre %></h5>
+            <p class="card-text">Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
+            <p class="card-text">Cantidad: <%= cantidad %></p>
+            <h4>Total: $<%= total.toFixed(2) %></h4>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div id="metodosPago" class="d-none">
-      <h3>Selecciona el Método de Pago</h3>
-      <button class="btn btn-success" id="pagoMovilBtn">Pago Móvil</button>
-      <button class="btn btn-primary" id="paypalBtn">PayPal</button>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <a class="btn btn-primary btn-lg btn-block" href="#" id="siguienteBtn">Siguiente</a>
+            <a class="btn btn-secondary btn-lg btn-block" href="/" id="cancelarBtn">Cancelar</a>
+          </div>
+        </div>
+
+        <div id="metodosPago" class="d-none mt-3">
+          <h3>Selecciona el Método de Pago</h3>
+          <button class="btn btn-success" id="pagoMovilBtn">Pago Móvil</button>
+          <button class="btn btn-primary" id="paypalBtn">PayPal</button>
+        </div>
+      </div>
     </div>
 
     <!-- Modal for Pago Móvil -->
@@ -49,15 +61,15 @@
           </div>
           <div class="modal-body">
             <ol>
-              <li>Ingresa a la página de <a href="https://www.bdv.com.ve" target="_blank">BDV</a>.</li>
+              <li>Ingresa a la página de <a href="https://www.bancodevenezuela.com" target="_blank">Banco de Venezuela</a>.</li>
               <li>Selecciona "Pago Móvil" e ingresa los siguientes datos:
                 <ul>
-                  <li>Teléfono de la Empresa: <strong>+123456789</strong></li>
-                  <li>Cédula de la Empresa: <strong>V-12345678</strong></li>
+                  <li>Teléfono de la Empresa: <strong>+412-6378817</strong></li>
+                  <li>Cédula de la Empresa: <strong>V-30815482</strong></li>
                 </ul>
               </li>
               <li>Realiza el pago y toma una captura del comprobante.</li>
-              <li>Comunica el pago a la empresa a través de <a href="https://wa.me/+123456789" target="_blank" class="btn btn-success">WhatsApp</a>.</li>
+              <li>Comunica el pago a la empresa a través de <a href="https://wa.me/+412-6378817" target="_blank" class="btn btn-success">WhatsApp</a>.</li>
             </ol>
           </div>
           <div class="modal-footer">

@@ -231,7 +231,7 @@ app.get('/comprasCarrito', async (req, res) => {
     try {
         const carritoProductos = []; // Aquí debes obtener los productos del carrito del usuario
         const totalCarrito = carritoProductos.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
-        res.render('shop/comprasCarrito', { productos: carritoProductos, totalCarrito });
+        res.render('shop/Compra/compraCarrito', { productos: carritoProductos, totalCarrito });
     } catch (error) {
         console.error('Error al obtener los productos del carrito:', error);
         res.status(500).send('Error al obtener los productos del carrito');
