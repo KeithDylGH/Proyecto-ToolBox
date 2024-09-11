@@ -25,7 +25,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="card mb-3">
-          <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="card-img-top">
+          <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="card-img-top" style="max-width: 150px;">
           <div class="card-body">
             <h5 class="card-title"><%= producto.nombre %></h5>
             <p class="card-text">Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
@@ -39,14 +39,15 @@
         <div class="card">
           <div class="card-body">
             <a class="btn btn-primary btn-lg btn-block" href="#" id="siguienteBtn">Siguiente</a>
-            <a class="btn btn-secondary btn-lg btn-block" href="/" id="cancelarBtn">Cancelar</a>
+            <a class="btn btn-secondary btn-lg btn-block mt-2" href="/" id="cancelarBtn">Cancelar</a>
           </div>
         </div>
 
-        <div id="metodosPago" class="d-none mt-3">
+        <div id="metodosPago" class="d-none mt-3 text-center">
           <h3>Selecciona el Método de Pago</h3>
-          <button class="btn btn-success" id="pagoMovilBtn">Pago Móvil</button>
-          <button class="btn btn-primary" id="paypalBtn">PayPal</button>
+          <button class="btn btn-success btn-lg" id="pagoMovilBtn">Pago Móvil</button>
+          <button class="btn btn-primary btn-lg" id="paypalBtn">PayPal</button>
+          <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
         </div>
       </div>
     </div>
@@ -64,12 +65,12 @@
               <li>Ingresa a la página de <a href="https://www.bancodevenezuela.com" target="_blank">Banco de Venezuela</a>.</li>
               <li>Selecciona "Pago Móvil" e ingresa los siguientes datos:
                 <ul>
-                  <li>Teléfono de la Empresa: <strong>+412-6378817</strong></li>
+                  <li>Teléfono de la Empresa: <strong>+0412-6378817</strong></li>
                   <li>Cédula de la Empresa: <strong>V-30815482</strong></li>
                 </ul>
               </li>
               <li>Realiza el pago y toma una captura del comprobante.</li>
-              <li>Comunica el pago a la empresa a través de <a href="https://wa.me/+412-6378817" target="_blank" class="btn btn-success">WhatsApp</a>.</li>
+              <li>Comunica el pago a la empresa a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</li>
             </ol>
           </div>
           <div class="modal-footer">
