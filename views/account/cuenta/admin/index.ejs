@@ -48,14 +48,17 @@
                                 background: rgb(94,59,59);
                                 background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
                                 <div class="welcomeMsg">
-                                    <% if (CUsuario.rol === 'admin') { %>
-                                        <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
-                                        <p class="card-text-overlay">Administra productos, usuarios y más con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
-                                    <% } else if (CUsuario.rol === 'boss') { %>
-                                        <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
-                                        <p class="card-text-overlay">Administra la página, usuarios y productos con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
-                                    <% } %>
-                                </div>
+                                  <% if (CUsuario && CUsuario.rol === 'admin') { %>
+                                      <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
+                                      <p class="card-text-overlay">Administra productos, usuarios y más con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
+                                  <% } else if (CUsuario && CUsuario.rol === 'boss') { %>
+                                      <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
+                                      <p class="card-text-overlay">Administra la página, usuarios y productos con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
+                                  <% } else { %>
+                                      <h3 class="card-title text-light">Bienvenido!</h3>
+                                      <p class="card-text-overlay">Tu rol no está definido. Por favor, contacta al soporte.</p>
+                                  <% } %>
+                              </div>                              
                             </div>
                         </div>
 
