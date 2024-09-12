@@ -202,7 +202,9 @@ app.get('/buscarProductos', async (req, res) => {
     }
 });
 
-app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'account', 'cuenta', 'login'));
+});
 
 // Ruta para la página de olvidar la contraseña
 app.get('/claveOlvidada', (req, res) => {
