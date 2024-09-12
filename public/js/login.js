@@ -20,9 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const claveOlvidada = document.getElementById('olvidada');
 
-    claveOlvidada.addEventListener('click', function() {
-        window.location.href = '/claveOlvidada/';
-    });
+    if (claveOlvidada) {
+        claveOlvidada.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenir comportamiento por defecto del enlace
+            window.location.href = '/claveOlvidada/';
+        });
+    }
 });
 
 // Form login

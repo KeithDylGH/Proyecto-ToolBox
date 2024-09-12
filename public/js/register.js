@@ -79,3 +79,14 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '/login/';
     });
 });
+
+// Redireccionar a la página de términos de servicio si se requiere lógica adicional
+document.addEventListener('DOMContentLoaded', function() {
+    const termsLink = document.getElementById('termsLink');
+
+    if (termsLink) {
+        termsLink.addEventListener('click', function() {
+            window.location.href = '/terminos-y-condicion';
+        });
+    }
+});

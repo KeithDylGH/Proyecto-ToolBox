@@ -59,10 +59,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    email: emailUsuario, // Reemplazar con el correo del usuario autenticado
+                    correo: emailUsuario, // Asegúrate de que aquí también uses 'correo'
                     producto: producto,
                     precio: parseFloat(total),
-                    cantidad: 1, // Este valor puede cambiar según el caso
+                    cantidad: 1,
                     metodo: metodoPago
                 }),
             })
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 mostrarNotificacion('Error al confirmar el pago.', 'danger');
                 console.error('Error al confirmar el pago:', error);
-            });
+            });            
         });
     });
 

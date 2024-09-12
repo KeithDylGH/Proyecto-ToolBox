@@ -284,7 +284,7 @@ app.post('/nuevaClave', async (req, res) => {
 app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
 
 app.get('/terminos-y-condicion', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'terminos'));
+    res.render(path.join('terminos'));
 });
 
 app.get('/logout', (req, res) => {
@@ -421,9 +421,9 @@ app.get('/comprasCarrito', async (req, res) => {
 
 // Ruta para confirmar el pago y enviar el correo con PDF
 app.post('/confirmar-pago', async (req, res) => {
-    const { email, producto, precio, cantidad } = req.body;
+    const { correo, producto, precio, cantidad } = req.body;
 
-    if (!email || !producto || !precio || !cantidad) {
+    if (!correo || !producto || !precio || !cantidad) {
         return res.status(400).send('Faltan datos necesarios para el correo.');
     }
 
@@ -440,36 +440,11 @@ app.post('/confirmar-pago', async (req, res) => {
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
-        // Esperar a que el PDF se cree antes de continuar
-        await new Promise((resolve, reject) => {
-            doc.on('finish', resolve);
-            doc.on('error', reject);
-        });
-
-        // Opciones del correo
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Confirmación de Compra',
-            text: 'Gracias por tu compra. Adjuntamos tu factura en formato PDF.',
-            attachments: [
-                {
-                    filename: 'factura.pdf',
-                    path: pdfPath
-                }
-            ]
-        };
-
-        // Enviar el correo
-        await transporter.sendMail(mailOptions);
-
-        // Eliminar el archivo PDF una vez enviado
-        fs.unlinkSync(pdfPath);
-
-        res.send('Correo enviado con éxito.');
+        // Enviar respuesta exitosa en JSON
+        res.json({ success: true, message: 'Pago confirmado y correo enviado.' });
     } catch (error) {
-        console.error('Error al enviar el correo:', error);
-        res.status(500).send('Error al enviar el correo.');
+        console.error('Error al crear el PDF o enviar el correo:', error);
+        res.status(500).json({ error: 'Error al procesar el pago.' });  // Devuelve JSON en caso de error
     }
 });
 
