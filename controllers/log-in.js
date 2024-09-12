@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const User = require('../models/usuario'); // Asegúrate de importar el modelo correctamente
+const User = require('../models/usuario');
 
-// Función para iniciar sesión
 async function iniciarSesion(usuario, contraseña) {
     try {
         const user = await User.findOne({ usuario });
@@ -13,7 +12,7 @@ async function iniciarSesion(usuario, contraseña) {
             return { success: false, message: 'Usuario no encontrado' };
         }
 
-        console.log("Contraseña almacenada en la base de datos:", user.password); // Agrega esto para depuración
+        console.log("Contraseña almacenada en la base de datos:", user.password);
 
         const passwordCorrecta = await bcrypt.compare(contraseña, user.password);
         if (!passwordCorrecta) {
@@ -29,12 +28,11 @@ async function iniciarSesion(usuario, contraseña) {
     }
 }
 
-// Ruta para manejar el inicio de sesión
 router.post('/', async (req, res) => {
     try {
         const { usuario, contraseña } = req.body;
-        console.log('Usuario:', usuario); // Para depuración
-        console.log('Contraseña:', contraseña); // Para depuración
+        console.log('Usuario:', usuario);
+        console.log('Contraseña:', contraseña);
         const result = await iniciarSesion(usuario, contraseña);
 
         if (result.success) {
@@ -43,7 +41,7 @@ router.post('/', async (req, res) => {
                 usuario: result.user.usuario,
                 rol: result.user.rol
             };
-            console.log('Session user set:', req.session.user); // Para depuración
+            console.log('Session user set:', req.session.user);
             res.json({ success: true, user: req.session.user });
         } else {
             res.status(400).json({ success: false, message: result.message });
@@ -54,14 +52,13 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Ruta para manejar el cierre de sesión
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Error al cerrar sesión' });
         }
-        res.clearCookie('connect.sid'); // Asegúrate de que el nombre de la cookie sea correcto
-        res.redirect('/'); // Redirige a la página principal después del cierre de sesión
+        res.clearCookie('connect.sid');
+        res.redirect('/');
     });
 });
 

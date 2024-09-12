@@ -1,15 +1,15 @@
-module.exports = (rolesPermitidos, rutasPublicas) => {
+module.exports = (rolesPermitidos = [], rutasPublicas = []) => {
     return (req, res, next) => {
         // Verificar si la ruta actual está en la lista de rutas públicas
         if (rutasPublicas.includes(req.path)) {
-            return next();
+            console.log('Ruta pública, permitiendo acceso:', req.path);
+            return next(); // Si es una ruta pública, permite el acceso
         }
 
         // Verificar la autenticación de la sesión
         if (!req.session || !req.session.user) {
-            // Acceso denegado para rutas protegidas
             console.log('Sesión no encontrada o usuario no autenticado para la ruta', req.path);
-            return res.status(401).json({ success: false, message: 'No estás autenticado' });
+            return res.status(401).json({ success: false, message: 'No estás autenticado' }); // Acceso denegado
         }
 
         const user = req.session.user;
@@ -17,7 +17,8 @@ module.exports = (rolesPermitidos, rutasPublicas) => {
 
         // Verificar permisos
         if (!rolesPermitidos.includes(user.rol)) {
-            return res.status(403).json({ success: false, message: 'No tienes permiso para realizar esta acción' });
+            console.log('Permiso denegado para la ruta', req.path);
+            return res.status(403).json({ success: false, message: 'No tienes permiso para realizar esta acción' }); // Permiso denegado
         }
 
         // Permitir acceso si la autenticación y permisos son correctos

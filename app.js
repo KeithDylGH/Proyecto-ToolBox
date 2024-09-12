@@ -117,10 +117,12 @@ app.use((req, res, next) => {
     next();
 });
 
-const authMiddleware = require('./middleware/authorize')(
-    ['admin', 'user'], // Roles permitidos
-    ['/login', '/registro'] // Rutas públicas
-);
+// Definir rutas públicas y roles permitidos
+const rutasPublicas = ['/login', '/registrar']; // Lista de rutas públicas
+const rolesPermitidos = ['user', 'admin', 'boss']; // Roles permitidos
+
+// Uso del middleware de autorización
+app.use(authorize(rolesPermitidos, rutasPublicas));
 
 app.get('/', async (req, res) => {
     try {
@@ -724,6 +726,3 @@ app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
 app.use('/api/carrito', carritoRouter);
-
-// Middleware de autorización
-app.use(authorize(['user', 'admin', 'boss'], authMiddleware));
