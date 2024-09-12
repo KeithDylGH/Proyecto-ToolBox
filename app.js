@@ -224,6 +224,11 @@ app.get('/claveOlvidada', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'account', 'clave', 'olvidada'));
 });
 
+// Ruta para la página de olvidar la contraseña
+app.get('/claveOlvidada', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'account', 'clave', 'olvidada.ejs'));
+});
+
 // Ruta para enviar el correo de restablecimiento de contraseña
 app.post('/claveOlvidada', async (req, res) => {
     const { correo } = req.body;
@@ -257,19 +262,20 @@ app.post('/claveOlvidada', async (req, res) => {
 
 // Ruta para la página de restablecimiento de contraseña
 app.get('/nuevaClave', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'account', 'clave', 'renovar'));
+    const { token } = req.query;
+    res.render('account/clave/renovar.ejs', { token });
 });
 
 // Ruta para manejar la actualización de la contraseña
 app.post('/nuevaClave', async (req, res) => {
-    const { token, nuevaClave } = req.body;
+    const { token, nuevaPassword } = req.body;
     try {
         const user = await CUsuario.findOne({ resetToken: token });
         if (!user) {
             return res.status(400).json({ error: 'Token inválido o expirado' });
         }
 
-        user.password = await bcrypt.hash(nuevaClave, 10);
+        user.password = await bcrypt.hash(nuevaPassword, 10);
         user.resetToken = undefined; // Limpiar el token
         await user.save();
 

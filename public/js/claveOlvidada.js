@@ -1,4 +1,4 @@
-//reset
+// Para el formulario de restablecimiento de contraseña
 document.addEventListener('DOMContentLoaded', function() {
     const resetForm = document.getElementById('resetForm');
     
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const correo = document.getElementById('correo').value.trim();
 
             try {
-                const response = await fetch('/api/claveOlvidada', {
+                const response = await fetch('/claveOlvidada', { // Asegúrate de que la ruta sea correcta
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-//cambiar
+// Para el formulario de cambio de contraseña
 document.addEventListener('DOMContentLoaded', function() {
     const changePasswordForm = document.getElementById('changePasswordForm');
     
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                const response = await fetch('/api/nuevaClave', {
+                const response = await fetch('/nuevaClave', { // Asegúrate de que la ruta sea correcta
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

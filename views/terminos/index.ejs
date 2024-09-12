@@ -17,8 +17,13 @@
                     <img src="/path/to/logo.png" alt="ToolBox Logo">
                 </a>
                 <div>
-                    <a href="/login" class="btn btn-primary me-2">Login</a>
-                    <a href="/register" class="btn btn-secondary">Registro</a>
+                    <% if (user && user.isAuthenticated) { %>
+                        <a href="/" class="btn btn-primary me-2">Inicio</a>
+                        <a href="/cuenta" class="btn btn-secondary">Cuenta</a>
+                    <% } else { %>
+                        <a href="/login" class="btn btn-primary me-2">Login</a>
+                        <a href="/register" class="btn btn-secondary">Registro</a>
+                    <% } %>
                 </div>
             </div>
         </div>
