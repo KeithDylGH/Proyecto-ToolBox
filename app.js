@@ -225,8 +225,9 @@ app.get('/claveOlvidada', (req, res) => {
 });
 
 // Ruta para enviar el correo de restablecimiento de contraseña
-app.post('/claveOlvidada', async (req, res) => {
+app.post('/api/claveOlvidada', async (req, res) => {
     const { correo } = req.body;
+    console.log('Recibido correo:', correo); // Agrega un log para depuración
     try {
         const user = await CUsuario.findOne({ correo });
         if (!user) {

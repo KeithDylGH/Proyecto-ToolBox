@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Reemplaza esta lógica para obtener el email del usuario actual desde el servidor
             const emailUsuario = 'usuario@example.com'; 
             const producto = document.querySelector('.card-title').textContent;
-            const total = document.getElementById('totalMonto').textContent.replace('Total: $', '');
+            const total = parseFloat(document.getElementById('totalMonto').textContent.replace('Total: $', ''));
 
             // Enviar confirmación de pago al servidor
             fetch('/confirmar-pago', {
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({
                     correo: emailUsuario, // Asegúrate de que aquí también uses 'correo'
                     producto: producto,
-                    precio: parseFloat(total),
+                    precio: total,
                     cantidad: 1,
                     metodo: metodoPago
                 }),
