@@ -117,6 +117,11 @@ app.use((req, res, next) => {
     next();
 });
 
+const authMiddleware = require('./ruta/del/middleware')(
+    ['admin', 'user'], // Roles permitidos
+    ['/login', '/registro', '/publica'] // Rutas públicas
+);
+
 app.get('/', async (req, res) => {
     try {
         // Obtener 10 productos aleatorios para la sección de "Te puede interesar"
@@ -412,7 +417,6 @@ app.post('/confirmar-pago', async (req, res) => {
     }
 
     try {
-        // Crear PDF
         const doc = new pdf();
         const pdfPath = 'factura.pdf';
 
@@ -424,10 +428,8 @@ app.post('/confirmar-pago', async (req, res) => {
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
-        // Esperar a que el PDF se cree
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Crear y enviar el correo
         const mailOptions = {
             from: 'toolboxproyecto@gmail.com',
             to: email,
@@ -445,7 +447,6 @@ app.post('/confirmar-pago', async (req, res) => {
         await transporter.sendMail(mailOptions);
         console.log('Correo enviado exitosamente a', email);
 
-        // Elimina el PDF después de enviarlo
         fs.unlinkSync(pdfPath);
 
         res.send('Correo enviado con éxito.');
@@ -476,15 +477,15 @@ app.get('/cuenta/carrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-app.get('/cuenta/configuracion', (req, res) => {
+app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (req, res) => {
     res.render('account/cuenta/cliente/configuracion');
 });
 
-app.get('/cuenta/configuracion/cambiar-datos', (req, res) => {
+app.get('/cuenta/configuracion/cambiar-datos', authorize(['user', 'admin', 'boss']), async (req, res) => {
     res.render('account/cuenta/cliente/configuracion/datos');
 });
 
-app.get('/cuenta/atencion', (req, res) => {
+app.get('/cuenta/atencion', authorize(['user', 'admin', 'boss']), async (req, res) => {
     res.render('account/cuenta/cliente/atencion');
 });
 
@@ -516,7 +517,7 @@ app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
     }
 }); */
 
-app.get('/jefe/permisos', async (req, res) => {
+app.get('/jefe/permisos', authorize(['boss']), async (req, res) => {
     try {
         const users = await CUsuario.find();
         res.render('account/cuenta/boss/adminPage', { users, user: req.session.user });
@@ -597,7 +598,7 @@ app.get('/inventario/descargarInv', authorize(['admin', 'boss']), async (req, re
     }
 });
 
-app.get('/api/descargar-inventario', async (req, res) => {
+app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, res) => {
     const format = req.query.format;
 
     if (!['pdf', 'excel'].includes(format)) {
@@ -721,4 +722,4 @@ app.use('/api/categorias', categoriaRouter);
 app.use('/api/carrito', carritoRouter);
 
 // Middleware de autorización
-app.use(authorize(['user', 'admin', 'boss']));
+app.use(authorize(['user', 'admin', 'boss'], authMiddleware));

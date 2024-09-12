@@ -54,7 +54,7 @@ loginForm.addEventListener('submit', async (e) => {
         const notification = document.querySelector('.notification');
 
         if (data.success) {
-            if (data.user.rol === 'admin' || 'boss') {
+            if (data.user.rol === 'admin' || data.user.rol === 'boss') {
                 window.location.href = '/admin/';
             } else {
                 window.location.href = '/cliente/';
