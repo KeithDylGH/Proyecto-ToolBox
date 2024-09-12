@@ -126,7 +126,8 @@ const rutasPublicas = [
     '/nuevaClave',
     '/logout',
     '/tienda/:categoriaId?',
-    '/tienda/producto/:id'
+    '/tienda/producto/:id',
+    '/terminos-y-condicion'
 ];
 
 // Middleware de autorización
@@ -273,25 +274,13 @@ app.post('/api/claveOlvidada', async (req, res) => {
     }
 });
 
-// Ruta para manejar la actualización de la contraseña
-app.post('/nuevaClave', async (req, res) => {
-    const { token, nuevaPassword, correo } = req.body;
-    try {
-        const user = await CUsuario.findOne({ resetToken: token, resetTokenEmail: correo });
-        if (!user) {
-            return res.status(400).json({ error: 'Token inválido, expirado o correo incorrecto' });
-        }
-
-        user.password = await bcrypt.hash(nuevaPassword, 10);
-        user.resetToken = undefined; // Limpiar el token
-        user.resetTokenEmail = undefined; // Limpiar el correo
-        await user.save();
-
-        res.json({ success: 'Contraseña actualizada correctamente' });
-    } catch (error) {
-        console.error('Error al actualizar la contraseña:', error);
-        res.status(500).json({ error: 'Error en el servidor' });
+// Ruta para la página de restablecimiento de contraseña
+app.get('/nuevaClave', (req, res) => {
+    const { token, correo } = req.query;
+    if (!token || !correo) {
+        return res.status(400).send('Token o correo no proporcionados');
     }
+    res.render('account/clave/renovar', { token, correo });
 });
 
 // Ruta para manejar la actualización de la contraseña
@@ -465,7 +454,7 @@ app.post('/confirmar-pago', async (req, res) => {
 
     try {
         // Crear el PDF
-        const doc = new pdfkit();
+        const doc = new PDF();
         const pdfPath = path.join(__dirname, 'factura.pdf');
 
         doc.pipe(fs.createWriteStream(pdfPath)); // Crear archivo PDF
