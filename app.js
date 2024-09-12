@@ -23,6 +23,7 @@ const multer = require('multer');
 const formData = require('form-data');
 const axios = require('axios');
 const authorize = require('./middleware/authorize');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -36,6 +37,14 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     fileFilter: (req, file, cb) => {
       cb(null, true);
+    }
+});
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'tu-email@gmail.com',
+        pass: 'tu-contraseña'
     }
 });
 
@@ -326,6 +335,47 @@ app.get('/comprasCarrito', async (req, res) => {
     }
 });
 
+app.post('/confirmar-pago', (req, res) => {
+    // Suponiendo que recibes datos del producto desde el cliente
+    const { productos, total } = req.body;
+
+    // Crear un nuevo PDF
+    const doc = new PDFDocument();
+    const filePath = path.join(__dirname, 'comprobante.pdf');
+    doc.pipe(fs.createWriteStream(filePath));
+
+    doc.fontSize(16).text('Comprobante de Compra', { align: 'center' });
+    doc.fontSize(12).text('Productos:', { underline: true });
+
+    productos.forEach(producto => {
+        doc.text(`${producto.nombre} - ${producto.cantidad} x ${producto.precio} = ${producto.total}`);
+    });
+
+    doc.text(`\nMonto Total: ${total}`);
+    doc.end();
+
+    // Enviar el correo
+    const mailOptions = {
+        from: 'tu-email@gmail.com',
+        to: 'cliente-email@example.com',
+        subject: 'Confirmación de Pago',
+        text: 'Gracias por tu compra. Adjuntamos el comprobante en PDF.',
+        attachments: [
+            {
+                filename: 'comprobante.pdf',
+                path: filePath
+            }
+        ]
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return res.status(500).json({ success: false, message: error.message });
+        }
+        res.json({ success: true, message: 'Pago confirmado y correo enviado.' });
+    });
+});
+
 app.get('/cliente', (req, res) => {
     res.render('account/cuenta/cliente');
 });
@@ -365,8 +415,8 @@ app.get('/error', (req, res) => {
 });
 
 app.get('/admin', authorize(['admin', 'boss']), (req, res) => {
-    console.log('Usuario autenticado:', req.user); // Añade esta línea para depuración
-    const CUsuario = req.user;
+    console.log('Usuario autenticado:', req.session.user); // Cambié `req.user` por `req.session.user`
+    const CUsuario = req.session.user; // Obtén el usuario de la sesión
     res.render('account/cuenta/admin/index', { CUsuario });
 });
 

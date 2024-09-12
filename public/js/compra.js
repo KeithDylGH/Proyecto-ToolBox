@@ -18,41 +18,44 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (pagoMovilBtn && transferenciaBtn && zinliBtn && cancelarPagoBtn) {
         pagoMovilBtn.addEventListener('click', function () {
-            mostrarModal('pagoMovilModal');
+            // Mostrar instrucciones para Pago Móvil
         });
 
         transferenciaBtn.addEventListener('click', function () {
-            mostrarModal('transferenciaModal');
+            // Mostrar instrucciones para Transferencia
         });
 
         zinliBtn.addEventListener('click', function () {
-            mostrarModal('zinliModal');
+            // Mostrar instrucciones para Zinli
         });
 
         cancelarPagoBtn.addEventListener('click', function () {
-            window.location.href = '/';
+            // Cancelar el pago
         });
     }
 
-    function mostrarModal(modalId) {
-        const modals = ['pagoMovilModal', 'transferenciaModal', 'zinliModal'];
-        modals.forEach(function (modal) {
-            const modalElement = document.getElementById(modal);
-            if (modalElement) {
-                const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                if (modalInstance) {
-                    modalInstance.hide();
-                }
-            }
+    const confirmarPagoBtn = document.querySelectorAll('#confirmarPagoBtn');
+
+    confirmarPagoBtn.forEach(button => {
+        button.addEventListener('click', function () {
+            // Envía una solicitud al servidor para confirmar el pago
+            fetch('/confirmar-pago', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    // Incluye los datos necesarios, como el id del producto, cantidad, etc.
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Pago confirmado. Se te enviará un correo con el comprobante.');
+                  } else {
+                      alert('Hubo un problema al confirmar el pago.');
+                  }
+              })
+              .catch(error => console.error('Error:', error));
         });
-    
-        const selectedModal = document.getElementById(modalId);
-        if (selectedModal) {
-            let modalInstance = bootstrap.Modal.getInstance(selectedModal);
-            if (!modalInstance) {
-                modalInstance = new bootstrap.Modal(selectedModal);
-            }
-            modalInstance.show();
-        }
-    }    
+    });
 });
