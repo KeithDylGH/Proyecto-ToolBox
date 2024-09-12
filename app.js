@@ -210,7 +210,7 @@ app.get('/buscarProductos', async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'account', 'login'));
+    res.render('account/login'); // Asume que tienes configurado EJS y tu archivo está en la carpeta 'views/account'
 });
 
 // Ruta para la página de olvidar la contraseña
