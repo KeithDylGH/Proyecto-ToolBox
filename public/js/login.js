@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Clave Olvidada
 document.addEventListener('DOMContentLoaded', function() {
-    const claveOlvidada = document.getElementById('claveOlvidada');
+    const claveOlvidada = document.getElementById('olvidada');
 
     claveOlvidada.addEventListener('click', function() {
         window.location.href = '/claveOlvidada/';
