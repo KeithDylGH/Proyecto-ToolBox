@@ -117,7 +117,7 @@ app.use((req, res, next) => {
     next();
 });
 
-const authMiddleware = require('./ruta/del/middleware')(
+const authMiddleware = require('./middleware/authorize')(
     ['admin', 'user'], // Roles permitidos
     ['/login', '/registro', '/publica'] // Rutas públicas
 );
@@ -417,21 +417,24 @@ app.post('/confirmar-pago', async (req, res) => {
     }
 
     try {
+        // Crear PDF
         const doc = new pdf();
-        const pdfPath = 'factura.pdf';
+        const pdfPath = path.join(__dirname, 'factura.pdf');
 
         doc.pipe(fs.createWriteStream(pdfPath));
-        doc.fontSize(12).text(`Factura de Compra`, { align: 'center' });
+        doc.fontSize(12).text('Factura de Compra', { align: 'center' });
         doc.text(`Producto: ${producto}`);
         doc.text(`Precio: $${precio}`);
         doc.text(`Cantidad: ${cantidad}`);
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
+        // Esperar a que el PDF se cree
         await new Promise(resolve => setTimeout(resolve, 1000));
 
+        // Crear y enviar el correo
         const mailOptions = {
-            from: 'toolboxproyecto@gmail.com',
+            from: process.env.EMAIL_USER,
             to: email,
             subject: 'Confirmación de Compra',
             text: 'Gracias por tu compra. Adjuntamos tu factura en formato PDF.',
@@ -447,6 +450,7 @@ app.post('/confirmar-pago', async (req, res) => {
         await transporter.sendMail(mailOptions);
         console.log('Correo enviado exitosamente a', email);
 
+        // Elimina el PDF después de enviarlo
         fs.unlinkSync(pdfPath);
 
         res.send('Correo enviado con éxito.');
