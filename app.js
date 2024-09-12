@@ -236,7 +236,8 @@ app.post('/api/claveOlvidada', async (req, res) => {
 
         // Generar un enlace de restablecimiento de contraseña (esto debería ser más seguro en un entorno de producción)
         const resetToken = Math.random().toString(36).substr(2);
-        user.resetToken = resetToken; // Asegúrate de agregar este campo al modelo de usuario
+        user.resetToken = resetToken;
+        user.resetTokenEmail = correo; // Almacena el correo con el token
         await user.save();
 
         // Usa el enlace de restablecimiento de contraseña con el dominio de Render
@@ -280,15 +281,16 @@ app.get('/nuevaClave', (req, res) => {
 
 // Ruta para manejar la actualización de la contraseña
 app.post('/nuevaClave', async (req, res) => {
-    const { token, nuevaPassword } = req.body;
+    const { token, nuevaPassword, correo } = req.body;
     try {
-        const user = await CUsuario.findOne({ resetToken: token });
+        const user = await CUsuario.findOne({ resetToken: token, resetTokenEmail: correo });
         if (!user) {
-            return res.status(400).json({ error: 'Token inválido o expirado' });
+            return res.status(400).json({ error: 'Token inválido, expirado o correo incorrecto' });
         }
 
         user.password = await bcrypt.hash(nuevaPassword, 10);
         user.resetToken = undefined; // Limpiar el token
+        user.resetTokenEmail = undefined; // Limpiar el correo
         await user.save();
 
         res.json({ success: 'Contraseña actualizada correctamente' });
@@ -298,7 +300,9 @@ app.post('/nuevaClave', async (req, res) => {
     }
 });
 
-app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
+app.get('/registrar', (req, res) => {
+    res.render(path.join('account/register/'));
+});
 
 app.get('/terminos-y-condicion', (req, res) => {
     res.render(path.join('terminos'));

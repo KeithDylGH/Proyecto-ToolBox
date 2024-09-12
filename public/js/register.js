@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Redireccionar a la página de términos de servicio si se requiere lógica adicional
-document.addEventListener('DOMContentLoaded', function() {
+/* document.addEventListener('DOMContentLoaded', function() {
     const termsLink = document.getElementById('terminos');
 
     if (termsLink) {
@@ -89,4 +89,4 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = '/terminos-y-condicion';
         });
     }
-});
+}); */
