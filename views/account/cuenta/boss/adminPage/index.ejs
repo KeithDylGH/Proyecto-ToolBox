@@ -63,6 +63,7 @@
                                         <th>Apellidos</th>
                                         <th>Cédula</th>
                                         <th>Teléfono</th>
+                                        <th>Correo</th> <!-- Nueva columna para el correo -->
                                         <th>Rol</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -75,19 +76,25 @@
                                             <td><%= user.apellido %></td>
                                             <td><%= user.cedula %></td>
                                             <td><%= user.numero %></td>
+                                            <td><%= user.correo %></td> <!-- Mostrar correo del usuario -->
                                             <td><%= user.rol %></td>
                                             <td>
-                                                <% if (user.rol === 'admin') { %>
-                                                    <button class="btn btn-warning btn-sm" onclick="changeRole('<%= user._id %>', 'user')">Revocar Admin</button>
+                                                <% if (user.rol === 'boss') { %>
+                                                    <!-- El usuario con rol 'boss' no puede ser modificado -->
+                                                    <button class="btn btn-secondary btn-sm" disabled>Protegido</button>
                                                 <% } else { %>
-                                                    <button class="btn btn-success btn-sm" onclick="changeRole('<%= user._id %>', 'admin')">Promover a Admin</button>
+                                                    <% if (user.rol === 'admin') { %>
+                                                        <button class="btn btn-warning btn-sm" onclick="changeRole('<%= user._id %>', 'user')">Revocar Admin</button>
+                                                    <% } else { %>
+                                                        <button class="btn btn-success btn-sm" onclick="changeRole('<%= user._id %>', 'admin')">Promover a Admin</button>
+                                                    <% } %>
+                                                    <button class="btn btn-danger btn-sm" onclick="banUser('<%= user._id %>')">Banear</button>
                                                 <% } %>
-                                                <button class="btn btn-danger btn-sm" onclick="banUser('<%= user._id %>')">Banear</button>
                                             </td>
                                         </tr>
                                     <% }); %>
                                 </tbody>
-                            </table>
+                            </table>                            
                         </div>
                         
                     </div>

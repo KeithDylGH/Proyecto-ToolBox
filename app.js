@@ -335,20 +335,27 @@ app.get('/comprasCarrito', async (req, res) => {
     }
 });
 
+// Ruta para confirmar el pago
 app.post('/confirmar-pago', (req, res) => {
     const { email, producto, precio, cantidad } = req.body;
+
+    // Verifica que todos los campos necesarios están presentes
+    if (!email || !producto || !precio || !cantidad) {
+        return res.status(400).send('Faltan datos necesarios para completar la compra.');
+    }
 
     // Crea un PDF en memoria
     const doc = new PDF();
     const buffers = [];
-    
+
+    // Recoge los datos que se están escribiendo en el PDF en un buffer
     doc.on('data', buffers.push.bind(buffers));
     doc.on('end', async () => {
         const pdfData = Buffer.concat(buffers);
 
         // Configurar el correo con archivo adjunto
         const mailOptions = {
-            from: 'tuemail@gmail.com', // Cambia esto a tu dirección de correo
+            from: 'toolboxproyecto@gmail.com', // Cambia esto a tu dirección de correo
             to: email, // Correo del usuario que recibirá el PDF
             subject: 'Confirmación de Compra',
             text: 'Gracias por tu compra. Adjuntamos tu factura en formato PDF.',
@@ -366,7 +373,7 @@ app.post('/confirmar-pago', (req, res) => {
             await transporter.sendMail(mailOptions);
             res.send('Correo enviado con éxito.');
         } catch (error) {
-            console.error('Error al enviar correo:', error);
+            console.error('Error al enviar correo:', error.message);
             res.status(500).send('Error al enviar el correo.');
         }
     });

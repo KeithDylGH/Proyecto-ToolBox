@@ -71,18 +71,21 @@ function changeRole(userId, newRole) {
     fetch(`/jefe/permisos/rol/${userId}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ rol: newRole })
+        body: JSON.stringify({ rol: newRole }),
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(`El rol ha sido cambiado a ${newRole}`);
+            alert(data.message);
             location.reload(); // Recargar la página para ver los cambios
         } else {
-            alert('Error al cambiar el rol');
+            alert(data.message);
         }
+    })
+    .catch(error => {
+        console.error('Error al cambiar el rol:', error);
     });
 }
 
@@ -90,16 +93,19 @@ function changeRole(userId, newRole) {
 function banUser(userId) {
     if (confirm('¿Estás seguro de que quieres banear a este usuario?')) {
         fetch(`/jefe/permisos/banear/${userId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Usuario baneado');
-                location.reload();
+                alert(data.message);
+                location.reload(); // Recargar la página para ver los cambios
             } else {
-                alert('Error al banear al usuario');
+                alert(data.message);
             }
+        })
+        .catch(error => {
+            console.error('Error al banear al usuario:', error);
         });
     }
 }
