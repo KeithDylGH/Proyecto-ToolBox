@@ -43,8 +43,8 @@ const upload = multer({
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'toolboxproyecto@gmail.com',
-        pass: 'Papu1234',
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
     debug: true, // Activa el modo depuración
     logger: true // Registra los mensajes SMTP

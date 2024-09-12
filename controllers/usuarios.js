@@ -136,7 +136,6 @@ userRouter.put('/permisos/rol/:id', async (req, res) => {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Impedir cambiar el rol de un usuario con rol 'boss'
         if (user.rol === 'boss') {
             return res.status(403).json({ success: false, message: 'No puedes cambiar el rol de un usuario con rol Boss' });
         }
@@ -161,7 +160,6 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        // Impedir banear a un usuario con rol 'boss'
         if (user.rol === 'boss') {
             return res.status(403).json({ success: false, message: 'No puedes banear a un usuario con rol Boss' });
         }
@@ -174,6 +172,5 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error en el servidor' });
     }
 });
-
 
 module.exports = userRouter;

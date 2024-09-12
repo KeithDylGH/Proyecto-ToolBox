@@ -68,7 +68,7 @@ router.get('/logout', (req, res) => {
 //PERMISOS
 // Función para cambiar el rol de un usuario
 function changeRole(userId, newRole) {
-    fetch(`/jefe/permisos/rol/${userId}`, {
+    fetch(`/api/usuarios/permisos/rol/${userId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ function changeRole(userId, newRole) {
 // Función para banear a un usuario
 function banUser(userId) {
     if (confirm('¿Estás seguro de que quieres banear a este usuario?')) {
-        fetch(`/jefe/permisos/banear/${userId}`, {
+        fetch(`/api/usuarios/permisos/banear/${userId}`, {
             method: 'DELETE',
         })
         .then(response => response.json())
