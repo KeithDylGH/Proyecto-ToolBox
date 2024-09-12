@@ -29,7 +29,7 @@
             <% productos.forEach(function(producto) { %>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="d-flex">
-                  <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-thumbnail" style="max-width: 100px; margin-right: 20px;">
+                  <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-thumbnail" style="max-width: 100px;">
                   <div>
                     <h6><%= producto.nombre %></h6>
                     <p>Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
@@ -49,9 +49,9 @@
       </div>
       <div id="metodosPago" class="d-none mt-3">
         <h3>Selecciona el Método de Pago</h3>
-        <button class="btn btn-success btn-lg mb-2" id="pagoMovilBtn">Pago Móvil</button>
-        <button class="btn btn-primary btn-lg mb-2" id="transferenciaBtn">Transferencia</button>
-        <button class="btn btn-info btn-lg mb-2" id="zinliBtn">Zinli</button>
+        <button id="pagoMovilBtn" class="btn btn-primary">Pago Móvil</button>
+        <button id="transferenciaBtn" class="btn btn-primary">Transferencia</button>
+        <button id="zinliBtn" class="btn btn-primary">Zinli</button>
         <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
       </div>
 

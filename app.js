@@ -44,8 +44,10 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'toolboxproyecto@gmail.com',
-        pass: 'Papu1234'
-    }
+        pass: 'Papu1234',
+    },
+    debug: true, // Activa el modo depuración
+    logger: true // Registra los mensajes SMTP
 });
 
 mongoose.connect(mongoUri).then(() => {
@@ -336,57 +338,32 @@ app.get('/comprasCarrito', async (req, res) => {
 });
 
 // Ruta para confirmar el pago
-app.post('/confirmar-pago', (req, res) => {
+app.post('/confirmar-pago', async (req, res) => {
     const { email, producto, precio, cantidad } = req.body;
+    console.log('Recibiendo confirmación de pago para:', email);
 
-    // Verifica que todos los campos necesarios están presentes
-    if (!email || !producto || !precio || !cantidad) {
-        return res.status(400).send('Faltan datos necesarios para completar la compra.');
+    if (!email) {
+        console.log('Error: No se proporcionó un correo electrónico.');
+        return res.status(400).send('Falta el email del usuario.');
     }
 
-    // Crea un PDF en memoria
-    const doc = new PDF();
-    const buffers = [];
-
-    // Recoge los datos que se están escribiendo en el PDF en un buffer
-    doc.on('data', buffers.push.bind(buffers));
-    doc.on('end', async () => {
-        const pdfData = Buffer.concat(buffers);
-
-        // Configurar el correo con archivo adjunto
+    try {
+        // Crear y enviar el PDF
         const mailOptions = {
-            from: 'toolboxproyecto@gmail.com', // Cambia esto a tu dirección de correo
-            to: email, // Correo del usuario que recibirá el PDF
+            from: 'toolboxproyecto@gmail.com',
+            to: email,
             subject: 'Confirmación de Compra',
             text: 'Gracias por tu compra. Adjuntamos tu factura en formato PDF.',
-            attachments: [
-                {
-                    filename: `factura_${Date.now()}.pdf`,
-                    content: pdfData,
-                    contentType: 'application/pdf'
-                }
-            ]
         };
 
-        // Enviar el correo
-        try {
-            await transporter.sendMail(mailOptions);
-            res.send('Correo enviado con éxito.');
-        } catch (error) {
-            console.error('Error al enviar correo:', error.message);
-            res.status(500).send('Error al enviar el correo.');
-        }
-    });
-
-    // Escribir en el PDF
-    doc.text('Factura de Compra');
-    doc.text(`Producto: ${producto}`);
-    doc.text(`Precio: $${precio}`);
-    doc.text(`Cantidad: ${cantidad}`);
-    doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
-
-    // Finaliza el PDF
-    doc.end();
+        console.log('Enviando correo...');
+        await transporter.sendMail(mailOptions);
+        console.log('Correo enviado exitosamente a', email);
+        res.send('Correo enviado con éxito.');
+    } catch (error) {
+        console.error('Error al enviar correo:', error.message);
+        res.status(500).send('Error al enviar el correo.');
+    }
 });
 
 app.get('/cliente', (req, res) => {
@@ -439,7 +416,7 @@ app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
 });
 
 // Ruta para la página del BOSS
-app.get('/jefe', authorize(['boss']), async (req, res) => {
+/* app.get('/jefe', authorize(['boss']), async (req, res) => {
     try {
         // Obtén la lista de usuarios
         const usuarios = await CUsuario.find({});
@@ -448,7 +425,7 @@ app.get('/jefe', authorize(['boss']), async (req, res) => {
         console.error(error);
         res.status(500).send('Error en el servidor');
     }
-});
+}); */
 
 app.get('/jefe/permisos', async (req, res) => {
     try {
@@ -461,7 +438,7 @@ app.get('/jefe/permisos', async (req, res) => {
 });
 
 // Ruta para actualizar el rol del usuario
-app.post('/jefe/actualizarRol', authorize(['boss']), async (req, res) => {
+/* app.post('/jefe/actualizarRol', authorize(['boss']), async (req, res) => {
     try {
         const { userId, rol } = req.body;
         await CUsuario.findByIdAndUpdate(userId, { rol });
@@ -470,7 +447,7 @@ app.post('/jefe/actualizarRol', authorize(['boss']), async (req, res) => {
         console.error(error);
         res.status(500).send('Error en el servidor');
     }
-});
+}); */
 
 app.get('/inventario/agregarproduto', authorize(['admin', 'boss']), async (req, res) => {
     try {
