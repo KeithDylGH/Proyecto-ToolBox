@@ -110,11 +110,13 @@
                     <% } %>                    
                                                                                                       
                   </ul>
-                  <form class="d-flex position-relative" id="productSearchForm">
-                    <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
-                    <button class="btn btn-outline-success" type="submit">Buscar</button>
-                    <div id="suggestions" class="list-group position-absolute w-100"></div>
-                  </form>                               
+                  <form class="d-flex flex-column position-relative" id="productSearchForm">
+                    <div class="d-flex">
+                        <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
+                        <button class="btn btn-outline-success" type="submit">Buscar</button>
+                    </div>
+                    <div id="suggestions" class="list-group mt-2 position-absolute w-100"></div>
+                </form>                                            
               </div>
           </div>
       </nav>

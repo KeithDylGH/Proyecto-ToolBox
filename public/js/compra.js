@@ -44,18 +44,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Función para mostrar las instrucciones de pago y ocultar las demás
-    function mostrarInstruccionesPago(instruccionId) {
-        // Oculta todas las instrucciones de pago
-        const modals = document.querySelectorAll('.modal');
-        modals.forEach(function (modal) {
+    function mostrarInstruccionesPago(modalId) {
+        // Oculta todos los modales de pago
+        const modales = document.querySelectorAll('.modal');
+        modales.forEach(function (modal) {
             const modalInstance = bootstrap.Modal.getInstance(modal);
             if (modalInstance) {
                 modalInstance.hide();
             }
         });
 
-        // Muestra el modal del método seleccionado
-        const modal = document.getElementById(instruccionId);
+        // Muestra el modal seleccionado
+        const modal = document.getElementById(modalId);
         if (modal) {
             const modalInstance = new bootstrap.Modal(modal);
             modalInstance.show();

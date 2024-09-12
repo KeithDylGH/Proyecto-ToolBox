@@ -381,11 +381,18 @@ footer p a{
 }
 
 /* BUSQUEDA */
+#productSearchForm {
+  position: relative; /* Necesario para posicionar el contenedor de sugerencias en relación al formulario */
+}
+
 #suggestions {
   max-height: 300px;
   overflow-y: auto;
   z-index: 1000;
-  margin-top: 5px; /* Ajusta la distancia desde el campo de búsqueda */
+  margin-top: 2px; /* Ajusta la distancia desde el campo de búsqueda */
+  position: absolute; /* Asegura que se posicione en relación al formulario */
+  top: 100%; /* Ubica el contenedor justo debajo del formulario */
+  left: 0;
 }
 
 #suggestions .list-group-item {
