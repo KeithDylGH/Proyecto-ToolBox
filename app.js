@@ -365,6 +365,7 @@ app.get('/error', (req, res) => {
 });
 
 app.get('/admin', authorize(['admin', 'boss']), (req, res) => {
+    console.log('Usuario autenticado:', req.user); // Añade esta línea para depuración
     const CUsuario = req.user;
     res.render('account/cuenta/admin/index', { CUsuario });
 });
