@@ -119,7 +119,7 @@ app.use((req, res, next) => {
 
 const authMiddleware = require('./middleware/authorize')(
     ['admin', 'user'], // Roles permitidos
-    ['/login', '/registro', '/publica'] // Rutas públicas
+    ['/login', '/registro'] // Rutas públicas
 );
 
 app.get('/', async (req, res) => {
