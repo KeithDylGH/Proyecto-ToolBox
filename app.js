@@ -46,8 +46,8 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
-    debug: true, // Activa el modo depuración
-    logger: true // Registra los mensajes SMTP
+    debug: true,  // Habilitar el modo depuración
+    logger: true, // Habilitar registro de mensajes SMTP
 });
 
 mongoose.connect(mongoUri).then(() => {
@@ -414,22 +414,20 @@ app.get('/comprasCarrito', async (req, res) => {
     }
 });
 
-// Ruta para confirmar el pago
+// Ruta para confirmar el pago y enviar el correo con PDF
 app.post('/confirmar-pago', async (req, res) => {
     const { email, producto, precio, cantidad } = req.body;
-    console.log('Recibiendo confirmación de pago para:', email);
 
     if (!email || !producto || !precio || !cantidad) {
-        console.log('Error: Falta información en la solicitud.');
         return res.status(400).send('Faltan datos necesarios para el correo.');
     }
 
     try {
-        // Crear PDF
-        const doc = new pdf();
+        // Crear el PDF
+        const doc = new pdfkit();
         const pdfPath = path.join(__dirname, 'factura.pdf');
 
-        doc.pipe(fs.createWriteStream(pdfPath));
+        doc.pipe(fs.createWriteStream(pdfPath)); // Crear archivo PDF
         doc.fontSize(12).text('Factura de Compra', { align: 'center' });
         doc.text(`Producto: ${producto}`);
         doc.text(`Precio: $${precio}`);
@@ -437,10 +435,13 @@ app.post('/confirmar-pago', async (req, res) => {
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
-        // Esperar a que el PDF se cree
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Esperar a que el PDF se cree antes de continuar
+        await new Promise((resolve, reject) => {
+            doc.on('finish', resolve);
+            doc.on('error', reject);
+        });
 
-        // Crear y enviar el correo
+        // Opciones del correo
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
@@ -454,16 +455,15 @@ app.post('/confirmar-pago', async (req, res) => {
             ]
         };
 
-        console.log('Enviando correo...');
+        // Enviar el correo
         await transporter.sendMail(mailOptions);
-        console.log('Correo enviado exitosamente a', email);
 
-        // Elimina el PDF después de enviarlo
+        // Eliminar el archivo PDF una vez enviado
         fs.unlinkSync(pdfPath);
 
         res.send('Correo enviado con éxito.');
     } catch (error) {
-        console.error('Error al enviar correo:', error.message);
+        console.error('Error al enviar el correo:', error);
         res.status(500).send('Error al enviar el correo.');
     }
 });

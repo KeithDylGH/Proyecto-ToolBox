@@ -47,7 +47,10 @@ loginForm.addEventListener('submit', async (e) => {
             body: JSON.stringify({ usuario, contraseña })
         });
 
-        // Verifica si la respuesta es JSON
+        if (!response.ok) {
+            throw new Error('Error en la autenticación.');
+        }
+
         const data = await response.json();
         console.log('Login response:', data);
 
@@ -55,23 +58,23 @@ loginForm.addEventListener('submit', async (e) => {
 
         if (data.success) {
             if (data.user.rol === 'admin' || data.user.rol === 'boss') {
-                window.location.href = '/admin/';
+                window.location.href = '/admin';
             } else {
-                window.location.href = '/cliente/';
+                window.location.href = '/cliente';
             }
         } else {
-            notification.textContent = data.error || 'Error en el inicio de sesión'; // Usa 'error' aquí
+            notification.textContent = data.error || 'Error en el inicio de sesión';
             notification.classList.add('alert', 'alert-danger');
         
             setTimeout(() => {
                 notification.textContent = '';
                 notification.classList.remove('alert', 'alert-danger');
             }, 3000);
-        }        
+        }
     } catch (error) {
         console.error('Error:', error);
         const notification = document.querySelector('.notification');
-        notification.textContent = 'Error de conexión';
+        notification.textContent = 'Error de conexión o autenticación.';
         notification.classList.add('alert', 'alert-danger');
 
         setTimeout(() => {

@@ -81,6 +81,7 @@ userRouter.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
 
+        // Guardar los datos del usuario en la sesión
         req.session.user = {
             id: user._id,
             nombre: user.nombre,
