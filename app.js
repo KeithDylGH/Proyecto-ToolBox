@@ -118,7 +118,7 @@ app.use((req, res, next) => {
 });
 
 // Definir rutas públicas y roles permitidos
-const rutasPublicas = ['/login', '/registrar']; // Lista de rutas públicas
+const rutasPublicas = ['/login', '/registrar', '/', '/claveOlvidada', '/nuevaClave', '/logout', '/tienda/:categoriaId?', '/tienda/producto/:id']; // Lista de rutas públicas
 const rolesPermitidos = ['user', 'admin', 'boss']; // Roles permitidos
 
 // Uso del middleware de autorización
