@@ -87,7 +87,7 @@
 
                       <% if (CUsuario) { %>
                         <li class="nav-item">
-                            <% if (CUsuario.rol === 'admin') { %>
+                            <% if (CUsuario.rol === 'admin' || 'boss') { %>
                                 <a class="nav-link link-light" href="/admin">
                                     <%= CUsuario.nombre %>
                                 </a>

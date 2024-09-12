@@ -380,11 +380,12 @@ footer p a{
   background: #bababa;
 }
 
-/*BUSQUEDA*/
+/* BUSQUEDA */
 #suggestions {
   max-height: 300px;
   overflow-y: auto;
   z-index: 1000;
+  margin-top: 5px; /* Ajusta la distancia desde el campo de búsqueda */
 }
 
 #suggestions .list-group-item {

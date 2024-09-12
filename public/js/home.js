@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Mostrar nuevas sugerencias
                 productos.forEach(producto => {
                     const suggestionItem = document.createElement('a');
-                    suggestionItem.href = `/producto/${producto._id}`; // Enlazar al producto específico
+                    suggestionItem.href = `/tienda/producto/${producto._id}`;
                     suggestionItem.className = 'list-group-item list-group-item-action';
                     suggestionItem.innerHTML = `
                         <img src="${producto.imagen ? producto.imagen.data : '/path/to/default-image.jpg'}" alt="${producto.nombre}" class="img-thumbnail me-2" style="width: 50px;">

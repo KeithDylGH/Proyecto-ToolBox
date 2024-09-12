@@ -284,7 +284,6 @@ app.get('/compra', async (req, res) => {
 });
 
 // Ruta para la compra de productos en el carrito
-// Ruta para la compra de productos en el carrito
 app.get('/comprasCarrito', async (req, res) => {
     try {
         // Verificar si el usuario está autenticado
