@@ -1,16 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Botones y elementos comunes
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
     const metodosPago = document.getElementById('metodosPago');
 
     if (siguienteBtn && cancelarBtn && metodosPago) {
         siguienteBtn.addEventListener('click', function () {
+            // Muestra los métodos de pago y oculta los botones
             metodosPago.classList.remove('d-none');
             siguienteBtn.style.display = 'none';
             cancelarBtn.style.display = 'none';
         });
     }
 
+    // Métodos de pago
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
     const transferenciaBtn = document.getElementById('transferenciaBtn');
     const zinliBtn = document.getElementById('zinliBtn');
@@ -18,19 +21,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (pagoMovilBtn && transferenciaBtn && zinliBtn && cancelarPagoBtn) {
         pagoMovilBtn.addEventListener('click', function () {
-            // Mostrar instrucciones para Pago Móvil
+            // Muestra el modal para Pago Móvil
+            const pagoMovilModal = new bootstrap.Modal(document.getElementById('pagoMovilModal'));
+            pagoMovilModal.show();
         });
 
         transferenciaBtn.addEventListener('click', function () {
-            // Mostrar instrucciones para Transferencia
+            // Muestra el modal para Transferencia
+            const transferenciaModal = new bootstrap.Modal(document.getElementById('transferenciaModal'));
+            transferenciaModal.show();
         });
 
         zinliBtn.addEventListener('click', function () {
-            // Mostrar instrucciones para Zinli
+            // Muestra el modal para Zinli
+            const zinliModal = new bootstrap.Modal(document.getElementById('zinliModal'));
+            zinliModal.show();
         });
 
         cancelarPagoBtn.addEventListener('click', function () {
-            // Cancelar el pago
+            // Redirige al usuario a la página principal
+            window.location.href = '/';
         });
     }
 
