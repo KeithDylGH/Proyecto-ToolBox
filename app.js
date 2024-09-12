@@ -282,6 +282,10 @@ app.post('/nuevaClave', async (req, res) => {
 
 app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
 
+app.get('/terminos-y-condicion', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'terminos'));
+});
+
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
