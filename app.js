@@ -230,7 +230,10 @@ app.post('/api/claveOlvidada', async (req, res) => {
     const { correo } = req.body;
     console.log('Recibido correo:', correo); // Agrega un log para depuración
     try {
-        const user = await CUsuario.findOne({ correo });
+        // Convierte el correo a minúsculas para la búsqueda
+        const normalizedCorreo = correo.toLowerCase();
+        const user = await CUsuario.findOne({ correo: { $regex: new RegExp(`^${normalizedCorreo}$`, 'i') } });
+
         if (!user) {
             return res.status(400).json({ error: 'No se encontró un usuario con ese correo' });
         }
@@ -238,16 +241,16 @@ app.post('/api/claveOlvidada', async (req, res) => {
         // Generar un enlace de restablecimiento de contraseña (esto debería ser más seguro en un entorno de producción)
         const resetToken = Math.random().toString(36).substr(2);
         user.resetToken = resetToken;
-        user.resetTokenEmail = correo; // Almacena el correo con el token
+        user.resetTokenEmail = normalizedCorreo; // Almacena el correo en minúsculas con el token
         await user.save();
 
         // Usa el enlace de restablecimiento de contraseña con el dominio de Render
-        const resetLink = `https://proyecto-toolbox.onrender.com/nuevaClave?token=${resetToken}`;
+        const resetLink = `https://proyecto-toolbox.onrender.com/nuevaClave?token=${resetToken}&correo=${encodeURIComponent(normalizedCorreo)}`;
 
         // Enviar el correo
         await transporter.sendMail({
             from: 'toolboxproyecto@gmail.com',
-            to: correo,
+            to: normalizedCorreo,
             subject: 'Restablecimiento de Contraseña',
             html: `
                 <html>
@@ -257,7 +260,7 @@ app.post('/api/claveOlvidada', async (req, res) => {
                         <p>Hola,</p>
                         <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta. Para restablecer tu contraseña, por favor, haz clic en el siguiente enlace:</p>
                         <p style="text-align: center;">
-                            <a href="https://proyecto-toolbox.onrender.com/nuevaClave?token=YOUR_TOKEN&correo=USER_EMAIL">Restablecer Contraseña</a>
+                            <a href="https://proyecto-toolbox.onrender.com/nuevaClave?token=${resetToken}&correo=${encodeURIComponent(normalizedCorreo)}">Restablecer Contraseña</a>
                         </p>
                         <p>Si no solicitaste este cambio, por favor ignora este correo.</p>
                         <p>Saludos,<br>El equipo de Toolbox</p>
@@ -287,7 +290,13 @@ app.get('/nuevaClave', (req, res) => {
 app.post('/nuevaClave', async (req, res) => {
     const { token, nuevaPassword, correo } = req.body;
     try {
-        const user = await CUsuario.findOne({ resetToken: token, resetTokenEmail: correo });
+        // Convierte el correo a minúsculas para la búsqueda
+        const normalizedCorreo = correo.toLowerCase();
+        const user = await CUsuario.findOne({
+            resetToken: token,
+            resetTokenEmail: { $regex: new RegExp(`^${normalizedCorreo}$`, 'i') } // Insensible a mayúsculas y minúsculas
+        });
+
         if (!user) {
             return res.status(400).json({ error: 'Token inválido, expirado o correo incorrecto' });
         }
