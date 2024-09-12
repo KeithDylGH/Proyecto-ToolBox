@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const claveOlvidada = document.getElementById('claveOlvidada');
 
     claveOlvidada.addEventListener('click', function() {
-        window.location.href = '/claveOlvidada';
+        window.location.href = '/claveOlvidada/';
     });
 });
 
