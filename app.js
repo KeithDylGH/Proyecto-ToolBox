@@ -365,12 +365,12 @@ app.get('/error', (req, res) => {
 });
 
 app.get('/admin', authorize(['admin', 'boss']), (req, res) => {
-    const CUsuario = req.user; // Asegúrate de que 'req.user' es lo que estás usando para el usuario autenticado
+    const CUsuario = req.user;
     res.render('account/cuenta/admin/index', { CUsuario });
 });
 
 app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
-    const CUsuario = req.user; // Asegúrate de que 'req.user' es lo que estás usando para el usuario autenticado
+    const CUsuario = req.user;
     res.render('account/cuenta/admin/inventory', { CUsuario });
 });
 
