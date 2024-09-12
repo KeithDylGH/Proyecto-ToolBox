@@ -203,6 +203,68 @@ app.get('/buscarProductos', async (req, res) => {
 });
 
 app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'login')));
+
+// Ruta para la página de olvidar la contraseña
+app.get('/claveOlvidada', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'account', 'clave', 'olvidada'));
+});
+
+// Ruta para enviar el correo de restablecimiento de contraseña
+app.post('/claveOlvidada', async (req, res) => {
+    const { correo } = req.body;
+    try {
+        const user = await CUsuario.findOne({ correo });
+        if (!user) {
+            return res.status(400).json({ error: 'No se encontró un usuario con ese correo' });
+        }
+
+        // Generar un enlace de restablecimiento de contraseña (esto debería ser más seguro en un entorno de producción)
+        const resetToken = Math.random().toString(36).substr(2);
+        user.resetToken = resetToken; // Asegúrate de agregar este campo al modelo de usuario
+        await user.save();
+
+        const resetLink = `http://localhost:3000/nuevaClave?token=${resetToken}`;
+
+        // Enviar el correo
+        await transporter.sendMail({
+            from: 'toolboxproyecto@gmail.com',
+            to: correo,
+            subject: 'Restablecimiento de Contraseña',
+            text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${resetLink}`
+        });
+
+        res.json({ success: 'Correo enviado correctamente' });
+    } catch (error) {
+        console.error('Error al enviar correo:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
+
+// Ruta para la página de restablecimiento de contraseña
+app.get('/nuevaClave', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'account', 'clave', 'renovar'));
+});
+
+// Ruta para manejar la actualización de la contraseña
+app.post('/nuevaClave', async (req, res) => {
+    const { token, nuevaClave } = req.body;
+    try {
+        const user = await CUsuario.findOne({ resetToken: token });
+        if (!user) {
+            return res.status(400).json({ error: 'Token inválido o expirado' });
+        }
+
+        user.password = await bcrypt.hash(nuevaClave, 10);
+        user.resetToken = undefined; // Limpiar el token
+        await user.save();
+
+        res.json({ success: 'Contraseña actualizada correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar la contraseña:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
+
 app.use('/registrar', express.static(path.resolve(__dirname, 'views', 'account', 'register')));
 
 app.get('/logout', (req, res) => {
@@ -342,23 +404,48 @@ app.post('/confirmar-pago', async (req, res) => {
     const { email, producto, precio, cantidad } = req.body;
     console.log('Recibiendo confirmación de pago para:', email);
 
-    if (!email) {
-        console.log('Error: No se proporcionó un correo electrónico.');
-        return res.status(400).send('Falta el email del usuario.');
+    if (!email || !producto || !precio || !cantidad) {
+        console.log('Error: Falta información en la solicitud.');
+        return res.status(400).send('Faltan datos necesarios para el correo.');
     }
 
     try {
-        // Crear y enviar el PDF
+        // Crear PDF
+        const doc = new pdf();
+        const pdfPath = 'factura.pdf';
+
+        doc.pipe(fs.createWriteStream(pdfPath));
+        doc.fontSize(12).text(`Factura de Compra`, { align: 'center' });
+        doc.text(`Producto: ${producto}`);
+        doc.text(`Precio: $${precio}`);
+        doc.text(`Cantidad: ${cantidad}`);
+        doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
+        doc.end();
+
+        // Esperar a que el PDF se cree
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Crear y enviar el correo
         const mailOptions = {
             from: 'toolboxproyecto@gmail.com',
             to: email,
             subject: 'Confirmación de Compra',
             text: 'Gracias por tu compra. Adjuntamos tu factura en formato PDF.',
+            attachments: [
+                {
+                    filename: 'factura.pdf',
+                    path: pdfPath
+                }
+            ]
         };
 
         console.log('Enviando correo...');
         await transporter.sendMail(mailOptions);
         console.log('Correo enviado exitosamente a', email);
+
+        // Elimina el PDF después de enviarlo
+        fs.unlinkSync(pdfPath);
+
         res.send('Correo enviado con éxito.');
     } catch (error) {
         console.error('Error al enviar correo:', error.message);
