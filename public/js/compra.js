@@ -18,15 +18,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (pagoMovilBtn && transferenciaBtn && zinliBtn && cancelarPagoBtn) {
         pagoMovilBtn.addEventListener('click', function () {
-            mostrarInstruccionesPago('pagoMovilModal');
+            mostrarModal('pagoMovilModal');
         });
 
         transferenciaBtn.addEventListener('click', function () {
-            mostrarInstruccionesPago('transferenciaModal');
+            mostrarModal('transferenciaModal');
         });
 
         zinliBtn.addEventListener('click', function () {
-            mostrarInstruccionesPago('zinliModal');
+            mostrarModal('zinliModal');
         });
 
         cancelarPagoBtn.addEventListener('click', function () {
@@ -34,20 +34,25 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function mostrarInstruccionesPago(modalId) {
+    function mostrarModal(modalId) {
         const modals = ['pagoMovilModal', 'transferenciaModal', 'zinliModal'];
         modals.forEach(function (modal) {
             const modalElement = document.getElementById(modal);
             if (modalElement) {
-                const modalInstance = new bootstrap.Modal(modalElement);
-                modalInstance.hide();
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
             }
         });
-
+    
         const selectedModal = document.getElementById(modalId);
         if (selectedModal) {
-            const modalInstance = new bootstrap.Modal(selectedModal);
+            let modalInstance = bootstrap.Modal.getInstance(selectedModal);
+            if (!modalInstance) {
+                modalInstance = new bootstrap.Modal(selectedModal);
+            }
             modalInstance.show();
         }
-    }
+    }    
 });
