@@ -239,14 +239,30 @@ app.post('/api/claveOlvidada', async (req, res) => {
         user.resetToken = resetToken; // Asegúrate de agregar este campo al modelo de usuario
         await user.save();
 
-        const resetLink = `http://localhost:3000/nuevaClave?token=${resetToken}`;
+        // Usa el enlace de restablecimiento de contraseña con el dominio de Render
+        const resetLink = `https://proyecto-toolbox.onrender.com/nuevaClave?token=${resetToken}`;
 
         // Enviar el correo
         await transporter.sendMail({
             from: 'toolboxproyecto@gmail.com',
             to: correo,
             subject: 'Restablecimiento de Contraseña',
-            text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${resetLink}`
+            html: `
+                <html>
+                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
+                    <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                        <h2 style="text-align: center; color: #007bff;">Restablecimiento de Contraseña</h2>
+                        <p>Hola,</p>
+                        <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta. Para restablecer tu contraseña, por favor, haz clic en el siguiente enlace:</p>
+                        <p style="text-align: center;">
+                            <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; font-size: 16px; font-weight: bold; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px;">Restablecer Contraseña</a>
+                        </p>
+                        <p>Si no solicitaste este cambio, por favor ignora este correo.</p>
+                        <p>Saludos,<br>El equipo de Toolbox</p>
+                    </div>
+                </body>
+                </html>
+            `
         });
 
         res.json({ success: 'Correo enviado correctamente' });
@@ -422,9 +438,9 @@ app.get('/comprasCarrito', async (req, res) => {
 
 // Ruta para confirmar el pago y enviar el correo con PDF
 app.post('/confirmar-pago', async (req, res) => {
-    const { correo, producto, precio, cantidad } = req.body;
+    const { correo, producto, precio, cantidad, metodo } = req.body;
 
-    if (!correo || !producto || !precio || !cantidad) {
+    if (!correo || !producto || !precio || !cantidad || !metodo) {
         return res.status(400).send('Faltan datos necesarios para el correo.');
     }
 
@@ -435,6 +451,7 @@ app.post('/confirmar-pago', async (req, res) => {
 
         doc.pipe(fs.createWriteStream(pdfPath)); // Crear archivo PDF
         doc.fontSize(12).text('Factura de Compra', { align: 'center' });
+        doc.text(`Método de Pago: ${metodo}`);
         doc.text(`Producto: ${producto}`);
         doc.text(`Precio: $${precio}`);
         doc.text(`Cantidad: ${cantidad}`);
@@ -445,7 +462,7 @@ app.post('/confirmar-pago', async (req, res) => {
         res.json({ success: true, message: 'Pago confirmado y correo enviado.' });
     } catch (error) {
         console.error('Error al crear el PDF o enviar el correo:', error);
-        res.status(500).json({ error: 'Error al procesar el pago.' });  // Devuelve JSON en caso de error
+        res.status(500).json({ error: 'Error al procesar el pago. Detalles: ' + error.message });  // Devuelve JSON en caso de error
     }
 });
 

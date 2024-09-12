@@ -47,12 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
                                form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
 
-            // Reemplaza esta lógica para obtener el email del usuario actual desde el servidor
-            const emailUsuario = 'usuario@example.com'; 
+            const emailUsuario = 'usuario@example.com'; // Asegúrate de que aquí también uses 'correo'
             const producto = document.querySelector('.card-title').textContent;
+            const cantidad = parseInt(document.querySelector('p:contains("Cantidad")').textContent.replace('Cantidad: ', ''), 10) || 1;
             const total = parseFloat(document.getElementById('totalMonto').textContent.replace('Total: $', ''));
 
-            // Enviar confirmación de pago al servidor
             fetch('/confirmar-pago', {
                 method: 'POST',
                 headers: {
@@ -62,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     correo: emailUsuario, // Asegúrate de que aquí también uses 'correo'
                     producto: producto,
                     precio: total,
-                    cantidad: 1,
+                    cantidad: cantidad,
                     metodo: metodoPago
                 }),
             })
@@ -78,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Función para mostrar notificaciones
     function mostrarNotificacion(mensaje, tipo) {
         const notificacion = document.createElement('div');
         notificacion.className = `alert alert-${tipo}`;
