@@ -310,8 +310,6 @@ app.get('/registrar', (req, res) => {
 
 app.get('/terminos-y-condicion', (req, res) => {
     const user = req.session ? req.session.user : null;
-
-    // Luego pasas el objeto user a la vista
     res.render('terminos', { user });
 });
 
@@ -507,7 +505,7 @@ app.post('/confirmar-pago', async (req, res) => {
 
     } catch (error) {
         console.error('Error al crear el PDF o enviar el correo:', error);
-        res.status(500).json({ error: 'Error al procesar el pago. Detalles: ' + error.message });  // Devuelve JSON en caso de error
+        res.status(500).json({ error: 'Error al procesar el pago. Detalles: ' + error.message });
     }
 });
 

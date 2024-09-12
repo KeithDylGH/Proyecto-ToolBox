@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (siguienteBtn && cancelarBtn && metodosPago) {
         siguienteBtn.addEventListener('click', function () {
-            metodosPago.classList.remove('d-none'); // Mostrar los métodos de pago
-            siguienteBtn.style.display = 'none';    // Ocultar el botón "Siguiente"
-            cancelarBtn.style.display = 'none';     // Ocultar el botón "Cancelar"
+            metodosPago.classList.remove('d-none');
+            siguienteBtn.style.display = 'none';
+            cancelarBtn.style.display = 'none';
         });
     }
 
@@ -19,25 +19,24 @@ document.addEventListener('DOMContentLoaded', function () {
     if (pagoMovilBtn && transferenciaBtn && zinliBtn && cancelarPagoBtn) {
         pagoMovilBtn.addEventListener('click', function () {
             const pagoMovilModal = new bootstrap.Modal(document.getElementById('pagoMovilModal'));
-            pagoMovilModal.show(); // Mostrar el modal de Pago Móvil
+            pagoMovilModal.show();
         });
 
         transferenciaBtn.addEventListener('click', function () {
             const transferenciaModal = new bootstrap.Modal(document.getElementById('transferenciaModal'));
-            transferenciaModal.show(); // Mostrar el modal de Transferencia
+            transferenciaModal.show();
         });
 
         zinliBtn.addEventListener('click', function () {
             const zinliModal = new bootstrap.Modal(document.getElementById('zinliModal'));
-            zinliModal.show(); // Mostrar el modal de Zinli
+            zinliModal.show();
         });
 
         cancelarPagoBtn.addEventListener('click', function () {
-            window.location.href = '/'; // Redirigir a la página principal
+            window.location.href = '/';
         });
     }
 
-    // Confirmar pago para diferentes métodos
     const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
     confirmarPagoBtns.forEach(form => {
@@ -47,10 +46,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
                                form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
 
-            const emailUsuario = 'usuario@example.com'; // Asegúrate de que aquí también uses 'correo'
+            const emailUsuario = document.querySelector('meta[name="usuario-correo"]').getAttribute('content'); // Asegúrate de tener un meta tag con el correo del usuario en el HTML
             const producto = document.querySelector('.card-title').textContent;
 
-            // Buscar el elemento que contiene la cantidad
             const cantidadElemento = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('Cantidad'));
             const cantidad = parseInt(cantidadElemento ? cantidadElemento.textContent.replace('Cantidad: ', '') : '1', 10);
 
@@ -62,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    correo: emailUsuario, // Asegúrate de que aquí también uses 'correo'
+                    correo: emailUsuario,
                     producto: producto,
                     precio: total,
                     cantidad: cantidad,
@@ -90,6 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         setTimeout(() => {
             notificacion.remove();
-        }, 3000); // Ocultar la notificación después de 3 segundos
+        }, 3000);
     }
 });
