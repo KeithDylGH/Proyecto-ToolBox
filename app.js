@@ -203,7 +203,7 @@ app.get('/buscarProductos', async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'account', 'cuenta', 'login'));
+    res.sendFile(path.join(__dirname, 'views', 'account', 'login'));
 });
 
 // Ruta para la página de olvidar la contraseña
