@@ -1,1 +1,17 @@
-
+/* Aumentar el tamaño de la imagen del producto */
+.card-img-top {
+    max-width: 300px; /* Ajusta el tamaño según sea necesario */
+    height: auto; /* Mantiene la relación de aspecto */
+}
+/* Aumentar el tamaño del texto en la tarjeta del producto */
+.card-body h5 {
+    font-size: 1.5rem; /* Tamaño de fuente para el nombre del producto */
+}
+.card-body p {
+    font-size: 1.25rem; /* Tamaño de fuente para los datos del producto */
+}
+/* Ajustar el tamaño de los botones */
+.btn-lg {
+    font-size: 1.25rem;
+    padding: 0.75rem 1.25rem;
+}
