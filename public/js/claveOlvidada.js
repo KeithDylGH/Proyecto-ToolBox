@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Para el formulario de cambio de contraseña
 document.addEventListener('DOMContentLoaded', function() {
     const changePasswordForm = document.getElementById('changePasswordForm');
     
@@ -56,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const nuevaPassword = document.getElementById('nuevaPassword').value.trim();
             const confirmarPassword = document.getElementById('confirmarPassword').value.trim();
             const token = document.querySelector('input[name="token"]').value;
+            const correo = document.querySelector('input[name="correo"]').value;
 
             if (nuevaPassword !== confirmarPassword) {
                 const notification = document.querySelector('.notification');
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ nuevaPassword, token })
+                    body: JSON.stringify({ nuevaPassword, token, correo })
                 });
 
                 const data = await response.json();

@@ -17,7 +17,7 @@
                     <img src="/path/to/logo.png" alt="ToolBox Logo">
                 </a>
                 <div>
-                    <% if (user && user.isAuthenticated) { %>
+                    <% if (typeof user !== 'undefined' && user && user.isAuthenticated) { %>
                         <a href="/" class="btn btn-primary me-2">Inicio</a>
                         <a href="/cuenta" class="btn btn-secondary">Cuenta</a>
                     <% } else { %>

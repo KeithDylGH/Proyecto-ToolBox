@@ -309,7 +309,10 @@ app.get('/registrar', (req, res) => {
 });
 
 app.get('/terminos-y-condicion', (req, res) => {
-    res.render('terminos');
+    const user = req.session ? req.session.user : null;
+
+    // Luego pasas el objeto user a la vista
+    res.render('terminos', { user });
 });
 
 app.get('/logout', (req, res) => {
@@ -466,8 +469,42 @@ app.post('/confirmar-pago', async (req, res) => {
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
-        // Enviar respuesta exitosa en JSON
-        res.json({ success: true, message: 'Pago confirmado y correo enviado.' });
+        // Esperar hasta que el PDF esté completamente escrito
+        await new Promise((resolve, reject) => {
+            doc.on('finish', resolve);
+            doc.on('error', reject);
+        });
+
+        // Configurar el contenido del correo
+        const mailOptions = {
+            from: 'toolboxproyecto@gmail.com', // Cambia esto por tu correo
+            to: correo,
+            subject: 'Factura de Compra',
+            text: `Gracias por tu compra. Adjunto encontrarás la factura de tu compra.`,
+            attachments: [
+                {
+                    filename: 'factura.pdf',
+                    path: pdfPath
+                }
+            ]
+        };
+
+        // Enviar el correo
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error al enviar el correo:', error);
+                return res.status(500).json({ error: 'Error al enviar el correo.' });
+            }
+
+            // Eliminar el archivo PDF después de enviar el correo
+            fs.unlink(pdfPath, (err) => {
+                if (err) console.error('Error al eliminar el archivo PDF:', err);
+            });
+
+            // Enviar respuesta exitosa en JSON
+            res.json({ success: true, message: 'Pago confirmado y correo enviado.' });
+        });
+
     } catch (error) {
         console.error('Error al crear el PDF o enviar el correo:', error);
         res.status(500).json({ error: 'Error al procesar el pago. Detalles: ' + error.message });  // Devuelve JSON en caso de error
