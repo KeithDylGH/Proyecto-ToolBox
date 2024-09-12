@@ -1,7 +1,11 @@
 module.exports = (rolesPermitidos = [], rutasPublicas = []) => {
     return (req, res, next) => {
         // Verificar si la ruta actual está en la lista de rutas públicas
-        if (rutasPublicas.includes(req.path)) {
+        if (rutasPublicas.some(ruta => {
+            // Usamos `new RegExp` para manejar rutas con parámetros dinámicos como `/tienda/:categoriaId?`
+            const regex = new RegExp(ruta.replace(/:[^\s/]+/g, '[^/]+') + '$');
+            return regex.test(req.path);
+        })) {
             console.log('Ruta pública, permitiendo acceso:', req.path);
             return next(); // Si es una ruta pública, permite el acceso
         }

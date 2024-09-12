@@ -117,12 +117,20 @@ app.use((req, res, next) => {
     next();
 });
 
-// Definir rutas públicas y roles permitidos
-const rutasPublicas = ['/login/', '/registrar/', '/', '/claveOlvidada', '/nuevaClave', '/logout', '/tienda/:categoriaId?', '/tienda/producto/:id']; // Lista de rutas públicas
-const rolesPermitidos = ['user', 'admin', 'boss']; // Roles permitidos
+// Lista de rutas públicas
+const rutasPublicas = [
+    '/login',
+    '/registrar',
+    '/',
+    '/claveOlvidada',
+    '/nuevaClave',
+    '/logout',
+    '/tienda/:categoriaId?',
+    '/tienda/producto/:id'
+];
 
-// Uso del middleware de autorización
-app.use(authorize(rolesPermitidos, rutasPublicas));
+// Middleware de autorización
+app.use(authorize(['user', 'admin', 'boss'], rutasPublicas));
 
 app.get('/', async (req, res) => {
     try {
