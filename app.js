@@ -221,12 +221,7 @@ app.use('/login', express.static(path.resolve(__dirname, 'views', 'account', 'lo
 
 // Ruta para la página de olvidar la contraseña
 app.get('/claveOlvidada', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'account', 'clave', 'olvidada'));
-});
-
-// Ruta para la página de olvidar la contraseña
-app.get('/claveOlvidada', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'account', 'clave', 'olvidada.ejs'));
+    res.render('account/clave/olvidada');
 });
 
 // Ruta para enviar el correo de restablecimiento de contraseña
@@ -263,7 +258,7 @@ app.post('/claveOlvidada', async (req, res) => {
 // Ruta para la página de restablecimiento de contraseña
 app.get('/nuevaClave', (req, res) => {
     const { token } = req.query;
-    res.render('account/clave/renovar.ejs', { token });
+    res.render('account/clave/renovar', { token });
 });
 
 // Ruta para manejar la actualización de la contraseña

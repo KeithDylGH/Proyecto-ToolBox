@@ -1,19 +1,19 @@
-// Para el formulario de restablecimiento de contraseña
+// Manejar el envío del formulario para la recuperación de contraseña
 document.addEventListener('DOMContentLoaded', function() {
-    const resetForm = document.getElementById('resetForm');
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
     
-    if (resetForm) {
-        resetForm.addEventListener('submit', async function(e) {
+    if (resetPasswordForm) {
+        resetPasswordForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const correo = document.getElementById('correo').value.trim();
+            const email = document.getElementById('email').value.trim();
 
             try {
-                const response = await fetch('/claveOlvidada', { // Asegúrate de que la ruta sea correcta
+                const response = await fetch('/api/claveOlvidada', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ correo })
+                    body: JSON.stringify({ correo: email })
                 });
 
                 const data = await response.json();
