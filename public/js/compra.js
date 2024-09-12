@@ -43,13 +43,17 @@ document.addEventListener('DOMContentLoaded', function () {
     confirmarPagoBtns.forEach(form => {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
-            
+
             const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
                                form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
 
             const emailUsuario = 'usuario@example.com'; // Asegúrate de que aquí también uses 'correo'
             const producto = document.querySelector('.card-title').textContent;
-            const cantidad = parseInt(document.querySelector('p:contains("Cantidad")').textContent.replace('Cantidad: ', ''), 10) || 1;
+
+            // Buscar el elemento que contiene la cantidad
+            const cantidadElemento = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('Cantidad'));
+            const cantidad = parseInt(cantidadElemento ? cantidadElemento.textContent.replace('Cantidad: ', '') : '1', 10);
+
             const total = parseFloat(document.getElementById('totalMonto').textContent.replace('Total: $', ''));
 
             fetch('/confirmar-pago', {
@@ -73,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 mostrarNotificacion('Error al confirmar el pago.', 'danger');
                 console.error('Error al confirmar el pago:', error);
-            });            
+            });
         });
     });
 

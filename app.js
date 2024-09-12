@@ -256,7 +256,7 @@ app.post('/api/claveOlvidada', async (req, res) => {
                         <p>Hola,</p>
                         <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta. Para restablecer tu contraseña, por favor, haz clic en el siguiente enlace:</p>
                         <p style="text-align: center;">
-                            <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; font-size: 16px; font-weight: bold; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px;">Restablecer Contraseña</a>
+                            <a href="https://proyecto-toolbox.onrender.com/nuevaClave?token=YOUR_TOKEN&correo=USER_EMAIL">Restablecer Contraseña</a>
                         </p>
                         <p>Si no solicitaste este cambio, por favor ignora este correo.</p>
                         <p>Saludos,<br>El equipo de Toolbox</p>
@@ -273,10 +273,25 @@ app.post('/api/claveOlvidada', async (req, res) => {
     }
 });
 
-// Ruta para la página de restablecimiento de contraseña
-app.get('/nuevaClave', (req, res) => {
-    const { token } = req.query;
-    res.render('account/clave/renovar', { token });
+// Ruta para manejar la actualización de la contraseña
+app.post('/nuevaClave', async (req, res) => {
+    const { token, nuevaPassword, correo } = req.body;
+    try {
+        const user = await CUsuario.findOne({ resetToken: token, resetTokenEmail: correo });
+        if (!user) {
+            return res.status(400).json({ error: 'Token inválido, expirado o correo incorrecto' });
+        }
+
+        user.password = await bcrypt.hash(nuevaPassword, 10);
+        user.resetToken = undefined; // Limpiar el token
+        user.resetTokenEmail = undefined; // Limpiar el correo
+        await user.save();
+
+        res.json({ success: 'Contraseña actualizada correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar la contraseña:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
 });
 
 // Ruta para manejar la actualización de la contraseña
@@ -305,7 +320,7 @@ app.get('/registrar', (req, res) => {
 });
 
 app.get('/terminos-y-condicion', (req, res) => {
-    res.render(path.join('terminos'));
+    res.render('terminos');
 });
 
 app.get('/logout', (req, res) => {
