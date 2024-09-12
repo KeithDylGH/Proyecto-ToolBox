@@ -47,58 +47,49 @@
                                 background: rgb(94,59,59);
                                 background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
                                 <div class="welcomeMsg">
-                                    <h3 class="card-title text-light">Bienvenido <%= user.nombre %>!</h3>
-                                    <p class="card-text-overlay">Administra productos, usuarios y más con el modo <%= user.rol.charAt(0).toUpperCase() + user.rol.slice(1) %></p>
+                                    <h3 class="card-title text-light">Permisos</h3>
+                                    <p class="card-text-overlay">Administra usuarios, baneando, quitando y agregando Administradores</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-center">
-                            <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                                <div class="card-body">
-                                    <h5 class="card-subtitle mb-2 mt-2">
-                                        <img src="/img/icono/carrito de comprasN.png" alt="" width="50px">
-                                        Carrito
-                                    </h5>
-                                    <p class="card-text">Mira los productos que añadiste a tu carrito</p>
-                                    <a href="#" class="card-link">Entrar al carrito</a>
-                                </div>
-                            </div>
-
-                            <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                                <div class="card-body">
-                                    <h5 class="card-subtitle mb-2 mt-2">
-                                        <img src="/img/icono/contactosN.png" alt="" width="50px">
-                                        Contáctos
-                                    </h5>
-                                    <p class="card-text">Contáctanos en nuestro servicio al cliente</p>
-                                    <a href="#" class="card-link">Entrar a contactos</a>
-                                </div>
-                            </div>
-
-                            <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                                <div class="card-body">
-                                    <h5 class="card-subtitle mb-2 mt-2">
-                                        <img src="/img/icono/configuracionN.png" alt="" width="50px">
-                                        Configuración
-                                    </h5>
-                                    <p class="card-text">Configura tu cuenta, si quieres cambiar algo</p>
-                                    <a href="#" class="card-link">Entrar a configuración</a>
-                                </div>
-                            </div>
-
-                            <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                                <div class="card-body">
-                                    <h5 class="card-subtitle mb-2 mt-2">
-                                        <img src="/img/icono/alt-de-inventario.png" alt="" width="50px">
-                                        Inventario
-                                    </h5>
-                                    <p class="card-text">Agrega, edita y elimina tus productos</p>
-                                    <a href="#" class="card-link">Entrar a Inventario</a>
-                                </div>
-                            </div>
-
+                        <div class="container mt-4">
+                            <h2>Gestión de Usuarios</h2>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre de Usuario</th>
+                                        <th>Nombres</th>
+                                        <th>Apellidos</th>
+                                        <th>Cédula</th>
+                                        <th>Teléfono</th>
+                                        <th>Rol</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% users.forEach(user => { %>
+                                        <tr>
+                                            <td><%= user.usuario %></td>
+                                            <td><%= user.nombre %></td>
+                                            <td><%= user.apellido %></td>
+                                            <td><%= user.cedula %></td>
+                                            <td><%= user.numero %></td>
+                                            <td><%= user.rol %></td>
+                                            <td>
+                                                <% if (user.rol === 'admin') { %>
+                                                    <button class="btn btn-warning btn-sm" onclick="changeRole('<%= user._id %>', 'user')">Revocar Admin</button>
+                                                <% } else { %>
+                                                    <button class="btn btn-success btn-sm" onclick="changeRole('<%= user._id %>', 'admin')">Promover a Admin</button>
+                                                <% } %>
+                                                <button class="btn btn-danger btn-sm" onclick="banUser('<%= user._id %>')">Banear</button>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
                         </div>
+                        
                     </div>
                 </div>
             </div>

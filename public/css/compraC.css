@@ -1,0 +1,21 @@
+body {
+    background-color: #f8f9fa;
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+#metodosPago {
+    margin-top: 20px;
+}
+
+#totalMonto {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.img-thumbnail {
+    border: none;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}

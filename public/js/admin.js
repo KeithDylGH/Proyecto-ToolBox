@@ -64,3 +64,42 @@ router.get('/logout', (req, res) => {
         res.redirect('/');
     });
 });
+
+//PERMISOS
+// Función para cambiar el rol de un usuario
+function changeRole(userId, newRole) {
+    fetch(`/jefe/permisos/rol/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ rol: newRole })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`El rol ha sido cambiado a ${newRole}`);
+            location.reload(); // Recargar la página para ver los cambios
+        } else {
+            alert('Error al cambiar el rol');
+        }
+    });
+}
+
+// Función para banear a un usuario
+function banUser(userId) {
+    if (confirm('¿Estás seguro de que quieres banear a este usuario?')) {
+        fetch(`/jefe/permisos/banear/${userId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Usuario baneado');
+                location.reload();
+            } else {
+                alert('Error al banear al usuario');
+            }
+        });
+    }
+}

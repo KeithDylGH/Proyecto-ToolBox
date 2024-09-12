@@ -44,28 +44,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    const confirmarPagoBtn = document.querySelectorAll('#confirmarPagoBtn');
+    const confirmarPagoBtn = document.getElementById('confirmarPagoBtn');
+    
+    if (confirmarPagoBtn) {
+        confirmarPagoBtn.addEventListener('click', function () {
+            // Simulación de una solicitud de pago
+            const pagoExitoso = true; // Cambiar a falso para probar el error
 
-    confirmarPagoBtn.forEach(button => {
-        button.addEventListener('click', function () {
-            // Envía una solicitud al servidor para confirmar el pago
-            fetch('/confirmar-pago', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    // Incluye los datos necesarios, como el id del producto, cantidad, etc.
-                })
-            }).then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      alert('Pago confirmado. Se te enviará un correo con el comprobante.');
-                  } else {
-                      alert('Hubo un problema al confirmar el pago.');
-                  }
-              })
-              .catch(error => console.error('Error:', error));
+            if (pagoExitoso) {
+                mostrarNotificacion('Pago realizado con éxito.', 'success');
+            } else {
+                mostrarNotificacion('Hubo un error al realizar el pago.', 'danger');
+            }
         });
-    });
+    }
+
+    function mostrarNotificacion(mensaje, tipo) {
+        const notificacion = document.createElement('div');
+        notificacion.className = `alert alert-${tipo}`;
+        notificacion.textContent = mensaje;
+
+        // Insertar notificación en la parte superior
+        document.body.prepend(notificacion);
+
+        // Remover notificación después de 3 segundos
+        setTimeout(() => {
+            notificacion.remove();
+        }, 3000);
+    }
 });

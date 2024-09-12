@@ -336,44 +336,50 @@ app.get('/comprasCarrito', async (req, res) => {
 });
 
 app.post('/confirmar-pago', (req, res) => {
-    // Suponiendo que recibes datos del producto desde el cliente
-    const { productos, total } = req.body;
+    const { email, producto, precio, cantidad } = req.body;
 
-    // Crear un nuevo PDF
-    const doc = new PDFDocument();
-    const filePath = path.join(__dirname, 'comprobante.pdf');
-    doc.pipe(fs.createWriteStream(filePath));
+    // Crea un PDF en memoria
+    const doc = new PDF();
+    const buffers = [];
+    
+    doc.on('data', buffers.push.bind(buffers));
+    doc.on('end', async () => {
+        const pdfData = Buffer.concat(buffers);
 
-    doc.fontSize(16).text('Comprobante de Compra', { align: 'center' });
-    doc.fontSize(12).text('Productos:', { underline: true });
+        // Configurar el correo con archivo adjunto
+        const mailOptions = {
+            from: 'tuemail@gmail.com', // Cambia esto a tu dirección de correo
+            to: email, // Correo del usuario que recibirá el PDF
+            subject: 'Confirmación de Compra',
+            text: 'Gracias por tu compra. Adjuntamos tu factura en formato PDF.',
+            attachments: [
+                {
+                    filename: `factura_${Date.now()}.pdf`,
+                    content: pdfData,
+                    contentType: 'application/pdf'
+                }
+            ]
+        };
 
-    productos.forEach(producto => {
-        doc.text(`${producto.nombre} - ${producto.cantidad} x ${producto.precio} = ${producto.total}`);
-    });
-
-    doc.text(`\nMonto Total: ${total}`);
-    doc.end();
-
-    // Enviar el correo
-    const mailOptions = {
-        from: 'tu-email@gmail.com',
-        to: 'cliente-email@example.com',
-        subject: 'Confirmación de Pago',
-        text: 'Gracias por tu compra. Adjuntamos el comprobante en PDF.',
-        attachments: [
-            {
-                filename: 'comprobante.pdf',
-                path: filePath
-            }
-        ]
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return res.status(500).json({ success: false, message: error.message });
+        // Enviar el correo
+        try {
+            await transporter.sendMail(mailOptions);
+            res.send('Correo enviado con éxito.');
+        } catch (error) {
+            console.error('Error al enviar correo:', error);
+            res.status(500).send('Error al enviar el correo.');
         }
-        res.json({ success: true, message: 'Pago confirmado y correo enviado.' });
     });
+
+    // Escribir en el PDF
+    doc.text('Factura de Compra');
+    doc.text(`Producto: ${producto}`);
+    doc.text(`Precio: $${precio}`);
+    doc.text(`Cantidad: ${cantidad}`);
+    doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
+
+    // Finaliza el PDF
+    doc.end();
 });
 
 app.get('/cliente', (req, res) => {
@@ -437,8 +443,14 @@ app.get('/jefe', authorize(['boss']), async (req, res) => {
     }
 });
 
-app.get('/jefe/permisos', (req, res) => {
-    res.render('account/cuenta/boss/adminPage');
+app.get('/jefe/permisos', async (req, res) => {
+    try {
+        const users = await CUsuario.find();
+        res.render('account/cuenta/boss/adminPage', { users, user: req.session.user });
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        res.status(500).json({ error: 'Error al obtener usuarios' });
+    }
 });
 
 // Ruta para actualizar el rol del usuario

@@ -124,4 +124,44 @@ userRouter.post('/logout', (req, res) => {
     });
 });
 
+
+// Cambiar rol de un usuario
+userRouter.put('/permisos/rol/:id', async (req, res) => {
+    const userId = req.params.id;
+    const { rol } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+        }
+
+        user.rol = rol;
+        await user.save();
+
+        res.json({ success: true, message: `Rol cambiado a ${rol}` });
+    } catch (error) {
+        console.error('Error al cambiar el rol:', error);
+        res.status(500).json({ success: false, message: 'Error en el servidor' });
+    }
+});
+
+// Banear a un usuario (eliminar usuario)
+userRouter.delete('/permisos/banear/:id', async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await User.findByIdAndDelete(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+        }
+
+        res.json({ success: true, message: 'Usuario baneado correctamente' });
+    } catch (error) {
+        console.error('Error al banear al usuario:', error);
+        res.status(500).json({ success: false, message: 'Error en el servidor' });
+    }
+});
+
+
 module.exports = userRouter;
