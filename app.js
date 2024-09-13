@@ -398,7 +398,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
         if (producto) {
             const total = producto.precio * cantidad;
-            res.render('shop/Compra', { producto, cantidad, total, usuarioCorreo: usuario ? usuario.correo : 'no-reply@example.com' });
+            res.render('shop/Compra', { producto, cantidad, total, usuario });
         } else {
             res.status(404).send('Producto no encontrado');
         }
