@@ -453,29 +453,18 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { producto, precio, cantidad, metodo } = req.body;
-    const usuario = req.session.user;
+    const { correo, producto, precio, cantidad, metodo } = req.body;
+    const usuario = req.session.user; // Usar req.session.user
 
-    console.log('Usuario autenticado:', usuario);
-    console.log('Datos recibidos:', { producto, precio, cantidad, metodo });
+    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
+    console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
         console.log('Usuario no autenticado.');
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    let emailUsuario = usuario.correo;
-
-    if (!emailUsuario) {
-        try {
-            // Buscar el usuario en la base de datos usando el identificador de la sesión
-            const usuarioDB = await CUsuario.findById(usuario._id); // Asegúrate de tener el modelo y el método correcto
-            emailUsuario = usuarioDB.correo;
-        } catch (error) {
-            console.error('Error al buscar el usuario en la base de datos:', error);
-            return res.status(500).json({ error: 'Error al recuperar el correo del usuario.' });
-        }
-    }
+    const emailUsuario = correo && correo !== 'no-reply@example.com' ? correo : usuario.correo;
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
