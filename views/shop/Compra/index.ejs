@@ -33,11 +33,11 @@
                           <div>
                               <h6><%= producto.nombre %></h6>
                               <p>Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
-                              <p>Cantidad: <%= producto.cantidad || 1 %></p>
-                              <p>Total: $<%= (producto.precio * (producto.cantidad || 1)).toFixed(2) %></p>
+                              <p>Cantidad: <%= cantidad %></p>
+                              <p>Total: $<%= total.toFixed(2) %></p>
                           </div>
                       </div>
-                      <h4 id="totalMonto" class="mt-3">Total: $<%= (producto.precio * (producto.cantidad || 1)).toFixed(2) %></h4>
+                      <h4 id="totalMonto" class="mt-3">Total: $<%= total.toFixed(2) %></h4>
                   </div>
               </div>
           </div>
@@ -73,7 +73,7 @@
                       <li><strong>Número de cuenta:</strong> 0102-1234-5678-9012</li>
                       <li><strong>Titular:</strong> Juan Pérez</li>
                     </ul>
-                    <p>Una vez completada la transferencia, envía el comprobante al correo <strong><%= usuario.correo %></strong>.</p>
+                    <p>Una vez completada la transferencia, envía el comprobante al correo <strong><%= usuarioCorreo %></strong>.</p>
                   </div>
 
                   <!-- Instrucciones de Zinli -->
