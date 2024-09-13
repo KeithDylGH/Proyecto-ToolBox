@@ -410,9 +410,6 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     }
 });
 
-// Ruta para confirmar el pago
-app.post('/confirmar-pago', confirmarPago);
-
 // Ruta para la compra de productos en el carrito
 app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
@@ -456,7 +453,7 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-/* app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
+app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
 
@@ -558,7 +555,7 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
         console.error('Error al confirmar el pago:', error);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
-}); */
+});
 
 app.get('/cliente', authorize(['user', 'admin', 'boss']), (req, res) => {
     res.render('account/cuenta/cliente');
