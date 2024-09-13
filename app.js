@@ -25,6 +25,7 @@ const axios = require('axios');
 const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
 const { buscarUsuarioPorCorreo } = require('./controllers/buscarUsuario'); // Ajusta la ruta según corresponda
+const { buscarUsuarioPorNombre } = require('./controllers/buscarUsuario')
 //const { enviarCorreo } = require('./mailer'); // Importa la función de mailer
 
 const app = express();
@@ -386,24 +387,22 @@ app.get('/tienda/producto/:id', async (req, res) => {
     }
 });
 
+// Ejemplo de autenticación y almacenamiento en la sesión
 app.post('/login', async (req, res) => {
-    const { correo, password } = req.body;
+    const { usuario, password } = req.body;
 
     try {
-        // Busca el usuario por correo en la base de datos
-        const usuarioDB = await buscarUsuarioPorCorreo(correo.toLowerCase());
+        const usuarioDB = await buscarUsuarioPorNombre(usuario);
 
-        // Verifica que el usuario exista y la contraseña sea correcta
-        if (!usuarioDB || !compararContraseña(password, usuarioDB.password)) {
+        if (!usuarioDB || usuarioDB.password !== password) {
             return res.status(401).send('Usuario o contraseña incorrectos');
         }
 
-        // Almacena la información del usuario en la sesión
         req.session.user = {
             nombre: usuarioDB.nombre,
             usuario: usuarioDB.usuario,
             rol: usuarioDB.rol,
-            correo: usuarioDB.correo
+            correo: usuarioDB.correo // Asegúrate de almacenar el correo aquí
         };
 
         res.json({ success: 'Inicio de sesión exitoso' });
