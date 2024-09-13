@@ -161,9 +161,9 @@
             <h2>Los mejores productos</h2>
             <div class="row">
                 <% productosDestacados.forEach(producto => { %>
-                    <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                    <div class="col-md-4 mb-4 d-flex align-items-stretch">
                         <div class="card h-100">
-                            <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" style="object-fit: cover; height: 200px;" />
+                            <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" style="object-fit: cover; height: 250px;" />
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><%= producto.nombre %></h5>
                                 <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
@@ -175,7 +175,7 @@
                 <% }); %>
             </div>
         </div>
-    </section>
+    </section>    
     
     <!-- Te puede interesar -->
     <section>
