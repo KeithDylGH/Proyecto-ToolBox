@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 document.addEventListener('DOMContentLoaded', function() {
     const changePasswordForm = document.getElementById('changePasswordForm');
     
@@ -56,6 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const confirmarPassword = document.getElementById('confirmarPassword').value.trim();
             const token = document.querySelector('input[name="token"]').value;
             const correo = document.querySelector('input[name="correo"]').value;
+
+            console.log({ nuevaPassword, confirmarPassword, token, correo }); // Verifica los valores
 
             if (nuevaPassword !== confirmarPassword) {
                 const notification = document.querySelector('.notification');
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                const response = await fetch('/nuevaClave', { // Asegúrate de que la ruta sea correcta
+                const response = await fetch('/nuevaClave', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

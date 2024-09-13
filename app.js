@@ -290,11 +290,10 @@ app.get('/nuevaClave', (req, res) => {
 app.post('/nuevaClave', async (req, res) => {
     const { token, nuevaPassword, correo } = req.body;
     try {
-        // Convierte el correo a minúsculas para la búsqueda
         const normalizedCorreo = correo.toLowerCase();
         const user = await CUsuario.findOne({
             resetToken: token,
-            resetTokenEmail: { $regex: new RegExp(`^${normalizedCorreo}$`, 'i') } // Insensible a mayúsculas y minúsculas
+            resetTokenEmail: { $regex: new RegExp(`^${normalizedCorreo}$`, 'i') }
         });
 
         if (!user) {
@@ -302,8 +301,8 @@ app.post('/nuevaClave', async (req, res) => {
         }
 
         user.password = await bcrypt.hash(nuevaPassword, 10);
-        user.resetToken = undefined; // Limpiar el token
-        user.resetTokenEmail = undefined; // Limpiar el correo
+        user.resetToken = undefined;
+        user.resetTokenEmail = undefined;
         await user.save();
 
         res.json({ success: 'Contraseña actualizada correctamente' });
