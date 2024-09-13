@@ -2,139 +2,111 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ToolBox - Cuenta/Cliente/Configuracion</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolBox - Datos de Usuario</title>
 
-  <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png">
+    <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png">
 
-  <link rel="stylesheet" href="/css/cuenta.css">
-  <link rel="stylesheet" href="/css/configuration.css">
-
-  <!--BOOTSTRAP-->
-   <!--  <link rel="stylesheet" href="/bootstrap-5.3.3-dist/css/bootstrap.rtl.min.css">
-    <script src="/bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script> -->
-
+    <link rel="stylesheet" href="/css/datos.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap"
-    rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-
-  <div>
-    <section>
-      <!--Sidebar-->
-
-      <div class="sidebar">
-        <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
-
-        <a href="#" id="client">Inicio</a>
-        <a href="#general" id="pagBtn">Ir a la Pág. Principal</a>
-        <a href="#carrito" id="carritoBtn">Carrito</a>
-        <a href="#contacto" id="contactoBtn">Servicio al Cliente</a>
-        <a class="active sidebar_btn" href="#configuracion" id="configuracionBtn">Configuración</a>
-
-        <button class="Log-Out" id="logout"><a href="#">Cerrar sesion
-          </a></button>
-      </div>
-
-    </section>
-
-    <section class="interfaz">
-      <div class="container">
-        <div class="content">
-
-          <div class="conf">
-
-            <div class="carrito">
-              <div class="card bg-dark text-white" style="padding: 5rem;">
-                <div class="card-img-overlay" style="background-color: #5e3b3b;
-                                background: rgb(94,59,59);
-                                background: linear-gradient(153deg, rgb(59, 85, 94) 25%, rgb(44, 52, 52) 100%);">
-                  <h3 class="card-title">Configuracion</h3>
-                  <p class="card-text-overlay">Configura tu cuenta y si quieres cambiar algo</p>
-                </div>
-              </div>
-
-              <div class="d-flex justify-content-center">
-                <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                  <div class="card-body">
-                    <h5 class="card-subtitle mb-2 mt-2">
-                      <img src="/img/icono/lapiz-de-usuario.png" alt="" width="50px">
-                      Cambiar Datos
-                    </h5>
-                    <p class="card-text">Cambia tu contraseña, usuario o correo</p>
-                    <a href="#" class="card-link" id="btnDatos">Cambiar datos de Usuario</a>
-                  </div>
-                </div>
-  
-                <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                  <div class="card-body">
-                    <h5 class="card-subtitle mb-2 mt-2">
-                      <img src="/img/icono/money-cheque-editar.png" alt="" width="50px">
-                      Cambiar Pagas
-                    </h5>
-                    <p class="card-text">Cambia tus datos de pagas, tarjetas, cuenta, etc</p>
-                    <a href="#" class="card-link">Cambiar datos de paga</a>
-                  </div>
-                </div>
-  
-                <div class="card shadow-sm" style="width: 14rem; border-radius: .5rem;">
-                  <div class="card-body">
-                    <h5 class="card-subtitle mb-2 mt-2">
-                      <img src="/img/icono/alt-administrador.png" alt="" width="50px">
-                      Avanzada
-                    </h5>
-                    <p class="card-text">Chequea tus datos actuales y otras funciones</p>
-                    <a href="#" class="card-link">Entrar a configuración avanzada</a>
-                  </div>
-                </div>
-  
-              </div>
-
-              
-
-
-                    </div>
-                  </div>
-
-
-                </div>
-              </div>
-
-
-            </div>
-
-
-          </div>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar bg-dark text-light p-3" style="width: 250px;">
+            <a href="#" id="homeBtn" class="d-block mb-4"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="img-fluid"></a>
+            <a href="#" class="d-block text-light mb-2">Inicio</a>
+            <a href="#general" class="d-block text-light mb-2">Ir a la Pág. Principal</a>
+            <a href="#carrito" class="d-block text-light mb-2">Carrito</a>
+            <a href="#contacto" class="d-block text-light mb-2">Servicio al Cliente</a>
+            <a href="#configuracion" class="d-block text-light mb-2 active">Configuración</a>
+            <button class="btn btn-danger mt-4 w-100" id="logout"><a href="#" class="text-light text-decoration-none">Cerrar sesión</a></button>
         </div>
 
+        <!-- Main content -->
+        <div class="flex-grow-1 p-4">
+            <div class="container">
+                <div class="card bg-dark text-light">
+                    <div class="card-header">
+                        <h3 class="card-title">Datos de Usuario</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-subtitle mb-4">Información Personal</h4>
 
-    </section>
+                        <form>
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" value="<%= usuario.nombre %>">
+                            </div>
 
-  </div>
+                            <div class="mb-3">
+                                <label for="apellido" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" id="apellido" value="<%= usuario.apellido %>">
+                            </div>
 
-  </div>
+                            <div class="mb-3">
+                                <label for="correo" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="correo" value="<%= usuario.correo %>">
+                            </div>
 
+                            <div class="mb-3">
+                                <label for="usuario" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" id="usuario" value="<%= usuario.usuario %>">
+                            </div>
 
-  <script src="/js/cuenta.js"></script>
-  <script src="/js/client.js"></script>
-  <script src="/js/logout.js"></script>
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefono" value="<%= usuario.telefono %>">
+                            </div>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+                            <div class="mb-3">
+                                <label for="cedula" class="form-label">Cédula</label>
+                                <input type="text" class="form-control" id="cedula" value="<%= usuario.cedula %>">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="contrasena" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="contrasena" placeholder="********">
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarModal">Eliminar Cuenta</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for account deletion -->
+    <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eliminarModalLabel">Eliminar Cuenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger">Eliminar Cuenta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/configuracion.js"></script>
 </body>
 
 </html>
