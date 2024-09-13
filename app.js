@@ -457,12 +457,20 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     const usuario = req.session.user;
 
     if (!usuario) {
+        console.error('Usuario no autenticado');
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
     let emailUsuario = correo || usuario.correo;
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
+        console.error('Datos faltantes:', {
+            correo: emailUsuario,
+            producto,
+            precio,
+            cantidad,
+            metodo
+        });
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 

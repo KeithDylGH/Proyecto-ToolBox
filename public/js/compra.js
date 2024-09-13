@@ -81,7 +81,9 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Error en la respuesta del servidor');
+                    return response.text().then(text => {
+                        throw new Error(`Error en la respuesta del servidor: ${text}`);
+                    });
                 }
                 return response.json();
             })
@@ -90,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('Respuesta del servidor:', data);
             })
             .catch(error => {
-                mostrarNotificacion('Error al confirmar el pago.', 'danger');
+                mostrarNotificacion(`Error al confirmar el pago: ${error.message}`, 'danger');
                 console.error('Error al confirmar el pago:', error);
             });                                  
         });
