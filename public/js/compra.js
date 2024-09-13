@@ -49,9 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
                                form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
 
-            const metaUsuarioCorreo = document.querySelector('meta[name="usuario-correo"]');
-            const emailUsuario = metaUsuarioCorreo ? metaUsuarioCorreo.getAttribute('content') : 'no-reply@example.com';
-
             const productoElemento = document.querySelector('.card-title');
             const producto = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
 
@@ -62,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0').toFixed(2);
 
             console.log('Datos a enviar:', {
-                correo: emailUsuario,
                 producto: producto,
                 precio: total,
                 cantidad: cantidad,
@@ -75,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    correo: emailUsuario,
                     producto: producto,
                     precio: total,
                     cantidad: cantidad,
@@ -91,25 +86,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                mostrarNotificacion('Pago confirmado correctamente. Se ha enviado un recibo a tu correo.', 'success');
-                console.log('Respuesta del servidor:', data);
+                mostrarNotificacion('Pago confirmado correctamente. Se ha enviado un correo con la factura.');
             })
             .catch(error => {
-                mostrarNotificacion(`Error al confirmar el pago: ${error.message}`, 'danger');
                 console.error('Error al confirmar el pago:', error);
-            });                                  
+                mostrarNotificacion('Hubo un error al confirmar el pago.');
+            });
         });
     });
 
-    function mostrarNotificacion(mensaje, tipo) {
-        const notificacion = document.createElement('div');
-        notificacion.className = `alert alert-${tipo}`;
-        notificacion.textContent = mensaje;
-
-        document.body.prepend(notificacion);
-
-        setTimeout(() => {
-            notificacion.remove();
-        }, 3000);
+    function mostrarNotificacion(mensaje) {
+        alert(mensaje);
     }
 });

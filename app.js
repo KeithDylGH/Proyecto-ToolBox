@@ -8,7 +8,7 @@ const productoRouter = require('./controllers/productos');
 const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 const Excel = require('exceljs');
-const PDF = require('pdfkit');
+const PDFDocument = require('pdfkit');
 const subirProducto = require('./controllers/subirProducto');
 const bcrypt = require('bcryptjs');
 const Categoria = require('./models/categoria');
@@ -24,6 +24,7 @@ const formData = require('form-data');
 const axios = require('axios');
 const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
+const { confirmarPago } = require('./controllers/confirmarPago');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -408,6 +409,9 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     }
 });
 
+// Ruta para confirmar el pago
+app.post('/confirmar-pago', confirmarPago);
+
 // Ruta para la compra de productos en el carrito
 app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
@@ -451,7 +455,7 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
+/* app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
 
@@ -492,7 +496,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        const doc = new PDF();
+        const doc = new PDFDocument();
         const pdfPath = path.join(__dirname, 'factura.pdf');
 
         doc.pipe(fs.createWriteStream(pdfPath));
@@ -553,7 +557,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         console.error('Error al confirmar el pago:', error);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
-});
+}); */
 
 app.get('/cliente', authorize(['user', 'admin', 'boss']), (req, res) => {
     res.render('account/cuenta/cliente');
@@ -734,7 +738,7 @@ app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, r
             await workbook.xlsx.write(res);
             res.end();
         } else if (format === 'pdf') {
-            const doc = new PDF();
+            const doc = new PDFDocument();
 
             const logoPath = path.join(__dirname, 'public', 'img', 'logo', 'LogoLetra.png');
             doc.image(logoPath, 50, 50, { width: 100 });
@@ -819,3 +823,4 @@ app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
 app.use('/api/carrito', carritoRouter);
+app.use('/api', confirmarPagoRouter);
