@@ -43,8 +43,8 @@ const upload = multer({
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: 'toolboxproyecto@gmail.com',
+        pass: 'degf euub exnz rvfr'
     },
     debug: true,  // Habilitar el modo depuración
     logger: true, // Habilitar registro de mensajes SMTP
@@ -452,7 +452,7 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 });
 
 // Ruta para confirmar el pago
-app.post('/confirmar-pago', async (req, res) => {
+app.post('/confirmar-pago', authorize(['user']), async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
 
