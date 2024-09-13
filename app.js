@@ -438,6 +438,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
         let usuario;
         try {
             usuario = await buscarUsuarioPorCorreo(usuarioSesion.correo);
+            console.log('Usuario encontrado por correo:', usuario);
         } catch (error) {
             console.error('Error al buscar usuario por correo:', error);
             return res.status(500).send('Error interno del servidor');
@@ -454,6 +455,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
         }
 
         const producto = await iProducto.findById(productoId);
+        console.log('Producto encontrado:', producto);
 
         if (producto) {
             const total = producto.precio * cantidad;
