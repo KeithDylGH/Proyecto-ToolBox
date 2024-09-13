@@ -24,7 +24,7 @@ const formData = require('form-data');
 const axios = require('axios');
 const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
-const { buscarUsuarioPorCorreo } = require('./controllers/usuario'); // Ajusta la ruta según corresponda
+const { buscarUsuarioPorCorreo } = require('./controllers/buscarUsuario'); // Ajusta la ruta según corresponda
 
 const app = express();
 const PORT = process.env.PORT || 4000;
