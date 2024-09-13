@@ -451,7 +451,7 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-// Ruta para confirmar el pago
+//ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
@@ -488,6 +488,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
+        // Esperar a que el PDF se genere correctamente
         await new Promise((resolve, reject) => {
             doc.on('finish', resolve);
             doc.on('error', reject);
@@ -498,22 +499,43 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             from: 'toolboxproyecto@gmail.com',
             to: emailUsuario,
             subject: 'Factura de Compra',
-            text: 'Gracias por tu compra. Adjunto encontrarás la factura de tu compra.',
+            html: `
+                <html>
+                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
+                    <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                        <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
+                        <p>Hola,</p>
+                        <p>Gracias por tu compra. Adjunto encontrarás la factura de tu compra.</p>
+                        <p><strong>Método de Pago:</strong> ${metodo}</p>
+                        <p><strong>Producto:</strong> ${producto}</p>
+                        <p><strong>Precio:</strong> $${precio}</p>
+                        <p><strong>Cantidad:</strong> ${cantidad}</p>
+                        <p><strong>Total:</strong> $${(precio * cantidad).toFixed(2)}</p>
+                        <p>Saludos,<br>El equipo de Toolbox</p>
+                    </div>
+                </body>
+                </html>
+            `,
             attachments: [{ filename: 'factura.pdf', path: pdfPath }]
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('Error al enviar el correo:', error);
-                return res.status(500).json({ error: 'Error al enviar el correo.' });
-            }
-
-            fs.unlink(pdfPath, (err) => {
-                if (err) console.error('Error al eliminar el archivo PDF:', err);
+        // Usar promesas para manejar el envío del correo
+        await new Promise((resolve, reject) => {
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error al enviar el correo:', error);
+                    reject(new Error('Error al enviar el correo.'));
+                } else {
+                    console.log('Correo enviado:', info.response);
+                    fs.unlink(pdfPath, (err) => {
+                        if (err) console.error('Error al eliminar el archivo PDF:', err);
+                    });
+                    resolve({ message: 'Correo enviado correctamente.' });
+                }
             });
-
-            res.status(200).json({ message: 'Correo enviado correctamente.' });
         });
+
+        res.status(200).json({ message: 'Correo enviado correctamente.' });
     } catch (error) {
         console.error('Error al confirmar el pago:', error);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
