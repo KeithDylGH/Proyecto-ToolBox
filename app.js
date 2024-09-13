@@ -25,6 +25,7 @@ const axios = require('axios');
 const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
 const { buscarUsuarioPorCorreo } = require('./controllers/buscarUsuario'); // Ajusta la ruta según corresponda
+//const { enviarCorreo } = require('./mailer'); // Importa la función de mailer
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -386,20 +387,23 @@ app.get('/tienda/producto/:id', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    const { usuario, password } = req.body;
+    const { correo, password } = req.body;
 
     try {
-        const usuarioDB = await buscarUsuarioPorNombre(usuario);
+        // Busca el usuario por correo en la base de datos
+        const usuarioDB = await buscarUsuarioPorCorreo(correo.toLowerCase());
 
-        if (!usuarioDB || usuarioDB.password !== password) {
+        // Verifica que el usuario exista y la contraseña sea correcta
+        if (!usuarioDB || !compararContraseña(password, usuarioDB.password)) {
             return res.status(401).send('Usuario o contraseña incorrectos');
         }
 
+        // Almacena la información del usuario en la sesión
         req.session.user = {
             nombre: usuarioDB.nombre,
             usuario: usuarioDB.usuario,
             rol: usuarioDB.rol,
-            correo: usuarioDB.correo // Asegúrate de almacenar el correo aquí
+            correo: usuarioDB.correo
         };
 
         res.json({ success: 'Inicio de sesión exitoso' });
@@ -415,6 +419,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
         const usuario = req.session.user;
 
+        // Agrega un log para verificar el usuario en sesión
         console.log('Usuario en sesión en /compra:', usuario);
 
         if (!usuario) {
@@ -424,6 +429,11 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
         // Añadir log para verificar el contenido de la sesión
         console.log('Contenido de la sesión:', req.session);
+
+        if (!usuario.correo) {
+            console.error('Error: El correo del usuario no está disponible en la sesión');
+            return res.status(400).send('El correo del usuario no está disponible en la sesión');
+        }
 
         if (!productoId) {
             console.error('Error: ID del producto no proporcionado');
