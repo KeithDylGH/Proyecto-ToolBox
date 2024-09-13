@@ -388,6 +388,7 @@ app.get('/compra', async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
+        const usuarioCorreo = req.user ? req.user.correo : 'no-reply@example.com'; // Obtén el correo del usuario autenticado
 
         // Verificar si el productoId está presente
         if (!productoId) {
@@ -400,7 +401,7 @@ app.get('/compra', async (req, res) => {
         // Verificar si el producto fue encontrado
         if (producto) {
             const total = producto.precio * cantidad;
-            res.render('shop/Compra', { producto, cantidad, total });
+            res.render('shop/Compra', { producto, cantidad, total, usuarioCorreo });
         } else {
             res.status(404).send('Producto no encontrado');
         }

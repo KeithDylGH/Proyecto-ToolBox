@@ -18,7 +18,8 @@ const usuarioSchema = new mongoose.Schema({
     correo: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true // Convierte automáticamente el correo a minúsculas
     },
     password: {
         type: String,
@@ -44,6 +45,14 @@ const usuarioSchema = new mongoose.Schema({
             cantidad: { type: Number, default: 1 }
         }
     ]
+});
+
+// Convertir el correo a minúsculas antes de guardar
+usuarioSchema.pre('save', function (next) {
+    if (this.isModified('correo')) {
+        this.correo = this.correo.toLowerCase();
+    }
+    next();
 });
 
 // Opcional: configurar opciones adicionales del esquema
