@@ -388,21 +388,16 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
-        const usuario = req.user; // Asegúrate de tener el usuario autenticado
+        const usuario = req.session.user; // Cambiado de req.user a req.session.user
 
-        // Verificar si el productoId está presente
         if (!productoId) {
             return res.status(400).send('ID del producto no proporcionado');
         }
 
-        // Obtener el producto desde la base de datos
         const producto = await iProducto.findById(productoId);
 
-        // Verificar si el producto fue encontrado
         if (producto) {
             const total = producto.precio * cantidad;
-
-            // Renderizar la página de compra con la información del producto
             res.render('shop/Compra', { producto, cantidad, total, usuarioCorreo: usuario ? usuario.correo : 'no-reply@example.com' });
         } else {
             res.status(404).send('Producto no encontrado');
@@ -459,17 +454,16 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
-    const usuario = req.user; // Asegúrate de tener el usuario autenticado en req.user
+    const usuario = req.session.user; // Usar req.session.user
 
     console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
+    console.log('Usuario desde la sesión:', usuario);
 
-    // Verifica si usuario está definido
     if (!usuario) {
         console.log('Usuario no autenticado.');
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    // Usar el correo del usuario autenticado si no se proporciona uno
     const emailUsuario = correo && correo !== 'no-reply@example.com' ? correo : usuario.correo;
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
@@ -478,11 +472,10 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        // Crear el PDF
         const doc = new PDFDocument();
         const pdfPath = path.join(__dirname, 'factura.pdf');
 
-        doc.pipe(fs.createWriteStream(pdfPath)); // Crear archivo PDF
+        doc.pipe(fs.createWriteStream(pdfPath));
         doc.fontSize(12).text('Factura de Compra', { align: 'center' });
         doc.text(`Método de Pago: ${metodo}`);
         doc.text(`Producto: ${producto}`);
@@ -493,15 +486,13 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         console.log('PDF creado.');
 
-        // Esperar hasta que el PDF esté completamente escrito
         await new Promise((resolve, reject) => {
             doc.on('finish', resolve);
             doc.on('error', reject);
         });
 
-        // Configurar el contenido del correo
         const mailOptions = {
-            from: 'toolboxproyecto@gmail.com', // Cambia esto por tu correo
+            from: 'toolboxproyecto@gmail.com',
             to: emailUsuario,
             subject: 'Factura de Compra',
             text: `Gracias por tu compra. Adjunto encontrarás la factura de tu compra.`,
@@ -513,14 +504,12 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             ]
         };
 
-        // Enviar el correo
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.error('Error al enviar el correo:', error);
                 return res.status(500).json({ error: 'Error al enviar el correo.' });
             }
 
-            // Eliminar el archivo PDF después de enviar el correo
             fs.unlink(pdfPath, (err) => {
                 if (err) console.error('Error al eliminar el archivo PDF:', err);
             });
