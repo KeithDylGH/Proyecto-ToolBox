@@ -384,12 +384,11 @@ app.get('/tienda/producto/:id', async (req, res) => {
     }
 });
 
-// Ruta para la compra de un producto individual
 app.get('/compra', async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
-        const usuarioCorreo = req.user ? req.user.correo : 'no-reply@example.com'; // Obtén el correo del usuario autenticado
+        const usuario = req.user; // Asegúrate de tener el usuario autenticado
 
         // Verificar si el productoId está presente
         if (!productoId) {
@@ -402,7 +401,9 @@ app.get('/compra', async (req, res) => {
         // Verificar si el producto fue encontrado
         if (producto) {
             const total = producto.precio * cantidad;
-            res.render('shop/Compra', { producto, cantidad, total, usuarioCorreo });
+
+            // Renderizar la página de compra con la información del producto
+            res.render('shop/Compra', { producto, cantidad, total, usuarioCorreo: usuario ? usuario.correo : 'no-reply@example.com' });
         } else {
             res.status(404).send('Producto no encontrado');
         }
@@ -455,14 +456,21 @@ app.get('/comprasCarrito', async (req, res) => {
     }
 });
 
+// Ruta para confirmar el pago
 app.post('/confirmar-pago', async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.user; // Asegúrate de tener el usuario autenticado en req.user
 
     console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
 
+    // Verifica si usuario está definido
+    if (!usuario) {
+        console.log('Usuario no autenticado.');
+        return res.status(401).json({ error: 'Usuario no autenticado.' });
+    }
+
     // Usar el correo del usuario autenticado si no se proporciona uno
-    const emailUsuario = correo !== 'no-reply@example.com' ? correo : usuario.correo;
+    const emailUsuario = correo && correo !== 'no-reply@example.com' ? correo : usuario.correo;
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
@@ -471,7 +479,7 @@ app.post('/confirmar-pago', async (req, res) => {
 
     try {
         // Crear el PDF
-        const doc = new PDF();
+        const doc = new PDFDocument();
         const pdfPath = path.join(__dirname, 'factura.pdf');
 
         doc.pipe(fs.createWriteStream(pdfPath)); // Crear archivo PDF

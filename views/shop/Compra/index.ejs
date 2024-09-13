@@ -81,7 +81,7 @@
                             <li>Introduce el monto total de la compra y confirma el pago.</li>
                         </ul>
                         <p>Una vez realizado el pago, envía una captura del comprobante a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
-                        <button type="submit" class="btn btn-primary" id="confirmarPagoBtn">Confirmar Pago</button>
+                        <button type="submit" class="btn btn-primary" id="confirmarPagoMovilBtn">Confirmar Pago</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -110,7 +110,7 @@
                             <li>RIF: <strong>J-12345678-9</strong></li>
                         </ul>
                         <p>Una vez realizada la transferencia, por favor envía el comprobante a nuestro <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
-                        <button type="submit" class="btn btn-primary" id="confirmarPagoBtn">Confirmar Pago</button>
+                        <button type="submit" class="btn btn-primary" id="confirmarTransferenciaBtn">Confirmar Pago</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -131,14 +131,18 @@
                 <div class="modal-body">
                     <h4>Datos para Pago con Zinli</h4>
                     <form id="zinliForm">
-                        <p>Abre la aplicación de Zinli y sigue estos pasos:</p>
+                        <p>Utiliza la aplicación Zinli para realizar el pago:</p>
                         <ul>
-                            <li>Selecciona la opción "Pagar con Zinli".</li>
-                            <li>Ingresa el número de cuenta: <strong>+0412-6378817</strong></li>
+                            <li>Selecciona la opción "Enviar Dinero".</li>
+                            <li>Ingresa los siguientes datos:</li>
+                            <ul>
+                                <li>Teléfono de la Empresa: <strong>+0412-6378817</strong></li>
+                                <li>RIF: <strong>J-12345678-9</strong></li>
+                            </ul>
                             <li>Introduce el monto total de la compra y confirma el pago.</li>
                         </ul>
-                        <p>Una vez realizado el pago, envía una captura del comprobante a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
-                        <button type="submit" class="btn btn-primary" id="confirmarPagoBtn">Confirmar Pago</button>
+                        <p>Una vez realizado el pago, envía una captura del comprobante a nuestro <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+                        <button type="submit" class="btn btn-primary" id="confirmarZinliBtn">Confirmar Pago</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -147,8 +151,6 @@
             </div>
         </div>
       </div>
-    <% } else { %>
-      <p>No hay productos en el carrito.</p>
     <% } %>
   </main>
 

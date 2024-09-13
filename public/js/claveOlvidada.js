@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = document.getElementById('email').value.trim();
 
             try {
-                const response = await fetch('/nuevaClave', {
+                const response = await fetch('/api/claveOlvidada', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ nuevaPassword, token, correo })
-                });                
+                    body: JSON.stringify({ correo: email })
+                });
 
                 const data = await response.json();
                 const notification = document.querySelector('.notification');
@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+//Renovar la clave
 document.addEventListener('DOMContentLoaded', function() {
     const changePasswordForm = document.getElementById('changePasswordForm');
     

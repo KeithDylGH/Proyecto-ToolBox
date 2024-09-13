@@ -31,8 +31,9 @@
             <div class="col-md-6">
                 <h2 class="text-center">Actualizar Contraseña</h2>
                 <form id="changePasswordForm">
-                    <input type="hidden" name="token" value="<%= token %>"> <!-- Token oculto -->
-                    <input type="hidden" name="correo" value="<%= correo %>"> <!-- Campo oculto para el correo -->
+                    <!-- Token y correo ocultos -->
+                    <input type="hidden" name="token" value="<%= token %>">
+                    <input type="hidden" name="correo" value="<%= correo %>">
                     <div class="form-group">
                         <label for="correoUsuario">Correo Electrónico</label>
                         <input type="text" class="form-control" id="correoUsuario" value="<%= correo %>" readonly>
