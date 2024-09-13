@@ -290,21 +290,22 @@ app.get('/nuevaClave', (req, res) => {
 app.post('/nuevaClave', async (req, res) => {
     const { token, nuevaPassword, correo } = req.body;
 
+    console.log({ token, nuevaPassword, correo }); // Verifica los datos recibidos
+
     try {
         const normalizedCorreo = correo.toLowerCase();
+        console.log('Buscando usuario con correo:', normalizedCorreo); // Verifica el correo normalizado
 
-        // Buscar el usuario por correo
         const user = await CUsuario.findOne({ correo: normalizedCorreo });
 
         if (!user) {
+            console.log('Correo no encontrado'); // Verifica si el usuario no se encuentra
             return res.status(400).json({ error: 'Correo no encontrado' });
         }
 
-        // Actualizar la contraseña
         user.password = await bcrypt.hash(nuevaPassword, 10);
         await user.save();
 
-        // Redirigir al login
         res.redirect('/login');
     } catch (error) {
         console.error('Error al actualizar la contraseña:', error);
@@ -465,7 +466,7 @@ app.post('/confirmar-pago', async (req, res) => {
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
-        return res.status(400).send('Faltan datos necesarios para el correo.');
+        return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {

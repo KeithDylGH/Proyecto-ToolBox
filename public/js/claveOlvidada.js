@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = document.getElementById('email').value.trim();
 
             try {
-                const response = await fetch('/api/claveOlvidada', {
+                const response = await fetch('/nuevaClave', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ correo: email })
-                });
+                    body: JSON.stringify({ nuevaPassword, token, correo })
+                });                
 
                 const data = await response.json();
                 const notification = document.querySelector('.notification');
