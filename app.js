@@ -24,8 +24,6 @@ const formData = require('form-data');
 const axios = require('axios');
 const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
-const confirmarPagoRouter = require('./controllers/confirmarPago');
-const { confirmarPago } = require('./controllers/confirmarPago');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
