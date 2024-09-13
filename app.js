@@ -394,6 +394,15 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
         // Verifica si el correo está en la sesión del usuario
         console.log('Usuario en sesión:', usuario);
 
+        if (!usuario) {
+            return res.status(401).send('No estás autenticado');
+        }
+
+        // Verifica si el correo del usuario está disponible
+        if (!usuario.correo) {
+            return res.status(400).send('El correo del usuario no está disponible en la sesión');
+        }
+
         if (!productoId) {
             return res.status(400).send('ID del producto no proporcionado');
         }
@@ -461,6 +470,11 @@ app.post('/confirmar-pago', async (req, res) => {
     console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo }); // Agrega un log para depuración
     
     try {
+        // Verifica si el correo se está enviando correctamente
+        if (!correo) {
+            return res.status(400).json({ error: 'Correo no proporcionado' });
+        }
+
         // Busca el usuario por correo
         const usuario = await buscarUsuarioPorCorreo(correo);
         
