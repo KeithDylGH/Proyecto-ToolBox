@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Mostrar métodos de pago
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
     const metodosPago = document.getElementById('metodosPago');
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Mostrar modales
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
     const transferenciaBtn = document.getElementById('transferenciaBtn');
     const zinliBtn = document.getElementById('zinliBtn');
@@ -37,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Confirmar pago
     const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
     confirmarPagoBtns.forEach(form => {
@@ -50,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const metaUsuarioCorreo = document.querySelector('meta[name="usuario-correo"]');
             const emailUsuario = metaUsuarioCorreo ? metaUsuarioCorreo.getAttribute('content') : 'no-reply@example.com';
 
-            // Obtener el nombre del producto
+            // Obtener la información del producto
             const productoElemento = document.querySelector('.card-title');
             const producto = productoElemento ? productoElemento.textContent : 'Producto desconocido';
 
@@ -62,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const totalElemento = document.getElementById('totalMonto');
             const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0', 10);
 
+            // Confirmar el pago
             fetch('/confirmar-pago', {
                 method: 'POST',
                 headers: {

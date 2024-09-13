@@ -457,7 +457,10 @@ app.get('/comprasCarrito', async (req, res) => {
 app.post('/confirmar-pago', async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
 
+    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
+
     if (!correo || !producto || !precio || !cantidad || !metodo) {
+        console.log('Faltan datos necesarios para el correo.');
         return res.status(400).send('Faltan datos necesarios para el correo.');
     }
 
@@ -474,6 +477,8 @@ app.post('/confirmar-pago', async (req, res) => {
         doc.text(`Cantidad: ${cantidad}`);
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
+
+        console.log('PDF creado.');
 
         // Esperar hasta que el PDF esté completamente escrito
         await new Promise((resolve, reject) => {
@@ -507,13 +512,11 @@ app.post('/confirmar-pago', async (req, res) => {
                 if (err) console.error('Error al eliminar el archivo PDF:', err);
             });
 
-            // Enviar respuesta exitosa en JSON
-            res.json({ success: true, message: 'Pago confirmado y correo enviado.' });
+            res.status(200).json({ message: 'Correo enviado correctamente.' });
         });
-
     } catch (error) {
-        console.error('Error al crear el PDF o enviar el correo:', error);
-        res.status(500).json({ error: 'Error al procesar el pago. Detalles: ' + error.message });
+        console.error('Error al confirmar el pago:', error);
+        res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
 });
 
