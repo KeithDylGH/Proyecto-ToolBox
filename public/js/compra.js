@@ -58,10 +58,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const totalElemento = document.getElementById('totalMonto');
             const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0').toFixed(2);
 
-            const userCorreo = document.getElementById('userCorreo').value;
+            const correoUsuario = document.getElementById('correoUsuario').value;  // Aquí cambié 'userCorreo' a 'correoUsuario'
 
             console.log('Datos a enviar:', {
-                correo: userCorreo,
+                correo: correoUsuario,
                 producto: producto,
                 precio: total,
                 cantidad: cantidad,
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    correo: userCorreo,
+                    correo: correoUsuario,
                     producto: producto,
                     precio: total,
                     cantidad: cantidad,
