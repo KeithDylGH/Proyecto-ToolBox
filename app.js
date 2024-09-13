@@ -425,11 +425,6 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
         // Añadir log para verificar el contenido de la sesión
         console.log('Contenido de la sesión:', req.session);
 
-        if (!usuario.correo) {
-            console.error('Error: El correo del usuario no está disponible en la sesión');
-            return res.status(400).send('El correo del usuario no está disponible en la sesión');
-        }
-
         if (!productoId) {
             console.error('Error: ID del producto no proporcionado');
             return res.status(400).send('ID del producto no proporcionado');
