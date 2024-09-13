@@ -174,4 +174,30 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
     }
 });
 
+// Endpoint para editar datos del usuario
+userRouter.put('/editar/:id', async (req, res) => {
+    const userId = req.params.id;
+    const { nombre, apellido, correo, usuario, numero, cedula } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+        }
+
+        user.nombre = nombre || user.nombre;
+        user.apellido = apellido || user.apellido;
+        user.correo = correo || user.correo;
+        user.usuario = usuario || user.usuario;
+        user.numero = numero || user.numero;
+        user.cedula = cedula || user.cedula;
+
+        await user.save();
+
+        res.json({ success: true, message: 'Datos actualizados correctamente' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error en el servidor' });
+    }
+});
+
 module.exports = userRouter;

@@ -41,14 +41,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Confirmar el pago
     const confirmarPagoBtns = [document.getElementById('pagoMovilForm'), document.getElementById('transferenciaForm'), document.getElementById('zinliForm')];
-    
+
     confirmarPagoBtns.forEach(form => {
         if (form) {
             form.addEventListener('submit', function (event) {
                 event.preventDefault();
 
                 const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
-                                form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
+                                    form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
 
                 const productoElemento = document.querySelector('.card-title');
                 const producto = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
@@ -60,6 +60,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0').toFixed(2);
 
                 const correoUsuario = document.getElementById('correoUsuario').value;
+
+                console.log('Datos enviados:', {
+                    correo: correoUsuario,
+                    producto: producto,
+                    precio: total,
+                    cantidad: cantidad,
+                    metodo: metodoPago
+                });
 
                 fetch('/confirmar-pago', {
                     method: 'POST',

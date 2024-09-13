@@ -24,6 +24,7 @@ const formData = require('form-data');
 const axios = require('axios');
 const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
+const { buscarUsuarioPorCorreo } = require('./controllers/usuario'); // Ajusta la ruta según corresponda
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -390,6 +391,9 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
         const usuario = req.session.user;
 
+        // Verifica si el correo está en la sesión del usuario
+        console.log('Usuario en sesión:', usuario);
+
         if (!productoId) {
             return res.status(400).send('ID del producto no proporcionado');
         }
@@ -457,11 +461,10 @@ app.post('/confirmar-pago', async (req, res) => {
     console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo }); // Agrega un log para depuración
     
     try {
-        // Convierte el correo a minúsculas para la búsqueda
-        const normalizedCorreo = correo.toLowerCase();
-        const user = await CUsuario.findOne({ correo: { $regex: new RegExp(`^${normalizedCorreo}$`, 'i') } });
-
-        if (!user) {
+        // Busca el usuario por correo
+        const usuario = await buscarUsuarioPorCorreo(correo);
+        
+        if (!usuario) {
             return res.status(400).json({ error: 'No se encontró un usuario con ese correo' });
         }
 
@@ -475,7 +478,7 @@ app.post('/confirmar-pago', async (req, res) => {
             // Enviar el correo con el PDF adjunto
             transporter.sendMail({
                 from: 'toolboxproyecto@gmail.com',
-                to: normalizedCorreo,
+                to: correo,
                 subject: 'Confirmación de Pago',
                 html: `
                     <html>

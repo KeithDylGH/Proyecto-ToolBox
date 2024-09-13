@@ -65,3 +65,70 @@ eliminarBtn.addEventListener('click', async () => {
         }
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const saveChangesButton = document.getElementById('saveChanges');
+    const deleteAccountButton = document.getElementById('deleteAccount');
+
+    // Función para guardar los cambios en los datos del usuario
+    saveChangesButton.addEventListener('click', function () {
+        const name = document.getElementById('name').value;
+        const lastname = document.getElementById('lastname').value;
+        const email = document.getElementById('email').value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const phone = document.getElementById('phone').value;
+        const idnumber = document.getElementById('idnumber').value;
+
+        // Validación básica de los campos
+        if (!name || !lastname || !email || !username || !password || !phone || !idnumber) {
+            alert('Por favor, complete todos los campos.');
+            return;
+        }
+
+        // Enviar datos al servidor para actualizar el perfil
+        fetch('/api/actualizar-perfil', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                lastname: lastname,
+                email: email,
+                username: username,
+                password: password,
+                phone: phone,
+                idnumber: idnumber
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Datos actualizados correctamente.');
+            } else {
+                alert('Error al actualizar los datos.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    // Función para eliminar la cuenta del usuario
+    deleteAccountButton.addEventListener('click', function () {
+        if (confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+            fetch('/api/eliminar-cuenta', {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Cuenta eliminada correctamente.');
+                    window.location.href = '/'; // Redirige al inicio o a otra página
+                } else {
+                    alert('Error al eliminar la cuenta.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+});
