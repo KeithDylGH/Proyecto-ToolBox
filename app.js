@@ -426,34 +426,6 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
             return res.status(401).send('No estás autenticado');
         }
 
-        // Añadir log para verificar el contenido de la sesión
-        console.log('Contenido de la sesión:', req.session);
-
-        if (!usuarioSesion.correo) {
-            console.error('Error: El correo del usuario no está disponible en la sesión');
-            return res.status(400).send('El correo del usuario no está disponible en la sesión');
-        }
-
-        // Buscar el usuario por correo
-        let usuario;
-        try {
-            usuario = await buscarUsuarioPorCorreo(usuarioSesion.correo);
-            console.log('Usuario encontrado por correo:', usuario);
-        } catch (error) {
-            console.error('Error al buscar usuario por correo:', error);
-            return res.status(500).send('Error interno del servidor');
-        }
-
-        if (!usuario) {
-            console.error('Error: No se encontró un usuario con el correo proporcionado');
-            return res.status(404).send('No se encontró el usuario');
-        }
-
-        if (!productoId) {
-            console.error('Error: ID del producto no proporcionado');
-            return res.status(400).send('ID del producto no proporcionado');
-        }
-
         const producto = await iProducto.findById(productoId);
         console.log('Producto encontrado:', producto);
 
