@@ -494,7 +494,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         const mailOptions = {
             from: 'toolboxproyecto@gmail.com',
             to: emailUsuario,
-            subject: 'Factura de Compra',
+            subject: 'Factura de Compras',
             text: `Gracias por tu compra. Adjunto encontrarás la factura de tu compra.`,
             attachments: [
                 {
