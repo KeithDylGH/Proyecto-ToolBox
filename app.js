@@ -470,7 +470,13 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         try {
             // Buscar el usuario en la base de datos usando el identificador de la sesión
             const usuarioDB = await CUsuario.findById(usuario._id); // Asegúrate de tener el modelo y el método correcto
-            emailUsuario = usuarioDB.correo;
+            
+            if (usuarioDB) {
+                emailUsuario = usuarioDB.correo;
+            } else {
+                console.log('Usuario no encontrado en la base de datos.');
+                return res.status(404).json({ error: 'Usuario no encontrado en la base de datos.' });
+            }
         } catch (error) {
             console.error('Error al buscar el usuario en la base de datos:', error);
             return res.status(500).json({ error: 'Error al recuperar el correo del usuario.' });
