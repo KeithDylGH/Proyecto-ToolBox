@@ -385,6 +385,30 @@ app.get('/tienda/producto/:id', async (req, res) => {
     }
 });
 
+app.post('/login', async (req, res) => {
+    const { usuario, password } = req.body;
+
+    try {
+        const usuarioDB = await buscarUsuarioPorNombre(usuario);
+
+        if (!usuarioDB || usuarioDB.password !== password) {
+            return res.status(401).send('Usuario o contraseña incorrectos');
+        }
+
+        req.session.user = {
+            nombre: usuarioDB.nombre,
+            usuario: usuarioDB.usuario,
+            rol: usuarioDB.rol,
+            correo: usuarioDB.correo // Asegúrate de almacenar el correo aquí
+        };
+
+        res.json({ success: 'Inicio de sesión exitoso' });
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        res.status(500).send('Error en el servidor');
+    }
+});
+
 app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.query.productoId;
@@ -397,6 +421,9 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
             console.error('Error: No estás autenticado');
             return res.status(401).send('No estás autenticado');
         }
+
+        // Añadir log para verificar el contenido de la sesión
+        console.log('Contenido de la sesión:', req.session);
 
         if (!usuario.correo) {
             console.error('Error: El correo del usuario no está disponible en la sesión');
