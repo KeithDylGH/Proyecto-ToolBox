@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-//Renovar la clave
+// Renovar la clave
 document.addEventListener('DOMContentLoaded', function() {
     const changePasswordForm = document.getElementById('changePasswordForm');
     
@@ -81,24 +81,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify({ nuevaPassword, token, correo })
                 });
 
-                const data = await response.json();
-                const notification = document.querySelector('.notification');
+                // Verifica si la respuesta es JSON
+                const contentType = response.headers.get('Content-Type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
 
-                if (data.success) {
-                    notification.textContent = 'Contraseña cambiada con éxito.';
-                    notification.classList.add('alert', 'alert-success');
+                    const notification = document.querySelector('.notification');
+
+                    if (data.success) {
+                        notification.textContent = 'Contraseña cambiada con éxito.';
+                        notification.classList.add('alert', 'alert-success');
+                        setTimeout(() => {
+                            window.location.href = '/login';
+                        }, 3000);
+                    } else {
+                        notification.textContent = data.error || 'Error al cambiar la contraseña';
+                        notification.classList.add('alert', 'alert-danger');
+                    }
+
                     setTimeout(() => {
-                        window.location.href = '/login';
+                        notification.textContent = '';
+                        notification.classList.remove('alert', 'alert-success', 'alert-danger');
                     }, 3000);
                 } else {
-                    notification.textContent = data.error || 'Error al cambiar la contraseña';
-                    notification.classList.add('alert', 'alert-danger');
+                    throw new Error('Respuesta del servidor no es JSON');
                 }
-
-                setTimeout(() => {
-                    notification.textContent = '';
-                    notification.classList.remove('alert', 'alert-success', 'alert-danger');
-                }, 3000);
             } catch (error) {
                 console.error('Error:', error);
                 const notification = document.querySelector('.notification');

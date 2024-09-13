@@ -306,10 +306,10 @@ app.post('/nuevaClave', async (req, res) => {
         user.password = await bcrypt.hash(nuevaPassword, 10);
         await user.save();
 
-        res.redirect('/login');
+        res.json({ success: true }); // Enviar respuesta JSON
     } catch (error) {
         console.error('Error al actualizar la contraseña:', error);
-        res.status(500).json({ error: 'Error en el servidor' });
+        res.status(500).json({ error: 'Error en el servidor' }); // Asegúrate de enviar JSON en caso de error
     }
 });
 
@@ -384,7 +384,7 @@ app.get('/tienda/producto/:id', async (req, res) => {
     }
 });
 
-app.get('/compra', async (req, res) => {
+app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
@@ -414,7 +414,7 @@ app.get('/compra', async (req, res) => {
 });
 
 // Ruta para la compra de productos en el carrito
-app.get('/comprasCarrito', async (req, res) => {
+app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         // Verificar si el usuario está autenticado
         const user = req.session.user;
@@ -457,7 +457,7 @@ app.get('/comprasCarrito', async (req, res) => {
 });
 
 // Ruta para confirmar el pago
-app.post('/confirmar-pago', async (req, res) => {
+app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.user; // Asegúrate de tener el usuario autenticado en req.user
 
@@ -533,7 +533,7 @@ app.post('/confirmar-pago', async (req, res) => {
     }
 });
 
-app.get('/cliente', (req, res) => {
+app.get('/cliente', authorize(['user', 'admin', 'boss']), (req, res) => {
     res.render('account/cuenta/cliente');
 });
 
