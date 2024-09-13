@@ -289,23 +289,23 @@ app.get('/nuevaClave', (req, res) => {
 // Ruta para manejar la actualización de la contraseña
 app.post('/nuevaClave', async (req, res) => {
     const { token, nuevaPassword, correo } = req.body;
+
     try {
         const normalizedCorreo = correo.toLowerCase();
-        const user = await CUsuario.findOne({
-            resetToken: token,
-            resetTokenEmail: { $regex: new RegExp(`^${normalizedCorreo}$`, 'i') }
-        });
+
+        // Buscar el usuario por correo
+        const user = await CUsuario.findOne({ correo: normalizedCorreo });
 
         if (!user) {
-            return res.status(400).json({ error: 'Token inválido, expirado o correo incorrecto' });
+            return res.status(400).json({ error: 'Correo no encontrado' });
         }
 
+        // Actualizar la contraseña
         user.password = await bcrypt.hash(nuevaPassword, 10);
-        user.resetToken = undefined;
-        user.resetTokenEmail = undefined;
         await user.save();
 
-        res.json({ success: 'Contraseña actualizada correctamente' });
+        // Redirigir al login
+        res.redirect('/login');
     } catch (error) {
         console.error('Error al actualizar la contraseña:', error);
         res.status(500).json({ error: 'Error en el servidor' });
@@ -453,13 +453,16 @@ app.get('/comprasCarrito', async (req, res) => {
     }
 });
 
-// Ruta para confirmar el pago y enviar el correo con PDF
 app.post('/confirmar-pago', async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
+    const usuario = req.user; // Asegúrate de tener el usuario autenticado en req.user
 
     console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
 
-    if (!correo || !producto || !precio || !cantidad || !metodo) {
+    // Usar el correo del usuario autenticado si no se proporciona uno
+    const emailUsuario = correo !== 'no-reply@example.com' ? correo : usuario.correo;
+
+    if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
         return res.status(400).send('Faltan datos necesarios para el correo.');
     }
@@ -489,7 +492,7 @@ app.post('/confirmar-pago', async (req, res) => {
         // Configurar el contenido del correo
         const mailOptions = {
             from: 'toolboxproyecto@gmail.com', // Cambia esto por tu correo
-            to: correo,
+            to: emailUsuario,
             subject: 'Factura de Compra',
             text: `Gracias por tu compra. Adjunto encontrarás la factura de tu compra.`,
             attachments: [

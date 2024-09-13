@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Obtener la información del producto
             const productoElemento = document.querySelector('.card-title');
-            const producto = productoElemento ? productoElemento.textContent : 'Producto desconocido';
+            const producto = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
 
             // Obtener la cantidad
             const cantidadElemento = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('Cantidad'));
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Obtener el total
             const totalElemento = document.getElementById('totalMonto');
-            const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0', 10);
+            const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0').toFixed(2);
 
             // Confirmar el pago
             fetch('/confirmar-pago', {
