@@ -87,12 +87,12 @@
 
                       <% if (CUsuario) { %>
                         <li class="nav-item">
-                            <% if (CUsuario.rol === 'user') { %>
-                                <a class="nav-link link-light" href="/cliente">
+                            <% if (CUsuario.rol === 'admin' || 'boss') { %>
+                                <a class="nav-link link-light" href="/admin">
                                     <%= CUsuario.nombre %>
                                 </a>
-                            <% } else if (CUsuario.rol === 'admin' || CUsuario.rol === 'boss') { %>
-                                <a class="nav-link link-light" href="/admin">
+                            <% } else { %>
+                                <a class="nav-link link-light" href="/cliente">
                                     <%= CUsuario.nombre %>
                                 </a>
                             <% } %>
@@ -107,7 +107,7 @@
                         <li class="nav-item">
                             <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
                         </li>
-                    <% } %>                                        
+                    <% } %>                    
                                                                                                       
                   </ul>
                   <form class="d-flex flex-column position-relative" id="productSearchForm">

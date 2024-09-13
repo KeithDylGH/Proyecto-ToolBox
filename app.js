@@ -8,7 +8,7 @@ const productoRouter = require('./controllers/productos');
 const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 const Excel = require('exceljs');
-const PDFDocument = require('pdfkit');
+const PDF = require('pdfkit');
 const subirProducto = require('./controllers/subirProducto');
 const bcrypt = require('bcryptjs');
 const Categoria = require('./models/categoria');
@@ -43,8 +43,8 @@ const upload = multer({
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'toolboxproyecto@gmail.com',
-        pass: 'degf euub exnz rvfr'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
     debug: true,  // Habilitar el modo depuración
     logger: true, // Habilitar registro de mensajes SMTP
@@ -388,7 +388,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
-        const usuario = req.session.user;
+        const usuario = req.session.user; // Cambiado de req.user a req.session.user
 
         if (!productoId) {
             return res.status(400).send('ID del producto no proporcionado');
@@ -398,7 +398,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
         if (producto) {
             const total = producto.precio * cantidad;
-            res.render('shop/Compra', { producto, cantidad, total, usuario });
+            res.render('shop/Compra', { producto, cantidad, total, usuarioCorreo: usuario ? usuario.correo : 'no-reply@example.com' });
         } else {
             res.status(404).send('Producto no encontrado');
         }
@@ -451,43 +451,34 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
+// Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { correo, producto, precio, cantidad, metodo } = req.body;
+    const { producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
 
-    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
     console.log('Usuario autenticado:', usuario);
+    console.log('Datos recibidos:', { producto, precio, cantidad, metodo });
 
     if (!usuario) {
-        console.error('Usuario no autenticado');
+        console.log('Usuario no autenticado.');
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    let emailUsuario = correo || usuario.correo;
+    let emailUsuario = usuario.correo;
 
     if (!emailUsuario) {
         try {
-            const usuarioBD = await CUsuario.findOne({ usuario: usuario.usuario }).exec();
-            if (usuarioBD) {
-                emailUsuario = usuarioBD.correo;
-            } else {
-                console.error('No se encontró el usuario en la base de datos');
-                return res.status(400).json({ error: 'Correo electrónico no disponible.' });
-            }
+            // Buscar el usuario en la base de datos usando el identificador de la sesión
+            const usuarioDB = await CUsuario.findById(usuario._id); // Asegúrate de tener el modelo y el método correcto
+            emailUsuario = usuarioDB.correo;
         } catch (error) {
             console.error('Error al buscar el usuario en la base de datos:', error);
-            return res.status(500).json({ error: 'Error al buscar el usuario en la base de datos.' });
+            return res.status(500).json({ error: 'Error al recuperar el correo del usuario.' });
         }
     }
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
-        console.error('Datos faltantes:', {
-            correo: emailUsuario,
-            producto,
-            precio,
-            cantidad,
-            metodo
-        });
+        console.log('Faltan datos necesarios para el correo.');
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
@@ -504,6 +495,8 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
+        console.log('PDF creado.');
+
         await new Promise((resolve, reject) => {
             doc.on('finish', resolve);
             doc.on('error', reject);
@@ -513,49 +506,34 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             from: 'toolboxproyecto@gmail.com',
             to: emailUsuario,
             subject: 'Factura de Compra',
-            html: `
-                <html>
-                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
-                    <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                        <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
-                        <p>Hola,</p>
-                        <p>Gracias por tu compra. Adjunto encontrarás la factura de tu compra.</p>
-                        <p><strong>Método de Pago:</strong> ${metodo}</p>
-                        <p><strong>Producto:</strong> ${producto}</p>
-                        <p><strong>Precio:</strong> $${precio}</p>
-                        <p><strong>Cantidad:</strong> ${cantidad}</p>
-                        <p><strong>Total:</strong> $${(precio * cantidad).toFixed(2)}</p>
-                        <p>Saludos,<br>El equipo de Toolbox</p>
-                    </div>
-                </body>
-                </html>
-            `,
-            attachments: [{ filename: 'factura.pdf', path: pdfPath }]
+            text: `Gracias por tu compra. Adjunto encontrarás la factura de tu compra.`,
+            attachments: [
+                {
+                    filename: 'factura.pdf',
+                    path: pdfPath
+                }
+            ]
         };
 
-        await new Promise((resolve, reject) => {
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error('Error al enviar el correo:', error);
-                    reject(new Error('Error al enviar el correo.'));
-                } else {
-                    console.log('Correo enviado:', info.response);
-                    fs.unlink(pdfPath, (err) => {
-                        if (err) console.error('Error al eliminar el archivo PDF:', err);
-                    });
-                    resolve({ message: 'Correo enviado correctamente.' });
-                }
-            });
-        });
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error al enviar el correo:', error);
+                return res.status(500).json({ error: 'Error al enviar el correo.' });
+            }
 
-        res.status(200).json({ message: 'Correo enviado correctamente.' });
+            fs.unlink(pdfPath, (err) => {
+                if (err) console.error('Error al eliminar el archivo PDF:', err);
+            });
+
+            res.status(200).json({ message: 'Correo enviado correctamente.' });
+        });
     } catch (error) {
         console.error('Error al confirmar el pago:', error);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
 });
 
-app.get('/cliente', authorize(['user']), (req, res) => {
+app.get('/cliente', authorize(['user', 'admin', 'boss']), (req, res) => {
     res.render('account/cuenta/cliente');
 });
 
@@ -734,7 +712,7 @@ app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, r
             await workbook.xlsx.write(res);
             res.end();
         } else if (format === 'pdf') {
-            const doc = new PDFDocument();
+            const doc = new PDF();
 
             const logoPath = path.join(__dirname, 'public', 'img', 'logo', 'LogoLetra.png');
             doc.image(logoPath, 50, 50, { width: 100 });
