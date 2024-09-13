@@ -455,11 +455,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
 
-    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
-    console.log('Usuario autenticado:', usuario);
-
     if (!usuario) {
-        console.error('Usuario no autenticado');
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
@@ -471,23 +467,14 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             if (usuarioBD) {
                 emailUsuario = usuarioBD.correo;
             } else {
-                console.error('No se encontró el usuario en la base de datos');
                 return res.status(400).json({ error: 'Correo electrónico no disponible.' });
             }
         } catch (error) {
-            console.error('Error al buscar el usuario en la base de datos:', error);
             return res.status(500).json({ error: 'Error al buscar el usuario en la base de datos.' });
         }
     }
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
-        console.error('Datos faltantes:', {
-            correo: emailUsuario,
-            producto,
-            precio,
-            cantidad,
-            metodo
-        });
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
@@ -533,29 +520,19 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             attachments: [{ filename: 'factura.pdf', path: pdfPath }]
         };
 
-        await new Promise((resolve, reject) => {
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error('Error al enviar el correo:', error);
-                    reject(new Error('Error al enviar el correo.'));
-                } else {
-                    console.log('Correo enviado:', info.response);
-                    fs.unlink(pdfPath, (err) => {
-                        if (err) console.error('Error al eliminar el archivo PDF:', err);
-                    });
-                    resolve({ message: 'Correo enviado correctamente.' });
-                }
-            });
+        await transporter.sendMail(mailOptions);
+
+        fs.unlink(pdfPath, (err) => {
+            if (err) console.error('Error al eliminar el archivo PDF:', err);
         });
 
         res.status(200).json({ message: 'Correo enviado correctamente.' });
     } catch (error) {
-        console.error('Error al confirmar el pago:', error);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
 });
 
-app.get('/cliente', authorize(['user', 'admin', 'boss']), (req, res) => {
+app.get('/cliente', authorize(['user']), (req, res) => {
     res.render('account/cuenta/cliente');
 });
 
