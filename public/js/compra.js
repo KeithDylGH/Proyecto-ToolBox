@@ -60,8 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0').toFixed(2);
 
                 const correoUsuario = document.getElementById('correoUsuario').value;
-                console.log('Correo del usuario:', correoUsuario); // Verifica que este valor no esté vacío
-
+                console.log('Correo del usuario:', correoUsuario);
 
                 console.log('Datos enviados:', {
                     correo: correoUsuario,
@@ -84,14 +83,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         metodo: metodoPago
                     }),
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta de la red');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Respuesta del servidor:', data);
                     mostrarNotificacion('Pago confirmado correctamente. Se ha enviado un correo con la factura.');
                 })
                 .catch(error => {
                     console.error('Error al confirmar el pago:', error);
                     mostrarNotificacion('Hubo un error al confirmar el pago.');
-                });                
+                });
             });
         }
     });

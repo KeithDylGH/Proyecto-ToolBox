@@ -2,11 +2,12 @@ const CUsuario = require('../models/usuario');
 
 async function buscarUsuarioPorCorreo(correo) {
     try {
-        const usuario = await CUsuario.findOne({ correo });
+        // Normalizar el correo a minúsculas para evitar problemas de caso
+        const usuario = await CUsuario.findOne({ correo: correo.toLowerCase() });
         return usuario;
     } catch (error) {
         console.error('Error al buscar usuario por correo:', error);
-        throw new Error('Error al buscar usuario por correo');
+        throw error;
     }
 }
 

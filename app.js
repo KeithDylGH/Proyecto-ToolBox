@@ -391,19 +391,20 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
         const usuario = req.session.user;
 
-        // Verifica si el correo está en la sesión del usuario
-        console.log('Usuario en sesión:', usuario);
+        console.log('Usuario en sesión en /compra:', usuario);
 
         if (!usuario) {
+            console.error('Error: No estás autenticado');
             return res.status(401).send('No estás autenticado');
         }
 
-        // Verifica si el correo del usuario está disponible
         if (!usuario.correo) {
+            console.error('Error: El correo del usuario no está disponible en la sesión');
             return res.status(400).send('El correo del usuario no está disponible en la sesión');
         }
 
         if (!productoId) {
+            console.error('Error: ID del producto no proporcionado');
             return res.status(400).send('ID del producto no proporcionado');
         }
 
@@ -413,10 +414,11 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
             const total = producto.precio * cantidad;
             res.render('shop/Compra', { producto, cantidad, total, usuario });
         } else {
+            console.error('Error: Producto no encontrado');
             res.status(404).send('Producto no encontrado');
         }
     } catch (error) {
-        console.error('Error al obtener el producto:', error);
+        console.error('Error al obtener el producto en /compra:', error);
         res.status(500).send('Error al obtener el producto');
     }
 });
@@ -467,29 +469,29 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 // Ruta para confirmar el pago y enviar el correo con el PDF
 app.post('/confirmar-pago', async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
-    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo }); // Agrega un log para depuración
-    
+    console.log('Datos recibidos en /confirmar-pago:', { correo, producto, precio, cantidad, metodo });
+
     try {
-        // Verifica si el correo se está enviando correctamente
         if (!correo) {
+            console.error('Error: Correo no proporcionado');
             return res.status(400).json({ error: 'Correo no proporcionado' });
         }
 
         // Busca el usuario por correo
         const usuario = await buscarUsuarioPorCorreo(correo);
-        
+        console.log('Usuario encontrado:', usuario);
+
         if (!usuario) {
+            console.error('Error: No se encontró un usuario con ese correo');
             return res.status(400).json({ error: 'No se encontró un usuario con ese correo' });
         }
 
-        // Crear el documento PDF
         const pdfDoc = new PDFDocument();
         const chunks = [];
         pdfDoc.on('data', chunk => chunks.push(chunk));
         pdfDoc.on('end', () => {
             const pdfBuffer = Buffer.concat(chunks);
-            
-            // Enviar el correo con el PDF adjunto
+
             transporter.sendMail({
                 from: 'toolboxproyecto@gmail.com',
                 to: correo,
@@ -523,11 +525,11 @@ app.post('/confirmar-pago', async (req, res) => {
                     console.error('Error al enviar correo:', error);
                     return res.status(500).json({ error: 'Error en el servidor al enviar el correo' });
                 }
+                console.log('Correo enviado con éxito:', info);
                 res.json({ success: 'Correo enviado correctamente' });
             });
         });
 
-        // Agregar contenido al PDF
         pdfDoc.fontSize(16).text('Factura de Compra', { align: 'center' });
         pdfDoc.moveDown();
         pdfDoc.fontSize(14).text(`Producto: ${producto}`);
