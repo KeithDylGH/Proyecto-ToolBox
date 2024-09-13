@@ -417,22 +417,21 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
-        const usuario = req.session.user;
+        const usuarioEnSesion = req.session.user;
 
-        // Agrega un log para verificar el usuario en sesión
-        console.log('Usuario en sesión en /compra:', usuario);
+        console.log('Usuario en sesión en /compra:', usuarioEnSesion);
 
-        if (!usuario) {
+        if (!usuarioEnSesion) {
             console.error('Error: No estás autenticado');
             return res.status(401).send('No estás autenticado');
         }
 
-        // Añadir log para verificar el contenido de la sesión
-        console.log('Contenido de la sesión:', req.session);
+        // Busca el usuario en la base de datos usando el correo
+        const usuario = await buscarUsuarioPorCorreo(usuarioEnSesion.correo);
 
-        if (!usuario.correo) {
-            console.error('Error: El correo del usuario no está disponible en la sesión');
-            return res.status(400).send('El correo del usuario no está disponible en la sesión');
+        if (!usuario) {
+            console.error('Error: No se encontró un usuario con ese correo');
+            return res.status(400).send('No se encontró un usuario con ese correo');
         }
 
         if (!productoId) {
