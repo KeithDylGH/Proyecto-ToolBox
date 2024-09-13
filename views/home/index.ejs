@@ -29,96 +29,97 @@
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <nav class="navbar navbar-expand-lg navbar-light">
           <div class="container-fluid">
-              <!-- Logo -->
-              <a href="/" class="navbar-brand">
-                  <img src="/img/logo/Logo Letra trazo.png" alt="Logo" class="img-fluid" style="max-width: 150px;">
-              </a>
-              <!-- Toggler button for mobile view -->
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                  aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <a href="/"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                  aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
               </button>
-              <!-- Navbar links and dropdowns -->
-              <div class="collapse navbar-collapse" id="navbarNav">
-                  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                      <!-- Home link -->
+              <div class="collapse navbar-collapse" id="navbarScroll">
+                  <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                       <li class="nav-item">
-                          <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                          <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
                       </li>
-                      <!-- Categories dropdown -->
+
                       <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Categoría
-                          </a>
-                          <ul class="dropdown-menu">
-                              <% if (categorias && categorias.length > 0) { %>
-                                  <% categorias.forEach(categoria => { %>
-                                      <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
-                                  <% }) %>
-                              <% } else { %>
-                                  <li><a class="dropdown-item" href="#">No hay categorías disponibles</a></li>
-                              <% } %>
-                          </ul>
-                      </li>
-                      <!-- Cart icon and modal -->
+                        <a class="nav-link dropdown-toggle link-light" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Categoría
+                        </a>
+                        <ul class="dropdown-menu">
+                            <% if (categorias && categorias.length > 0) { %>
+                                <% categorias.forEach(categoria => { %>
+                                    <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
+                                <% }) %>
+                            <% } else { %>
+                                <li><a class="dropdown-item" href="#">No hay categorías disponibles</a></li>
+                            <% } %>
+                        </ul>
+                    </li>                    
+                                     
                       <li class="nav-item">
-                          <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#carritoModal">
-                              <img src="/img/icono/carrito de compras.png" alt="Carrito" class="img-fluid" style="max-width: 30px;">
-                          </a>
-                          <!-- Modal for cart -->
-                          <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
-                              <div class="modal-dialog modal-dialog-centered">
-                                  <div class="modal-content">
-                                      <div class="modal-header">
-                                          <h5 class="modal-title" id="carritoModalLabel">Tu Carrito de Compras</h5>
-                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                      </div>
-                                      <div class="modal-body">
-                                          <ul id="carritoList" class="list-group">
-                                              <!-- Aquí se cargarán dinámicamente los productos del carrito -->
-                                          </ul>
-                                      </div>
-                                      <div class="modal-footer">
-                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                          <a href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
-                                          <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
-                                      </div>
-                                  </div>
+                        <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">
+                          <img src="/img/icono/carrito de compras.png" alt="carrito" />
+                        </a>
+        
+                        <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>
+                              <div class="modal-body">
+                                <ul id="carritoList" class="list-group">
+                                  <!-- Aquí se cargarán dinámicamente los productos del carrito -->
+                                </ul>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
+                                <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
+                              </div>
+                            </div>
                           </div>
-                      </li>
-                      <!-- User or login links -->
+                        </div>
+                      </li>                                                            
+
                       <% if (CUsuario) { %>
-                          <li class="nav-item">
-                              <% if (CUsuario.rol === 'admin' || 'boss') { %>
-                                  <a class="nav-link" href="/admin"><%= CUsuario.nombre %></a>
-                              <% } else { %>
-                                  <a class="nav-link" href="/cliente"><%= CUsuario.nombre %></a>
-                              <% } %>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link" href="/logout">Cerrar sesión</a>
-                          </li>
-                      <% } else { %>
-                          <li class="nav-item">
-                              <a class="nav-link" id="login" href="/login">Iniciar sesión</a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link" id="register" href="/registrar">Registrarse</a>
-                          </li>
-                      <% } %>
+                        <li class="nav-item">
+                            <% if (CUsuario.rol === 'admin' || 'boss') { %>
+                                <a class="nav-link link-light" href="/admin">
+                                    <%= CUsuario.nombre %>
+                                </a>
+                            <% } else { %>
+                                <a class="nav-link link-light" href="/cliente">
+                                    <%= CUsuario.nombre %>
+                                </a>
+                            <% } %>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
+                        </li>
+                    <% } %>                    
+                                                                                                      
                   </ul>
-                  <!-- Search form -->
-                  <form class="d-flex ms-auto position-relative" id="productSearchForm">
-                      <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
-                      <div id="suggestions" class="list-group position-absolute w-100 mt-2"></div>
-                  </form>
+                  <form class="d-flex flex-column position-relative" id="productSearchForm">
+                    <div class="d-flex">
+                        <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
+                    </div>
+                    <div id="suggestions" class="list-group mt-2 position-absolute w-100"></div>
+                </form>                                            
               </div>
           </div>
       </nav>
-  </header>       
+  </header>     
 
   <!--NOTIFICACION-->
   <div class="notification d-none"></div>
