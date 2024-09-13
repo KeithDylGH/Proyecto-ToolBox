@@ -451,10 +451,12 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-//ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
+
+    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
+    console.log('Usuario autenticado:', usuario);
 
     if (!usuario) {
         console.error('Usuario no autenticado');
@@ -465,7 +467,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     if (!emailUsuario) {
         try {
-            // Buscar el usuario en la base de datos para obtener el correo
             const usuarioBD = await CUsuario.findOne({ usuario: usuario.usuario }).exec();
             if (usuarioBD) {
                 emailUsuario = usuarioBD.correo;
@@ -491,7 +492,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        // Crear PDF
         const doc = new PDF();
         const pdfPath = path.join(__dirname, 'factura.pdf');
 
@@ -504,13 +504,11 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
-        // Esperar a que el PDF se genere correctamente
         await new Promise((resolve, reject) => {
             doc.on('finish', resolve);
             doc.on('error', reject);
         });
 
-        // Enviar correo
         const mailOptions = {
             from: 'toolboxproyecto@gmail.com',
             to: emailUsuario,
@@ -535,7 +533,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             attachments: [{ filename: 'factura.pdf', path: pdfPath }]
         };
 
-        // Usar promesas para manejar el envío del correo
         await new Promise((resolve, reject) => {
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {

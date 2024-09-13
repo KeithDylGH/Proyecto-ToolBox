@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Confirmar pago
+    // Confirmar el pago
     const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
     confirmarPagoBtns.forEach(form => {
@@ -49,23 +49,26 @@ document.addEventListener('DOMContentLoaded', function () {
             const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
                                form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
 
-            // Obtener el correo del usuario
             const metaUsuarioCorreo = document.querySelector('meta[name="usuario-correo"]');
             const emailUsuario = metaUsuarioCorreo ? metaUsuarioCorreo.getAttribute('content') : 'no-reply@example.com';
 
-            // Obtener la información del producto
             const productoElemento = document.querySelector('.card-title');
             const producto = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
 
-            // Obtener la cantidad
             const cantidadElemento = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('Cantidad'));
             const cantidad = parseInt(cantidadElemento ? cantidadElemento.textContent.replace('Cantidad: ', '') : '1', 10);
 
-            // Obtener el total
             const totalElemento = document.getElementById('totalMonto');
             const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0').toFixed(2);
 
-            // Confirmar el pago
+            console.log('Datos a enviar:', {
+                correo: emailUsuario,
+                producto: producto,
+                precio: total,
+                cantidad: cantidad,
+                metodo: metodoPago
+            });
+
             fetch('/confirmar-pago', {
                 method: 'POST',
                 headers: {
