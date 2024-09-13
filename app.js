@@ -24,9 +24,6 @@ const formData = require('form-data');
 const axios = require('axios');
 const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
-const { buscarUsuarioPorCorreo } = require('./controllers/buscarUsuario'); // Ajusta la ruta según corresponda
-const { buscarUsuarioPorNombre } = require('./controllers/buscarUsuario')
-//const { enviarCorreo } = require('./mailer'); // Importa la función de mailer
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -387,57 +384,26 @@ app.get('/tienda/producto/:id', async (req, res) => {
     }
 });
 
-// Ejemplo de autenticación y almacenamiento en la sesión
-app.post('/login', async (req, res) => {
-    const { usuario, password } = req.body;
-
-    try {
-        const usuarioDB = await buscarUsuarioPorNombre(usuario);
-
-        if (!usuarioDB || usuarioDB.password !== password) {
-            return res.status(401).send('Usuario o contraseña incorrectos');
-        }
-
-        req.session.user = {
-            nombre: usuarioDB.nombre,
-            usuario: usuarioDB.usuario,
-            rol: usuarioDB.rol,
-            correo: usuarioDB.correo // Asegúrate de almacenar el correo aquí
-        };
-
-        res.json({ success: 'Inicio de sesión exitoso' });
-    } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        res.status(500).send('Error en el servidor');
-    }
-});
-
 app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
-        const usuarioSesion = req.session.user;
+        const usuario = req.session.user;
 
-        // Agrega un log para verificar el usuario en sesión
-        console.log('Usuario en sesión en /compra:', usuarioSesion);
-
-        if (!usuarioSesion) {
-            console.error('Error: No estás autenticado');
-            return res.status(401).send('No estás autenticado');
+        if (!productoId) {
+            return res.status(400).send('ID del producto no proporcionado');
         }
 
         const producto = await iProducto.findById(productoId);
-        console.log('Producto encontrado:', producto);
 
         if (producto) {
             const total = producto.precio * cantidad;
             res.render('shop/Compra', { producto, cantidad, total, usuario });
         } else {
-            console.error('Error: Producto no encontrado');
             res.status(404).send('Producto no encontrado');
         }
     } catch (error) {
-        console.error('Error al obtener el producto en /compra:', error);
+        console.error('Error al obtener el producto:', error);
         res.status(500).send('Error al obtener el producto');
     }
 });
@@ -485,84 +451,107 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-// Ruta para confirmar el pago y enviar el correo con el PDF
-app.post('/confirmar-pago', async (req, res) => {
+app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
-    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo }); // Agrega un log para depuración
+    const usuario = req.session.user;
+
+    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
+    console.log('Usuario autenticado:', usuario);
+
+    if (!usuario) {
+        console.error('Usuario no autenticado');
+        return res.status(401).json({ error: 'Usuario no autenticado.' });
+    }
+
+    let emailUsuario = correo || usuario.correo;
+
+    if (!emailUsuario) {
+        try {
+            const usuarioBD = await CUsuario.findOne({ usuario: usuario.usuario }).exec();
+            if (usuarioBD) {
+                emailUsuario = usuarioBD.correo;
+            } else {
+                console.error('No se encontró el usuario en la base de datos');
+                return res.status(400).json({ error: 'Correo electrónico no disponible.' });
+            }
+        } catch (error) {
+            console.error('Error al buscar el usuario en la base de datos:', error);
+            return res.status(500).json({ error: 'Error al buscar el usuario en la base de datos.' });
+        }
+    }
+
+    if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
+        console.error('Datos faltantes:', {
+            correo: emailUsuario,
+            producto,
+            precio,
+            cantidad,
+            metodo
+        });
+        return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
+    }
 
     try {
-        // Verifica si el correo se está enviando correctamente
-        if (!correo) {
-            return res.status(400).json({ error: 'Correo no proporcionado' });
-        }
+        const doc = new PDFDocument();
+        const pdfPath = path.join(__dirname, 'factura.pdf');
 
-        // Convierte el correo a minúsculas para la búsqueda
-        const normalizedCorreo = correo.toLowerCase();
-        console.log('Correo normalizado:', normalizedCorreo);
+        doc.pipe(fs.createWriteStream(pdfPath));
+        doc.fontSize(12).text('Factura de Compra', { align: 'center' });
+        doc.text(`Método de Pago: ${metodo}`);
+        doc.text(`Producto: ${producto}`);
+        doc.text(`Precio: $${precio}`);
+        doc.text(`Cantidad: ${cantidad}`);
+        doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
+        doc.end();
 
-        // Busca el usuario por correo
-        const usuario = await CUsuario.findOne({ correo: { $regex: new RegExp(`^${normalizedCorreo}$`, 'i') } });
+        await new Promise((resolve, reject) => {
+            doc.on('finish', resolve);
+            doc.on('error', reject);
+        });
 
-        if (!usuario) {
-            return res.status(400).json({ error: 'No se encontró un usuario con ese correo' });
-        }
+        const mailOptions = {
+            from: 'toolboxproyecto@gmail.com',
+            to: emailUsuario,
+            subject: 'Factura de Compra',
+            html: `
+                <html>
+                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
+                    <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                        <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
+                        <p>Hola,</p>
+                        <p>Gracias por tu compra. Adjunto encontrarás la factura de tu compra.</p>
+                        <p><strong>Método de Pago:</strong> ${metodo}</p>
+                        <p><strong>Producto:</strong> ${producto}</p>
+                        <p><strong>Precio:</strong> $${precio}</p>
+                        <p><strong>Cantidad:</strong> ${cantidad}</p>
+                        <p><strong>Total:</strong> $${(precio * cantidad).toFixed(2)}</p>
+                        <p>Saludos,<br>El equipo de Toolbox</p>
+                    </div>
+                </body>
+                </html>
+            `,
+            attachments: [{ filename: 'factura.pdf', path: pdfPath }]
+        };
 
-        // Crear el documento PDF
-        const pdfDoc = new PDFDocument();
-        const chunks = [];
-        pdfDoc.on('data', chunk => chunks.push(chunk));
-        pdfDoc.on('end', () => {
-            const pdfBuffer = Buffer.concat(chunks);
-            
-            // Enviar el correo con el PDF adjunto
-            transporter.sendMail({
-                from: 'toolboxproyecto@gmail.com',
-                to: normalizedCorreo, // Usa el correo normalizado aquí
-                subject: 'Confirmación de Pago',
-                html: `
-                    <html>
-                    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
-                        <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <h2 style="text-align: center; color: #007bff;">Confirmación de Pago</h2>
-                            <p>Hola,</p>
-                            <p>Tu pago ha sido confirmado exitosamente. Adjunto encontrarás un archivo PDF con los detalles de tu compra.</p>
-                            <p>Producto: ${producto}</p>
-                            <p>Cantidad: ${cantidad}</p>
-                            <p>Precio Total: $${precio}</p>
-                            <p>Método de Pago: ${metodo}</p>
-                            <p>Gracias por tu compra.</p>
-                            <p>Saludos,<br>El equipo de Toolbox</p>
-                        </div>
-                    </body>
-                    </html>
-                `,
-                attachments: [
-                    {
-                        filename: 'factura.pdf',
-                        content: pdfBuffer,
-                        encoding: 'base64'
-                    }
-                ]
-            }, (error, info) => {
+        await new Promise((resolve, reject) => {
+            transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                    console.error('Error al enviar correo:', error);
-                    return res.status(500).json({ error: 'Error en el servidor al enviar el correo' });
+                    console.error('Error al enviar el correo:', error);
+                    reject(new Error('Error al enviar el correo.'));
+                } else {
+                    console.log('Correo enviado:', info.response);
+                    fs.unlink(pdfPath, (err) => {
+                        if (err) console.error('Error al eliminar el archivo PDF:', err);
+                    });
+                    resolve({ message: 'Correo enviado correctamente.' });
                 }
-                res.json({ success: 'Correo enviado correctamente' });
             });
         });
 
-        // Agregar contenido al PDF
-        pdfDoc.fontSize(16).text('Factura de Compra', { align: 'center' });
-        pdfDoc.moveDown();
-        pdfDoc.fontSize(14).text(`Producto: ${producto}`);
-        pdfDoc.text(`Cantidad: ${cantidad}`);
-        pdfDoc.text(`Precio Total: $${precio}`);
-        pdfDoc.text(`Método de Pago: ${metodo}`);
-        pdfDoc.end();
+        res.status(200).json({ message: 'Correo enviado correctamente.' });
     } catch (error) {
         console.error('Error al confirmar el pago:', error);
-        res.status(500).json({ error: 'Error en el servidor' });
+        res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
 });
 
