@@ -496,32 +496,36 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 // Ruta para confirmar el pago y enviar el correo con el PDF
 app.post('/confirmar-pago', async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
-    console.log('Datos recibidos en /confirmar-pago:', { correo, producto, precio, cantidad, metodo });
+    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo }); // Agrega un log para depuración
 
     try {
+        // Verifica si el correo se está enviando correctamente
         if (!correo) {
-            console.error('Error: Correo no proporcionado');
             return res.status(400).json({ error: 'Correo no proporcionado' });
         }
 
+        // Convierte el correo a minúsculas para la búsqueda
+        const normalizedCorreo = correo.toLowerCase();
+        console.log('Correo normalizado:', normalizedCorreo);
+
         // Busca el usuario por correo
-        const usuario = await buscarUsuarioPorCorreo(correo);
-        console.log('Usuario encontrado:', usuario);
+        const usuario = await CUsuario.findOne({ correo: { $regex: new RegExp(`^${normalizedCorreo}$`, 'i') } });
 
         if (!usuario) {
-            console.error('Error: No se encontró un usuario con ese correo');
             return res.status(400).json({ error: 'No se encontró un usuario con ese correo' });
         }
 
+        // Crear el documento PDF
         const pdfDoc = new PDFDocument();
         const chunks = [];
         pdfDoc.on('data', chunk => chunks.push(chunk));
         pdfDoc.on('end', () => {
             const pdfBuffer = Buffer.concat(chunks);
-
+            
+            // Enviar el correo con el PDF adjunto
             transporter.sendMail({
                 from: 'toolboxproyecto@gmail.com',
-                to: correo,
+                to: normalizedCorreo, // Usa el correo normalizado aquí
                 subject: 'Confirmación de Pago',
                 html: `
                     <html>
@@ -552,11 +556,11 @@ app.post('/confirmar-pago', async (req, res) => {
                     console.error('Error al enviar correo:', error);
                     return res.status(500).json({ error: 'Error en el servidor al enviar el correo' });
                 }
-                console.log('Correo enviado con éxito:', info);
                 res.json({ success: 'Correo enviado correctamente' });
             });
         });
 
+        // Agregar contenido al PDF
         pdfDoc.fontSize(16).text('Factura de Compra', { align: 'center' });
         pdfDoc.moveDown();
         pdfDoc.fontSize(14).text(`Producto: ${producto}`);
