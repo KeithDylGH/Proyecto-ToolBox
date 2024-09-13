@@ -452,29 +452,22 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 });
 
 // Ruta para confirmar el pago
-app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { producto, precio, cantidad, metodo } = req.body;
+app.post('/confirmar-pago', async (req, res) => {
+    const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
 
-    console.log('Usuario autenticado:', usuario);
-    console.log('Datos recibidos:', { producto, precio, cantidad, metodo });
-
     if (!usuario) {
-        console.log('Usuario no autenticado.');
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    let emailUsuario = usuario.correo;
+    let emailUsuario = correo || usuario.correo;
 
     if (!emailUsuario) {
         try {
-            // Buscar el usuario en la base de datos usando el identificador de la sesión
-            const usuarioDB = await CUsuario.findById(usuario._id); // Asegúrate de tener el modelo y el método correcto
-            
+            const usuarioDB = await CUsuario.findById(usuario._id);
             if (usuarioDB) {
                 emailUsuario = usuarioDB.correo;
             } else {
-                console.log('Usuario no encontrado en la base de datos.');
                 return res.status(404).json({ error: 'Usuario no encontrado en la base de datos.' });
             }
         } catch (error) {
@@ -484,12 +477,12 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
-        console.log('Faltan datos necesarios para el correo.');
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        const doc = new PDFDocument();
+        // Crear PDF
+        const doc = new PDF();
         const pdfPath = path.join(__dirname, 'factura.pdf');
 
         doc.pipe(fs.createWriteStream(pdfPath));
@@ -501,13 +494,12 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
-        console.log('PDF creado.');
-
         await new Promise((resolve, reject) => {
             doc.on('finish', resolve);
             doc.on('error', reject);
         });
 
+        // Enviar correo
         const mailOptions = {
             from: 'toolboxproyecto@gmail.com',
             to: emailUsuario,

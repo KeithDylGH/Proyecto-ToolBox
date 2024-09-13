@@ -161,83 +161,67 @@
             <h2>Los mejores productos</h2>
             <div class="row">
                 <% productosDestacados.forEach(producto => { %>
-                    <div class="col-md-3 mb-4">
-                        <div class="card">
-                            <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" />
-                            <div class="card-body">
+                    <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                        <div class="card h-100">
+                            <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" style="object-fit: cover; height: 200px;" />
+                            <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><%= producto.nombre %></h5>
                                 <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                                <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
-                                <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">
-                                    Agregar al Carrito
-                                </button>
+                                <a href="/tienda/producto/<%= producto._id %>" class="btn btn-primary mt-auto">Ver más</a>
+                                <button class="btn btn-primary btn-agregar-carrito mt-2" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
                             </div>
                         </div>
                     </div>
                 <% }); %>
             </div>
-        </div>             
-
-      <!-- Te puede interesar -->
-<section>
-  <h2>Te puede interesar</h2>
-  <div class="MultiCarousel"
-      data-items="1,3,5,6"
-      data-slide="1"
-      id="MultiCarousel"
-      data-interval="1000">
-      <div class="MultiCarousel-inner">
-          <% productosParaCarousel.forEach(producto => { %>
-              <div class="item">
-                  <div class="card" style="width: 100%">
-                      <img
-                          class="card-img-top"
-                          src="<%= producto.imagen.data %>"
-                          alt="<%= producto.nombre %>"/>
-                      <div class="card-body">
-                          <h5 class="card-title"><%= producto.nombre %></h5>
-                          <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                          <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
-                          <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
-                      </div>
-                  </div>
-              </div>
-          <% }); %>
-      </div>
-      <button class="btn leftLst bg-light text-dark"><</button>
-      <button class="btn rightLst bg-light text-dark">></button>
-  </div>
-</section>        
-
-<!-- Categorías recomendadas -->
-<div class="categoria">
-  <h2>Categorías Recomendadas</h2>
-  <div class="categoria_items row row-cols-4">
-      <% categoriasRecomendadas.forEach(categoria => { %>
-          <div class="card" style="width: 15rem; background-color: #5e3b3b; color: #fff">
-              <% if (categoria.productoDestacado && categoria.productoDestacado.imagen && categoria.productoDestacado.imagen.data) { %>
-                  <img
-                      class="card-img-top"
-                      src="<%= categoria.productoDestacado.imagen.data %>"
-                      alt="<%= categoria.productoDestacado.nombre %>"
-                  />
-              <% } else { %>
-                  <img
-                      class="card-img-top"
-                      src="/ruta/a/imagen/por/defecto.jpg"
-                      alt="Imagen no disponible"
-                  />
-              <% } %>
-              <div class="card-body">
-                  <h5 class="card-title">
-                      <%= categoria.productoDestacado ? `${categoria.productoDestacado.nombre} - ${categoria.nombre}` : categoria.nombre %>
-                  </h5>
-                  <a href="/tienda/<%= categoria._id %>" class="btn btn-primary">Entrar al catálogo</a>
-              </div>
-          </div>
-      <% }); %>
-  </div>
-</div>
+        </div>
+    </section>
+    
+    <!-- Te puede interesar -->
+    <section>
+        <h2>Te puede interesar</h2>
+        <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel" data-interval="1000">
+            <div class="MultiCarousel-inner">
+                <% productosParaCarousel.forEach(producto => { %>
+                    <div class="item d-flex align-items-stretch">
+                        <div class="card h-100" style="width: 100%;">
+                            <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" style="object-fit: cover; height: 200px;" />
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><%= producto.nombre %></h5>
+                                <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                                <a href="/tienda/producto/<%= producto._id %>" class="btn btn-primary mt-auto">Ver más</a>
+                                <button class="btn btn-primary btn-agregar-carrito mt-2" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+            <button class="btn leftLst bg-light text-dark"><</button>
+            <button class="btn rightLst bg-light text-dark">></button>
+        </div>
+    </section>
+    
+    <!-- Categorías recomendadas -->
+    <div class="categoria">
+        <h2>Categorías Recomendadas</h2>
+        <div class="categoria_items row row-cols-4">
+            <% categoriasRecomendadas.forEach(categoria => { %>
+                <div class="col mb-4 d-flex align-items-stretch">
+                    <div class="card h-100" style="width: 100%; background-color: #5e3b3b; color: #fff;">
+                        <% if (categoria.productoDestacado && categoria.productoDestacado.imagen && categoria.productoDestacado.imagen.data) { %>
+                            <img class="card-img-top" src="<%= categoria.productoDestacado.imagen.data %>" alt="<%= categoria.productoDestacado.nombre %>" style="object-fit: cover; height: 200px;" />
+                        <% } else { %>
+                            <img class="card-img-top" src="/ruta/a/imagen/por/defecto.jpg" alt="Imagen no disponible" style="object-fit: cover; height: 200px;" />
+                        <% } %>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title"><%= categoria.productoDestacado ? `${categoria.productoDestacado.nombre} - ${categoria.nombre}` : categoria.nombre %></h5>
+                            <a href="/tienda/<%= categoria._id %>" class="btn btn-primary mt-auto">Entrar al catálogo</a>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
 
       </section>
 

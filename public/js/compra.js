@@ -86,13 +86,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                mostrarNotificacion('Pago confirmado correctamente.', 'success');
+                mostrarNotificacion('Pago confirmado correctamente. Se ha enviado un recibo a tu correo.', 'success');
                 console.log('Respuesta del servidor:', data);
             })
             .catch(error => {
                 mostrarNotificacion('Error al confirmar el pago.', 'danger');
                 console.error('Error al confirmar el pago:', error);
-            });                        
+            });                                  
         });
     });
 
