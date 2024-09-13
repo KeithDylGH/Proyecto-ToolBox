@@ -452,7 +452,7 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 });
 
 // Ruta para confirmar el pago
-app.post('/confirmar-pago', authorize(['user']), async (req, res) => {
+app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { correo, producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
 
@@ -461,20 +461,6 @@ app.post('/confirmar-pago', authorize(['user']), async (req, res) => {
     }
 
     let emailUsuario = correo || usuario.correo;
-
-    if (!emailUsuario) {
-        try {
-            const usuarioDB = await CUsuario.findById(usuario._id);
-            if (usuarioDB) {
-                emailUsuario = usuarioDB.correo;
-            } else {
-                return res.status(404).json({ error: 'Usuario no encontrado en la base de datos.' });
-            }
-        } catch (error) {
-            console.error('Error al buscar el usuario en la base de datos:', error);
-            return res.status(500).json({ error: 'Error al recuperar el correo del usuario.' });
-        }
-    }
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
@@ -504,13 +490,8 @@ app.post('/confirmar-pago', authorize(['user']), async (req, res) => {
             from: 'toolboxproyecto@gmail.com',
             to: emailUsuario,
             subject: 'Factura de Compra',
-            text: `Gracias por tu compra. Adjunto encontrarás la factura de tu compra.`,
-            attachments: [
-                {
-                    filename: 'factura.pdf',
-                    path: pdfPath
-                }
-            ]
+            text: 'Gracias por tu compra. Adjunto encontrarás la factura de tu compra.',
+            attachments: [{ filename: 'factura.pdf', path: pdfPath }]
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
