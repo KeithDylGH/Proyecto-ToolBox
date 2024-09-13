@@ -417,21 +417,36 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
-        const usuarioEnSesion = req.session.user;
+        const usuarioSesion = req.session.user;
 
-        console.log('Usuario en sesión en /compra:', usuarioEnSesion);
+        // Agrega un log para verificar el usuario en sesión
+        console.log('Usuario en sesión en /compra:', usuarioSesion);
 
-        if (!usuarioEnSesion) {
+        if (!usuarioSesion) {
             console.error('Error: No estás autenticado');
             return res.status(401).send('No estás autenticado');
         }
 
-        // Busca el usuario en la base de datos usando el correo
-        const usuario = await buscarUsuarioPorCorreo(usuarioEnSesion.correo);
+        // Añadir log para verificar el contenido de la sesión
+        console.log('Contenido de la sesión:', req.session);
+
+        if (!usuarioSesion.correo) {
+            console.error('Error: El correo del usuario no está disponible en la sesión');
+            return res.status(400).send('El correo del usuario no está disponible en la sesión');
+        }
+
+        // Buscar el usuario por correo
+        let usuario;
+        try {
+            usuario = await buscarUsuarioPorCorreo(usuarioSesion.correo);
+        } catch (error) {
+            console.error('Error al buscar usuario por correo:', error);
+            return res.status(500).send('Error interno del servidor');
+        }
 
         if (!usuario) {
-            console.error('Error: No se encontró un usuario con ese correo');
-            return res.status(400).send('No se encontró un usuario con ese correo');
+            console.error('Error: No se encontró un usuario con el correo proporcionado');
+            return res.status(404).send('No se encontró el usuario');
         }
 
         if (!productoId) {
