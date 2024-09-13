@@ -463,6 +463,22 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     let emailUsuario = correo || usuario.correo;
 
+    if (!emailUsuario) {
+        try {
+            // Buscar el usuario en la base de datos para obtener el correo
+            const usuarioBD = await CUsuario.findOne({ usuario: usuario.usuario }).exec();
+            if (usuarioBD) {
+                emailUsuario = usuarioBD.correo;
+            } else {
+                console.error('No se encontró el usuario en la base de datos');
+                return res.status(400).json({ error: 'Correo electrónico no disponible.' });
+            }
+        } catch (error) {
+            console.error('Error al buscar el usuario en la base de datos:', error);
+            return res.status(500).json({ error: 'Error al buscar el usuario en la base de datos.' });
+        }
+    }
+
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
         console.error('Datos faltantes:', {
             correo: emailUsuario,
