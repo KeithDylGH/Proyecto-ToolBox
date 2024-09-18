@@ -459,7 +459,7 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { producto, precio, cantidad, metodo } = req.body;
-    const usuario = req.session.user; // Usar req.session.user
+    const usuario = req.session.user;
 
     console.log('Datos recibidos:', { producto, precio, cantidad, metodo });
     console.log('Usuario desde la sesión:', usuario);
@@ -469,7 +469,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    // Obtener el correo del usuario desde la sesión si no se proporciona en el cuerpo de la solicitud
     const emailUsuario = req.body.correo || usuario.correo;
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
@@ -490,12 +489,14 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
-        console.log('PDF creado.');
+        console.log('PDF creado en:', pdfPath);
 
         await new Promise((resolve, reject) => {
             doc.on('finish', resolve);
             doc.on('error', reject);
         });
+
+        console.log('PDF creado y listo para enviar.');
 
         const mailOptions = {
             from: 'toolboxproyecto@gmail.com',
@@ -515,6 +516,8 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                 console.error('Error al enviar el correo:', error);
                 return res.status(500).json({ error: 'Error al enviar el correo.' });
             }
+
+            console.log('Correo enviado:', info.response);
 
             fs.unlink(pdfPath, (err) => {
                 if (err) console.error('Error al eliminar el archivo PDF:', err);
