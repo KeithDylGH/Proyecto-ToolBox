@@ -34,7 +34,7 @@ userRouter.post('/registrar', async (req, res) => {
             nombre,
             apellido,
             usuario,
-            correo,
+            correo: correo.toLowerCase(), // Asegurarse de guardar el correo en minúsculas
             password: hashedPassword,
             numero,
             cedula,
@@ -90,9 +90,9 @@ userRouter.post('/login', async (req, res) => {
             id: user._id,
             nombre: user.nombre,
             usuario: user.usuario,
-            correo: user.correo,  // Asegúrate de incluir el correo
+            correo: user.correo.toLowerCase(),  // Asegúrate de incluir el correo
             rol: user.rol
-        };        
+        };
 
         // Después de guardar los datos en la sesión
         console.log('Usuario autenticado y almacenado en sesión:', req.session.user);
@@ -107,28 +107,11 @@ userRouter.post('/login', async (req, res) => {
     }
 });
 
-// Endpoint para obtener todos los usuarios o buscar por correo
+// Endpoint para obtener todos los usuarios
 userRouter.get('/', async (req, res) => {
-    const { correo } = req.query; // Obtener el parámetro de correo de la consulta (query param)
-
     try {
-        let users;
-
-        if (correo) {
-            // Buscar usuario por correo si el parámetro está presente
-            users = await User.find({ correo: correo.toLowerCase() }); // Convertir el correo a minúsculas para evitar problemas de mayúsculas/minúsculas
-            console.log('Usuario(s) encontrado(s) por correo:', correo, users);
-        } else {
-            // Si no hay parámetro de búsqueda, devolver todos los usuarios
-            users = await User.find();
-            console.log('Todos los usuarios encontrados:', users);
-        }
-
-        // Verificar si se encontraron usuarios
-        if (!users || users.length === 0) {
-            return res.status(404).json({ error: 'No se encontraron usuarios con el correo proporcionado.' });
-        }
-
+        const users = await User.find();
+        console.log('Usuarios encontrados:', users);
         res.json(users);
     } catch (error) {
         console.error('Error al buscar usuarios:', error);
