@@ -43,8 +43,8 @@ const upload = multer({
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'toolboxproyecto@gmail.com',
-        pass: 'degf euub exnz rvfr',
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
     debug: true,  // Habilitar el modo depuración
     logger: true, // Habilitar registro de mensajes SMTP
@@ -499,10 +499,10 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         console.log('PDF creado y listo para enviar.');
 
         const mailOptions = {
-            from: 'toolboxproyecto@gmail.com',
+            from: process.env.EMAIL_USER,  // Usar el correo del entorno
             to: emailUsuario,
             subject: 'Factura de Compras',
-            text: `Gracias por tu compra. Adjunto encontrarás la factura de tu compra.`,
+            text: 'Gracias por tu compra. Adjunto encontrarás la factura de tu compra.',
             attachments: [
                 {
                     filename: 'factura.pdf',
