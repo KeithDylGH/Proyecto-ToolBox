@@ -66,8 +66,6 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
         }
 
         console.log('Buscando usuario y cargando carrito para:', user.usuario); // Log del usuario autenticado
-
-        // Aquí es donde se usa el código de "populate"
         const usuario = await CUsuario.findOne({ usuario: user.usuario })
             .populate({
                 path: 'carrito.producto',
@@ -81,14 +79,22 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
-        const carrito = usuario.carrito.map(item => ({
-            _id: item.producto._id,
-            nombre: item.producto.nombre,
-            precio: item.producto.precio,
-            categoria: item.producto.categoria.nombre,
-            imagen: item.producto.imagen,
-            cantidad: item.cantidad
-        }));
+        // Mapear el carrito y asegurarse de que producto no es null
+        const carrito = usuario.carrito.map(item => {
+            if (!item.producto) {
+                console.error('Producto no encontrado para el carrito:', item); // Log de error de producto
+                return null; // Retornar null si el producto no está disponible
+            }
+
+            return {
+                _id: item.producto._id,
+                nombre: item.producto.nombre,
+                precio: item.producto.precio,
+                categoria: item.producto.categoria ? item.producto.categoria.nombre : 'Categoría no disponible',
+                imagen: item.producto.imagen,
+                cantidad: item.cantidad
+            };
+        }).filter(item => item !== null); // Filtrar los elementos nulos
 
         console.log('Productos del carrito devueltos:', carrito); // Log de los productos en el carrito
         res.json({ success: true, carrito });
