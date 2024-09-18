@@ -19,6 +19,7 @@ userRouter.post('/registrar', async (req, res) => {
 
         // Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
         const existingUser = await User.findOne({ $or: [{ usuario }, { correo }] });
+        console.log('Intentando registrar usuario con correo:', correo);
         console.log('Usuario existente:', existingUser);
 
         if (existingUser) {
@@ -72,6 +73,9 @@ userRouter.post('/login', async (req, res) => {
         }
 
         const user = await User.findOne({ usuario });
+        console.log('Intentando login con usuario:', usuario);
+        console.log('Usuario encontrado para login:', user);
+
         if (!user) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
@@ -85,10 +89,13 @@ userRouter.post('/login', async (req, res) => {
         req.session.user = {
             id: user._id,
             nombre: user.nombre,
-            usuario: user.usuario,  // Asegúrate de que esta línea esté presente
-            correo: user.correo,
+            usuario: user.usuario,
+            correo: user.correo,  // Asegúrate de incluir el correo
             rol: user.rol
-        };
+        };        
+
+        // Después de guardar los datos en la sesión
+        console.log('Usuario autenticado y almacenado en sesión:', req.session.user);
 
         res.json({
             success: true,
@@ -99,7 +106,6 @@ userRouter.post('/login', async (req, res) => {
         res.status(500).json({ error: 'Error en el servidor' });
     }
 });
-
 
 // Endpoint para obtener todos los usuarios
 userRouter.get('/', async (req, res) => {
@@ -124,7 +130,6 @@ userRouter.post('/logout', (req, res) => {
         res.redirect('/login'); // redirige a la página de inicio de sesión después de cerrar sesión
     });
 });
-
 
 // Cambiar rol de un usuario
 userRouter.put('/permisos/rol/:id', async (req, res) => {

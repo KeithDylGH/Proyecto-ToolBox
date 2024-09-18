@@ -66,6 +66,8 @@ carritoRouter.get('/getCarrito', authorize(['user', 'admin', 'boss']), async (re
         }
 
         console.log('Buscando usuario y cargando carrito para:', user.usuario); // Log del usuario autenticado
+
+        // Aquí es donde se usa el código de "populate"
         const usuario = await CUsuario.findOne({ usuario: user.usuario })
             .populate({
                 path: 'carrito.producto',
