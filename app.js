@@ -489,41 +489,40 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
         doc.end();
 
-        console.log('PDF creado en:', pdfPath);
+        doc.on('finish', async () => {
+            console.log('PDF creado y listo para enviar.');
 
-        await new Promise((resolve, reject) => {
-            doc.on('finish', resolve);
-            doc.on('error', reject);
+            const mailOptions = {
+                from: process.env.EMAIL_USER,  // Usar el correo del entorno
+                to: emailUsuario,
+                subject: 'Factura de Compras',
+                text: 'Gracias por tu compra. Adjunto encontrarás la factura de tu compra.',
+                attachments: [
+                    {
+                        filename: 'factura.pdf',
+                        path: pdfPath
+                    }
+                ]
+            };
+
+            try {
+                await transporter.sendMail(mailOptions);
+                console.log('Correo enviado correctamente.');
+
+                fs.unlink(pdfPath, (err) => {
+                    if (err) console.error('Error al eliminar el archivo PDF:', err);
+                });
+
+                res.status(200).json({ message: 'Correo enviado correctamente.' });
+            } catch (error) {
+                console.error('Error al enviar el correo:', error);
+                res.status(500).json({ error: 'Error al enviar el correo.' });
+            }
         });
 
-        console.log('PDF creado y listo para enviar.');
-
-        const mailOptions = {
-            from: process.env.EMAIL_USER,  // Usar el correo del entorno
-            to: emailUsuario,
-            subject: 'Factura de Compras',
-            text: 'Gracias por tu compra. Adjunto encontrarás la factura de tu compra.',
-            attachments: [
-                {
-                    filename: 'factura.pdf',
-                    path: pdfPath
-                }
-            ]
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('Error al enviar el correo:', error);
-                return res.status(500).json({ error: 'Error al enviar el correo.' });
-            }
-
-            console.log('Correo enviado:', info.response);
-
-            fs.unlink(pdfPath, (err) => {
-                if (err) console.error('Error al eliminar el archivo PDF:', err);
-            });
-
-            res.status(200).json({ message: 'Correo enviado correctamente.' });
+        doc.on('error', (error) => {
+            console.error('Error al crear el PDF:', error);
+            res.status(500).json({ error: 'Error al crear el PDF.' });
         });
     } catch (error) {
         console.error('Error al confirmar el pago:', error);
