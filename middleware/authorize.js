@@ -18,6 +18,7 @@ module.exports = (rolesPermitidos = [], rutasPublicas = []) => {
 
         const user = req.session.user;
         console.log('Usuario autenticado:', user);
+        console.log('Correo del usuario autenticado:', user.correo); // Añadido para verificar el correo
 
         // Verificar permisos
         if (!rolesPermitidos.includes(user.rol)) {
