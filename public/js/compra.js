@@ -79,12 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     metodo: metodoPago
                 }),
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error en la respuesta del servidor');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 mostrarNotificacion('Pago confirmado correctamente.', 'success');
                 console.log('Respuesta del servidor:', data);
