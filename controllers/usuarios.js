@@ -107,11 +107,28 @@ userRouter.post('/login', async (req, res) => {
     }
 });
 
-// Endpoint para obtener todos los usuarios
+// Endpoint para obtener todos los usuarios o buscar por correo
 userRouter.get('/', async (req, res) => {
+    const { correo } = req.query; // Obtener el parámetro de correo de la consulta (query param)
+
     try {
-        const users = await User.find();
-        console.log('Usuarios encontrados:', users);
+        let users;
+
+        if (correo) {
+            // Buscar usuario por correo si el parámetro está presente
+            users = await User.find({ correo: correo.toLowerCase() }); // Convertir el correo a minúsculas para evitar problemas de mayúsculas/minúsculas
+            console.log('Usuario(s) encontrado(s) por correo:', correo, users);
+        } else {
+            // Si no hay parámetro de búsqueda, devolver todos los usuarios
+            users = await User.find();
+            console.log('Todos los usuarios encontrados:', users);
+        }
+
+        // Verificar si se encontraron usuarios
+        if (!users || users.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron usuarios con el correo proporcionado.' });
+        }
+
         res.json(users);
     } catch (error) {
         console.error('Error al buscar usuarios:', error);
