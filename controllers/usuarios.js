@@ -1,4 +1,3 @@
-// usuarios.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/usuario'); // Importar el modelo de usuario
@@ -75,6 +74,13 @@ userRouter.post('/login', async (req, res) => {
         const user = await User.findOne({ usuario });
         console.log('Intentando login con usuario:', usuario);
         console.log('Usuario encontrado para login:', user);
+
+        // Verifica si se encuentra el correo
+        if (!user.correo) {
+            console.error('El correo es undefined para el usuario:', user);
+        } else {
+            console.log('Correo encontrado en la base de datos:', user.correo);
+        }
 
         if (!user) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
@@ -176,6 +182,17 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
     } catch (error) {
         console.error('Error al banear al usuario:', error);
         res.status(500).json({ success: false, message: 'Error en el servidor' });
+    }
+});
+
+// Nuevo endpoint para verificar correos
+userRouter.get('/verificar-correos', async (req, res) => {
+    try {
+        const usuarios = await User.find({}, { usuario: 1, correo: 1 });
+        res.json(usuarios);
+    } catch (error) {
+        console.error('Error al obtener correos:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
     }
 });
 
