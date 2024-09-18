@@ -78,7 +78,7 @@ userRouter.post('/login', async (req, res) => {
             id: user._id,
             nombre: user.nombre,
             usuario: user.usuario,
-            correo: user.correo.toLowerCase(),  // Asegúrate de que el correo se guarda correctamente
+            correo: user.correo,  // Asegúrate de que el correo se guarda correctamente
             rol: user.rol
         };
 
