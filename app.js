@@ -388,7 +388,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
-        const usuario = req.session.user; // Cambiado de req.user a req.session.user
+        const usuario = req.session.user; // Usar req.session.user
 
         if (!productoId) {
             return res.status(400).send('ID del producto no proporcionado');
@@ -402,7 +402,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
                 producto,
                 cantidad,
                 total,
-                usuarioCorreo: usuario ? usuario.correo : 'no-reply@example.com'
+                usuarioCorreo: usuario ? usuario.correo : 'no-reply@example.com' // Pasar la variable correcta
             });            
         } else {
             res.status(404).send('Producto no encontrado');
