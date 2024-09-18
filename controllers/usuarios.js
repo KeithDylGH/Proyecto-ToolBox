@@ -67,27 +67,9 @@ userRouter.post('/login', async (req, res) => {
     const { usuario, password } = req.body;
 
     try {
-        if (!usuario || !password) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
-        }
-
         const user = await User.findOne({ usuario });
-        console.log('Intentando login con usuario:', usuario);
-        console.log('Usuario encontrado para login:', user);
 
-        // Verifica si se encuentra el correo
-        if (!user.correo) {
-            console.error('El correo es undefined para el usuario:', user);
-        } else {
-            console.log('Correo encontrado en la base de datos:', user.correo);
-        }
-
-        if (!user) {
-            return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
-        }
-
-        const passwordCorrecto = await bcrypt.compare(password, user.password);
-        if (!passwordCorrecto) {
+        if (!user || !await bcrypt.compare(password, user.password)) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
 
@@ -96,12 +78,11 @@ userRouter.post('/login', async (req, res) => {
             id: user._id,
             nombre: user.nombre,
             usuario: user.usuario,
-            correo: user.correo.toLowerCase(),  // Asegúrate de incluir el correo
+            correo: user.correo.toLowerCase(),  // Asegúrate de que el correo se guarda correctamente
             rol: user.rol
         };
 
-        // Después de guardar los datos en la sesión
-        console.log('Usuario autenticado y almacenado en sesión:', req.session.user);
+        console.log('Datos de usuario guardados en la sesión:', req.session.user);
 
         res.json({
             success: true,

@@ -458,10 +458,10 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { correo, producto, precio, cantidad, metodo } = req.body;
+    const { producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user; // Usar req.session.user
 
-    console.log('Datos recibidos:', { correo, producto, precio, cantidad, metodo });
+    console.log('Datos recibidos:', { producto, precio, cantidad, metodo });
     console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
@@ -469,7 +469,8 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    const emailUsuario = correo && correo !== 'no-reply@example.com' ? correo : usuario.correo;
+    // Obtener el correo del usuario desde la sesión si no se proporciona en el cuerpo de la solicitud
+    const emailUsuario = req.body.correo || usuario.correo;
 
     if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
