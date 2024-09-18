@@ -28,6 +28,7 @@ async function iniciarSesion(usuario, contraseña) {
     }
 }
 
+// LOG-IN.js
 router.post('/', async (req, res) => {
     try {
         const { usuario, contraseña } = req.body;
@@ -39,6 +40,7 @@ router.post('/', async (req, res) => {
             req.session.user = {
                 nombre: result.user.nombre,
                 usuario: result.user.usuario,
+                correo: result.user.correo,  // Incluye el correo aquí
                 rol: result.user.rol
             };
             console.log('Session user set:', req.session.user);

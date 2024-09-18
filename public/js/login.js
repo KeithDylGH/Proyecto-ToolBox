@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const loginForm = document.querySelector('#loginForm');
 
+// login.js
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -64,9 +65,6 @@ if (loginForm) {
             console.log('Login response:', data);
 
             if (data.success) {
-                // Almacena el correo del usuario en el localStorage
-                localStorage.setItem('userCorreo', data.user.correo);
-
                 if (data.user.rol === 'admin' || data.user.rol === 'boss') {
                     window.location.href = '/admin';
                 } else {
