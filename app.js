@@ -456,7 +456,12 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 
         const totalCarrito = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
 
-        res.render('shop/Compra/compraCarrito', { productos: carrito, totalCarrito });
+        // Pasar usuarioCorreo a la vista
+        res.render('shop/Compra/compraCarrito', { 
+            productos: carrito, 
+            totalCarrito,
+            usuarioCorreo: user.correo // Asegúrate de que user.correo esté definido
+        });
     } catch (error) {
         console.error('Error al obtener los productos del carrito:', error);
         res.status(500).send('Error al obtener los productos del carrito');
