@@ -397,10 +397,12 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
         const producto = await iProducto.findById(productoId);
 
         if (producto) {
-            const total = producto.precio * cantidad;
+            const precio = producto.precio; // Obtener el precio del producto
+            const total = precio * cantidad;
             res.render('shop/Compra', {
-                producto,
+                producto: producto.nombre, // Suponiendo que el producto tiene una propiedad nombre
                 cantidad,
+                precio, // Pasar precio a la vista
                 total,
                 usuarioCorreo: usuario ? usuario.correo : 'no-reply@example.com' // Pasar la variable correcta
             });            
