@@ -1,35 +1,33 @@
-const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const path = require('path');
+const { PDFDocument } = require('pdf-lib');
 
-exports.generarPdf = async (productos, metodoPago) => {
-  return new Promise((resolve, reject) => {
-    if (!productos || !Array.isArray(productos)) {
-      return reject(new Error('No se proporcionaron productos válidos'));
+exports.generarPdf = async (datos) => {
+    const { producto, precio, cantidad, metodo } = datos;
+
+    try {
+        const doc = await PDFDocument.create();
+        const page = doc.addPage([600, 400]);
+        page.drawText(`Factura de Compra\nProducto: ${producto}\nPrecio: $${precio}\nCantidad: ${cantidad}\nMétodo: ${metodo}`, {
+            x: 50,
+            y: 350,
+            size: 12
+        });
+
+        // Crear el directorio 'tmp' si no existe
+        const tmpDir = path.join(__dirname, 'tmp');
+        if (!fs.existsSync(tmpDir)) {
+            fs.mkdirSync(tmpDir);
+        }
+
+        // Guardar el archivo PDF en la carpeta 'tmp'
+        const pdfPath = path.join(tmpDir, `factura_${Date.now()}.pdf`);
+        const pdfBytes = await doc.save();
+        fs.writeFileSync(pdfPath, pdfBytes);
+
+        return pdfPath;
+    } catch (error) {
+        console.error('Error al generar el PDF:', error);
+        throw error;
     }
-
-    const doc = new PDFDocument();
-    let pdfPath = 'path/to/your/pdf/confirmacion.pdf'; // Ajusta la ruta según tus necesidades
-    doc.pipe(fs.createWriteStream(pdfPath));
-
-    doc.fontSize(25).text('Confirmación de Compra', { align: 'center' });
-
-    doc.fontSize(18).text('Método de Pago: ' + metodoPago);
-    
-    productos.forEach((producto) => {
-      doc.fontSize(14).text(`Producto: ${producto.nombre}`, { continued: true })
-        .text(` Precio Unitario: $${producto.precio.toFixed(2)}`)
-        .text(` Cantidad: ${producto.cantidad}`)
-        .text(` Total: $${(producto.precio * producto.cantidad).toFixed(2)}`);
-    });
-
-    doc.end();
-
-    doc.on('finish', () => {
-      resolve(pdfPath);
-    });
-
-    doc.on('error', (err) => {
-      reject(err);
-    });
-  });
 };
