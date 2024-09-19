@@ -39,21 +39,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Confirmar pago desde el carrito
-    const confirmarCarritoForm = document.getElementById('confirmarCarritoForm');
-    if (confirmarCarritoForm) {
-        confirmarCarritoForm.addEventListener('submit', function (event) {
+    // Confirmar pago
+    const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
+
+    confirmarPagoBtns.forEach(form => {
+        form.addEventListener('submit', function (event) {
             event.preventDefault();
+
+            const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
+                               form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
 
             // Obtener el correo del usuario
             const metaUsuarioCorreo = document.querySelector('meta[name="usuario-correo"]');
             const emailUsuario = metaUsuarioCorreo ? metaUsuarioCorreo.getAttribute('content') : 'no-reply@example.com';
 
-            // Obtener los productos del carrito
-            const productos = JSON.parse(confirmarCarritoForm.querySelector('input[name="productos"]').value);
+            // Obtener la información del producto
+            const productoElemento = document.querySelector('.card-title');
+            const producto = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
+
+            // Obtener la cantidad
+            const cantidadElemento = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('Cantidad'));
+            const cantidad = parseInt(cantidadElemento ? cantidadElemento.textContent.replace('Cantidad: ', '') : '1', 10);
 
             // Obtener el total
-            const total = productos.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0).toFixed(2);
+            const totalElemento = document.getElementById('totalMonto');
+            const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0').toFixed(2);
 
             // Confirmar el pago
             fetch('/confirmar-pago', {
@@ -63,9 +73,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({
                     correo: emailUsuario,
-                    productos: productos,
+                    producto: producto,
                     precio: total,
-                    metodo: 'Método no especificado' // Agrega lógica para seleccionar el método de pago
+                    cantidad: cantidad,
+                    metodo: metodoPago
                 }),
             })
             .then(response => response.json())
@@ -76,7 +87,19 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 mostrarNotificacion('Error al confirmar el pago.', 'danger');
                 console.error('Error al confirmar el pago:', error);
-            });
+            });                        
         });
+    });
+
+    function mostrarNotificacion(mensaje, tipo) {
+        const notificacion = document.createElement('div');
+        notificacion.className = `alert alert-${tipo}`;
+        notificacion.textContent = mensaje;
+
+        document.body.prepend(notificacion);
+
+        setTimeout(() => {
+            notificacion.remove();
+        }, 3000);
     }
 });

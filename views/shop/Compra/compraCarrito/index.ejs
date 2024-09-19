@@ -32,7 +32,7 @@
                   <div class="d-flex">
                     <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-thumbnail" style="max-width: 100px;">
                     <div>
-                      <h6><%= producto.nombre %></h6>
+                      <h6 class="card-title"><%= producto.nombre %></h6>
                       <p>Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
                       <p>Cantidad: <%= producto.cantidad %></p>
                       <p>Total: $<%= (producto.precio * producto.cantidad).toFixed(2) %></p>
@@ -46,15 +46,16 @@
           </div>
         </div>
         <div class="text-end mt-4">
-          <button type="submit" class="btn btn-primary">Confirmar Pago</button>
+          <button type="button" class="btn btn-primary" id="confirmarPagoBtn">Confirmar Pago</button>
           <a class="btn btn-secondary ms-2" href="/" id="cancelarBtn">Cancelar</a>
         </div>
       </form>
+      
       <div id="metodosPago" class="d-none mt-3">
         <h3>Selecciona el Método de Pago</h3>
-        <button id="pagoMovilBtn" class="btn btn-primary">Pago Móvil</button>
-        <button id="transferenciaBtn" class="btn btn-primary">Transferencia</button>
-        <button id="zinliBtn" class="btn btn-primary">Zinli</button>
+        <button type="button" id="pagoMovilBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pagoMovilModal">Pago Móvil</button>
+        <button type="button" id="transferenciaBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transferenciaModal">Transferencia</button>
+        <button type="button" id="zinliBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#zinliModal">Zinli</button>
         <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
       </div>
 
@@ -82,7 +83,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="confirmarPagoBtn" data-bs-dismiss="modal">Confirmar Pago</button>
+                    <button type="button" id="pagoMovilForm" class="btn btn-primary" data-bs-dismiss="modal">Confirmar Pago</button>
                 </div>
             </div>
         </div>
@@ -109,7 +110,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="confirmarPagoBtn" data-bs-dismiss="modal">Confirmar Pago</button>
+                    <button type="button" id="transferenciaForm" class="btn btn-primary" data-bs-dismiss="modal">Confirmar Pago</button>
                 </div>
             </div>
         </div>
@@ -128,23 +129,24 @@
                     <p>Abre la aplicación de Zinli y sigue estos pasos:</p>
                     <ul>
                         <li>Selecciona la opción "Pagar con Zinli".</li>
-                        <li>Ingresa el número de cuenta: <strong>+0412-6378817</strong></li>
+                        <li>Ingresa el número de cuenta: <strong>1234567890</strong></li>
                         <li>Introduce el monto total de la compra y confirma el pago.</li>
                     </ul>
                     <p>Una vez realizado el pago, envía una captura del comprobante a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="confirmarPagoBtn" data-bs-dismiss="modal">Confirmar Pago</button>
+                    <button type="button" id="zinliForm" class="btn btn-primary" data-bs-dismiss="modal">Confirmar Pago</button>
                 </div>
             </div>
         </div>
       </div>
+
     <% } else { %>
       <p>No hay productos en el carrito.</p>
     <% } %>
   </main>
 
-  <script src="/js/compra.js"></script>
+  <script src="/js/compraCarrito.js"></script>
 </body>
 </html>
