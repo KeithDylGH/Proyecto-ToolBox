@@ -9,6 +9,7 @@ const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 const Excel = require('exceljs');
 const PDFDocument = require('pdfkit');
+const { generarPDF } = require('./controllers/pdfController');
 const subirProducto = require('./controllers/subirProducto');
 const bcrypt = require('bcryptjs');
 const Categoria = require('./models/categoria');
@@ -485,31 +486,10 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     try {
         // Crear el PDF
-        const doc = new PDFDocument();
-        const pdfPath = path.join(__dirname, 'factura.pdf');
-
-        doc.pipe(fs.createWriteStream(pdfPath));
-        doc.fontSize(12).text('Factura de Compra', { align: 'center' });
-        doc.text(`Método de Pago: ${metodo}`);
-        doc.text(`Producto: ${producto}`);
-        doc.text(`Precio: $${precio}`);
-        doc.text(`Cantidad: ${cantidad}`);
-        doc.text(`Total: $${(precio * cantidad).toFixed(2)}`);
-
-        // Incluir la imagen en el PDF si está disponible
-        if (producto.imagen && producto.imagen.data) {
-            doc.addPage()
-               .image(producto.imagen.data, {
-                   fit: [250, 250],
-                   align: 'center',
-                   valign: 'center'
-               });
-        }
-
-        doc.end();
-
-        doc.on('finish', async () => {
-            console.log('PDF creado y listo para enviar.');
+        generarPDF({ producto, precio, cantidad, metodo }, async (error, pdfPath) => {
+            if (error) {
+                return res.status(500).json({ error: 'Error al crear el PDF.' });
+            }
 
             // Enviar el correo
             try {
@@ -542,7 +522,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                         }
                     ]
                 });
-
+                
                 console.log('Correo enviado correctamente.');
                 fs.unlink(pdfPath, (err) => {
                     if (err) console.error('Error al eliminar el archivo PDF:', err);
@@ -553,11 +533,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                 console.error('Error al enviar el correo:', error);
                 res.status(500).json({ error: 'Error al enviar el correo.' });
             }
-        });
-
-        doc.on('error', (error) => {
-            console.error('Error al crear el PDF:', error);
-            res.status(500).json({ error: 'Error al crear el PDF.' });
         });
     } catch (error) {
         console.error('Error al confirmar el pago:', error);
