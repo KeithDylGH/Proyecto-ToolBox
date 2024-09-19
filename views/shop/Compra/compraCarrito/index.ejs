@@ -48,7 +48,7 @@
           <div class="col-md-4">
             <div class="card">
               <div class="card-body text-center">
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Confirmar Pago</button>
+                <a class="btn btn-primary btn-lg btn-block" href="#" id="siguienteBtn">Siguiente</a>
                 <a class="btn btn-secondary btn-lg btn-block mt-2" href="/" id="cancelarBtn">Cancelar</a>
                 <div id="metodosPago" class="d-none mt-3">
                   <h3>Selecciona el Método de Pago</h3>
@@ -136,13 +136,13 @@
                       <form id="zinliForm">
                           <p>Utiliza la aplicación Zinli para realizar el pago:</p>
                           <ul>
-                              <li>Selecciona la opción "Pagar".</li>
-                              <li>Ingresa los datos del comercio:</li>
+                              <li>Selecciona la opción "Enviar Dinero".</li>
+                              <li>Ingresa los siguientes datos:</li>
                               <ul>
-                                  <li>Nombre del Comercio: <strong>ToolBox</strong></li>
-                                  <li>Teléfono: <strong>0412-6378817</strong></li>
+                                  <li>Teléfono de la Empresa: <strong>+0412-6378817</strong></li>
+                                  <li>RIF: <strong>J-12345678-9</strong></li>
                               </ul>
-                              <li>Introduce el monto total y confirma el pago.</li>
+                              <li>Introduce el monto total de la compra y confirma el pago.</li>
                           </ul>
                           <p>Envíanos el comprobante de pago a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
                           <button type="submit" class="btn btn-primary" id="confirmarZinliBtn">Confirmar Pago</button>
@@ -157,7 +157,7 @@
       </form>
     <% } else { %>
       <div class="alert alert-warning" role="alert">
-        No hay productos en el carrito.
+        Tu carrito está vacío.
       </div>
     <% } %>
   </main>
