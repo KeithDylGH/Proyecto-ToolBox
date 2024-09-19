@@ -424,9 +424,10 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 // Ruta para la compra de productos en el carrito
 app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
+        // Verificar si el usuario está autenticado
         const user = req.session.user;
         if (!user) {
-            return res.redirect('/');
+            return res.redirect('/'); // Redirigir si el usuario no está autenticado
         }
 
         // Obtener los productos del carrito desde la base de datos
@@ -443,81 +444,96 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
             return res.status(404).send('Usuario no encontrado');
         }
 
-        // Obtener los productos del carrito y manejar el caso de productos nulos
-        const carrito = usuario.carrito
-            .filter(item => item.producto) // Filtrar productos nulos
-            .map(item => ({
-                _id: item.producto._id,
-                nombre: item.producto.nombre,
-                precio: item.producto.precio,
-                imagen: item.producto.imagen,
-                cantidad: item.cantidad
-            }));
+        // Obtener los productos del carrito
+        const carrito = usuario.carrito.map(item => ({
+            _id: item.producto._id,
+            nombre: item.producto.nombre,
+            precio: item.producto.precio,
+            imagen: item.producto.imagen,
+            cantidad: item.cantidad
+        }));
 
+        // Calcular el total del carrito
         const totalCarrito = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
 
-        // Pasar el correo del usuario a la vista
-        res.render('shop/Compra/compraCarrito', { productos: carrito, totalCarrito, usuarioCorreo: user.correo });
+        // Renderizar la vista con los productos del carrito
+        res.render('shop/Compra/compraCarrito', { productos: carrito, totalCarrito });
     } catch (error) {
         console.error('Error al obtener los productos del carrito:', error);
         res.status(500).send('Error al obtener los productos del carrito');
     }
 });
 
-// Ruta para confirmar el pago desde el carrito
-app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos, metodo } = req.body;
+// Ruta para confirmar el pago
+app.post('/confirmar-pago', pdfController.generarPdf, authorize(['user', 'admin', 'boss']), async (req, res) => {
+    const { producto, precio, cantidad, metodo } = req.body;
     const usuario = req.session.user;
+
+    console.log('Datos recibidos:', { producto, precio, cantidad, metodo });
+    console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
         console.log('Usuario no autenticado.');
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    const emailUsuario = usuario.correo;
+    const emailUsuario = req.body.correo || usuario.correo;
 
-    if (!emailUsuario || !productos || productos.length === 0 || !metodo) {
+    if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        // Crear el PDF con los detalles de todos los productos
-        const totalCompra = productos.reduce((total, item) => total + item.precio * item.cantidad, 0);
-        const pdfPath = await pdfController.generarPdf({ productos, totalCompra, metodo });
+        // Crear el PDF
+        generarPDF({ producto, precio, cantidad, metodo }, async (error, pdfPath) => {
+            if (error) {
+                return res.status(500).json({ error: 'Error al crear el PDF.' });
+            }
 
-        // Enviar el correo con el PDF adjunto
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: emailUsuario,
-            subject: 'Factura de Compra',
-            html: `
-                <html>
-                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
-                    <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                        <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
-                        <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
-                        <p><strong>Método de Pago:</strong> ${metodo}</p>
-                        <ul>
-                            ${productos.map(item => `<li>${item.nombre} - $${item.precio} x ${item.cantidad}</li>`).join('')}
-                        </ul>
-                        <p><strong>Total:</strong> $${totalCompra.toFixed(2)}</p>
-                        <p>Saludos,<br>El equipo de ToolBox</p>
-                    </div>
-                </body>
-                </html>
-            `,
-            attachments: [{ filename: 'factura.pdf', path: pdfPath }]
+            // Enviar el correo
+            try {
+                await transporter.sendMail({
+                    from: process.env.EMAIL_USER,
+                    to: emailUsuario,
+                    subject: 'Factura de Compra',
+                    html: `
+                        <html>
+                        <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
+                            <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                                <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
+                                <p>Hola,</p>
+                                <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
+                                <p><strong>Método de Pago:</strong> ${metodo}</p>
+                                <p><strong>Producto:</strong> ${producto}</p>
+                                <p><strong>Precio:</strong> $${precio}</p>
+                                <p><strong>Cantidad:</strong> ${cantidad}</p>
+                                <p><strong>Total:</strong> $${(precio * cantidad).toFixed(2)}</p>
+                                <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+                                <p>Saludos,<br>El equipo de ToolBox</p>
+                            </div>
+                        </body>
+                        </html>
+                    `,
+                    attachments: [
+                        {
+                            filename: 'factura.pdf',
+                            path: pdfPath
+                        }
+                    ]
+                });
+                
+                console.log('Correo enviado correctamente.');
+                fs.unlink(pdfPath, (err) => {
+                    if (err) console.error('Error al eliminar el archivo PDF:', err);
+                });
+
+                res.status(200).json({ message: 'Correo enviado correctamente.' });
+            } catch (error) {
+                console.error('Error al enviar el correo:', error);
+                res.status(500).json({ error: 'Error al enviar el correo.' });
+            }
         });
-
-        console.log('Correo enviado correctamente.');
-
-        // Eliminar el archivo PDF temporal
-        fs.unlink(pdfPath, (err) => {
-            if (err) console.error('Error al eliminar el archivo PDF:', err);
-        });
-
-        res.status(200).json({ message: 'Correo enviado correctamente.' });
     } catch (error) {
         console.error('Error al confirmar el pago:', error);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
