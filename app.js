@@ -8,7 +8,7 @@ const productoRouter = require('./controllers/productos');
 const loginRouter = require('./controllers/log-in');
 const ejs = require('ejs');
 const Excel = require('exceljs');
-const PDF = require('pdfkit');
+const PDFDocument = require('pdfkit');
 const subirProducto = require('./controllers/subirProducto');
 const bcrypt = require('bcryptjs');
 const Categoria = require('./models/categoria');
@@ -477,7 +477,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        const doc = new PDF();
+        const doc = new PDFDocument();
         const pdfPath = path.join(__dirname, 'factura.pdf');
 
         doc.pipe(fs.createWriteStream(pdfPath));
@@ -493,7 +493,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             console.log('PDF creado y listo para enviar.');
 
             const mailOptions = {
-                from: process.env.EMAIL_USER,  // Usar el correo del entorno
+                from: process.env.EMAIL_USER,
                 to: emailUsuario,
                 subject: 'Factura de Compras',
                 text: 'Gracias por tu compra. Adjunto encontrarás la factura de tu compra.',
@@ -504,20 +504,20 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                     }
                 ]
             };
-
-            try {
-                await transporter.sendMail(mailOptions);
-                console.log('Correo enviado correctamente.');
-
+            
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error al enviar el correo:', error);
+                    return res.status(500).json({ error: 'Error al enviar el correo.' });
+                }
+            
+                console.log('Correo enviado:', info.response);
                 fs.unlink(pdfPath, (err) => {
                     if (err) console.error('Error al eliminar el archivo PDF:', err);
                 });
-
+            
                 res.status(200).json({ message: 'Correo enviado correctamente.' });
-            } catch (error) {
-                console.error('Error al enviar el correo:', error);
-                res.status(500).json({ error: 'Error al enviar el correo.' });
-            }
+            });            
         });
 
         doc.on('error', (error) => {
@@ -709,7 +709,7 @@ app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, r
             await workbook.xlsx.write(res);
             res.end();
         } else if (format === 'pdf') {
-            const doc = new PDF();
+            const doc = new PDFDocument();
 
             const logoPath = path.join(__dirname, 'public', 'img', 'logo', 'LogoLetra.png');
             doc.image(logoPath, 50, 50, { width: 100 });
