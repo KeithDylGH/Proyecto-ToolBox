@@ -464,74 +464,60 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-// Ruta para confirmar el pago
+// Ruta para confirmar el pago desde el carrito
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { producto, precio, cantidad, metodo } = req.body;
+    const { productos, metodo } = req.body;
     const usuario = req.session.user;
-
-    console.log('Datos recibidos:', { producto, precio, cantidad, metodo });
-    console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
         console.log('Usuario no autenticado.');
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    const emailUsuario = req.body.correo || usuario.correo;
+    const emailUsuario = usuario.correo;
 
-    if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
+    if (!emailUsuario || !productos || productos.length === 0 || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        // Crear el PDF
-        const pdfPath = await pdfController.generarPdf({ producto, precio, cantidad, metodo });
+        // Crear el PDF con los detalles de todos los productos
+        const totalCompra = productos.reduce((total, item) => total + item.precio * item.cantidad, 0);
+        const pdfPath = await pdfController.generarPdf({ productos, totalCompra, metodo });
 
-        // Enviar el correo
-        try {
-            await transporter.sendMail({
-                from: process.env.EMAIL_USER,
-                to: emailUsuario,
-                subject: 'Factura de Compra',
-                html: `
-                    <html>
-                    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
-                        <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
-                            <p>Hola,</p>
-                            <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
-                            <p><strong>Método de Pago:</strong> ${metodo}</p>
-                            <p><strong>Producto:</strong> ${producto}</p>
-                            <p><strong>Precio:</strong> $${precio}</p>
-                            <p><strong>Cantidad:</strong> ${cantidad}</p>
-                            <p><strong>Total:</strong> $${(precio * cantidad).toFixed(2)}</p>
-                            <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
-                            <p>Saludos,<br>El equipo de ToolBox</p>
-                        </div>
-                    </body>
-                    </html>
-                `,
-                attachments: [
-                    {
-                        filename: 'factura.pdf',
-                        path: pdfPath
-                    }
-                ]
-            });
-            
-            console.log('Correo enviado correctamente.');
+        // Enviar el correo con el PDF adjunto
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: emailUsuario,
+            subject: 'Factura de Compra',
+            html: `
+                <html>
+                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
+                    <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                        <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
+                        <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
+                        <p><strong>Método de Pago:</strong> ${metodo}</p>
+                        <ul>
+                            ${productos.map(item => `<li>${item.nombre} - $${item.precio} x ${item.cantidad}</li>`).join('')}
+                        </ul>
+                        <p><strong>Total:</strong> $${totalCompra.toFixed(2)}</p>
+                        <p>Saludos,<br>El equipo de ToolBox</p>
+                    </div>
+                </body>
+                </html>
+            `,
+            attachments: [{ filename: 'factura.pdf', path: pdfPath }]
+        });
 
-            // Eliminar el archivo PDF temporal
-            fs.unlink(pdfPath, (err) => {
-                if (err) console.error('Error al eliminar el archivo PDF:', err);
-            });
+        console.log('Correo enviado correctamente.');
 
-            res.status(200).json({ message: 'Correo enviado correctamente.' });
-        } catch (error) {
-            console.error('Error al enviar el correo:', error);
-            res.status(500).json({ error: 'Error al enviar el correo.' });
-        }
+        // Eliminar el archivo PDF temporal
+        fs.unlink(pdfPath, (err) => {
+            if (err) console.error('Error al eliminar el archivo PDF:', err);
+        });
+
+        res.status(200).json({ message: 'Correo enviado correctamente.' });
     } catch (error) {
         console.error('Error al confirmar el pago:', error);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
