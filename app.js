@@ -388,7 +388,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const productoId = req.query.productoId;
         const cantidad = parseInt(req.query.cantidad, 10) || 1;
-        const usuario = req.session.user; // Usar req.session.user
+        const usuario = req.session.user;
 
         if (!productoId) {
             return res.status(400).send('ID del producto no proporcionado');
@@ -396,16 +396,21 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
         const producto = await iProducto.findById(productoId);
 
+        console.log('Producto:', producto); // Verifica la estructura del producto
+
         if (producto) {
-            const precio = producto.precio; // Obtener el precio del producto
+            const precio = producto.precio;
             const total = precio * cantidad;
             res.render('shop/Compra', {
-                producto: producto.nombre, // Suponiendo que el producto tiene una propiedad nombre
-                cantidad,
-                precio, // Pasar precio a la vista
-                total,
-                usuarioCorreo: usuario ? usuario.correo : 'no-reply@example.com' // Pasar la variable correcta
-            });            
+                producto: {
+                    nombre: producto.nombre,
+                    imagen: producto.imagen ? producto.imagen.data : '', // Manejo del caso en que imagen sea undefined
+                    precio: precio,
+                    cantidad: cantidad,
+                    total: total
+                },
+                usuarioCorreo: usuario ? usuario.correo : 'no-reply@example.com'
+            });
         } else {
             res.status(404).send('Producto no encontrado');
         }
