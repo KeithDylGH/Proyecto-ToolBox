@@ -1,21 +1,28 @@
-const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
+const { PDFDocument } = require('pdf-lib');
 
-exports.generarPdf = async ({ producto, precio, cantidad, metodo }) => {
+exports.generarPdf = async (datos) => {
+    const { producto, precio, cantidad, metodo } = datos;
+
     try {
-        const pdfDoc = await PDFDocument.create();
-        const page = pdfDoc.addPage([600, 400]);
-        const { width, height } = page.getSize();
+        const doc = await PDFDocument.create();
+        const page = doc.addPage([600, 400]);
+        page.drawText(`Factura de Compra\nProducto: ${producto}\nPrecio: $${precio}\nCantidad: ${cantidad}\nMétodo: ${metodo}`, {
+            x: 50,
+            y: 350,
+            size: 12
+        });
 
-        page.drawText('Confirmación de Compra', { x: 50, y: height - 50, size: 24, color: rgb(0, 0, 0) });
-        page.drawText(`Producto: ${producto}`, { x: 50, y: height - 100, size: 18, color: rgb(0, 0, 0) });
-        page.drawText(`Precio: $${precio}`, { x: 50, y: height - 130, size: 18, color: rgb(0, 0, 0) });
-        page.drawText(`Cantidad: ${cantidad}`, { x: 50, y: height - 160, size: 18, color: rgb(0, 0, 0) });
-        page.drawText(`Método de Pago: ${metodo}`, { x: 50, y: height - 190, size: 18, color: rgb(0, 0, 0) });
+        // Crear el directorio 'tmp' si no existe
+        const tmpDir = path.join(__dirname, 'tmp');
+        if (!fs.existsSync(tmpDir)) {
+            fs.mkdirSync(tmpDir);
+        }
 
-        const pdfBytes = await pdfDoc.save();
-        const pdfPath = path.join(__dirname, 'tmp', `factura_${Date.now()}.pdf`);
+        // Guardar el archivo PDF en la carpeta 'tmp'
+        const pdfPath = path.join(tmpDir, `factura_${Date.now()}.pdf`);
+        const pdfBytes = await doc.save();
         fs.writeFileSync(pdfPath, pdfBytes);
 
         return pdfPath;
