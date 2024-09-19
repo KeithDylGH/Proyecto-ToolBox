@@ -1,45 +1,23 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Mostrar métodos de pago
+    const confirmarCarritoForm = document.getElementById('confirmarCarritoForm');
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
     const metodosPago = document.getElementById('metodosPago');
 
     if (siguienteBtn && cancelarBtn && metodosPago) {
-        siguienteBtn.addEventListener('click', function () {
+        siguienteBtn.addEventListener('click', function (event) {
+            event.preventDefault(); // Evitar el reinicio de la página
             metodosPago.classList.remove('d-none');
             siguienteBtn.style.display = 'none';
             cancelarBtn.style.display = 'none';
         });
-    }
 
-    // Mostrar modales
-    const pagoMovilBtn = document.getElementById('pagoMovilBtn');
-    const transferenciaBtn = document.getElementById('transferenciaBtn');
-    const zinliBtn = document.getElementById('zinliBtn');
-    const cancelarPagoBtn = document.getElementById('cancelarPagoBtn');
-
-    if (pagoMovilBtn && transferenciaBtn && zinliBtn && cancelarPagoBtn) {
-        pagoMovilBtn.addEventListener('click', function () {
-            const pagoMovilModal = new bootstrap.Modal(document.getElementById('pagoMovilModal'));
-            pagoMovilModal.show();
-        });
-
-        transferenciaBtn.addEventListener('click', function () {
-            const transferenciaModal = new bootstrap.Modal(document.getElementById('transferenciaModal'));
-            transferenciaModal.show();
-        });
-
-        zinliBtn.addEventListener('click', function () {
-            const zinliModal = new bootstrap.Modal(document.getElementById('zinliModal'));
-            zinliModal.show();
-        });
-
-        cancelarPagoBtn.addEventListener('click', function () {
+        cancelarBtn.addEventListener('click', function (event) {
+            event.preventDefault(); // Evitar el reinicio de la página
             window.location.href = '/';
         });
     }
 
-    // Confirmar pago
     const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
     confirmarPagoBtns.forEach(form => {
