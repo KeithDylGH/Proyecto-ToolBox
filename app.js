@@ -424,10 +424,9 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 // Ruta para la compra de productos en el carrito
 app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        // Verificar si el usuario está autenticado
         const user = req.session.user;
         if (!user) {
-            return res.redirect('/'); // Redirigir si el usuario no está autenticado
+            return res.redirect('/');
         }
 
         // Obtener los productos del carrito desde la base de datos
@@ -444,19 +443,19 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
             return res.status(404).send('Usuario no encontrado');
         }
 
-        // Obtener los productos del carrito
-        const carrito = usuario.carrito.map(item => ({
-            _id: item.producto._id,
-            nombre: item.producto.nombre,
-            precio: item.producto.precio,
-            imagen: item.producto.imagen,
-            cantidad: item.cantidad
-        }));
+        // Obtener los productos del carrito y manejar el caso de productos nulos
+        const carrito = usuario.carrito
+            .filter(item => item.producto) // Filtrar productos nulos
+            .map(item => ({
+                _id: item.producto._id,
+                nombre: item.producto.nombre,
+                precio: item.producto.precio,
+                imagen: item.producto.imagen,
+                cantidad: item.cantidad
+            }));
 
-        // Calcular el total del carrito
         const totalCarrito = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
 
-        // Renderizar la vista con los productos del carrito
         res.render('shop/Compra/compraCarrito', { productos: carrito, totalCarrito });
     } catch (error) {
         console.error('Error al obtener los productos del carrito:', error);
