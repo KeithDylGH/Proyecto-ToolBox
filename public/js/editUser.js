@@ -3,7 +3,7 @@ document.getElementById('formEditarUsuario').addEventListener('submit', async fu
 
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
-    const userId = '<%= usuario.id %>'; // Asegúrate de pasar el ID del usuario aquí
+    const userId = '<%= usuario.id %>';
 
     try {
         const response = await fetch(`/api/usuarios/editar/${userId}`, {

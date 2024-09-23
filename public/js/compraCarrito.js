@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formulariosPago = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
     formulariosPago.forEach(formulario => {
-        formulario.addEventListener('click', function (event) {
+        formulario.addEventListener('submit', function (event) {
             event.preventDefault(); // Evitar que el formulario se envíe automáticamente
 
             let metodoPago;
@@ -69,16 +69,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Función para mostrar notificaciones
+    // Función para mostrar notificación
     function mostrarNotificacion(mensaje, tipo) {
-        const notificacion = document.createElement('div');
-        notificacion.className = `alert alert-${tipo}`;
-        notificacion.textContent = mensaje;
-
-        document.body.prepend(notificacion);
-
-        setTimeout(() => {
-            notificacion.remove();
-        }, 3000);
+        // Aquí puedes agregar código para mostrar una notificación en la interfaz
+        alert(mensaje);
     }
 });

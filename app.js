@@ -647,13 +647,23 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 });
 
 app.get('/cuenta/configuracion/cambiar-datos', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const usuario = req.session.user; // Asegúrate de que 'user' exista en la sesión.
-    
-    if (!usuario) {
-        return res.status(404).send('Usuario no encontrado');
-    }
+    try {
+        // Si el usuario está guardado en la sesión
+        const usuario = req.session.user;
 
-    res.render('account/cuenta/cliente/configuracion/datos', { usuario });
+        // O si necesitas obtener el usuario desde la base de datos
+        // const usuario = await CUsuario.buscarUsuarioPorId(req.session.user.id); // Ajusta esto según tu implementación
+        
+        if (!usuario) {
+            return res.status(404).send('Usuario no encontrado');
+        }
+
+        // Pasa el usuario a la vista
+        res.render('account/cuenta/cliente/configuracion/datos', { usuario });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al cargar la página de configuración');
+    }
 });
 
 app.get('/cuenta/atencion', authorize(['user', 'admin', 'boss']), async (req, res) => {
