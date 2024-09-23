@@ -554,7 +554,8 @@ app.post('/confirmar-compraCarrito', authorize(['user', 'admin', 'boss']), async
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    const emailUsuario = req.body.correo || usuario.correo;
+    // Usar el correo del usuario desde la sesión
+    const emailUsuario = usuario.correo;
 
     if (!emailUsuario || !productos || productos.length === 0) {
         console.log('Faltan datos necesarios para el correo.');
