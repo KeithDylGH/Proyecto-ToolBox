@@ -642,8 +642,14 @@ app.get('/cuenta/carrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    res.render('account/cuenta/cliente/configuracion');
+app.get('/cuenta/configuracion/cambiar-datos', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    const usuario = req.session.user; // Asegúrate de que 'user' exista en la sesión.
+    
+    if (!usuario) {
+        return res.status(404).send('Usuario no encontrado');
+    }
+
+    res.render('account/cuenta/cliente/configuracion/datos', { usuario });
 });
 
 app.get('/cuenta/configuracion/cambiar-datos', authorize(['user', 'admin', 'boss']), async (req, res) => {

@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formulariosPago = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
     formulariosPago.forEach(formulario => {
-        formulario.addEventListener('submit', function (event) {
+        formulario.addEventListener('click', function (event) {
             event.preventDefault(); // Evitar que el formulario se envíe automáticamente
 
             let metodoPago;
