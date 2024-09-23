@@ -488,9 +488,16 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
+    // Formatear los productos en un arreglo para la generación del PDF
+    const productos = [{
+        nombre: producto,
+        precio: parseFloat(precio),
+        cantidad: parseInt(cantidad, 10)
+    }];
+
     try {
         // Crear el PDF
-        const pdfPath = await pdfController.generarPdf({ producto, precio, cantidad, metodo });
+        const pdfPath = await pdfController.generarPdfCarrito(productos, metodo);
 
         // Enviar el correo
         try {
@@ -503,7 +510,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                     <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
                         <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
                             <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
-                            <p>Hola,</p>
+                            <p>Hola ${usuario.nombre || usuario.correo},</p>
                             <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
                             <p><strong>Método de Pago:</strong> ${metodo}</p>
                             <p><strong>Producto:</strong> ${producto}</p>
@@ -645,12 +652,23 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 });
 
 app.get('/cuenta/configuracion/cambiar-datos', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    // Aquí deberías cargar el usuario desde la base de datos
-    const usuario = await CUsuario.findById(req.session.user.id); // Asumiendo que el ID del usuario está en la sesión
-    if (!usuario) {
-        return res.status(404).send('Usuario no encontrado');
+    try {
+        // Asegúrate de que req.session.user.id tenga un valor
+        if (!req.session.user || !req.session.user.id) {
+            return res.status(403).send('No estás autorizado para ver esta página');
+        }
+
+        // Aquí deberías cargar el usuario desde la base de datos
+        const usuario = await CUsuario.findById(req.session.user.id); // Asegúrate de que este método exista en CUsuario
+        if (!usuario) {
+            return res.status(404).send('Usuario no encontrado');
+        }
+
+        res.render('account/cuenta/cliente/configuracion/datos', { usuario });
+    } catch (error) {
+        console.error('Error al cargar los datos del usuario:', error);
+        res.status(500).send('Error en el servidor');
     }
-    res.render('account/cuenta/cliente/configuracion/datos', { usuario });
 });
 
 app.get('/cuenta/atencion', authorize(['user', 'admin', 'boss']), async (req, res) => {
