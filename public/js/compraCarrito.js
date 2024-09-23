@@ -1,49 +1,50 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const confirmarCarritoForm = document.getElementById('confirmarCarritoForm');
+    // Mostrar métodos de pago
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
     const metodosPago = document.getElementById('metodosPago');
 
     if (siguienteBtn && cancelarBtn && metodosPago) {
         siguienteBtn.addEventListener('click', function (event) {
-            event.preventDefault(); // Evitar el reinicio de la página
-            metodosPago.classList.remove('d-none');
-            siguienteBtn.style.display = 'none';
-            cancelarBtn.style.display = 'none';
+            event.preventDefault(); // Evitar reiniciar la página
+            metodosPago.classList.remove('d-none'); // Mostrar métodos de pago
+            siguienteBtn.style.display = 'none'; // Ocultar botón de "Siguiente"
+            cancelarBtn.style.display = 'none'; // Ocultar botón de "Cancelar"
         });
 
         cancelarBtn.addEventListener('click', function (event) {
-            event.preventDefault(); // Evitar el reinicio de la página
-            window.location.href = '/';
+            event.preventDefault(); // Evitar reiniciar la página
+            window.location.href = '/'; // Redirigir a la página principal
         });
     }
 
-    const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
+    // Manejar el envío del formulario de pago (Pago Móvil, Transferencia, Zinli)
+    const formulariosPago = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
-    confirmarPagoBtns.forEach(form => {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
+    formulariosPago.forEach(formulario => {
+        formulario.addEventListener('submit', function (event) {
+            event.preventDefault(); // Evitar que el formulario se envíe automáticamente
 
-            const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
-                               form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
+            let metodoPago;
+            if (formulario.id === 'pagoMovilForm') {
+                metodoPago = 'Pago Móvil';
+            } else if (formulario.id === 'transferenciaForm') {
+                metodoPago = 'Transferencia';
+            } else if (formulario.id === 'zinliForm') {
+                metodoPago = 'Zinli';
+            }
 
-            // Obtener el correo del usuario
+            // Obtener el correo del usuario desde un meta tag o usar un correo por defecto
             const metaUsuarioCorreo = document.querySelector('meta[name="usuario-correo"]');
             const emailUsuario = metaUsuarioCorreo ? metaUsuarioCorreo.getAttribute('content') : 'no-reply@example.com';
 
-            // Obtener la información del producto
-            const productoElemento = document.querySelector('.card-title');
-            const producto = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
+            // Obtener los productos desde el formulario
+            const productos = JSON.parse(document.querySelector('input[name="productos"]').value);
 
-            // Obtener la cantidad
-            const cantidadElemento = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('Cantidad'));
-            const cantidad = parseInt(cantidadElemento ? cantidadElemento.textContent.replace('Cantidad: ', '') : '1', 10);
+            // Calcular el monto total
+            const totalMonto = productos.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0).toFixed(2);
 
-            // Obtener el total
-            const totalElemento = document.getElementById('totalMonto');
-            const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0').toFixed(2);
-
-            // Confirmar el pago
+            // Confirmar el pago enviando los datos al servidor
             fetch('/confirmar-pago', {
                 method: 'POST',
                 headers: {
@@ -51,9 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({
                     correo: emailUsuario,
-                    producto: producto,
-                    precio: total,
-                    cantidad: cantidad,
+                    productos: productos,
+                    total: totalMonto,
                     metodo: metodoPago
                 }),
             })
@@ -65,10 +65,11 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 mostrarNotificacion('Error al confirmar el pago.', 'danger');
                 console.error('Error al confirmar el pago:', error);
-            });                        
+            });
         });
     });
 
+    // Función para mostrar notificaciones
     function mostrarNotificacion(mensaje, tipo) {
         const notificacion = document.createElement('div');
         notificacion.className = `alert alert-${tipo}`;
