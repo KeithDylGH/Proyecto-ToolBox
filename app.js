@@ -542,11 +542,11 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 });
 
-app.post('/confirmar-carrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos } = req.body;
+app.post('/confirmar-compraCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    const productos = req.body.productos; // Aquí esperamos que los productos vengan como un array en el body.
     const usuario = req.session.user;
 
-    console.log('Datos recibidos:', { productos });
+    console.log('Productos recibidos:', productos);
     console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
@@ -562,31 +562,33 @@ app.post('/confirmar-carrito', authorize(['user', 'admin', 'boss']), async (req,
     }
 
     try {
-        // Crear el PDF
-        const pdfPath = await pdfController.generarPdf({
-            productos: productos,
-            metodo: 'No especificado' // Puedes actualizar esto si el método de pago es conocido
-        });
+        // Crear el PDF con la lista de productos
+        const pdfPath = await pdfController.generarPdfCarrito({ productos });
 
-        // Enviar el correo
+        // Preparar la lista de productos en HTML para el correo
+        const productosHtml = productos.map(producto => `
+            <div>
+                <h6>${producto.nombre}</h6>
+                <p>Precio Unitario: $${producto.precio.toFixed(2)}</p>
+                <p>Cantidad: ${producto.cantidad}</p>
+                <p>Total: $${(producto.precio * producto.cantidad).toFixed(2)}</p>
+            </div>
+        `).join('');
+
+        // Enviar el correo con el PDF adjunto
         try {
             await transporter.sendMail({
                 from: process.env.EMAIL_USER,
                 to: emailUsuario,
-                subject: 'Factura de Compra del Carrito',
+                subject: 'Factura de Compra - Carrito',
                 html: `
                     <html>
                     <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
                         <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <h2 style="text-align: center; color: #007bff;">Factura de Compra del Carrito</h2>
+                            <h2 style="text-align: center; color: #007bff;">Factura de Compra - Carrito</h2>
                             <p>Hola,</p>
                             <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
-                            <p><strong>Método de Pago:</strong> No especificado</p>
-                            <p><strong>Productos:</strong></p>
-                            <ul>
-                                ${productos.map(p => `<li>${p.nombre} (x${p.cantidad}) - $${(p.precio * p.cantidad).toFixed(2)}</li>`).join('')}
-                            </ul>
-                            <p><strong>Total:</strong> $${productos.reduce((total, p) => total + (p.precio * p.cantidad), 0).toFixed(2)}</p>
+                            ${productosHtml}
                             <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
                             <p>Saludos,<br>El equipo de ToolBox</p>
                         </div>
@@ -595,12 +597,12 @@ app.post('/confirmar-carrito', authorize(['user', 'admin', 'boss']), async (req,
                 `,
                 attachments: [
                     {
-                        filename: 'factura_carrito.pdf',
+                        filename: 'factura-carrito.pdf',
                         path: pdfPath
                     }
                 ]
             });
-            
+
             console.log('Correo enviado correctamente.');
 
             // Eliminar el archivo PDF temporal

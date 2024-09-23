@@ -166,6 +166,35 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
     }
 });
 
+// Endpoint para actualizar datos del usuario
+userRouter.put('/editar/:id', async (req, res) => {
+    const userId = req.params.id;
+    const { nombre, apellido, usuario, correo, numero, cedula } = req.body;
+
+    try {
+        // Verificar si el usuario existe
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        // Actualizar los datos del usuario
+        user.nombre = nombre || user.nombre;
+        user.apellido = apellido || user.apellido;
+        user.usuario = usuario || user.usuario;
+        user.correo = correo ? correo.toLowerCase() : user.correo;
+        user.numero = numero || user.numero;
+        user.cedula = cedula || user.cedula;
+
+        await user.save(); // Guardar los cambios en la base de datos
+
+        res.json({ success: true, message: 'Datos del usuario actualizados correctamente', user });
+    } catch (error) {
+        console.error('Error al actualizar los datos del usuario:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
+
 // Nuevo endpoint para verificar correos
 userRouter.get('/verificar-correos', async (req, res) => {
     try {
