@@ -542,11 +542,11 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 });
 
-app.post('/confirmar-compraCarrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const productos = req.body.productos; // Aquí esperamos que los productos vengan como un array en el body.
+/* app.post('/confirmar-carrito', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    const { productos } = req.body;
     const usuario = req.session.user;
 
-    console.log('Productos recibidos:', productos);
+    console.log('Datos recibidos:', { productos });
     console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
@@ -554,8 +554,7 @@ app.post('/confirmar-compraCarrito', authorize(['user', 'admin', 'boss']), async
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    // Usar el correo del usuario desde la sesión
-    const emailUsuario = usuario.correo;
+    const emailUsuario = req.body.correo || usuario.correo;
 
     if (!emailUsuario || !productos || productos.length === 0) {
         console.log('Faltan datos necesarios para el correo.');
@@ -563,33 +562,31 @@ app.post('/confirmar-compraCarrito', authorize(['user', 'admin', 'boss']), async
     }
 
     try {
-        // Crear el PDF con la lista de productos
-        const pdfPath = await pdfController.generarPdfCarrito({ productos });
+        // Crear el PDF
+        const pdfPath = await pdfController.generarPdf({
+            productos: productos,
+            metodo: 'No especificado' // Puedes actualizar esto si el método de pago es conocido
+        });
 
-        // Preparar la lista de productos en HTML para el correo
-        const productosHtml = productos.map(producto => `
-            <div>
-                <h6>${producto.nombre}</h6>
-                <p>Precio Unitario: $${producto.precio.toFixed(2)}</p>
-                <p>Cantidad: ${producto.cantidad}</p>
-                <p>Total: $${(producto.precio * producto.cantidad).toFixed(2)}</p>
-            </div>
-        `).join('');
-
-        // Enviar el correo con el PDF adjunto
+        // Enviar el correo
         try {
             await transporter.sendMail({
                 from: process.env.EMAIL_USER,
                 to: emailUsuario,
-                subject: 'Factura de Compra - Carrito',
+                subject: 'Factura de Compra del Carrito',
                 html: `
                     <html>
                     <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
                         <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <h2 style="text-align: center; color: #007bff;">Factura de Compra - Carrito</h2>
+                            <h2 style="text-align: center; color: #007bff;">Factura de Compra del Carrito</h2>
                             <p>Hola,</p>
                             <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
-                            ${productosHtml}
+                            <p><strong>Método de Pago:</strong> No especificado</p>
+                            <p><strong>Productos:</strong></p>
+                            <ul>
+                                ${productos.map(p => `<li>${p.nombre} (x${p.cantidad}) - $${(p.precio * p.cantidad).toFixed(2)}</li>`).join('')}
+                            </ul>
+                            <p><strong>Total:</strong> $${productos.reduce((total, p) => total + (p.precio * p.cantidad), 0).toFixed(2)}</p>
                             <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
                             <p>Saludos,<br>El equipo de ToolBox</p>
                         </div>
@@ -598,12 +595,12 @@ app.post('/confirmar-compraCarrito', authorize(['user', 'admin', 'boss']), async
                 `,
                 attachments: [
                     {
-                        filename: 'factura-carrito.pdf',
+                        filename: 'factura_carrito.pdf',
                         path: pdfPath
                     }
                 ]
             });
-
+            
             console.log('Correo enviado correctamente.');
 
             // Eliminar el archivo PDF temporal
@@ -620,7 +617,7 @@ app.post('/confirmar-compraCarrito', authorize(['user', 'admin', 'boss']), async
         console.error('Error al confirmar el pago:', error);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
-});
+}); */
 
 app.get('/cliente', authorize(['user', 'admin', 'boss']), (req, res) => {
     res.render('account/cuenta/cliente');
@@ -648,23 +645,12 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 });
 
 app.get('/cuenta/configuracion/cambiar-datos', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    try {
-        // Si el usuario está guardado en la sesión
-        const usuario = req.session.user;
-
-        // O si necesitas obtener el usuario desde la base de datos
-        // const usuario = await CUsuario.buscarUsuarioPorId(req.session.user.id); // Ajusta esto según tu implementación
-        
-        if (!usuario) {
-            return res.status(404).send('Usuario no encontrado');
-        }
-
-        // Pasa el usuario a la vista
-        res.render('account/cuenta/cliente/configuracion/datos', { usuario });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al cargar la página de configuración');
+    // Aquí deberías cargar el usuario desde la base de datos
+    const usuario = await CUsuario.findById(req.session.user.id); // Asumiendo que el ID del usuario está en la sesión
+    if (!usuario) {
+        return res.status(404).send('Usuario no encontrado');
     }
+    res.render('account/cuenta/cliente/configuracion/datos', { usuario });
 });
 
 app.get('/cuenta/atencion', authorize(['user', 'admin', 'boss']), async (req, res) => {

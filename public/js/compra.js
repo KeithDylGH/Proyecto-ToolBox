@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Obtener el total
             const totalElemento = document.getElementById('totalMonto');
-            const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Total: $', '') : '0').toFixed(2);
+            const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Monto Total: $', '') : '0').toFixed(2);
 
             // Confirmar el pago
             fetch('/confirmar-pago', {
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 mostrarNotificacion('Error al confirmar el pago.', 'danger');
                 console.error('Error al confirmar el pago:', error);
-            });                        
+            });
         });
     });
 

@@ -46,27 +46,39 @@
                             
                             <div class="form-group">
                                 <label for="nombre">Nombre:</label>
-                                <input type="text" id="nombre" name="nombre" value="<%= usuario.nombre %>" class="form-control" required>
+                                <input type="text" id="nombre" name="nombre" 
+                                       placeholder="<%= usuario.nombre %>" 
+                                       class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="apellido">Apellido:</label>
-                                <input type="text" id="apellido" name="apellido" value="<%= usuario.apellido %>" class="form-control" required>
+                                <input type="text" id="apellido" name="apellido" 
+                                       placeholder="<%= usuario.apellido %>" 
+                                       class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="usuario">Usuario:</label>
-                                <input type="text" id="usuario" name="usuario" value="<%= usuario.usuario %>" class="form-control" required>
+                                <input type="text" id="usuario" name="usuario" 
+                                       placeholder="<%= usuario.usuario %>" 
+                                       class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="correo">Correo:</label>
-                                <input type="email" id="correo" name="correo" value="<%= usuario.correo %>" class="form-control" required>
+                                <input type="email" id="correo" name="correo" 
+                                       placeholder="<%= usuario.correo %>" 
+                                       class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="numero">Número de Teléfono:</label>
-                                <input type="text" id="numero" name="numero" value="<%= usuario.numero %>" class="form-control">
+                                <input type="text" id="numero" name="numero" 
+                                       placeholder="<%= usuario.numero %>" 
+                                       class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="cedula">Cédula:</label>
-                                <input type="text" id="cedula" name="cedula" value="<%= usuario.cedula %>" class="form-control">
+                                <input type="text" id="cedula" name="cedula" 
+                                       placeholder="<%= usuario.cedula %>" 
+                                       class="form-control">
                             </div>
                             <button type="submit" class="btn btn-primary">Actualizar Datos</button>
                         </form>                        
@@ -74,11 +86,10 @@
                 </div>
             </div>
         </section>
-    </div>
-
-    <script src="/js/cuenta.js"></script>
-    <script src="/js/client.js"></script>
-    <script src="/js/editUser.js"></script>
+        
+        <script src="/js/cuenta.js"></script>
+        <script src="/js/client.js"></script>
+        <script src="/js/editUser.js"></script>         
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

@@ -167,7 +167,7 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar datos del usuario
-userRouter.put('/editar/:id', async (req, res) => {
+userRouter.post('/editar/:id', async (req, res) => {
     const userId = req.params.id;
     const { nombre, apellido, usuario, correo, numero, cedula } = req.body;
 
