@@ -1,3 +1,4 @@
+// PDFCONTROLLER.js
 const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
@@ -12,23 +13,14 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
     const page = pdfDoc.addPage([600, 400]);
     const { width, height } = page.getSize();
 
-    // Cargar el logo
     const logoPath = path.join(__dirname, '../public/img/logo/LogoLetra.png');
-    
-    // Verificar si el logo existe
-    if (!fs.existsSync(logoPath)) {
-        throw new Error(`Logo no encontrado en la ruta: ${logoPath}`);
-    }
-    
     const logoBytes = fs.readFileSync(logoPath);
     const logoImage = await pdfDoc.embedPng(logoBytes);
-    const logoDims = logoImage.scale(0.4); // Escalar el logo a 0.4 para hacerlo más pequeño
+    const logoDims = logoImage.scale(0.4);
 
-    // Calcular la posición para centrar el logo
     const logoX = (width - logoDims.width) / 2;
-    const logoY = height - logoDims.height - 20; // Espacio de 20px desde la parte superior
+    const logoY = height - logoDims.height - 20;
 
-    // Dibujar el logo en el PDF
     page.drawImage(logoImage, {
         x: logoX,
         y: logoY,
@@ -36,8 +28,7 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
         height: logoDims.height,
     });
 
-    // Agregar el título con un espacio adicional
-    const titleYPosition = logoY - 30; // Espacio de 30px debajo del logo
+    const titleYPosition = logoY - 30;
     page.drawText('Factura de Compra', {
         x: 50,
         y: titleYPosition,
@@ -47,12 +38,12 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
 
     page.drawText(`Método de Pago: ${metodo}`, {
         x: 50,
-        y: titleYPosition - 30, // Espacio de 30px debajo del título
+        y: titleYPosition - 30,
         size: 12,
         color: rgb(0, 0, 0),
     });
 
-    let yPosition = titleYPosition - 60; // Comenzar a dibujar productos 60px debajo del método de pago
+    let yPosition = titleYPosition - 60;
     for (const producto of productosArray) {
         const nombre = producto.nombre || 'Producto desconocido';
         const precio = producto.precio || 0;
@@ -67,7 +58,6 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
         yPosition -= 20;
     }
 
-    // Calcular el total
     const total = productosArray.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
     page.drawText(`Total: $${total.toFixed(2)}`, {
         x: 50,
@@ -77,7 +67,7 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
     });
 
     const pdfBytes = await pdfDoc.save();
-    const pdfPath = path.join(tmpDir, `factura-${Date.now()}.pdf`); // Guarda el PDF con un nombre único
+    const pdfPath = path.join(tmpDir, `factura-${Date.now()}.pdf`);
     fs.writeFileSync(pdfPath, pdfBytes);
     return pdfPath;
 };
