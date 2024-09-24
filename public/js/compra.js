@@ -46,17 +46,20 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
-                            form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
+            // Capturar el método de pago desde el formulario
+            const metodoPago = form.querySelector('input[name="metodoPago"]').value;
 
-            // Obtener todos los productos por sus IDs y nombres
-            const productos = Array.from(document.querySelectorAll('.producto')).map(producto => {
-                const id = producto.dataset.id; // Asegúrate de que cada producto tenga un data-attribute para el ID
-                const nombre = producto.querySelector('.nombre').textContent; // Asegúrate de que el nombre esté disponible en el elemento
-                return { id, nombre }; // Cambiar a enviar IDs y nombres
+            const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
+                const id = producto.dataset.id;
+                const nombre = producto.querySelector('h6').textContent; // Ajusta el selector según tu HTML
+                const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
+                return { id, nombre, cantidad };
             });
 
-            console.log('Productos:', productos); // Verifica aquí
+            if (!productos.length) {
+                mostrarNotificacion('No hay productos en el carrito.', 'danger');
+                return;
+            }
 
             // Confirmar el pago
             fetch('/confirmar-pago', {
@@ -65,9 +68,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    productos, // Cambiar a enviar IDs y nombres
-                    metodo: metodoPago
-                }),
+                    productos,
+                    metodo: metodoPago // Enviar el método de pago
+                }),                
             })
             .then(response => response.json())
             .then(data => {
@@ -76,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     mostrarNotificacion('Pago confirmado correctamente.', 'success');
                     console.log('Respuesta del servidor:', data);
-                    // Redireccionar o limpiar el formulario si es necesario
+                    // Aquí puedes limpiar los formularios o hacer alguna acción adicional sin redirigir
                 }
             })
             .catch(error => {

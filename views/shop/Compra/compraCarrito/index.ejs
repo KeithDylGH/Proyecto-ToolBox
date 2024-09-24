@@ -31,7 +31,7 @@
                       <h5 class="card-title">Productos en el Carrito</h5>
                       <ul class="list-group">
                           <% productos.forEach(producto => { %>
-                              <li class="list-group-item d-flex">
+                                <li class="list-group-item d-flex producto" data-id="<%= producto._id %>">
                                   <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-thumbnail me-3" style="max-width: 100px;">
                                   <div>
                                       <h6><%= producto.nombre %></h6>
