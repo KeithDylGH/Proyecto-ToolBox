@@ -1,8 +1,13 @@
-const { PDFDocument, rgb } = require('pdf-lib'); // Asegúrate de importar rgb
 const fs = require('fs');
 const path = require('path');
 
 exports.generarPdfCarrito = async (productosArray, metodo) => {
+    // Asegúrate de que el directorio tmp exista
+    const tmpDir = path.join(__dirname, '../tmp');
+    if (!fs.existsSync(tmpDir)) {
+        fs.mkdirSync(tmpDir);
+    }
+
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([600, 400]);
     const { width, height } = page.getSize();
@@ -46,7 +51,7 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
 
     // Guardar el PDF
     const pdfBytes = await pdfDoc.save();
-    const pdfPath = path.join(__dirname, '../tmp/factura.pdf');
+    const pdfPath = path.join(tmpDir, 'factura.pdf'); // Guardar en tmp
 
     fs.writeFileSync(pdfPath, pdfBytes);
     return pdfPath;
