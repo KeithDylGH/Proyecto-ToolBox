@@ -47,9 +47,8 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
 
             const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
-                               form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
+                            form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
 
-            // Obtener el correo del usuario
             const metaUsuarioCorreo = document.querySelector('meta[name="usuario-correo"]');
             const emailUsuario = metaUsuarioCorreo ? metaUsuarioCorreo.getAttribute('content') : 'no-reply@example.com';
 
@@ -57,18 +56,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const productoElemento = document.querySelector('.card-title');
             const productoNombre = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
 
+            // Obtener el precio del producto
+            const precioElemento = document.querySelector('.card-precio'); // Asegúrate de que esta clase esté en tu HTML
+            const productoPrecio = parseFloat(precioElemento ? precioElemento.textContent.replace('$', '').trim() : '0');
+
             // Obtener la cantidad
             const cantidadElemento = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('Cantidad'));
             const cantidad = parseInt(cantidadElemento ? cantidadElemento.textContent.replace('Cantidad: ', '') : '1', 10);
 
-            // Obtener el total
-            const totalElemento = document.getElementById('totalMonto');
-            const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Monto Total: $', '') : '0').toFixed(2);
-
             // Crear el arreglo de productos
             const productos = [{
                 nombre: productoNombre,
-                precio: parseFloat(total), // Asegúrate de que el precio sea un número
+                precio: productoPrecio, // Usamos el precio real del producto
                 cantidad: cantidad
             }];
 
@@ -80,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({
                     correo: emailUsuario,
-                    productos: productos, // Enviar productos como un arreglo
+                    productos: productos,
                     metodo: metodoPago
                 }),
             })

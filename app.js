@@ -491,11 +491,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     // Asegúrate de que 'productos' sea un arreglo
-    const productosArray = Array.isArray(productos) ? productos : [{
-        nombre: productos.producto,
-        precio: parseFloat(productos.precio),
-        cantidad: parseInt(productos.cantidad, 10)
-    }];
+    const productosArray = Array.isArray(productos) ? productos : [productos];
 
     try {
         // Crear el PDF
