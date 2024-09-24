@@ -481,7 +481,8 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    const emailUsuario = req.body.correo || usuario.correo;
+    // Asegúrate de que se obtiene el correo del usuario de la sesión
+    const emailUsuario = usuario.correo; // Usamos el correo del usuario desde la sesión
 
     if (!emailUsuario || !productos || !metodo) {
         console.log('Faltan datos necesarios para el correo.');

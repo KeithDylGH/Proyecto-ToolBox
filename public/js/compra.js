@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Obtener la información del producto
             const productoElemento = document.querySelector('.card-title');
-            const producto = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
+            const productoNombre = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
 
             // Obtener la cantidad
             const cantidadElemento = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('Cantidad'));
@@ -65,6 +65,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const totalElemento = document.getElementById('totalMonto');
             const total = parseFloat(totalElemento ? totalElemento.textContent.replace('Monto Total: $', '') : '0').toFixed(2);
 
+            // Crear el arreglo de productos
+            const productos = [{
+                nombre: productoNombre,
+                precio: parseFloat(total), // Asegúrate de que el precio sea un número
+                cantidad: cantidad
+            }];
+
             // Confirmar el pago
             fetch('/confirmar-pago', {
                 method: 'POST',
@@ -73,9 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({
                     correo: emailUsuario,
-                    producto: producto,
-                    precio: total,
-                    cantidad: cantidad,
+                    productos: productos, // Enviar productos como un arreglo
                     metodo: metodoPago
                 }),
             })
