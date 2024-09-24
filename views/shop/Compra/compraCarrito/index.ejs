@@ -13,7 +13,11 @@
 </head>
 
 <!-- Loader -->
-<div id="loader" class="loader" style="display: none;"></div>
+<div id="loader" class="d-none">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+</div>  
 
 <body>
   <header>
@@ -163,7 +167,7 @@
           </div>
 
           <!-- Modal PayPal -->
-          <div class="modal fade" id="paypalModal" tabindex="-1" aria-labelledby="paypalLabel" aria-hidden="true">
+        <div class="modal fade" id="paypalModal" tabindex="-1" aria-labelledby="paypalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -176,18 +180,16 @@
                             <li>Presiona el botón "Pagar con PayPal".</li>
                             <li>Se abrirá una ventana para iniciar sesión en tu cuenta de PayPal.</li>
                             <li>Confirma el pago en PayPal y regresa a nuestra página para finalizar la compra.</li>
-
-                            <div id="paypal-button-container"></div>
-                            <p id="result-message"></p>
                         </ul>
-
+                        <div id="paypal-button-container"></div>
+                        <p id="result-message"></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
-          </div>
+        </div>
     <% } else { %>
       <p>No hay productos en el carrito.</p>
     <% } %>
@@ -202,42 +204,79 @@
     ></script>
 
     <script>
-
         document.getElementById('paypalBtn').addEventListener('click', function() {
-          var paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
-          paypalModal.show();
+            var paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
+            paypalModal.show();
         });
       
+        // Script de PayPal
         paypal.Buttons({
-            style:{
+            style: {
                 color: 'blue',
                 shape: 'rect',
                 label: 'pago',
             },
-          createOrder: function(data, actions) {
-            return actions.order.create({
-              purchase_units: [{
-                amount: {
-                  value: '<%= productos.reduce((total, p) => total + (p.precio * (p.cantidad || 1)), 0).toFixed(2) %>'
-                }
-              }]
-            });
-          },
-          onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-              alert('Pago completado por ' + details.payer.name.given_name);
-              console.log(details)
-              // Aquí puedes enviar la confirmación del pago al servidor para registrarlo
-            });
-          },
-          onCancel: function(data) {
-            alert('Pago cancelado.');
-          },
-          onError: function(err) {
-            console.error('Error en el pago:', err);
-          }
-        }).render('#paypal-button-container'); // Renderiza el botón de PayPal en el contenedor
-
-      </script>
+            createOrder: function(data, actions) {
+                // Aquí necesitas calcular el total de los productos en JavaScript
+                let total = productos.reduce((total, p) => total + (p.precio * (p.cantidad || 1)), 0).toFixed(2);
+                
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: total
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                // Captura del pago exitoso
+                return actions.order.capture().then(function(details) {
+                    alert('Pago completado por ' + details.payer.name.given_name);
+                    // Aquí puedes enviar la confirmación del pago al servidor para registrarlo
+                    fetch('/confirmar-pago', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            productos: productos, // Asegúrate de que esto sea un objeto JavaScript
+                            metodo: 'paypal', // Especifica que el método de pago es PayPal
+                            detallesPago: details // Puedes enviar los detalles del pago para registro
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            mostrarNotificacion(data.error, 'danger');
+                        } else {
+                            mostrarNotificacion('Pago confirmado correctamente.', 'success');
+                        }
+                    })
+                    .catch(error => {
+                        mostrarNotificacion('Error al confirmar el pago.', 'danger');
+                        console.error('Error al confirmar el pago:', error);
+                    });
+                });
+            },
+            onCancel: function(data) {
+                alert('Pago cancelado.');
+            },
+            onError: function(err) {
+                console.error('Error en el pago:', err);
+            }
+        }).render('#paypal-button-container');
+    
+        function mostrarNotificacion(mensaje, tipo) {
+            const notificacion = document.createElement('div');
+            notificacion.className = `alert alert-${tipo}`;
+            notificacion.textContent = mensaje;
+    
+            document.body.prepend(notificacion);
+    
+            setTimeout(() => {
+                notificacion.remove();
+            }, 3000);
+        }
+    </script>        
 </body>
 </html>

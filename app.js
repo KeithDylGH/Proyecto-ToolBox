@@ -553,17 +553,22 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 
 app.get('/cuenta/configuracion/cambiar-datos', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        // Asegúrate de que req.session.user.id tenga un valor
+        // Verifica que la sesión del usuario esté correctamente configurada
         if (!req.session.user || !req.session.user.id) {
             return res.status(403).send('No estás autorizado para ver esta página');
         }
 
-        // Aquí deberías cargar el usuario desde la base de datos
-        const usuario = await CUsuario.findById(req.session.user.id); // Asegúrate de que este método exista en CUsuario
+        console.log('ID del usuario en la sesión:', req.session.user.id); // Log para verificar el ID de la sesión
+
+        // Cargar los datos del usuario desde la base de datos
+        const usuario = await CUsuario.findById(req.session.user.id);
+
+        // Si el usuario no se encuentra, devuelve un error 404
         if (!usuario) {
             return res.status(404).send('Usuario no encontrado');
         }
 
+        // Renderiza la vista pasando los datos del usuario
         res.render('account/cuenta/cliente/configuracion/datos', { usuario });
     } catch (error) {
         console.error('Error al cargar los datos del usuario:', error);

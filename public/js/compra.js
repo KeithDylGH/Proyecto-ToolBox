@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
     const metodosPago = document.getElementById('metodosPago');
-    const loader = document.getElementById('loader'); // Referencia al loader
 
     if (siguienteBtn && cancelarBtn && metodosPago) {
         siguienteBtn.addEventListener('click', function () {
@@ -13,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Mostrar modales de métodos de pago
+    // Mostrar modales
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
     const transferenciaBtn = document.getElementById('transferenciaBtn');
     const zinliBtn = document.getElementById('zinliBtn');
@@ -41,41 +40,41 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Confirmar pago
-    const confirmarPagoForms = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
+    const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
-    confirmarPagoForms.forEach(form => {
+    confirmarPagoBtns.forEach(form => {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
-            
+
             // Mostrar el loader
+            const loader = document.getElementById('loader');
             loader.classList.remove('d-none');
 
             // Capturar el método de pago desde el input oculto del formulario
             const metodoPagoInput = form.querySelector('input[name="metodoPago"]');
             if (!metodoPagoInput || !metodoPagoInput.value) {
                 mostrarNotificacion('Método de pago no especificado.', 'danger');
-                loader.classList.add('d-none'); // Ocultar el loader si hay un error
+                loader.classList.add('d-none'); // Ocultar el loader
                 return;
             }
             const metodoPago = metodoPagoInput.value;
 
-            // Capturar los productos del carrito
+            // Capturar los productos
             const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
                 const id = producto.dataset.id;
-                const nombre = producto.querySelector('.nombreProducto').textContent;
-                const cantidad = parseInt(producto.querySelector('.cantidadProducto').textContent) || 1;
-                const precio = parseFloat(producto.querySelector('.precioProducto').textContent) || 0;
-                return { id, nombre, cantidad, precio };
+                const nombre = producto.querySelector('h6').textContent;
+                const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
+                return { id, nombre, cantidad };
             });
 
             if (!productos.length) {
                 mostrarNotificacion('No hay productos en el carrito.', 'danger');
-                loader.classList.add('d-none'); // Ocultar el loader si no hay productos
+                loader.classList.add('d-none'); // Ocultar el loader
                 return;
             }
 
             // Enviar la confirmación de pago al servidor
-            fetch('/confirmar-pago-carrito', {
+            fetch('/confirmar-pago', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,15 +86,18 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(response => response.json())
             .then(data => {
-                loader.classList.add('d-none'); // Ocultar el loader cuando termine
+                // Ocultar el loader
+                loader.classList.add('d-none');
                 if (data.error) {
                     mostrarNotificacion(data.error, 'danger');
                 } else {
                     mostrarNotificacion('Pago confirmado correctamente.', 'success');
+                    console.log('Respuesta del servidor:', data);
                 }
             })
             .catch(error => {
-                loader.classList.add('d-none'); // Ocultar el loader si hay un error
+                // Ocultar el loader
+                loader.classList.add('d-none');
                 mostrarNotificacion('Error al confirmar el pago.', 'danger');
                 console.error('Error al confirmar el pago:', error);
             });
