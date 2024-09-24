@@ -470,7 +470,6 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 
 
 // Ruta para confirmar el pago
-// Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { productoIds, metodo } = req.body; // Cambiar a recibir IDs de productos
     const usuario = req.session.user;
@@ -492,7 +491,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     try {
         // Obtener productos de la base de datos
-        const productosArray = await iProducto.find({ _id: { $in: productoIds } }); // Asegúrate de que `Producto` sea tu modelo de Mongoose
+        const productosArray = await iProducto.find({ _id: { $in: productoIds } });
 
         if (productosArray.length === 0) {
             return res.status(404).json({ error: 'No se encontraron productos.' });
