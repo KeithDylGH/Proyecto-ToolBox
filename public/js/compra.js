@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
 
+            // Cerrar el modal antes de mostrar el loader
+            const modalElement = bootstrap.Modal.getInstance(form.closest('.modal'));
+            if (modalElement) {
+                modalElement.hide();
+            }
+
             // Mostrar el loader
             const loader = document.getElementById('loader');
             loader.classList.remove('d-none');
@@ -93,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     mostrarNotificacion('Pago confirmado correctamente.', 'success');
                     console.log('Respuesta del servidor:', data);
+                    // Redirigir o realizar otra acción aquí si es necesario
                 }
             })
             .catch(error => {

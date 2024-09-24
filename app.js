@@ -534,7 +534,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 app.get('/cuenta', authorize(['user', 'admin', 'boss']), (req, res) => {
     console.log('Usuario autenticado:', req.session.user); // Cambié `req.user` por `req.session.user`
     const CUsuario = req.session.user; // Obtén el usuario de la sesión
-    res.render('account/cuenta/index', { CUsuario });
+    res.render('account/cliente/index', { CUsuario });
 });
 
 // Rutas del carrito

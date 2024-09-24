@@ -189,6 +189,22 @@ userRouter.put('/actualizar', async (req, res) => {
         res.status(500).json({ error: 'Error en el servidor' });
     }
 });
+// Endpoint para obtener los datos de un usuario por ID
+userRouter.get('/obtener/:id', async (req, res) => {
+    const userId = req.params.id;
+    
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        res.render('editUser', { usuario: user });
+    } catch (error) {
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
+
 
 // Nuevo endpoint para verificar correos
 userRouter.get('/verificar-correos', async (req, res) => {

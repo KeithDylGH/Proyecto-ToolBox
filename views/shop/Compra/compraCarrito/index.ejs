@@ -21,9 +21,7 @@
 </div>  
 
 <!-- Notificación -->
-<div id="notification" class="notification d-none">
-    <p>Tu mensaje aquí</p>
-</div>
+<div id="notification" class="notification d-none"></div>
 
 <body>
   <header>
@@ -182,11 +180,9 @@
                     </div>
                     <div class="modal-body">
                         <p>Instrucciones para el pago con PayPal.</p>
+                        <div id="paypal-button-container"></div>
                     </div>
                     <div class="modal-footer">
-
-                        <div id="paypal-button-container"></div>
-
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
@@ -199,21 +195,18 @@
 
 
   <script src="/js/compra.js"></script>
-  <script
-            src="https://www.paypal.com/sdk/js?client-id=ASrqHJsAVar5r_BPz5aczxEfKFshCRz9iTy_7mJCh16QtQUPdPbFM4sxeKPx6WFRLpShJQtL4DTc3M8o"
-            data-sdk-integration-source="developer-studio"
-    ></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=ASrqHJsAVar5r_BPz5aczxEfKFshCRz9iTy_7mJCh16QtQUPdPbFM4sxeKPx6WFRLpShJQtL4DTc3M8o"
+        data-sdk-integration-source="developer-studio"></script>
 
     <script>
         document.getElementById('paypalBtn').addEventListener('click', function() {
             var paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
             paypalModal.show();
             
-            // Renderiza el botón de PayPal al abrir el modal
+            // Renderiza el botón de PayPal
             paypal.Buttons({
                 createOrder: function(data, actions) {
                     let total = productos.reduce((total, p) => total + (p.precio * (p.cantidad || 1)), 0).toFixed(2);
-                    
                     return actions.order.create({
                         purchase_units: [{
                             amount: {
@@ -256,16 +249,16 @@
                 onError: function(err) {
                     console.error('Error en el pago:', err);
                 }
-            }).render('#paypal-button-container'); // Renderiza el botón en el contenedor especificado
+            }).render('#paypal-button-container');
         });
-    
+
         function mostrarNotificacion(mensaje, tipo) {
             const notificacion = document.createElement('div');
             notificacion.className = `alert alert-${tipo}`;
             notificacion.textContent = mensaje;
-    
+
             document.body.prepend(notificacion);
-    
+
             setTimeout(() => {
                 notificacion.remove();
             }, 3000);

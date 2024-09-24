@@ -1,11 +1,11 @@
 .notification {
-    position: fixed;
-    top: 20px; /* Ajusta según necesites */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1100; /* Asegúrate de que esté por encima del loader */
+    position: fixed; /* Fijar la posición */
+    top: 20px; /* Ajustar según sea necesario */
+    right: 20px; /* Ajustar según sea necesario */
+    z-index: 1060; /* Asegurarse de que esté por encima del loader */
+    background-color: #f8d7da; /* Color de fondo para la notificación */
+    color: #721c24; /* Color de texto */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid #f5c6cb; /* Bordes */
+    border-radius: 5px; /* Bordes redondeados */
 }

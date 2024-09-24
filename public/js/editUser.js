@@ -1,43 +1,42 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById('formActualizar');
-
+// public/js/editUser.js
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('editUserForm');
+    
     if (form) {
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Evita el envío por defecto
+        // Enviar los datos del formulario al servidor
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evitar el envío normal del formulario
 
             const formData = new FormData(form);
-            const userData = {};
-
-            // Convertir FormData a objeto
-            formData.forEach((value, key) => {
-                userData[key] = value;
-            });
+            const data = {
+                nombre: formData.get('nombre'),
+                apellido: formData.get('apellido'),
+                usuario: formData.get('usuario'),
+                correo: formData.get('correo'),
+                password: formData.get('password'),
+                numero: formData.get('numero'),
+                cedula: formData.get('cedula')
+            };
 
             try {
-                const response = await fetch('/api/usuario/actualizar', { // Cambiado a /actualizar
-                    method: 'PUT', // Cambiado a PUT
+                const response = await fetch('/usuarios/actualizar', {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(userData),
+                    body: JSON.stringify(data)
                 });
 
-                if (!response.ok) {
-                    throw new Error('Error en la actualización del usuario');
-                }
-
-                const data = await response.json();
-
-                // Manejar la respuesta
-                if (data.success) {
-                    alert('Usuario actualizado con éxito');
-                    // Redirigir o realizar otras acciones
+                const result = await response.json();
+                if (result.success) {
+                    alert('Datos actualizados correctamente');
+                    window.location.href = '/cuenta';
                 } else {
-                    alert('Error: ' + data.message);
+                    alert(result.error || 'Error al actualizar datos');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                alert('Ocurrió un error al actualizar el usuario.');
+                console.error('Error al enviar datos:', error);
+                alert('Error en el servidor');
             }
         });
     }
