@@ -506,17 +506,15 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                     <html>
                     <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
                         <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <img src="/img/logo/logo.png" alt="Logo de ToolBox" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
+                            <img src="/img/logo/LogoLetra.png" alt="Logo de ToolBox" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
                             <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
                             <p>Hola ${usuario.nombre || usuario.correo},</p>
                             <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
                             <p><strong>Método de Pago:</strong> ${metodo}</p>
                             <p><strong>Productos:</strong></p>
                             <ul>
-                                ${productosArray.map(item => `
-                                    <li>
-                                        ${item.nombre}: $${item.precio.toFixed(2)} x ${item.cantidad} = $${(item.precio * item.cantidad).toFixed(2)}
-                                    </li>
+                                ${productos.map(producto => `
+                                    <li>${producto.nombre} - $${producto.precio.toFixed(2)} x ${producto.cantidad}</li>
                                 `).join('')}
                             </ul>
                             <p><strong>Total:</strong> $${(productosArray.reduce((total, item) => total + (item.precio * item.cantidad), 0)).toFixed(2)}</p>

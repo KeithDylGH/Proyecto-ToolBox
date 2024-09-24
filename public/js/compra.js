@@ -57,9 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const nombre = producto.querySelector('.card-title').textContent.trim();
                 const precio = parseFloat(producto.querySelector('.card-precio').textContent.replace('$', '').trim());
                 const cantidad = parseInt(producto.querySelector('.cantidad').textContent.replace('Cantidad: ', '').trim()) || 1;
-
+            
                 return { nombre, precio, cantidad };
-            });
+            });            
 
             // Confirmar el pago
             fetch('/confirmar-pago', {
