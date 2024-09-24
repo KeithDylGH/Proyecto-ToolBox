@@ -1,56 +1,72 @@
-const { PDFDocument, rgb } = require('pdf-lib'); // Asegúrate de importar rgb
+const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 
-exports.generarPdfCarrito = async (productosArray, metodo) => {
-    const tmpDir = path.join(__dirname, '../tmp');
-    if (!fs.existsSync(tmpDir)) {
-        fs.mkdirSync(tmpDir);
-    }
-
+async function generarPDF(datosCompra) {
+    // Crea un nuevo PDF
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([600, 400]);
-    const { width, height } = page.getSize();
+    const { nombreCliente, productos } = datosCompra;
 
-    page.drawText('Factura de Compra', {
-        x: 50,
-        y: height - 50,
+    // Establecer los márgenes
+    const margin = 50;
+    const yStart = page.getHeight() - margin;
+    let yPosition = yStart;
+
+    // Añadir el título
+    page.drawText('Confirmación de Compra', {
+        x: margin,
+        y: yPosition,
         size: 24,
         color: rgb(0, 0, 0),
     });
+    yPosition -= 30;
 
-    page.drawText(`Método de Pago: ${metodo}`, {
-        x: 50,
-        y: height - 80,
+    // Añadir nombre del cliente
+    page.drawText(`Nombre del Cliente: ${nombreCliente}`, {
+        x: margin,
+        y: yPosition,
         size: 12,
         color: rgb(0, 0, 0),
     });
+    yPosition -= 20;
 
-    let yPosition = height - 120;
-    for (const producto of productosArray) {
-        const nombre = producto.nombre || 'Producto desconocido';
-        const precio = producto.precio || 0;
-        const cantidad = producto.cantidad || 1;
-        
-        page.drawText(`${nombre}: $${precio} x ${cantidad} = $${(precio * cantidad).toFixed(2)}`, {
-            x: 50,
+    // Añadir lista de productos
+    page.drawText('Productos Comprados:', {
+        x: margin,
+        y: yPosition,
+        size: 12,
+        color: rgb(0, 0, 0),
+    });
+    yPosition -= 20;
+
+    // Recorre la lista de productos
+    productos.forEach(producto => {
+        page.drawText(`- ${producto.nombre} - Precio: $${producto.precio.toFixed(2)} - Cantidad: ${producto.cantidad}`, {
+            x: margin,
             y: yPosition,
             size: 12,
             color: rgb(0, 0, 0),
         });
-        yPosition -= 20;
-    }
+        yPosition -= 15; // Espaciado entre productos
+    });
 
-    const total = productosArray.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-    page.drawText(`Total: $${total.toFixed(2)}`, {
-        x: 50,
-        y: yPosition - 20,
+    // Añadir total
+    const totalCompra = productos.reduce((acc, producto) => acc + (producto.precio * (producto.cantidad || 1)), 0);
+    yPosition -= 10; // Espacio antes del total
+    page.drawText(`Total a Pagar: $${totalCompra.toFixed(2)}`, {
+        x: margin,
+        y: yPosition,
         size: 12,
         color: rgb(0, 0, 0),
     });
 
+    // Guarda el PDF en un archivo
     const pdfBytes = await pdfDoc.save();
-    const pdfPath = path.join(tmpDir, 'factura.pdf');
-    fs.writeFileSync(pdfPath, pdfBytes);
-    return pdfPath;
-};
+    const filePath = path.join(__dirname, 'tmp', 'confirmacion_compra.pdf');
+    fs.writeFileSync(filePath, pdfBytes);
+
+    return filePath;
+}
+
+module.exports = { generarPDF };
