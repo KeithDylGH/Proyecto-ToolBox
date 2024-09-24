@@ -47,7 +47,12 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
 
             // Capturar el método de pago desde el formulario
-            const metodoPago = form.querySelector('input[name="metodoPago"]').value;
+            const metodoPagoInput = form.querySelector('input[name="metodoPago"]');
+            if (!metodoPagoInput) {
+                mostrarNotificacion('Método de pago no especificado.', 'danger');
+                return;
+            }
+            const metodoPago = metodoPagoInput.value;
 
             const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
                 const id = producto.dataset.id;
@@ -79,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     mostrarNotificacion('Pago confirmado correctamente.', 'success');
                     console.log('Respuesta del servidor:', data);
-                    // Aquí puedes limpiar los formularios o hacer alguna acción adicional sin redirigir
                 }
             })
             .catch(error => {
