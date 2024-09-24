@@ -52,24 +52,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const metaUsuarioCorreo = document.querySelector('meta[name="usuario-correo"]');
             const emailUsuario = metaUsuarioCorreo ? metaUsuarioCorreo.getAttribute('content') : 'no-reply@example.com';
 
-            // Obtener la información del producto
-            const productoElemento = document.querySelector('.card-title');
-            const productoNombre = productoElemento ? productoElemento.textContent.trim() : 'Producto desconocido';
+            // Obtener todos los productos
+            const productos = Array.from(document.querySelectorAll('.producto')).map(producto => {
+                const nombre = producto.querySelector('.card-title').textContent.trim();
+                const precio = parseFloat(producto.querySelector('.card-precio').textContent.replace('$', '').trim());
+                const cantidad = parseInt(producto.querySelector('.cantidad').textContent.replace('Cantidad: ', '').trim()) || 1;
 
-            // Obtener el precio del producto
-            const precioElemento = document.querySelector('.card-precio'); // Asegúrate de que esta clase esté en tu HTML
-            const productoPrecio = parseFloat(precioElemento ? precioElemento.textContent.replace('$', '').trim() : '0');
-
-            // Obtener la cantidad
-            const cantidadElemento = Array.from(document.querySelectorAll('p')).find(p => p.textContent.includes('Cantidad'));
-            const cantidad = parseInt(cantidadElemento ? cantidadElemento.textContent.replace('Cantidad: ', '') : '1', 10);
-
-            // Crear el arreglo de productos
-            const productos = [{
-                nombre: productoNombre,
-                precio: productoPrecio, // Usamos el precio real del producto
-                cantidad: cantidad
-            }];
+                return { nombre, precio, cantidad };
+            });
 
             // Confirmar el pago
             fetch('/confirmar-pago', {
@@ -78,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    correo: emailUsuario,
                     productos: productos,
                     metodo: metodoPago
                 }),

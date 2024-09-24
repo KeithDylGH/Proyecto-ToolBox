@@ -482,7 +482,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    // Asegúrate de que se obtiene el correo del usuario de la sesión
     const emailUsuario = usuario.correo; // Usamos el correo del usuario desde la sesión
 
     if (!emailUsuario || !productos || !metodo) {
@@ -515,7 +514,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                             <ul>
                                 ${productosArray.map(item => `
                                     <li>
-                                        ${item.nombre}: $${item.precio} x ${item.cantidad} = $${(item.precio * item.cantidad).toFixed(2)}
+                                        ${item.nombre}: $${item.precio.toFixed(2)} x ${item.cantidad} = $${(item.precio * item.cantidad).toFixed(2)}
                                     </li>
                                 `).join('')}
                             </ul>
