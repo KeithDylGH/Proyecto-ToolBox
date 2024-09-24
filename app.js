@@ -471,10 +471,10 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productoIds, metodo } = req.body; // Cambiar a recibir IDs de productos
+    const { productos, metodo } = req.body; // Recibir productos y método de pago
     const usuario = req.session.user;
 
-    console.log('Datos recibidos:', { productoIds, metodo });
+    console.log('Datos recibidos:', { productos, metodo });
     console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
@@ -482,15 +482,16 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
-    const emailUsuario = usuario.correo; // Usamos el correo del usuario desde la sesión
+    const emailUsuario = usuario.correo;
 
-    if (!emailUsuario || !productoIds || !metodo) {
+    if (!emailUsuario || !productos || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        // Obtener productos de la base de datos
+        // Procesar productos y obtener sus detalles de la base de datos
+        const productoIds = productos.map(producto => producto.id); // Extraer los IDs de los productos
         const productosArray = await iProducto.find({ _id: { $in: productoIds } });
 
         if (productosArray.length === 0) {
@@ -499,6 +500,13 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         // Crear el PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, metodo);
+
+        // Preparar lista de productos para el cuerpo del correo
+        const listaProductosHtml = productosArray.map(producto => `
+            <li>${producto.nombre} - $${producto.precio.toFixed(2)} x ${producto.cantidad}</li>
+        `).join('');
+
+        const total = productosArray.reduce((total, item) => total + (item.precio * item.cantidad), 0);
 
         // Enviar el correo
         try {
@@ -517,11 +525,9 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                             <p><strong>Método de Pago:</strong> ${metodo}</p>
                             <p><strong>Productos:</strong></p>
                             <ul>
-                                ${productosArray.map(producto => `
-                                    <li>${producto.nombre} - $${producto.precio.toFixed(2)} x ${producto.cantidad}</li>
-                                `).join('')}
+                                ${listaProductosHtml}
                             </ul>
-                            <p><strong>Total:</strong> $${(productosArray.reduce((total, item) => total + (item.precio * item.cantidad), 0)).toFixed(2)}</p>
+                            <p><strong>Total:</strong> $${total.toFixed(2)}</p>
                             <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
                             <p>Saludos,<br>El equipo de ToolBox</p>
                         </div>

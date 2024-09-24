@@ -34,29 +34,29 @@
                           <div>
                               <h6><%= producto.nombre %></h6>
                               <p>Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
-                              <p>Cantidad: <%= producto.cantidad || 1 %></p> <!-- Mostrar cantidad o 1 si no está definida -->
-                              <p>Total: $<%= (producto.precio * (producto.cantidad || 1)).toFixed(2) %></p> <!-- Usar cantidad o 1 -->
+                              <p>Cantidad: <%= producto.cantidad || 1 %></p>
+                              <p>Total: $<%= (producto.precio * (producto.cantidad || 1)).toFixed(2) %></p>
                           </div>
                       </div>
-                      <h4 id="totalMonto" class="mt-3">Total: $<%= (producto.precio * (producto.cantidad || 1)).toFixed(2) %></h4> <!-- Usar cantidad o 1 -->
+                      <h4 id="totalMonto" class="mt-3">Total: $<%= (producto.precio * (producto.cantidad || 1)).toFixed(2) %></h4>
                   </div>
               </div>
           </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body text-center">
-              <a class="btn btn-primary btn-lg btn-block" href="#" id="siguienteBtn">Siguiente</a>
-              <a class="btn btn-secondary btn-lg btn-block mt-2" href="/" id="cancelarBtn">Cancelar</a>
-              <div id="metodosPago" class="d-none mt-3">
-                <h3>Selecciona el Método de Pago</h3>
-                <button id="pagoMovilBtn" class="btn btn-primary">Pago Móvil</button>
-                <button id="transferenciaBtn" class="btn btn-primary">Transferencia</button>
-                <button id="zinliBtn" class="btn btn-primary">Zinli</button>
-                <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
+          <div class="col-md-4">
+              <div class="card">
+                <div class="card-body text-center">
+                  <a class="btn btn-primary btn-lg btn-block" href="#" id="siguienteBtn">Siguiente</a>
+                  <a class="btn btn-secondary btn-lg btn-block mt-2" href="/" id="cancelarBtn">Cancelar</a>
+                  <div id="metodosPago" class="d-none mt-3">
+                    <h3>Selecciona el Método de Pago</h3>
+                    <button id="pagoMovilBtn" class="btn btn-primary">Pago Móvil</button>
+                    <button id="transferenciaBtn" class="btn btn-primary">Transferencia</button>
+                    <button id="zinliBtn" class="btn btn-primary">Zinli</button>
+                    <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
+                  </div>
+                </div>
               </div>
-            </div>
           </div>
-        </div>
       </div>
 
       <!-- Modal for Pago Móvil -->
