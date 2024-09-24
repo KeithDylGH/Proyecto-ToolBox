@@ -39,21 +39,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Obtener los botones de confirmación de pago
-    const confirmarPagoBtns = document.querySelectorAll('.confirmar-pago');
+    // Confirmar pago
+    const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
-    // Función para mostrar notificaciones
-    function mostrarNotificacion(mensaje, tipo) {
-        const notificacion = document.createElement('div');
-        notificacion.className = `alert alert-${tipo}`;
-        notificacion.textContent = mensaje;
-        document.body.appendChild(notificacion);
-        setTimeout(() => {
-            notificacion.remove();
-        }, 3000);
-    }
-
-    // Lógica para el botón de confirmación de pago
     confirmarPagoBtns.forEach(form => {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -66,36 +54,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             const metodoPago = metodoPagoInput.value;
 
-            // Lógica para productos en carrito
-            const productosEnCarrito = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
+            // Capturar los productos
+            const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
                 const id = producto.dataset.id;
                 const nombre = producto.querySelector('h6').textContent; // Ajusta según tu HTML
-                const cantidad = producto.querySelector('.cantidad') ? parseInt(producto.querySelector('.cantidad').textContent) : 1; // Cambiar a parseInt para capturar la cantidad
+                const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
                 return { id, nombre, cantidad };
             });
 
-            // Lógica para producto individual
-            const productoIndividual = document.querySelector('.producto-individual');
-            let productos = [];
-
-            if (productosEnCarrito.length) {
-                // Si hay productos en el carrito, utilizarlos
-                productos = productosEnCarrito;
-            } else if (productoIndividual) {
-                // Si hay un producto individual, capturar su información
-                const id = productoIndividual.dataset.id;
-                const nombre = productoIndividual.querySelector('h6').textContent; // Ajusta según tu HTML
-                const cantidad = 1; // Puedes ajustar esto según el HTML de tu producto individual
-                productos.push({ id, nombre, cantidad });
-            }
-
             if (!productos.length) {
-                mostrarNotificacion('No hay productos para procesar.', 'danger');
+                mostrarNotificacion('No hay productos en el carrito.', 'danger');
                 return;
             }
-
-            // Calcular el total y la cantidad
-            const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0);
 
             // Enviar la confirmación de pago al servidor
             fetch('/confirmar-pago', {
@@ -105,8 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({
                     productos,
-                    metodo: metodoPago, // Enviar el método de pago
-                    totalCantidad // Enviar cantidad total
+                    metodo: metodoPago // Enviar el método de pago
                 }),
             })
             .then(response => response.json())
