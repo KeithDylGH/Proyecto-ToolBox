@@ -13,7 +13,7 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
     const { width, height } = page.getSize();
 
     // Cargar el logo
-    const logoPath = path.join(__dirname, '../public/img/logo/logo.png');
+    const logoPath = path.join(__dirname, '../public/img/logo/LogoLetra.png');
     
     // Verificar si el logo existe
     if (!fs.existsSync(logoPath)) {
