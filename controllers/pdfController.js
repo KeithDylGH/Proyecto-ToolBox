@@ -58,7 +58,7 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
         const precio = producto.precio || 0;
         const cantidad = producto.cantidad || 1;
 
-        page.drawText(`${nombre}: $${precio} x ${cantidad} = $${(precio * cantidad).toFixed(2)}`, {
+        page.drawText(`${nombre}: $${precio.toFixed(2)} x ${cantidad} = $${(precio * cantidad).toFixed(2)}`, {
             x: 50,
             y: yPosition,
             size: 12,
@@ -67,6 +67,7 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
         yPosition -= 20;
     }
 
+    // Calcular el total
     const total = productosArray.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
     page.drawText(`Total: $${total.toFixed(2)}`, {
         x: 50,
@@ -76,7 +77,7 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
     });
 
     const pdfBytes = await pdfDoc.save();
-    const pdfPath = path.join(tmpDir, 'factura.pdf');
+    const pdfPath = path.join(tmpDir, `factura-${Date.now()}.pdf`); // Guarda el PDF con un nombre único
     fs.writeFileSync(pdfPath, pdfBytes);
     return pdfPath;
 };

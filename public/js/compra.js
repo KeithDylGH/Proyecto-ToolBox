@@ -39,9 +39,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Confirmar pago
-    const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
+    // Obtener los botones de confirmación de pago
+    const confirmarPagoBtns = document.querySelectorAll('.confirmar-pago');
 
+    // Función para mostrar notificaciones
+    function mostrarNotificacion(mensaje, tipo) {
+        const notificacion = document.createElement('div');
+        notificacion.className = `alert alert-${tipo}`;
+        notificacion.textContent = mensaje;
+        document.body.appendChild(notificacion);
+        setTimeout(() => {
+            notificacion.remove();
+        }, 3000);
+    }
+
+    // Lógica para el botón de confirmación de pago
     confirmarPagoBtns.forEach(form => {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -58,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const productosEnCarrito = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
                 const id = producto.dataset.id;
                 const nombre = producto.querySelector('h6').textContent; // Ajusta según tu HTML
-                const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
+                const cantidad = producto.querySelector('.cantidad') ? parseInt(producto.querySelector('.cantidad').textContent) : 1; // Cambiar a parseInt para capturar la cantidad
                 return { id, nombre, cantidad };
             });
 
@@ -82,6 +94,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // Calcular el total y la cantidad
+            const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0);
+
             // Enviar la confirmación de pago al servidor
             fetch('/confirmar-pago', {
                 method: 'POST',
@@ -90,7 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({
                     productos,
-                    metodo: metodoPago // Enviar el método de pago
+                    metodo: metodoPago, // Enviar el método de pago
+                    totalCantidad // Enviar cantidad total
                 }),
             })
             .then(response => response.json())

@@ -507,6 +507,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         `).join('');
 
         const total = productosArray.reduce((total, item) => total + (item.precio * item.cantidad), 0);
+        const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0); // Calcular total de productos
 
         // Enviar el correo
         try {
@@ -523,6 +524,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                             <p>Hola ${usuario.nombre || usuario.correo},</p>
                             <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
                             <p><strong>Método de Pago:</strong> ${metodo}</p>
+                            <p><strong>Total de Productos:</strong> ${totalCantidad}</p>
                             <p><strong>Productos:</strong></p>
                             <ul>
                                 ${listaProductosHtml}
