@@ -1,37 +1,44 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const formEditarUsuario = document.getElementById('formEditarUsuario');
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById('formActualizar');
 
-    formEditarUsuario.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const userId = document.getElementById('userId').value;
-        const nombre = document.getElementById('nombre').value;
-        const apellido = document.getElementById('apellido').value;
-        const usuario = document.getElementById('usuario').value;
-        const correo = document.getElementById('correo').value;
-        const numero = document.getElementById('numero').value;
-        const cedula = document.getElementById('cedula').value;
+    if (form) {
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Evita el envío por defecto
 
-        try {
-            const response = await fetch(`/api/usuarios/editar/${userId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ nombre, apellido, usuario, correo, numero, cedula }),
+            const formData = new FormData(form);
+            const userData = {};
+
+            // Convertir FormData a objeto
+            formData.forEach((value, key) => {
+                userData[key] = value;
             });
 
-            const result = await response.json();
+            try {
+                const response = await fetch('/api/usuario/actualizar', { // Cambiado a /actualizar
+                    method: 'PUT', // Cambiado a PUT
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
 
-            if (result.success) {
-                alert('Datos actualizados correctamente.');
-                window.location.reload(); // Recargar la página para reflejar los cambios
-            } else {
-                alert(result.message || 'Error al actualizar los datos.');
+                if (!response.ok) {
+                    throw new Error('Error en la actualización del usuario');
+                }
+
+                const data = await response.json();
+
+                // Manejar la respuesta
+                if (data.success) {
+                    alert('Usuario actualizado con éxito');
+                    // Redirigir o realizar otras acciones
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ocurrió un error al actualizar el usuario.');
             }
-        } catch (error) {
-            console.error('Error al enviar los datos:', error);
-            alert('Error en el servidor. Inténtalo de nuevo más tarde.');
-        }
-    });
+        });
+    }
 });

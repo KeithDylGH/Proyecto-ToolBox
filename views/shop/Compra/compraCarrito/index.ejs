@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/css/compraC.css">
     <link rel="stylesheet" href="/css/loader.css">
+    <link rel="stylesheet" href="/css/notification.css">
     <meta name="usuario-correo" content="<%= usuarioCorreo %>">
 </head>
 
@@ -181,9 +182,11 @@
                     </div>
                     <div class="modal-body">
                         <p>Instrucciones para el pago con PayPal.</p>
-                        <div id="paypal-button-container"></div> <!-- Contenedor para el botón -->
                     </div>
                     <div class="modal-footer">
+
+                        <div id="paypal-button-container"></div>
+
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
@@ -198,7 +201,6 @@
   <script src="/js/compra.js"></script>
   <script
             src="https://www.paypal.com/sdk/js?client-id=ASrqHJsAVar5r_BPz5aczxEfKFshCRz9iTy_7mJCh16QtQUPdPbFM4sxeKPx6WFRLpShJQtL4DTc3M8o"
-            
             data-sdk-integration-source="developer-studio"
     ></script>
 
@@ -209,11 +211,6 @@
             
             // Renderiza el botón de PayPal al abrir el modal
             paypal.Buttons({
-                style: {
-                    color: 'blue',
-                    shape: 'rect',
-                    label: 'pago',
-                },
                 createOrder: function(data, actions) {
                     let total = productos.reduce((total, p) => total + (p.precio * (p.cantidad || 1)), 0).toFixed(2);
                     

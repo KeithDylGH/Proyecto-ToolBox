@@ -463,14 +463,19 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         }
 
         // Crear el PDF
-        const pdfPath = await pdfController.generarPdfCarrito(productosArray, metodo);
+        const pdfPath = await pdfController.generarPdfCarrito(productosArray, productos, metodo);
 
         // Preparar lista de productos para el cuerpo del correo
-        const listaProductosHtml = productosArray.map(producto => `
-            <li>${producto.nombre} - $${producto.precio.toFixed(2)} x ${producto.cantidad}</li>
-        `).join('');
+        const listaProductosHtml = productos.map(producto => {
+            const productoEncontrado = productosArray.find(p => p._id.toString() === producto.id);
+            return `<li>${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)} x ${producto.cantidad}</li>`;
+        }).join('');
 
-        const total = productosArray.reduce((total, item) => total + (item.precio * item.cantidad), 0);
+        const total = productosArray.reduce((total, item) => {
+            const productoEncontrado = productos.find(p => p.id === item._id.toString());
+            return total + (item.precio * productoEncontrado.cantidad);
+        }, 0);
+        
         const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0); // Calcular total de productos
 
         // Enviar el correo
@@ -553,31 +558,8 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
     res.render('account/cuenta/cliente/configuracion');
 });
 
-app.get('/cuenta/configuracion/cambiar-datos', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    try {
-        console.log('Contenido de req.session.user:', req.session.user); // Agregado para depuración
-
-        // Verifica que la sesión del usuario esté correctamente configurada
-        if (!req.session.user || !req.session.user.id) {
-            return res.status(403).send('No estás autorizado para ver esta página');
-        }
-
-        console.log('ID del usuario en la sesión:', req.session.user.id); // Log para verificar el ID de la sesión
-
-        // Cargar los datos del usuario desde la base de datos
-        const usuario = await CUsuario.findById(req.session.user.id);
-
-        // Si el usuario no se encuentra, devuelve un error 404
-        if (!usuario) {
-            return res.status(404).send('Usuario no encontrado');
-        }
-
-        // Renderiza la vista pasando los datos del usuario
-        res.render('account/cuenta/cliente/configuracion/datos', { usuario });
-    } catch (error) {
-        console.error('Error al cargar los datos del usuario:', error);
-        res.status(500).send('Error en el servidor');
-    }
+app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    res.render('account/cuenta/cliente/configuracion/editar');
 });
 
 app.get('/cuenta/atencion', authorize(['user', 'admin', 'boss']), async (req, res) => {

@@ -3,7 +3,7 @@ const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 
-exports.generarPdfCarrito = async (productosArray, metodo) => {
+exports.generarPdfCarrito = async (productosArray, cantidades, metodo) => {
     const tmpDir = path.join(__dirname, '../tmp');
     if (!fs.existsSync(tmpDir)) {
         fs.mkdirSync(tmpDir);
@@ -44,10 +44,12 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
     });
 
     let yPosition = titleYPosition - 60;
-    for (const producto of productosArray) {
+    let total = 0;
+    for (let i = 0; i < productosArray.length; i++) {
+        const producto = productosArray[i];
+        const cantidad = cantidades[i].cantidad; // Obtiene la cantidad correspondiente
         const nombre = producto.nombre || 'Producto desconocido';
         const precio = producto.precio || 0;
-        const cantidad = producto.cantidad || 1;
 
         page.drawText(`${nombre}: $${precio.toFixed(2)} x ${cantidad} = $${(precio * cantidad).toFixed(2)}`, {
             x: 50,
@@ -55,10 +57,10 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
             size: 12,
             color: rgb(0, 0, 0),
         });
+        total += precio * cantidad; // Acumula el total
         yPosition -= 20;
     }
 
-    const total = productosArray.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
     page.drawText(`Total: $${total.toFixed(2)}`, {
         x: 50,
         y: yPosition - 20,
