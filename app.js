@@ -526,8 +526,10 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 });
 
-app.get('/cliente', authorize(['user', 'admin', 'boss']), (req, res) => {
-    res.render('account/cuenta/cliente');
+app.get('/cuenta', authorize(['user', 'admin', 'boss']), (req, res) => {
+    console.log('Usuario autenticado:', req.session.user); // Cambié `req.user` por `req.session.user`
+    const CUsuario = req.session.user; // Obtén el usuario de la sesión
+    res.render('account/cuenta/index', { CUsuario });
 });
 
 // Rutas del carrito
@@ -553,6 +555,8 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 
 app.get('/cuenta/configuracion/cambiar-datos', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
+        console.log('Contenido de req.session.user:', req.session.user); // Agregado para depuración
+
         // Verifica que la sesión del usuario esté correctamente configurada
         if (!req.session.user || !req.session.user.id) {
             return res.status(403).send('No estás autorizado para ver esta página');
