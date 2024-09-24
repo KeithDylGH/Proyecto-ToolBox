@@ -1,10 +1,17 @@
 const { PDFDocument } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
-const tmpDir = 'tmp'; // Asegúrate de que esta carpeta exista
+
+// Ruta temporal para almacenar PDFs
+const tmpDir = path.join(__dirname, '../tmp');
 
 exports.generarPdfCarrito = async (productos, metodo) => {
     try {
+        // Verificar si el directorio 'tmp' existe y crearlo si no
+        if (!fs.existsSync(tmpDir)) {
+            fs.mkdirSync(tmpDir);
+        }
+
         const doc = await PDFDocument.create();
         const page = doc.addPage([600, 400]);
         
@@ -14,7 +21,7 @@ exports.generarPdfCarrito = async (productos, metodo) => {
 
         productos.forEach(item => {
             const totalItem = item.precio * item.cantidad;
-            contenido += `Producto: ${item.nombre}, Precio: $${item.precio}, Cantidad: ${item.cantidad}, Total: $${totalItem.toFixed(2)}\n`;
+            contenido += `Producto: ${item.nombre}, Precio: $${item.precio.toFixed(2)}, Cantidad: ${item.cantidad}, Total: $${totalItem.toFixed(2)}\n`;
             totalGeneral += totalItem;
         });
 

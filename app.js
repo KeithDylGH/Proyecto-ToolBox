@@ -470,10 +470,10 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 
 
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { producto, precio, cantidad, metodo } = req.body;
+    const { productos, metodo } = req.body; // Cambiamos para recibir un array de productos
     const usuario = req.session.user;
 
-    console.log('Datos recibidos:', { producto, precio, cantidad, metodo });
+    console.log('Datos recibidos:', { productos, metodo });
     console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
@@ -483,21 +483,21 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     const emailUsuario = req.body.correo || usuario.correo;
 
-    if (!emailUsuario || !producto || !precio || !cantidad || !metodo) {
+    if (!emailUsuario || !productos || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
-    // Formatear los productos en un arreglo para la generación del PDF
-    const productos = [{
-        nombre: producto,
-        precio: parseFloat(precio),
-        cantidad: parseInt(cantidad, 10)
+    // Asegúrate de que 'productos' sea un arreglo
+    const productosArray = Array.isArray(productos) ? productos : [{
+        nombre: productos.producto,
+        precio: parseFloat(productos.precio),
+        cantidad: parseInt(productos.cantidad, 10)
     }];
 
     try {
         // Crear el PDF
-        const pdfPath = await pdfController.generarPdfCarrito(productos, metodo);
+        const pdfPath = await pdfController.generarPdfCarrito(productosArray, metodo);
 
         // Enviar el correo
         try {
@@ -513,10 +513,15 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                             <p>Hola ${usuario.nombre || usuario.correo},</p>
                             <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
                             <p><strong>Método de Pago:</strong> ${metodo}</p>
-                            <p><strong>Producto:</strong> ${producto}</p>
-                            <p><strong>Precio:</strong> $${precio}</p>
-                            <p><strong>Cantidad:</strong> ${cantidad}</p>
-                            <p><strong>Total:</strong> $${(precio * cantidad).toFixed(2)}</p>
+                            <p><strong>Productos:</strong></p>
+                            <ul>
+                                ${productosArray.map(item => `
+                                    <li>
+                                        ${item.nombre}: $${item.precio} x ${item.cantidad} = $${(item.precio * item.cantidad).toFixed(2)}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                            <p><strong>Total:</strong> $${(productosArray.reduce((total, item) => total + (item.precio * item.cantidad), 0)).toFixed(2)}</p>
                             <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
                             <p>Saludos,<br>El equipo de ToolBox</p>
                         </div>
