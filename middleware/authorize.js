@@ -20,9 +20,9 @@ module.exports = (rolesPermitidos = [], rutasPublicas = []) => {
         console.log('Usuario autenticado:', user);
         console.log('Correo del usuario autenticado:', user.correo); // Mostrar el correo
 
-        // Verificar permisos
+        // Verificar permisos y roles permitidos
         if (!rolesPermitidos.includes(user.rol)) {
-            console.log('Permiso denegado para la ruta', req.path);
+            console.log(`Permiso denegado para la ruta ${req.path} - Rol requerido: ${rolesPermitidos}, Rol del usuario: ${user.rol}`);
             return res.status(403).json({ success: false, message: 'No tienes permiso para realizar esta acción' });
         }
 
