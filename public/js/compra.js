@@ -46,17 +46,18 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            // Capturar el método de pago desde el formulario
+            // Capturar el método de pago desde el input oculto del formulario
             const metodoPagoInput = form.querySelector('input[name="metodoPago"]');
-            if (!metodoPagoInput) {
+            if (!metodoPagoInput || !metodoPagoInput.value) {
                 mostrarNotificacion('Método de pago no especificado.', 'danger');
                 return;
             }
             const metodoPago = metodoPagoInput.value;
 
+            // Capturar los productos
             const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
                 const id = producto.dataset.id;
-                const nombre = producto.querySelector('h6').textContent; // Ajusta el selector según tu HTML
+                const nombre = producto.querySelector('h6').textContent; // Ajusta según tu HTML
                 const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
                 return { id, nombre, cantidad };
             });
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Confirmar el pago
+            // Enviar la confirmación de pago al servidor
             fetch('/confirmar-pago', {
                 method: 'POST',
                 headers: {
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({
                     productos,
                     metodo: metodoPago // Enviar el método de pago
-                }),                
+                }),
             })
             .then(response => response.json())
             .then(data => {
