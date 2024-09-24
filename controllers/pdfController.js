@@ -13,7 +13,7 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
     const { width, height } = page.getSize();
 
     // Cargar el logo
-    const logoPath = path.join(__dirname, '/img/logo/LogoLetra.png'); // Asegúrate de usar la ruta correcta
+    const logoPath = path.join(__dirname, '../public/img/logo/logo.png');
     const logoBytes = fs.readFileSync(logoPath);
     const logoImage = await pdfDoc.embedPng(logoBytes);
     const logoDims = logoImage.scale(0.5); // Escalar el logo si es necesario
