@@ -1,3 +1,4 @@
+const { PDFDocument, rgb } = require('pdf-lib'); // Asegúrate de importar rgb
 const fs = require('fs');
 const path = require('path');
 
