@@ -14,6 +14,12 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
 
     // Cargar el logo
     const logoPath = path.join(__dirname, '../public/img/logo/logo.png');
+    
+    // Verificar si el logo existe
+    if (!fs.existsSync(logoPath)) {
+        throw new Error(`Logo no encontrado en la ruta: ${logoPath}`);
+    }
+    
     const logoBytes = fs.readFileSync(logoPath);
     const logoImage = await pdfDoc.embedPng(logoBytes);
     const logoDims = logoImage.scale(0.5); // Escalar el logo si es necesario
@@ -50,7 +56,7 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
         const nombre = producto.nombre || 'Producto desconocido';
         const precio = producto.precio || 0;
         const cantidad = producto.cantidad || 1;
-        
+
         page.drawText(`${nombre}: $${precio} x ${cantidad} = $${(precio * cantidad).toFixed(2)}`, {
             x: 50,
             y: yPosition,

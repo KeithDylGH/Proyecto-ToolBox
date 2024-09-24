@@ -506,6 +506,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                     <html>
                     <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
                         <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                            <img src="/img/logo/logo.png" alt="Logo de ToolBox" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
                             <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
                             <p>Hola ${usuario.nombre || usuario.correo},</p>
                             <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
@@ -523,7 +524,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                             <p>Saludos,<br>El equipo de ToolBox</p>
                         </div>
                     </body>
-                    </html>
+                </html>
                 `,
                 attachments: [
                     {
