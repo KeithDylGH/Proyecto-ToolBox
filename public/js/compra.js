@@ -39,45 +39,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Confirmar pago
-    const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
+    // Confirmar pago con el botón de confirmar
+    document.querySelector('#confirmarPagoBtn').addEventListener('click', (event) => {
+        event.preventDefault();
 
-    confirmarPagoBtns.forEach(form => {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
+        const metodoPago = document.querySelector('input[name="metodoPago"]:checked').value;
 
-            const metodoPago = form.id === 'pagoMovilForm' ? 'Pago Móvil' : 
-                            form.id === 'transferenciaForm' ? 'Transferencia' : 'Zinli';
+        // Recolectar IDs de productos
+        const productoIds = Array.from(document.querySelectorAll('.producto[data-id]')).map(producto => producto.dataset.id);
 
-            const metaUsuarioCorreo = document.querySelector('meta[name="usuario-correo"]');
-            const emailUsuario = metaUsuarioCorreo ? metaUsuarioCorreo.getAttribute('content') : 'no-reply@example.com';
+        console.log('Datos a enviar:', { productoIds, metodo: metodoPago });
 
-            // Obtener todos los productos por sus IDs
-            const productos = Array.from(document.querySelectorAll('.producto')).map(producto => {
-                const id = producto.dataset.id; // Asegúrate de que cada producto tenga un data-attribute para el ID
-                return id;            
-            });
-
-            // Confirmar el pago
-            fetch('/confirmar-pago', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    productoIds: productos, // Cambiar a enviar IDs
-                    metodo: metodoPago
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
+        // Confirmar el pago
+        fetch('/confirmar-pago', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                productoIds: productoIds,
+                metodo: metodoPago
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                mostrarNotificacion(data.error, 'danger');
+            } else {
                 mostrarNotificacion('Pago confirmado correctamente.', 'success');
                 console.log('Respuesta del servidor:', data);
-            })
-            .catch(error => {
-                mostrarNotificacion('Error al confirmar el pago.', 'danger');
-                console.error('Error al confirmar el pago:', error);
-            });
+                // Redireccionar o limpiar el formulario si es necesario
+            }
+        })
+        .catch(error => {
+            mostrarNotificacion('Error al confirmar el pago.', 'danger');
+            console.error('Error al confirmar el pago:', error);
         });
     });
 
