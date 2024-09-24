@@ -52,14 +52,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const metaUsuarioCorreo = document.querySelector('meta[name="usuario-correo"]');
             const emailUsuario = metaUsuarioCorreo ? metaUsuarioCorreo.getAttribute('content') : 'no-reply@example.com';
 
-            // Obtener todos los productos
+            // Obtener todos los productos por sus IDs
             const productos = Array.from(document.querySelectorAll('.producto')).map(producto => {
-                const nombre = producto.querySelector('.card-title').textContent.trim();
-                const precio = parseFloat(producto.querySelector('.card-precio').textContent.replace('$', '').trim());
-                const cantidad = parseInt(producto.querySelector('.cantidad').textContent.replace('Cantidad: ', '').trim()) || 1;
-            
-                return { nombre, precio, cantidad };
-            });            
+                const id = producto.dataset.id; // Asegúrate de que cada producto tenga un data-attribute para el ID
+                return id;            
+            });
 
             // Confirmar el pago
             fetch('/confirmar-pago', {
@@ -68,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    productos: productos,
+                    productoIds: productos, // Cambiar a enviar IDs
                     metodo: metodoPago
                 }),
             })

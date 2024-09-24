@@ -1,4 +1,4 @@
-const { PDFDocument, rgb } = require('pdf-lib'); // Asegúrate de importar rgb
+const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 
@@ -22,11 +22,11 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
     
     const logoBytes = fs.readFileSync(logoPath);
     const logoImage = await pdfDoc.embedPng(logoBytes);
-    const logoDims = logoImage.scale(0.5); // Escalar el logo si es necesario
+    const logoDims = logoImage.scale(0.4); // Escalar el logo a 0.4 para hacerlo más pequeño
 
     // Calcular la posición para centrar el logo
     const logoX = (width - logoDims.width) / 2;
-    const logoY = height - logoDims.height - 10; // Espacio de 10px desde la parte superior
+    const logoY = height - logoDims.height - 20; // Espacio de 20px desde la parte superior
 
     // Dibujar el logo en el PDF
     page.drawImage(logoImage, {
@@ -36,22 +36,23 @@ exports.generarPdfCarrito = async (productosArray, metodo) => {
         height: logoDims.height,
     });
 
-    // Agregar el título
+    // Agregar el título con un espacio adicional
+    const titleYPosition = logoY - 30; // Espacio de 30px debajo del logo
     page.drawText('Factura de Compra', {
         x: 50,
-        y: height - 50,
+        y: titleYPosition,
         size: 24,
         color: rgb(0, 0, 0),
     });
 
     page.drawText(`Método de Pago: ${metodo}`, {
         x: 50,
-        y: height - 80,
+        y: titleYPosition - 30, // Espacio de 30px debajo del título
         size: 12,
         color: rgb(0, 0, 0),
     });
 
-    let yPosition = height - 120;
+    let yPosition = titleYPosition - 60; // Comenzar a dibujar productos 60px debajo del método de pago
     for (const producto of productosArray) {
         const nombre = producto.nombre || 'Producto desconocido';
         const precio = producto.precio || 0;

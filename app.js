@@ -470,11 +470,12 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 
 
 // Ruta para confirmar el pago
+// Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos, metodo } = req.body; // Cambiamos para recibir un array de productos
+    const { productoIds, metodo } = req.body; // Cambiar a recibir IDs de productos
     const usuario = req.session.user;
 
-    console.log('Datos recibidos:', { productos, metodo });
+    console.log('Datos recibidos:', { productoIds, metodo });
     console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
@@ -484,15 +485,19 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     const emailUsuario = usuario.correo; // Usamos el correo del usuario desde la sesión
 
-    if (!emailUsuario || !productos || !metodo) {
+    if (!emailUsuario || !productoIds || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
-    // Asegúrate de que 'productos' sea un arreglo
-    const productosArray = Array.isArray(productos) ? productos : [productos];
-
     try {
+        // Obtener productos de la base de datos
+        const productosArray = await iProducto.find({ _id: { $in: productoIds } }); // Asegúrate de que `Producto` sea tu modelo de Mongoose
+
+        if (productosArray.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron productos.' });
+        }
+
         // Crear el PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, metodo);
 
@@ -513,7 +518,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                             <p><strong>Método de Pago:</strong> ${metodo}</p>
                             <p><strong>Productos:</strong></p>
                             <ul>
-                                ${productos.map(producto => `
+                                ${productosArray.map(producto => `
                                     <li>${producto.nombre} - $${producto.precio.toFixed(2)} x ${producto.cantidad}</li>
                                 `).join('')}
                             </ul>
