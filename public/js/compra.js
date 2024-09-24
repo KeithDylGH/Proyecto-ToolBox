@@ -54,16 +54,31 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             const metodoPago = metodoPagoInput.value;
 
-            // Capturar los productos
-            const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
+            // Lógica para productos en carrito
+            const productosEnCarrito = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
                 const id = producto.dataset.id;
                 const nombre = producto.querySelector('h6').textContent; // Ajusta según tu HTML
                 const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
                 return { id, nombre, cantidad };
             });
 
+            // Lógica para producto individual
+            const productoIndividual = document.querySelector('.producto-individual');
+            let productos = [];
+
+            if (productosEnCarrito.length) {
+                // Si hay productos en el carrito, utilizarlos
+                productos = productosEnCarrito;
+            } else if (productoIndividual) {
+                // Si hay un producto individual, capturar su información
+                const id = productoIndividual.dataset.id;
+                const nombre = productoIndividual.querySelector('h6').textContent; // Ajusta según tu HTML
+                const cantidad = 1; // Puedes ajustar esto según el HTML de tu producto individual
+                productos.push({ id, nombre, cantidad });
+            }
+
             if (!productos.length) {
-                mostrarNotificacion('No hay productos en el carrito.', 'danger');
+                mostrarNotificacion('No hay productos para procesar.', 'danger');
                 return;
             }
 
