@@ -469,6 +469,7 @@ app.get('/comprasCarrito', authorize(['user', 'admin', 'boss']), async (req, res
 });
 
 
+// Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { productos, metodo } = req.body; // Cambiamos para recibir un array de productos
     const usuario = req.session.user;

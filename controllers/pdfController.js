@@ -2,46 +2,52 @@ const { PDFDocument } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 
-// Ruta temporal para almacenar PDFs
-const tmpDir = path.join(__dirname, '../tmp');
+exports.generarPdfCarrito = async (productosArray, metodo) => {
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([600, 400]);
+    const { width, height } = page.getSize();
 
-exports.generarPdfCarrito = async (productos, metodo) => {
-    try {
-        // Verificar si el directorio 'tmp' existe y crearlo si no
-        if (!fs.existsSync(tmpDir)) {
-            fs.mkdirSync(tmpDir);
-        }
+    // Establecer el título
+    page.drawText('Factura de Compra', {
+        x: 50,
+        y: height - 50,
+        size: 24,
+        color: rgb(0, 0, 0),
+    });
 
-        const doc = await PDFDocument.create();
-        const page = doc.addPage([600, 400]);
-        
-        // Estilo y texto inicial
-        let contenido = `Factura de Compra\nMétodo: ${metodo}\n\nProductos:\n`;
-        let totalGeneral = 0;
+    // Establecer el método de pago
+    page.drawText(`Método de Pago: ${metodo}`, {
+        x: 50,
+        y: height - 80,
+        size: 12,
+        color: rgb(0, 0, 0),
+    });
 
-        productos.forEach(item => {
-            const totalItem = item.precio * item.cantidad;
-            contenido += `Producto: ${item.nombre}, Precio: $${item.precio.toFixed(2)}, Cantidad: ${item.cantidad}, Total: $${totalItem.toFixed(2)}\n`;
-            totalGeneral += totalItem;
-        });
-
-        contenido += `\nTotal General: $${totalGeneral.toFixed(2)}`; // Mostrar total general
-        
-        // Dibuja el texto en la página
-        page.drawText(contenido, {
+    // Listar productos
+    let yPosition = height - 120;
+    for (const producto of productosArray) {
+        page.drawText(`${producto.nombre}: $${producto.precio} x ${producto.cantidad} = $${(producto.precio * producto.cantidad).toFixed(2)}`, {
             x: 50,
-            y: 350,
-            size: 12
+            y: yPosition,
+            size: 12,
+            color: rgb(0, 0, 0),
         });
-
-        // Guardar el archivo PDF en la carpeta 'tmp'
-        const pdfPath = path.join(tmpDir, `factura_${Date.now()}.pdf`);
-        const pdfBytes = await doc.save();
-        fs.writeFileSync(pdfPath, pdfBytes);
-
-        return pdfPath;
-    } catch (error) {
-        console.error('Error al generar el PDF:', error);
-        throw error;
+        yPosition -= 20;
     }
+
+    // Total
+    const total = productosArray.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+    page.drawText(`Total: $${total.toFixed(2)}`, {
+        x: 50,
+        y: yPosition - 20,
+        size: 12,
+        color: rgb(0, 0, 0),
+    });
+
+    // Guardar el PDF
+    const pdfBytes = await pdfDoc.save();
+    const pdfPath = path.join(__dirname, '../tmp/factura.pdf');
+
+    fs.writeFileSync(pdfPath, pdfBytes);
+    return pdfPath;
 };
