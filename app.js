@@ -558,6 +558,24 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
     res.render('account/cuenta/cliente/configuracion');
 });
 
+// Ruta para obtener y editar la configuración del usuario
+app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    try {
+        const userId = req.session.user._id; // Obteniendo el ID del usuario de la sesión
+        const usuario = await CUsuario.findById(userId); // Buscando los datos del usuario
+
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        res.render('account/cuenta/configuracion/editar', { usuario, user: req.session.user }); // Renderizando la vista con los datos del usuario
+    } catch (error) {
+        console.error('Error al obtener usuario:', error);
+        res.status(500).json({ error: 'Error al obtener usuario' });
+    }
+});
+
+// Ruta para actualizar la configuración del usuario
 app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const userId = req.session.user._id;
     const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
@@ -578,8 +596,13 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
             updateData.password = hashedPassword; // Asegúrate de que el modelo de usuario tiene este campo
         }
 
-        await CUsuario.findByIdAndUpdate(userId, updateData);
-        res.json({ success: true }); // Respuesta JSON
+        const usuarioActualizado = await CUsuario.findByIdAndUpdate(userId, updateData, { new: true });
+
+        if (!usuarioActualizado) {
+            return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+        }
+
+        res.json({ success: true, usuario: usuarioActualizado }); // Respuesta JSON
     } catch (error) {
         console.error('Error al actualizar el usuario:', error);
         res.status(500).json({ success: false, error: 'Error al actualizar el usuario' }); // Enviar respuesta JSON en caso de error
