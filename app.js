@@ -561,14 +561,17 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 // Ruta para obtener y editar la configuración del usuario
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user._id; // Obteniendo el ID del usuario de la sesión
-        const usuario = await CUsuario.findById(userId); // Buscando los datos del usuario
+        const userId = req.session.user._id;
+        console.log('User ID:', userId); // Verifica que el ID no sea undefined
+        
+        const usuario = await CUsuario.findById(userId);
+        console.log('Usuario encontrado:', usuario); // Verifica que el usuario sea el correcto
 
         if (!usuario) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        res.render('account/cuenta/configuracion/editar', { usuario, user: req.session.user }); // Renderizando la vista con los datos del usuario
+        res.render('account/cuenta/configuracion/editar', { usuario, user: req.session.user });
     } catch (error) {
         console.error('Error al obtener usuario:', error);
         res.status(500).json({ error: 'Error al obtener usuario' });
