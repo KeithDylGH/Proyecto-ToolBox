@@ -167,27 +167,29 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar el usuario
-userRouter.put('/actualizar/:id', async (req, res) => {
-    const userId = req.params.id; // Obtén el ID de los parámetros de la URL
-    const { nombre, apellido, correo, password } = req.body;
+userRouter.put('/actualizar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    const userId = req.session.user._id; // ID del usuario desde la sesión
+    const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
 
     try {
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
+        const usuarioActualizado = await CUsuario.findByIdAndUpdate(userId, {
+            nombre,
+            apellido,
+            usuario,
+            correo,
+            password, // Asegúrate de manejar la encriptación si es necesario
+            numero,
+            cedula
+        }, { new: true });
+
+        if (!usuarioActualizado) {
+            return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
         }
 
-        // Actualizar solo los campos proporcionados
-        if (nombre) user.nombre = nombre;
-        if (apellido) user.apellido = apellido;
-        if (correo) user.correo = correo.toLowerCase(); // Guardar correo en minúsculas
-        if (password) user.password = await bcrypt.hash(password, 10); // Hashear nueva contraseña
-
-        await user.save();
-        res.json({ success: true, message: 'Datos actualizados correctamente' });
+        res.json({ success: true, usuario: usuarioActualizado });
     } catch (error) {
-        console.error('Error al actualizar datos:', error);
-        res.status(500).json({ error: 'Error en el servidor' });
+        console.error('Error al actualizar el usuario:', error);
+        res.status(500).json({ success: false, error: 'Error en el servidor' });
     }
 });
 

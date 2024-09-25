@@ -559,10 +559,12 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 });
 
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const userId = req.session.user._id; // Asumiendo que el ID del usuario se guarda en la sesión
+    const userId = req.session.user._id; // Asegúrate de que el ID del usuario se guarda en la sesión
+    console.log('User ID desde la sesión:', userId); // Agregado para depuración
     const usuario = await CUsuario.findById(userId); // Obtén el usuario desde la base de datos
 
     if (!usuario) {
+        console.error('Usuario no encontrado en la base de datos'); // Mensaje para depuración
         return res.status(404).send('Usuario no encontrado');
     }
 
