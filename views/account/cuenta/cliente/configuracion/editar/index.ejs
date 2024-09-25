@@ -27,7 +27,7 @@
         <div class="container">
           <div class="content">
               <h1>Editar Usuario</h1>
-              <form id="editUserForm">
+              <form id="editUserForm" action="/cuenta/configuracion/editar" method="POST"> <!-- Asegúrate de que la acción del formulario apunte a la ruta correcta -->
                   <div class="mb-3">
                       <label for="nombre" class="form-label">Nombre</label>
                       <input type="text" class="form-control" id="nombre" name="nombre" value="<%= usuario.nombre %>" required>

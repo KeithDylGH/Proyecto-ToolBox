@@ -558,18 +558,32 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
     res.render('account/cuenta/cliente/configuracion');
 });
 
-app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const userId = req.session.user._id; // Asegúrate de que el ID del usuario se guarda en la sesión
-    console.log('User ID desde la sesión:', userId); // Agregado para depuración
-    const usuario = await CUsuario.findById(userId); // Obtén el usuario desde la base de datos
+app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    const userId = req.session.user._id;
+    const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
 
-    if (!usuario) {
-        console.error('Usuario no encontrado en la base de datos'); // Mensaje para depuración
-        return res.status(404).send('Usuario no encontrado');
+    try {
+        const updateData = {
+            nombre,
+            apellido,
+            usuario,
+            correo,
+            numero,
+            cedula
+        };
+
+        // Si se proporciona una nueva contraseña, la has de hashear antes de guardar
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updateData.password = hashedPassword; // Asegúrate de que el modelo de usuario tiene este campo
+        }
+
+        await CUsuario.findByIdAndUpdate(userId, updateData);
+        res.json({ success: true }); // Respuesta JSON
+    } catch (error) {
+        console.error('Error al actualizar el usuario:', error);
+        res.status(500).json({ success: false, error: 'Error al actualizar el usuario' }); // Enviar respuesta JSON en caso de error
     }
-
-    // Renderiza la vista y pasa el objeto usuario
-    res.render('account/cuenta/cliente/configuracion/editar/index', { usuario });
 });
 
 app.get('/cuenta/atencion', authorize(['user', 'admin', 'boss']), async (req, res) => {

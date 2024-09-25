@@ -43,16 +43,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const orderData = await response.json();
 
+                    // Comprobar si el ID del pedido está presente
                     if (orderData.id) {
                         return orderData.id;
                     }
 
-                    const errorDetail = orderData?.details?.[0];
-                    const errorMessage = errorDetail
-                        ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
-                        : JSON.stringify(orderData);
+                    throw new Error('El ID del pedido no fue recibido');
 
-                    throw new Error(errorMessage);
                 } catch (error) {
                     console.error('Error en createOrder:', error);
                     mostrarNotificacion(`No se pudo iniciar el pago: ${error.message}`, 'danger');
@@ -80,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else if (errorDetail) {
                         throw new Error(`${errorDetail.description} (${orderData.debug_id})`);
                     } else if (!orderData.purchase_units) {
-                        throw new Error(JSON.stringify(orderData));
+                        throw new Error('No se encontraron unidades de compra en la respuesta');
                     } else {
                         const transaction = orderData?.purchase_units?.[0]?.payments?.captures?.[0] || orderData?.purchase_units?.[0]?.payments?.authorizations?.[0];
                         alert(`Transacción ${transaction.status}: ${transaction.id}`);
