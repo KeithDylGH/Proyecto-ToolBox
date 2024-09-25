@@ -167,11 +167,12 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar el usuario
-userRouter.put('/actualizar', async (req, res) => {
-    const { usuario, nombre, apellido, correo, password } = req.body;
-    
+userRouter.put('/actualizar/:id', async (req, res) => {
+    const userId = req.params.id; // Obtén el ID de los parámetros de la URL
+    const { nombre, apellido, correo, password } = req.body;
+
     try {
-        const user = await User.findOne({ usuario });
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
@@ -199,8 +200,7 @@ userRouter.get('/obtener/:id', async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
-        // Aquí asegúrate de pasar 'usuario' a la vista
-        res.render('editUser', { usuario: user });
+        res.json(user); // Devuelve el usuario encontrado
     } catch (error) {
         console.error('Error al obtener el usuario:', error);
         res.status(500).json({ error: 'Error en el servidor' });
