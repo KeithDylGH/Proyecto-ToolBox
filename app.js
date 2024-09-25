@@ -554,29 +554,8 @@ app.get('/cuenta/carrito', authorize(['user', 'admin', 'boss']), async (req, res
     }
 });
 
-// Ruta para obtener la configuración del usuario
 app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const userId = req.session.user ? req.session.user._id : null;
-    console.log('User ID desde la sesión:', userId);
-
-    if (!userId) {
-        return res.status(401).json({ error: 'Usuario no autenticado o ID no encontrado en la sesión' });
-    }
-
-    try {
-        const usuario = await CUsuario.findById(userId);
-        console.log('Usuario encontrado:', usuario);
-
-        if (!usuario) {
-            console.error(`Usuario con ID ${userId} no encontrado en la base de datos`);
-            return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
-
-        res.render('account/cuenta/cliente/configuracion', { usuario, user: req.session.user });
-    } catch (error) {
-        console.error('Error al obtener usuario:', error);
-        res.status(500).json({ error: 'Error al obtener usuario' });
-    }
+    res.render('account/cuenta/cliente/configuracion');
 });
 
 // Ruta para obtener y editar la configuración del usuario
