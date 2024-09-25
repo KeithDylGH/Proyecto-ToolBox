@@ -3,9 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('editUserForm');
 
     if (form) {
-        // Enviar los datos del formulario al servidor
         form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Evitar el envío normal del formulario
+            e.preventDefault();
 
             const formData = new FormData(form);
             const data = {
@@ -13,34 +12,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 apellido: formData.get('apellido'),
                 usuario: formData.get('usuario'),
                 correo: formData.get('correo'),
-                password: formData.get('password'), // Este puede ser vacío si no se quiere cambiar
+                password: formData.get('password'), // Puede estar vacío si no se quiere cambiar
                 numero: formData.get('numero'),
                 cedula: formData.get('cedula')
             };
 
             try {
-                const response = await fetch('/cuenta/configuracion/editar', { // Cambiado a la ruta correcta
-                    method: 'POST', // Asegúrate de que este método coincida con tu lógica en el servidor
+                const response = await fetch('/cuenta/configuracion/editar', {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data)
                 });
 
+                const result = await response.json();
+
                 if (!response.ok) {
-                    throw new Error('Error en la red'); // Manejo de errores de red
+                    throw new Error(result.error || 'Error al actualizar datos');
                 }
 
-                const result = await response.json();
-                if (result.success) {
-                    alert('Datos actualizados correctamente');
-                    window.location.href = '/cuenta'; // Redirige a la página deseada
-                } else {
-                    alert(result.error || 'Error al actualizar datos');
-                }
+                alert('Datos actualizados correctamente');
+                window.location.href = '/cuenta'; // Redirige a la página deseada
             } catch (error) {
                 console.error('Error al enviar datos:', error);
-                alert('Error en el servidor: ' + error.message); // Mensaje de error más informativo
+                alert('Error en el servidor: ' + error.message);
             }
         });
     }

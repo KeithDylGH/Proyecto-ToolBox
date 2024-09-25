@@ -561,7 +561,6 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 // Ruta para obtener y editar la configuración del usuario
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        // Asegúrate de que el ID está correctamente recuperado desde la sesión
         const userId = req.session.user ? req.session.user._id : null;
         console.log('User ID desde la sesión:', userId);
 
@@ -569,7 +568,6 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
             return res.status(401).json({ error: 'Usuario no autenticado o ID no encontrado en la sesión' });
         }
 
-        // Convertir el ID de string a ObjectId para la búsqueda en MongoDB
         const usuario = await CUsuario.findById(userId);
         console.log('Usuario encontrado:', usuario);
 
@@ -578,7 +576,7 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Renderizar la vista si el usuario es encontrado
+        // Asegúrate de pasar el objeto correcto a la vista
         res.render('account/cuenta/configuracion/editar', { usuario, user: req.session.user });
     } catch (error) {
         console.error('Error al obtener usuario:', error);
@@ -588,35 +586,26 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
 
 // Ruta para actualizar la configuración del usuario
 app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const userId = req.session.user._id;
-    const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
-
     try {
-        const updateData = {
-            nombre,
-            apellido,
-            usuario,
-            correo,
-            numero,
-            cedula
-        };
+        const userId = req.session.user ? req.session.user._id : null;
+        if (!userId) {
+            return res.status(401).json({ error: 'Usuario no autenticado o ID no encontrado en la sesión' });
+        }
 
-        // Si se proporciona una nueva contraseña, la has de hashear antes de guardar
+        const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
+
+        // Actualizar usuario
+        const updatedData = { nombre, apellido, usuario, correo, numero, cedula };
         if (password) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            updateData.password = hashedPassword; // Asegúrate de que el modelo de usuario tiene este campo
+            updatedData.password = await bcrypt.hash(password, 10); // Solo actualiza la contraseña si se proporciona
         }
 
-        const usuarioActualizado = await CUsuario.findByIdAndUpdate(userId, updateData, { new: true });
-
-        if (!usuarioActualizado) {
-            return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
-        }
-
-        res.json({ success: true, usuario: usuarioActualizado }); // Respuesta JSON
+        await CUsuario.findByIdAndUpdate(userId, updatedData);
+        console.log(`Usuario con ID ${userId} actualizado correctamente.`);
+        res.redirect('/cuenta/configuracion/editar'); // Redirigir a la misma página después de la actualización
     } catch (error) {
-        console.error('Error al actualizar el usuario:', error);
-        res.status(500).json({ success: false, error: 'Error al actualizar el usuario' }); // Enviar respuesta JSON en caso de error
+        console.error('Error al actualizar usuario:', error);
+        res.status(500).json({ error: 'Error al actualizar usuario' });
     }
 });
 
