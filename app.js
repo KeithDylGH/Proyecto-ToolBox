@@ -561,8 +561,12 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 // Ruta para obtener y editar la configuración del usuario
 app.get('/cuenta/configuracion/editar/:id', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.params.id; // Obtener ID del usuario desde los parámetros
-        console.log('User ID desde parámetros:', userId);
+        const userId = req.params.id; // Obtén el ID del parámetro de la URL
+        console.log('User ID desde parámetros:', userId); // Log para verificar el ID
+
+        if (!userId) {
+            return res.status(401).json({ error: 'ID de usuario no proporcionado' });
+        }
 
         const usuario = await CUsuario.findById(userId).exec();
         console.log('Usuario encontrado:', usuario);
