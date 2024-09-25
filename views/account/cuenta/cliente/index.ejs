@@ -24,7 +24,6 @@
 </head>
 
 <body>
-
   <div>
     <section>
       <!--Sidebar-->
@@ -38,10 +37,10 @@
         <a href="/cuenta/contacto" id="contactoBtn">Servicio al Cliente</a>
         <a href="/cuenta/configuracion" id="configuracionBtn">Configuración</a>
 
-        <% if (CUsuario.role === 'boss') { %>
+        <% if (CUsuario && CUsuario.rol === 'boss') { %>
           <a href="/cuenta/inventario" id="inventarioBtn">Inventario</a>
           <a href="/cuenta/permisos" id="permisosBtn">Permisos</a>
-        <% } else if (CUsuario.role === 'admin') { %>
+        <% } else if (CUsuario && CUsuario.rol === 'admin') { %>
           <a href="/cuenta/inventario" id="inventarioBtn">Inventario</a>
         <% } %>
 
@@ -116,7 +115,8 @@
   
           </div>
       </div>
-  </section>  
+  </section>
+</body>  
 
   </div>
 
