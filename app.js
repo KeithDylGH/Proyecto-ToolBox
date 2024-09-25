@@ -580,16 +580,12 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 });
 
 // Ruta para obtener y editar la configuración del usuario
-app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+app.get('/cuenta/configuracion/editar/:id', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user ? req.session.user._id : null;
-        console.log('User ID desde la sesión:', userId);
+        const userId = req.params.id; // Obtener ID del usuario desde los parámetros
+        console.log('User ID desde parámetros:', userId);
 
-        if (!userId) {
-            return res.status(401).json({ error: 'Usuario no autenticado o ID no encontrado en la sesión' });
-        }
-
-        const usuario = await CUsuario.findById(userId);
+        const usuario = await CUsuario.findById(userId).exec();
         console.log('Usuario encontrado:', usuario);
 
         if (!usuario) {
@@ -606,14 +602,10 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
 });
 
 // Ruta para actualizar la configuración del usuario
-app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+app.post('/cuenta/configuracion/editar/:id', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user ? req.session.user._id : null;
-        console.log('User ID desde la sesión para actualizar:', userId);
-
-        if (!userId) {
-            return res.status(401).json({ error: 'Usuario no autenticado o ID no encontrado en la sesión' });
-        }
+        const userId = req.params.id; // Obtener ID del usuario desde los parámetros
+        console.log('User ID desde parámetros para actualizar:', userId);
 
         const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
 
@@ -625,7 +617,7 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
 
         await CUsuario.findByIdAndUpdate(userId, updatedData);
         console.log(`Usuario con ID ${userId} actualizado correctamente.`);
-        res.redirect('/cuenta/configuracion/editar'); // Redirigir a la misma página después de la actualización
+        res.redirect(`/cuenta/configuracion/editar/${userId}`); // Redirigir a la misma página después de la actualización
     } catch (error) {
         console.error('Error al actualizar usuario:', error);
         res.status(500).json({ error: 'Error al actualizar usuario' });
