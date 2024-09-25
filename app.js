@@ -570,7 +570,7 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
         }
 
         // Convertir el ID de string a ObjectId para la búsqueda en MongoDB
-        const usuario = await CUsuario.findById(mongoose.Types.ObjectId(userId));
+        const usuario = await CUsuario.findById(userId);
         console.log('Usuario encontrado:', usuario);
 
         if (!usuario) {
