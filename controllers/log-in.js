@@ -38,9 +38,13 @@ router.post('/', async (req, res) => {
 
         if (result.success) {
             req.session.user = {
+                id: result.user._id, // Asegúrate de incluir esto
                 nombre: result.user.nombre,
+                apellido: result.user.apellido, // Añadido
                 usuario: result.user.usuario,
-                correo: result.user.correo,  // Incluye el correo aquí
+                correo: result.user.correo,
+                numero: result.user.numero, // Añadido
+                cedula: result.user.cedula, // Añadido
                 rol: result.user.rol
             };
             console.log('Session user set:', req.session.user);

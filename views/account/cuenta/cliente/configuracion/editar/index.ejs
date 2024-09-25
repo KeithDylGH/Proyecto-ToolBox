@@ -12,7 +12,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<!-- index.ejs -->
 <body>
     <div>
       <section>
@@ -35,15 +34,15 @@
                   </div>
                   <div class="mb-3">
                       <label for="apellido" class="form-label">Apellido</label>
-                      <input type="text" class="form-control" id="apellido" name="apellido" placeholder="<%= usuario.apellido %>" required>
+                      <input type="text" class="form-control" id="apellido" name="apellido" value="<%= usuario.apellido %>" required>
                   </div>
                   <div class="mb-3">
                       <label for="usuario" class="form-label">Usuario</label>
-                      <input type="text" class="form-control" id="usuario" name="usuario" placeholder="<%= usuario.usuario %>" required>
+                      <input type="text" class="form-control" id="usuario" name="usuario" value="<%= usuario.usuario %>" required>
                   </div>
                   <div class="mb-3">
                       <label for="correo" class="form-label">Correo</label>
-                      <input type="email" class="form-control" id="correo" name="correo" placeholder="<%= usuario.correo %>" required>
+                      <input type="email" class="form-control" id="correo" name="correo" value="<%= usuario.correo %>" required>
                   </div>
                   <div class="mb-3">
                       <label for="password" class="form-label">Nueva Contraseña</label>
@@ -51,11 +50,11 @@
                   </div>
                   <div class="mb-3">
                       <label for="numero" class="form-label">Número</label>
-                      <input type="number" class="form-control" id="numero" name="numero" placeholder="<%= usuario.numero %>" required>
+                      <input type="number" class="form-control" id="numero" name="numero" value="<%= usuario.numero %>" required>
                   </div>
                   <div class="mb-3">
                       <label for="cedula" class="form-label">Cédula</label>
-                      <input type="text" class="form-control" id="cedula" name="cedula" placeholder="<%= usuario.cedula %>" required>
+                      <input type="text" class="form-control" id="cedula" name="cedula" value="<%= usuario.cedula %>" required>
                   </div>
                   <button type="submit" class="btn btn-primary">Actualizar</button>
               </form>

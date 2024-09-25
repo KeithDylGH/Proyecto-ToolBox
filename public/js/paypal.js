@@ -36,11 +36,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         }),
                     });
 
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Error en el servidor: ${errorData.message || 'Error desconocido'}`);
+                    }
+
                     const orderData = await response.json();
 
                     if (orderData.id) {
                         return orderData.id;
                     }
+
                     const errorDetail = orderData?.details?.[0];
                     const errorMessage = errorDetail
                         ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
@@ -48,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     throw new Error(errorMessage);
                 } catch (error) {
-                    console.error(error);
-                    // mostrarNotificacion(`No se pudo iniciar el pago...<br><br>${error}`);
+                    console.error('Error en createOrder:', error);
+                    mostrarNotificacion(`No se pudo iniciar el pago: ${error.message}`, 'danger');
                 }
             },
             async onApprove(data, actions) {
@@ -60,6 +66,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             "Content-Type": "application/json",
                         },
                     });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Error en el servidor: ${errorData.message || 'Error desconocido'}`);
+                    }
 
                     const orderData = await response.json();
                     const errorDetail = orderData?.details?.[0];
@@ -76,8 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log("Resultado de la captura", orderData);
                     }
                 } catch (error) {
-                    console.error(error);
-                    alert(`Lo siento, no se pudo procesar tu transacción...<br><br>${error}`);
+                    console.error('Error en onApprove:', error);
+                    alert(`Lo siento, no se pudo procesar tu transacción: ${error.message}`);
                 }
             },
             onCancel: function(data) {
@@ -85,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             onError: function(err) {
                 console.error('Error en el pago:', err);
+                alert(`Error en el pago: ${err.message}`);
             }
         }).render('#paypal-button-container'); // Renderizar el botón de PayPal en el contenedor
     });

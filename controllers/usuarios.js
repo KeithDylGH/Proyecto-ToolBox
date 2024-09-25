@@ -168,11 +168,11 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
 
 // Endpoint para actualizar el usuario
 userRouter.put('/actualizar', async (req, res) => {
-    const userId = req.session.user._id; // ID del usuario desde la sesión
+    const userId = req.session.user.id; // Asegúrate de usar 'id' aquí
     const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
 
     try {
-        const usuarioActualizado = await CUsuario.findByIdAndUpdate(userId, {
+        const usuarioActualizado = await User.findByIdAndUpdate(userId, {
             nombre,
             apellido,
             usuario,
