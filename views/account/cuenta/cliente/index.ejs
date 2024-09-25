@@ -38,10 +38,10 @@
         <a href="/cuenta/configuracion" id="configuracionBtn">Configuración</a>
 
         <% if (CUsuario && CUsuario.rol === 'boss') { %>
-          <a href="/cuenta/inventario" id="inventarioBtn">Inventario</a>
-          <a href="/cuenta/permisos" id="permisosBtn">Permisos</a>
+          <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
+          <a href="/jefe/permisos" id="permisosBtn">Permisos</a>
         <% } else if (CUsuario && CUsuario.rol === 'admin') { %>
-          <a href="/cuenta/inventario" id="inventarioBtn">Inventario</a>
+          <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
         <% } %>
 
         <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>
