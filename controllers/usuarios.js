@@ -166,7 +166,7 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
     }
 });
 
-//Endpoint para actualizar el usuario
+// Endpoint para actualizar el usuario
 userRouter.put('/actualizar', async (req, res) => {
     const { usuario, nombre, apellido, correo, password } = req.body;
     
@@ -189,6 +189,7 @@ userRouter.put('/actualizar', async (req, res) => {
         res.status(500).json({ error: 'Error en el servidor' });
     }
 });
+
 // Endpoint para obtener los datos de un usuario por ID
 userRouter.get('/obtener/:id', async (req, res) => {
     const userId = req.params.id;
@@ -205,7 +206,6 @@ userRouter.get('/obtener/:id', async (req, res) => {
         res.status(500).json({ error: 'Error en el servidor' });
     }
 });
-
 
 // Nuevo endpoint para verificar correos
 userRouter.get('/verificar-correos', async (req, res) => {

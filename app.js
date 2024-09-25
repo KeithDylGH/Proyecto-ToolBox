@@ -559,7 +559,15 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 });
 
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    res.render('account/cuenta/cliente/configuracion/editar');
+    const userId = req.session.user._id; // Asumiendo que el ID del usuario se guarda en la sesión
+    const usuario = await CUsuario.findById(userId); // Obtén el usuario desde la base de datos
+
+    if (!usuario) {
+        return res.status(404).send('Usuario no encontrado');
+    }
+
+    // Renderiza la vista y pasa el objeto usuario
+    res.render('account/cuenta/cliente/configuracion/editar/index', { usuario });
 });
 
 app.get('/cuenta/atencion', authorize(['user', 'admin', 'boss']), async (req, res) => {
@@ -582,18 +590,6 @@ app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
     res.render('account/cuenta/admin/inventory', { CUsuario });
 });
 
-// Ruta para la página del BOSS
-/* app.get('/jefe', authorize(['boss']), async (req, res) => {
-    try {
-        // Obtén la lista de usuarios
-        const usuarios = await CUsuario.find({});
-        res.render('account/cuenta/boss', { usuarios });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error en el servidor');
-    }
-}); */
-
 app.get('/jefe/permisos', authorize(['boss']), async (req, res) => {
     try {
         const users = await CUsuario.find();
@@ -603,18 +599,6 @@ app.get('/jefe/permisos', authorize(['boss']), async (req, res) => {
         res.status(500).json({ error: 'Error al obtener usuarios' });
     }
 });
-
-// Ruta para actualizar el rol del usuario
-/* app.post('/jefe/actualizarRol', authorize(['boss']), async (req, res) => {
-    try {
-        const { userId, rol } = req.body;
-        await CUsuario.findByIdAndUpdate(userId, { rol });
-        res.redirect('/jefe');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error en el servidor');
-    }
-}); */
 
 app.get('/inventario/agregarproduto', authorize(['admin', 'boss']), async (req, res) => {
     try {
