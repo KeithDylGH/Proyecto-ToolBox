@@ -67,7 +67,7 @@ userRouter.post('/login', async (req, res) => {
     const { usuario, password } = req.body;
 
     try {
-        const user = await User.findOne({ usuario });
+        const user = await CUsuario.findOne({ usuario }); // Cambia a CUsuario si es necesario
 
         if (!user || !await bcrypt.compare(password, user.password)) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
@@ -75,10 +75,13 @@ userRouter.post('/login', async (req, res) => {
 
         // Guardar los datos del usuario en la sesión
         req.session.user = {
-            id: user._id,
+            _id: user._id,    // Asegúrate de usar _id
             nombre: user.nombre,
+            apellido: user.apellido, // Agrega el apellido
             usuario: user.usuario,
             correo: user.correo,  // Asegúrate de que el correo se guarda correctamente
+            numero: user.numero, // Agrega el número
+            cedula: user.cedula, // Agrega la cédula
             rol: user.rol
         };
 

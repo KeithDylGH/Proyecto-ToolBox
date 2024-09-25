@@ -561,11 +561,15 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 // Ruta para obtener y editar la configuración del usuario
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user._id;
-        console.log('User ID:', userId); // Verifica que el ID no sea undefined
-        
+        const userId = req.session.user ? req.session.user._id : null; // Maneja el caso en que no hay sesión
+        console.log('User ID:', userId);
+
+        if (!userId) {
+            return res.status(401).json({ error: 'Usuario no autenticado' });
+        }
+
         const usuario = await CUsuario.findById(userId);
-        console.log('Usuario encontrado:', usuario); // Verifica que el usuario sea el correcto
+        console.log('Usuario encontrado:', usuario);
 
         if (!usuario) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
