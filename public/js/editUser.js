@@ -2,11 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('editUserForm');
 
     if (form) {
+        const userId = form.action.split('/').pop(); // Obtener ID de la acción del formulario
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const formData = new FormData(form);
-            const userId = formData.get('userId'); // Obtiene el ID del usuario
             const data = {
                 nombre: formData.get('nombre'),
                 apellido: formData.get('apellido'),
