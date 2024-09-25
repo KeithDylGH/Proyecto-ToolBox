@@ -1,4 +1,3 @@
-// public/js/editUser.js
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('editUserForm');
 
@@ -7,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
 
             const formData = new FormData(form);
+            const userId = formData.get('userId'); // Obtiene el ID del usuario
             const data = {
                 nombre: formData.get('nombre'),
                 apellido: formData.get('apellido'),
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             try {
-                const response = await fetch('/cuenta/configuracion/editar', {
+                const response = await fetch(`/cuenta/configuracion/editar/${userId}`, { // Usa el ID del usuario
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
