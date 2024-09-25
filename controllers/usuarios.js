@@ -167,7 +167,7 @@ userRouter.delete('/permisos/banear/:id', async (req, res) => {
 });
 
 // Endpoint para actualizar el usuario
-userRouter.put('/actualizar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+userRouter.put('/actualizar', async (req, res) => {
     const userId = req.session.user._id; // ID del usuario desde la sesión
     const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
 
