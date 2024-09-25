@@ -561,20 +561,24 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 // Ruta para obtener y editar la configuración del usuario
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user ? req.session.user._id : null; // Maneja el caso en que no hay sesión
-        console.log('User ID:', userId);
+        // Asegúrate de que el ID está correctamente recuperado desde la sesión
+        const userId = req.session.user ? req.session.user._id : null;
+        console.log('User ID desde la sesión:', userId);
 
         if (!userId) {
-            return res.status(401).json({ error: 'Usuario no autenticado' });
+            return res.status(401).json({ error: 'Usuario no autenticado o ID no encontrado en la sesión' });
         }
 
-        const usuario = await CUsuario.findById(userId);
+        // Convertir el ID de string a ObjectId para la búsqueda en MongoDB
+        const usuario = await CUsuario.findById(mongoose.Types.ObjectId(userId));
         console.log('Usuario encontrado:', usuario);
 
         if (!usuario) {
+            console.error(`Usuario con ID ${userId} no encontrado en la base de datos`);
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
+        // Renderizar la vista si el usuario es encontrado
         res.render('account/cuenta/configuracion/editar', { usuario, user: req.session.user });
     } catch (error) {
         console.error('Error al obtener usuario:', error);
