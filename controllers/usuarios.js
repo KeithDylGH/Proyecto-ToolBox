@@ -73,19 +73,19 @@ userRouter.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
         }
 
-        // Guardar los datos del usuario en la sesión
+        // Guardar los datos del usuario en la sesión asegurando que _id sea el campo utilizado
         req.session.user = {
-            _id: user._id,    // Asegúrate de usar _id
+            _id: user._id,    // Cambiar de id a _id para evitar el problema
             nombre: user.nombre,
-            apellido: user.apellido, // Agrega el apellido
+            apellido: user.apellido,
             usuario: user.usuario,
-            correo: user.correo,  // Asegúrate de que el correo se guarda correctamente
-            numero: user.numero, // Agrega el número
-            cedula: user.cedula, // Agrega la cédula
+            correo: user.correo,
+            numero: user.numero,
+            cedula: user.cedula,
             rol: user.rol
         };
 
-        console.log('Datos de usuario guardados en la sesión:', req.session.user);
+        console.log('Usuario autenticado:', req.session.user);
 
         res.json({
             success: true,
