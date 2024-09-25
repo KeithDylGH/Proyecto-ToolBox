@@ -561,26 +561,25 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 // Ruta para obtener y editar la configuración del usuario
 app.get('/cuenta/configuracion/editar/:id', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.params.id; // Obtén el ID del parámetro de la URL
-        console.log('User ID desde parámetros:', userId); // Log para verificar el ID
+        const userId = req.params.id;
+        console.log('ID del usuario recibido:', userId);
 
-        if (!userId) {
-            return res.status(401).json({ error: 'ID de usuario no proporcionado' });
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            console.error('ID de usuario no válido:', userId);
+            return res.status(400).json({ error: 'ID de usuario no válido' });
         }
 
         const usuario = await CUsuario.findById(userId).exec();
-        console.log('Usuario encontrado:', usuario);
 
         if (!usuario) {
-            console.error(`Usuario con ID ${userId} no encontrado en la base de datos`);
+            console.error(`Usuario no encontrado para ID: ${userId}`);
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Asegúrate de pasar el objeto correcto a la vista
         res.render('account/cuenta/configuracion/editar', { usuario, user: req.session.user });
     } catch (error) {
-        console.error('Error al obtener usuario:', error);
-        res.status(500).json({ error: 'Error al obtener usuario' });
+        console.error('Error al buscar el usuario:', error);
+        return res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
