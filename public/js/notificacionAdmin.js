@@ -1,26 +1,44 @@
-async function updateNotificacion(id) {
-    const checkbox = document.getElementById(`atendido-${id}`);
-    const response = await fetch(`/admin/notificacion/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ atendido: checkbox.checked }),
-    });
+// Función para actualizar el estado de "atendido"
+async function updateNotificacion(notificacionId) {
+    const atendido = document.getElementById(`atendido-${notificacionId}`).checked;
 
-    if (!response.ok) {
-      alert('Error al actualizar la notificación.');
+    try {
+        const response = await fetch(`/api/notificaciones/actualizar/${notificacionId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ atendido })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al actualizar la notificación.');
+        }
+
+        alert('Notificación actualizada correctamente.');
+    } catch (error) {
+        console.error(error);
+        alert('Hubo un problema al actualizar la notificación.');
     }
-  }
+}
 
-  async function deleteNotificacion(id) {
-    const response = await fetch(`/admin/notificacion/${id}`, {
-      method: 'DELETE',
-    });
+// Función para eliminar una notificación
+async function deleteNotificacion(notificacionId) {
+    if (confirm('¿Estás seguro de que quieres eliminar esta notificación?')) {
+        try {
+            const response = await fetch(`/api/notificaciones/eliminar/${notificacionId}`, {
+                method: 'DELETE'
+            });
 
-    if (response.ok) {
-      location.reload(); // Recargar la página para actualizar las notificaciones
-    } else {
-      alert('Error al eliminar la notificación.');
+            if (!response.ok) {
+                throw new Error('Error al eliminar la notificación.');
+            }
+
+            alert('Notificación eliminada correctamente.');
+            window.location.reload();  // Recargar la página para reflejar los cambios
+        } catch (error) {
+            console.error(error);
+            alert('Hubo un problema al eliminar la notificación.');
+        }
     }
-  }
+}

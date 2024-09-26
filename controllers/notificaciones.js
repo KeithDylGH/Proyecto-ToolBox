@@ -13,10 +13,10 @@ router.get('/', async (req, res) => {
     }
 });
 
-// PATCH para actualizar la notificación
-router.patch('/:id', async (req, res) => {
+// Ruta PATCH para actualizar la notificación
+router.patch('/actualizar/:id', async (req, res) => {
     try {
-        const { atendido } = req.body;
+        const { atendido } = req.body; // Obtener el estado del checkbox
         const notificacionActualizada = await Notificacion.findByIdAndUpdate(req.params.id, { atendido }, { new: true });
 
         if (!notificacionActualizada) {
@@ -31,7 +31,7 @@ router.patch('/:id', async (req, res) => {
 });
 
 // DELETE para eliminar la notificación
-router.delete('/:id', async (req, res) => {
+router.delete('/eliminar/:id', async (req, res) => {
     try {
         const notificacionEliminada = await Notificacion.findByIdAndDelete(req.params.id);
 

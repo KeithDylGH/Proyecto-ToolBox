@@ -690,8 +690,13 @@ app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
 
 app.get('/admin/notificacion', authorize(['admin', 'boss']), async (req, res) => {
     try {
+        // Obtener todas las notificaciones de la base de datos
         const notificaciones = await Notificacion.find().sort({ fecha: -1 }).lean();
-        res.render('account/cuenta/admin/notification', { notificaciones });
+        // Renderizar la vista de notificaciones y pasar las notificaciones al archivo EJS
+        res.render('account/cuenta/admin/notification', { 
+            notificaciones, 
+            CUsuario: req.session.user  // Pasar los datos del usuario a la vista para el sidebar
+        });
     } catch (error) {
         console.error('Error al obtener notificaciones:', error);
         res.status(500).send('Error al obtener notificaciones.');
