@@ -25,6 +25,7 @@ const formData = require('form-data');
 const axios = require('axios');
 const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
+const Notificacion = require('./models/notificacion');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -435,7 +436,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos, metodo } = req.body; // Recibir productos y método de pago
+    const { productos, metodo, telefono } = req.body; // Asegúrate de recibir el teléfono
     const usuario = req.session.user;
 
     console.log('Datos recibidos:', { productos, metodo });
@@ -455,7 +456,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     try {
         // Procesar productos y obtener sus detalles de la base de datos
-        const productoIds = productos.map(producto => producto.id); // Extraer los IDs de los productos
+        const productoIds = productos.map(producto => producto.id);
         const productosArray = await iProducto.find({ _id: { $in: productoIds } });
 
         if (productosArray.length === 0) {
@@ -476,55 +477,87 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             return total + (item.precio * productoEncontrado.cantidad);
         }, 0);
         
-        const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0); // Calcular total de productos
+        const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0);
 
-        // Enviar el correo
-        try {
-            await transporter.sendMail({
-                from: process.env.EMAIL_USER,
-                to: emailUsuario,
-                subject: 'Factura de Compra',
-                html: `
-                    <html>
-                    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
-                        <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <img src="/public/img/logo/LogoLetra.png" alt="Logo de ToolBox" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
-                            <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
-                            <p>Hola ${usuario.nombre || usuario.correo},</p>
-                            <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
-                            <p><strong>Método de Pago:</strong> ${metodo}</p>
-                            <p><strong>Total de Productos:</strong> ${totalCantidad}</p>
-                            <p><strong>Productos:</strong></p>
-                            <ul>
-                                ${listaProductosHtml}
-                            </ul>
-                            <p><strong>Total:</strong> $${total.toFixed(2)}</p>
-                            <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
-                            <p>Saludos,<br>El equipo de ToolBox</p>
-                        </div>
-                    </body>
+        // Guarda la notificación en la base de datos
+        const notificacion = new Notificacion({
+            usuarioNombre: usuario.nombre,
+            usuarioCorreo: emailUsuario,
+            usuarioTelefono: telefono,
+            productos: productos.map(p => ({ name: p.nombre, price: p.precio, quantity: p.cantidad })),
+            total: total,
+            metodoPago: metodo,
+        });
+        
+        await notificacion.save();
+
+        // Obtener todos los usuarios con rol de admin y boss
+        const admins = await CUsuario.find({ rol: { $in: ['admin', 'boss'] } });
+
+        // Enviar el correo a cada admin/boss
+        const adminEmails = admins.map(admin => admin.correo).join(', ');
+
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: adminEmails,
+            subject: 'Nueva Compra Realizada',
+            html: `
+                <h1>Nueva Compra</h1>
+                <p>Usuario: ${usuario.nombre}</p>
+                <p>Correo: ${emailUsuario}</p>
+                <p>Teléfono: ${telefono}</p>
+                <p><strong>Productos Comprados:</strong></p>
+                <ul>
+                    ${listaProductosHtml}
+                </ul>
+                <p><strong>Método de Pago:</strong> ${metodo}</p>
+                <p><strong>Total:</strong> $${total.toFixed(2)}</p>
+            `,
+            attachments: [
+                {
+                    filename: 'factura.pdf',
+                    path: pdfPath
+                }
+            ]
+        });
+
+        console.log('Correo enviado a administradores.');
+
+        // Enviar el correo al usuario
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: emailUsuario,
+            subject: 'Factura de Compra',
+            html: `
+                <html>
+                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
+                    <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                        <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
+                        <p>Hola ${usuario.nombre || usuario.correo},</p>
+                        <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
+                        <p><strong>Método de Pago:</strong> ${metodo}</p>
+                        <p><strong>Total de Productos:</strong> ${totalCantidad}</p>
+                        <p><strong>Productos:</strong></p>
+                        <ul>
+                            ${listaProductosHtml}
+                        </ul>
+                        <p><strong>Total:</strong> $${total.toFixed(2)}</p>
+                        <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+                        <p>Saludos,<br>El equipo de ToolBox</p>
+                    </div>
+                </body>
                 </html>
-                `,
-                attachments: [
-                    {
-                        filename: 'factura.pdf',
-                        path: pdfPath
-                    }
-                ]
-            });
-            
-            console.log('Correo enviado correctamente.');
+            `,
+        });
 
-            // Eliminar el archivo PDF temporal
-            fs.unlink(pdfPath, (err) => {
-                if (err) console.error('Error al eliminar el archivo PDF:', err);
-            });
+        console.log('Correo enviado al usuario.');
 
-            res.status(200).json({ message: 'Correo enviado correctamente.' });
-        } catch (error) {
-            console.error('Error al enviar el correo:', error);
-            res.status(500).json({ error: 'Error al enviar el correo.' });
-        }
+        // Eliminar el archivo PDF temporal
+        fs.unlink(pdfPath, (err) => {
+            if (err) console.error('Error al eliminar el archivo PDF:', err);
+        });
+
+        res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.' });
     } catch (error) {
         console.error('Error al confirmar el pago:', error);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
@@ -562,7 +595,7 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         // Obtener el ID del usuario desde la sesión
-        const userId = req.session.user ? req.session.user._id : null;
+        const userId = req.session.user ? req.session.user.id : null;
 
         if (!userId) {
             return res.status(400).json({ error: 'Usuario no autenticado' });
@@ -587,7 +620,7 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
 app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         // Obtener el ID del usuario desde la sesión
-        const userId = req.session.user ? req.session.user._id : null;
+        const userId = req.session.user ? req.session.user.id : null;
 
         if (!userId) {
             return res.status(400).json({ error: 'Usuario no autenticado' });
@@ -656,8 +689,14 @@ app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
     res.render('account/cuenta/admin/inventory', { CUsuario });
 });
 
-app.get('/admin/notificacion', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    res.render('account/cuenta/cliente/notification');
+app.get('/admin/notificacion', authorize(['admin', 'boss']), async (req, res) => {
+    try {
+        const notificaciones = await Notificacion.find().sort({ fecha: -1 }).lean();
+        res.render('account/cuenta/admin/notification', { notificaciones });
+    } catch (error) {
+        console.error('Error al obtener notificaciones:', error);
+        res.status(500).send('Error al obtener notificaciones.');
+    }
 });
 
 app.get('/jefe/permisos', authorize(['boss']), async (req, res) => {

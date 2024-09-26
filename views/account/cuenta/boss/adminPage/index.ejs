@@ -22,26 +22,28 @@
     <div>
         <section>
             <!--Sidebar-->
-      
+          
             <div class="sidebar">
               <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
-      
+          
               <a href="/cuenta" id="client">Inicio</a>
               <a href="/" id="pagBtn">Ir a la Pág. Principal</a>
-              <a href="/cuenta/contacto" id="contactoBtn">Servicio al Cliente</a>
               <a href="/cuenta/carrito" id="carritoBtn">Carrito</a>
+              <a href="/cuenta/atencion" id="contactoBtn">Servicio al Cliente</a>
               <a href="/cuenta/configuracion" id="configuracionBtn">Configuración</a>
-      
+          
               <% if (CUsuario && CUsuario.rol === 'boss') { %>
+                <a href="/cuenta/notificacion">Notificación</a>
                 <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
                 <a class="active sidebar_btn" href="/jefe/permisos" id="permisosBtn">Permisos</a>
               <% } else if (CUsuario && CUsuario.rol === 'admin') { %>
+                <a href="/admin/notificacion">Notificación</a>
                 <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
               <% } %>
-      
+          
               <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>
             </div>
-      
+          
           </section>
 
         <section class="interfaz">
