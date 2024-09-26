@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Notificacion = require('./models/Notificacion'); // Asegúrate de que la ruta sea correcta
+const Notificacion = require('./models/notificacion'); // Asegúrate de que la ruta sea correcta
 
 // Obtener todas las notificaciones
 router.get('/', async (req, res) => {
