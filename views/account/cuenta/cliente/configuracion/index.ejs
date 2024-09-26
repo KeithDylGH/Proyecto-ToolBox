@@ -40,7 +40,7 @@
         <a class="active sidebar_btn" href="/cuenta/configuracion" id="configuracionBtn">Configuración</a>
     
         <% if (CUsuario && CUsuario.rol === 'boss') { %>
-          <a href="/cuenta/notificacion">Notificación</a>
+          <a href="/admin/notificacion">Notificación</a>
           <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
           <a href="/jefe/permisos" id="permisosBtn">Permisos</a>
         <% } else if (CUsuario && CUsuario.rol === 'admin') { %>
