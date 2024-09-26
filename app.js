@@ -470,15 +470,13 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         // Preparar lista de productos para el cuerpo del correo
         const listaProductosHtml = productos.map(producto => {
             const productoEncontrado = productosArray.find(p => p._id.toString() === producto.id);
-            // Asegúrate de que aquí se esté usando producto.cantidad
             return `<li>${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)} x ${producto.cantidad}</li>`;
         }).join('');
 
         // Calcular total
         const total = productos.reduce((acc, producto) => {
             const productoEncontrado = productosArray.find(p => p._id.toString() === producto.id);
-            // Usar producto.cantidad en el cálculo del total
-            return acc + (productoEncontrado.precio * producto.cantidad);
+            return acc + (productoEncontrado.precio * producto.cantidad); // Usar producto.cantidad en el cálculo del total
         }, 0);
 
         const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0);
@@ -487,7 +485,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         const notificacion = new Notificacion({
             usuarioNombre: usuario.nombre,
             usuarioCorreo: emailUsuario,
-            productos: productos.map(p => ({ name: p.nombre, price: p.precio, quantity: p.cantidad })),
+            productos: productos.map(p => ({ name: p.nombre, price: p.precio, quantity: p.cantidad })), // Cambié a producto.cantidad
             total: total,
             metodoPago: metodo,
         });

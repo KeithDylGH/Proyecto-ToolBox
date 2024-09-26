@@ -47,7 +47,7 @@ exports.generarPdfCarrito = async (productosArray, cantidades, metodo) => {
     let total = 0;
     for (let i = 0; i < productosArray.length; i++) {
         const producto = productosArray[i];
-        const cantidad = cantidades.find(c => c.id === producto._id.toString()).cantidad; // Obtener la cantidad
+        const cantidad = cantidades[i].cantidad; // Asegúrate de acceder a la cantidad correctamente
         const nombre = producto.nombre || 'Producto desconocido';
         const precio = producto.precio || 0;
 
@@ -64,12 +64,13 @@ exports.generarPdfCarrito = async (productosArray, cantidades, metodo) => {
     page.drawText(`Total: $${total.toFixed(2)}`, {
         x: 50,
         y: yPosition - 20,
-        size: 12,
+        size: 14,
         color: rgb(0, 0, 0),
     });
 
     const pdfBytes = await pdfDoc.save();
     const pdfPath = path.join(tmpDir, `factura-${Date.now()}.pdf`);
     fs.writeFileSync(pdfPath, pdfBytes);
-    return pdfPath;
+
+    return pdfPath; // Devuelve la ruta del PDF
 };

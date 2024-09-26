@@ -28,4 +28,37 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
-  
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const comprarBtn = document.getElementById("comprarBtn");
+
+    if (comprarBtn) {
+        comprarBtn.addEventListener("click", function(event) {
+            event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+
+            const productoId = this.getAttribute("data-producto-id");
+
+            // Aquí puedes hacer una petición POST a tu servidor para agregar el producto al carrito
+            fetch("/api/agregar-al-carrito", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ productoId: productoId }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Redirigir a la página del carrito si el producto se agrega correctamente
+                    window.location.href = "/cuenta/carrito";
+                } else {
+                    // Manejar error al agregar el producto
+                    alert("Error al agregar el producto al carrito.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Ocurrió un error al agregar el producto al carrito.");
+            });
+        });
+    }
+});
