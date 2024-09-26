@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     cargarCarrito();
                     mostrarNotificacion('Producto agregado al carrito', 'success');
+
+                    // Redirigir a la página de compra
+                    window.location.href = '/compra';  // Redirige a la página de compra
                 } else {
                     mostrarNotificacion('Error al agregar al carrito', 'error');
                 }
@@ -115,13 +118,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                     method: 'DELETE',
                                     headers: {
                                         'Content-Type': 'application/json',
-                                    },
-                                    credentials: 'same-origin'
+                                    }
                                 });
-
+                                
                                 const result = await response.json();
                                 if (result.success) {
-                                    mostrarNotificacion('Carrito vaciado exitosamente', 'success');
+                                    mostrarNotificacion('Carrito vaciado', 'success');
                                     cargarCarrito(); // Actualiza el carrito en la interfaz
                                 } else {
                                     mostrarNotificacion(result.message || 'Error al vaciar el carrito', 'error');
@@ -132,33 +134,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         });
                     }
-
                 } else {
-                    carritoList.innerHTML = '<p>Tu carrito está vacío.</p>';
+                    // Si el carrito está vacío, mostrar un mensaje
+                    carritoList.innerHTML = '<li class="list-group-item">Tu carrito está vacío.</li>';
                 }
-            } else {
-                console.error('Error al cargar el carrito:', data.message);
-                mostrarNotificacion('Error al cargar el carrito', 'error');
             }
         } catch (error) {
-            console.error('Error en la solicitud:', error);
+            console.error('Error al cargar el carrito:', error);
             mostrarNotificacion('Error al cargar el carrito', 'error');
         }
-    }
-
-    // Mostrar notificaciones
-    function mostrarNotificacion(mensaje, tipo) {
-        const notificacion = document.createElement('div');
-        notificacion.className = `notification ${tipo === 'success' ? 'success' : 'error'}`;
-        notificacion.textContent = mensaje;
-        document.body.appendChild(notificacion);
-
-        // Mostrar notificación
-        notificacion.style.display = 'block';
-
-        // Ocultar notificación después de 3 segundos
-        setTimeout(() => {
-            notificacion.remove();
-        }, 3000);
     }
 });

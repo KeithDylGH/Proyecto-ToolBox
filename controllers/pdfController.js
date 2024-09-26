@@ -47,7 +47,7 @@ exports.generarPdfCarrito = async (productosArray, cantidades, metodo) => {
     let total = 0;
     for (let i = 0; i < productosArray.length; i++) {
         const producto = productosArray[i];
-        const cantidad = cantidades[i].cantidad; // Obtiene la cantidad correspondiente
+        const cantidad = cantidades.find(c => c.id === producto._id.toString()).cantidad; // Obtener la cantidad
         const nombre = producto.nombre || 'Producto desconocido';
         const precio = producto.precio || 0;
 
