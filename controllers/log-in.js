@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
 
         if (result.success) {
             req.session.user = {
-                id: result.user._id, // Asegúrate de incluir esto
+                id: result.user.id, // Asegúrate de incluir esto
                 nombre: result.user.nombre,
                 apellido: result.user.apellido, // Añadido
                 usuario: result.user.usuario,

@@ -56,38 +56,101 @@
     <section class="interfaz">
       <div class="container">
         <div class="content">
-
-
-
-
-
-
-          <!--Contacto-->
-          <div class="contactos">
-
-
-            <div class="carrito">
-              <div class="card bg-dark text-white" style="padding: 5rem;">
-                <div class="card-img-overlay" style="background-color: #5e3b3b;
-                                background: rgb(94,59,59);
-                                background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
-                  <h3 class="card-title">Servicio al Cliente</h3>
-                  <p class="card-text-overlay">Comunicate con nuestros contactos</p>
+    
+          <!-- INICIO -->
+          <div class="inicio">
+            <div class="card bg-dark text-white" style="padding: 5rem;">
+              <div class="card-img-overlay" style="background-color: #5e3b3b;
+                              background: rgb(94,59,59);
+                              background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
+                <div class="welcomeMsg">
+                  <% if (CUsuario && CUsuario.rol === 'admin') { %>
+                    <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
+                    <p class="card-text-overlay">Administra productos, usuarios y más con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
+                  <% } else if (CUsuario && CUsuario.rol === 'boss') { %>
+                    <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
+                    <p class="card-text-overlay">Administra la página, usuarios y productos con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
+                  <% } else if (CUsuario) { %>
+                    <h3 class="card-title text-light">¡Bienvenido <%= CUsuario.nombre %>!</h3>
+                    <p class="card-text-overlay">Disfruta las funciones exclusivas de un cliente en ToolBox.</p>
+                  <% } else { %>
+                    <h3 class="card-title text-light">¡Bienvenido Usuario!</h3>
+                    <p class="card-text-overlay">Tu rol no está definido. Por favor, contacta al soporte.</p>
+                  <% } %>
                 </div>
               </div>
-
-
             </div>
-
-
-
-
-
+    
+            <div class="d-flex justify-content-center">
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/bdv.png" alt="Pago Móvil" width="50px">
+                    Pago Móvil
+                  </h5>
+                  <p class="card-text">Realiza tus pagos fácilmente con BDV.</p>
+                </div>
+              </div>
+    
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/zinli.png" alt="Zinli" width="50px">
+                    Zinli
+                  </h5>
+                  <p class="card-text">Usa Zinli para tus transacciones rápidas.</p>
+                </div>
+              </div>
+    
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/transferencia-bancaria.png" alt="Transferencia" width="50px">
+                    Transferencia
+                  </h5>
+                  <p class="card-text">Transfiere fondos con tarjeta de crédito.</p>
+                </div>
+              </div>
+    
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/paypal.webp" alt="PayPal" width="50px">
+                    PayPal
+                  </h5>
+                  <p class="card-text">Realiza tus pagos de manera segura con PayPal.</p>
+                </div>
+              </div>
+    
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/whatsapp.png" alt="Contáctanos" width="50px">
+                    Contáctanos
+                  </h5>
+                  <p class="card-text">Si tienes alguna falla o duda, no dudes en contactarnos.</p>
+                  <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>
+                </div>
+              </div>
+    
+              <% if (CUsuario && (CUsuario.rol === 'admin' || CUsuario.rol === 'boss')) { %>
+                <div class="card" style="width: 14rem; border-radius: .5rem; background-color: #007bff;">
+                  <div class="card-body">
+                    <h5 class="card-subtitle mb-2 mt-2">
+                      <img src="/img/icono/whatsapp.png" alt="Soporte" width="50px">
+                      Soporte
+                    </h5>
+                    <p class="card-text">Habla con el programador para cualquier duda o problema.</p>
+                    <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-light">Hablar</a>
+                  </div>
+                </div>
+              <% } %>
+            </div>
           </div>
+    
         </div>
-
-
-    </section>
+      </div>
+    </section>    
 
   </div>
 
