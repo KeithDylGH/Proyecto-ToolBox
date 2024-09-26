@@ -562,7 +562,7 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         // Obtener el ID del usuario desde la sesión
-        const userId = req.session.user ? req.session.user.id : null; // Cambiado a "id"
+        const userId = req.session.user ? req.session.user._id : null; // Asegúrate de usar _id
 
         // Verificar si el ID es nulo o no es un ObjectId válido
         if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
@@ -626,6 +626,15 @@ app.get('/cuenta/atencion', authorize(['user', 'admin', 'boss']), async (req, re
     res.render('account/cuenta/cliente/atencion');
 });
 
+/* app.get('/admin/notificacion', async (req, res) => {
+    try {
+      const notificaciones = await Notificaciones.find();  // Suponiendo que usas MongoDB
+      res.render('notificacion', { notificaciones });
+    } catch (error) {
+      res.status(500).send({ message: 'Error al cargar las notificaciones' });
+    }
+  });  
+ */
 app.get('/error', (req, res) => {
     const message = req.query.message || 'Se ha producido un error.';
     res.status(403).render('error/index', { message });
