@@ -580,7 +580,7 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
         }
 
         // Renderizar la vista de edición del usuario
-        res.render('account/cuenta/configuracion/editar', { usuario, user: req.session.user });
+        res.render('account/cuenta/cliente/configuracion/editar', { usuario, user: req.session.user });
     } catch (error) {
         console.error('Error al buscar el usuario:', error);
         return res.status(500).json({ error: 'Error interno del servidor' });
