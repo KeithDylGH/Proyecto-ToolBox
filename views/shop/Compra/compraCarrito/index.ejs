@@ -52,7 +52,7 @@
                       <ul class="list-group">
                           <% productos.forEach(producto => { %>
                                 <li class="list-group-item d-flex producto" data-id="<%= producto._id %>">
-                                  <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-thumbnail me-3" style="max-width: 100px;">
+                                  <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-thumbnail me-3" style="width: 25%;">
                                   <div>
                                       <h6><%= producto.nombre %></h6>
                                       <p>Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
@@ -194,11 +194,11 @@
                             <li>Introduzca el monto total de la compra.</li>
                             <li>Incluya una nota con su número de pedido.</li>
                             <li>Confirme el pago.</li>
-
-                            <li>
-                                <div id="paypal-button-container"></div>
-                            </li>
                         </ul>
+
+                        <div>
+                            <div id="paypal-button-container"></div>
+                        </div>
 
                     </div>
                     <div class="modal-footer">
