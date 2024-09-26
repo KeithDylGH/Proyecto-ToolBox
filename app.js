@@ -436,7 +436,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos, metodo, numero } = req.body; // Asegúrate de recibir el número como teléfono
+    const { productos, metodo } = req.body;
     const usuario = req.session.user;
 
     console.log('Datos recibidos:', { productos, metodo });
@@ -449,7 +449,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     const emailUsuario = usuario.correo;
 
-    if (!emailUsuario || !productos || !metodo || !numero) {
+    if (!emailUsuario || !productos || !metodo) {
         console.log('Faltan datos necesarios para el correo.');
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
@@ -483,7 +483,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         const notificacion = new Notificacion({
             usuarioNombre: usuario.nombre,
             usuarioCorreo: emailUsuario,
-            usuarioTelefono: numero,
             productos: productos.map(p => ({ name: p.nombre, price: p.precio, quantity: p.cantidad })),
             total: total,
             metodoPago: metodo,
@@ -505,7 +504,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                 <h1>Nueva Compra</h1>
                 <p>Usuario: ${usuario.nombre}</p>
                 <p>Correo: ${emailUsuario}</p>
-                <p>Teléfono: ${numero}</p>
                 <p><strong>Productos Comprados:</strong></p>
                 <ul>
                     ${listaProductosHtml}
