@@ -65,11 +65,8 @@ if (loginForm) {
             console.log('Login response:', data);
 
             if (data.success) {
-                if (data.user.rol === 'admin' || data.user.rol === 'boss') {
-                    window.location.href = '/admin';
-                } else {
-                    window.location.href = '/cliente';
-                }
+                // Redirigir a /cuenta para todos los roles
+                window.location.href = '/cuenta';
             } else {
                 if (notification) {
                     notification.textContent = data.error || 'Error en el inicio de sesión';
