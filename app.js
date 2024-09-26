@@ -561,22 +561,25 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 // Ruta para obtener y editar la configuración del usuario
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user._id; // ID desde la sesión
+        // Obtener el ID del usuario desde la sesión
+        const userId = req.session.user ? req.session.user._id : null;
 
-        // Verifica que el ID sea válido
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
+        // Verificar si el ID es nulo o no es un ObjectId válido
+        if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
             console.error('ID de usuario no válido:', userId);
             return res.status(400).json({ error: 'ID de usuario no válido' });
         }
 
-        // Busca el usuario por ID
+        // Buscar el usuario en la base de datos por su ID
         const usuario = await CUsuario.findById(userId).exec();
 
+        // Verificar si el usuario existe
         if (!usuario) {
             console.error(`Usuario no encontrado para ID: ${userId}`);
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
+        // Renderizar la vista de edición del usuario
         res.render('account/cuenta/configuracion/editar', { usuario, user: req.session.user });
     } catch (error) {
         console.error('Error al buscar el usuario:', error);
