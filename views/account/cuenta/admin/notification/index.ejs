@@ -56,13 +56,16 @@
                   <div class="card-body">
                     <h5 class="card-title">Compra por: <%= notificacion.usuarioNombre %></h5>
                     <p class="card-text">Correo: <%= notificacion.usuarioCorreo %></p>
-                    <p class="card-text">Teléfono: <%= notificacion.usuarioTelefono %></p>
                     <p class="card-text"><strong>Método de Pago:</strong> <%= notificacion.metodoPago %></p>
                     <p class="card-text"><strong>Total:</strong> $<%= notificacion.total.toFixed(2) %></p>
                     <p class="card-text"><strong>Productos:</strong></p>
                     <ul>
                       <% notificacion.productos.forEach(producto => { %>
-                        <li><%= producto.name %> - $<%= producto.price.toFixed(2) %> x <%= producto.quantity %></li>
+                        <% if (producto && typeof producto.price === 'number') { %>
+                          <li><%= producto.name %> - $<%= producto.price.toFixed(2) %> x <%= producto.quantity %></li>
+                        <% } else { %>
+                          <li>Producto no disponible</li>
+                        <% } %>
                       <% }) %>
                     </ul>
                     <p class="card-text"><small class="text-muted">Fecha: <%= notificacion.fecha.toLocaleString() %></small></p>
