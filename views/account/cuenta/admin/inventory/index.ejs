@@ -32,13 +32,13 @@
           <a href="/" id="pagBtn">Ir a la Pág. Principal</a>
           <a href="/cuenta/carrito" id="carritoBtn">Carrito</a>
           <a href="/cuenta/contacto" id="contactoBtn">Servicio al Cliente</a>
-          <a class="active sidebar_btn" href="/cuenta/configuracion" id="configuracionBtn">Configuración</a>
+          <a href="/cuenta/configuracion" id="configuracionBtn">Configuración</a>
   
           <% if (CUsuario && CUsuario.rol === 'boss') { %>
-            <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
+            <a class="active sidebar_btn" href="/admin/inventario" id="inventarioBtn">Inventario</a>
             <a href="/jefe/permisos" id="permisosBtn">Permisos</a>
           <% } else if (CUsuario && CUsuario.rol === 'admin') { %>
-            <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
+            <a class="active sidebar_btn" href="/admin/inventario" id="inventarioBtn">Inventario</a>
           <% } %>
   
           <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>

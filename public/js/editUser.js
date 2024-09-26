@@ -17,26 +17,26 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             try {
-                const response = await fetch('/cuenta/configuracion/editar', { // Aquí ya no necesitas el ID en la URL
+                const response = await fetch('/cuenta/configuracion/editar', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data)
-                });                
-
+                });
+            
                 const result = await response.json();
-
+            
                 if (!response.ok) {
                     throw new Error(result.error || 'Error al actualizar datos');
                 }
-
+            
                 alert('Datos actualizados correctamente');
-                window.location.href = '/cuenta'; // Redirige a la página deseada
+                window.location.href = '/cuenta'; // Redirige al finalizar
             } catch (error) {
                 console.error('Error al enviar datos:', error);
                 alert('Error en el servidor: ' + error.message);
-            }
+            }            
         });
     }
 });

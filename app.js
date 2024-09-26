@@ -590,7 +590,7 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
 // Ruta para actualizar la configuración del usuario
 app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user._id; // ID del usuario desde la sesión
+        const userId = req.session.user._id; // Usa _id si es MongoDB
         const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
 
         const updates = {
@@ -603,7 +603,7 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
         };
 
         if (password) {
-            updates.password = password; // Solo actualizar si se proporciona una nueva contraseña
+            updates.password = password; // Actualiza si hay nueva contraseña
         }
 
         const usuarioActualizado = await CUsuario.findByIdAndUpdate(userId, updates, { new: true });
@@ -612,10 +612,10 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Actualizar la sesión con los nuevos datos
+        // Actualiza la sesión
         req.session.user = usuarioActualizado;
 
-        res.redirect('/cuenta/configuracion/editar');
+        res.json({ success: true });
     } catch (error) {
         console.error('Error al actualizar el usuario:', error);
         return res.status(500).json({ error: 'Error interno del servidor' });
