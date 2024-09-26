@@ -437,7 +437,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos, metodo } = req.body;
+    const { productos, metodo } = req.body; // Asegúrate de que 'productos' contenga la cantidad
     const usuario = req.session.user;
 
     console.log('Datos recibidos:', { productos, metodo });
@@ -470,11 +470,14 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         // Preparar lista de productos para el cuerpo del correo
         const listaProductosHtml = productos.map(producto => {
             const productoEncontrado = productosArray.find(p => p._id.toString() === producto.id);
+            // Asegúrate de que aquí se esté usando producto.cantidad
             return `<li>${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)} x ${producto.cantidad}</li>`;
         }).join('');
 
+        // Calcular total
         const total = productos.reduce((acc, producto) => {
             const productoEncontrado = productosArray.find(p => p._id.toString() === producto.id);
+            // Usar producto.cantidad en el cálculo del total
             return acc + (productoEncontrado.precio * producto.cantidad);
         }, 0);
 
@@ -488,7 +491,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             total: total,
             metodoPago: metodo,
         });
-        
+
         await notificacion.save();
 
         // Obtener todos los usuarios con rol de admin y boss
