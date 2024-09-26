@@ -562,37 +562,40 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         // Obtener el ID del usuario desde la sesión
-        const userId = req.session.user ? req.session.user._id : null; // Asegúrate de usar _id
+        const userId = req.session.user ? req.session.user._id : null;
 
-        // Verificar si el ID es nulo o no es un ObjectId válido
-        if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-            console.error('ID de usuario no válido:', userId);
-            return res.status(400).json({ error: 'ID de usuario no válido' });
+        if (!userId) {
+            return res.status(400).json({ error: 'Usuario no autenticado' });
         }
 
         // Buscar el usuario en la base de datos por su ID
         const usuario = await CUsuario.findById(userId).exec();
 
-        // Verificar si el usuario existe
         if (!usuario) {
-            console.error(`Usuario no encontrado para ID: ${userId}`);
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Renderizar la vista de edición del usuario
+        // Renderizar la vista de edición con los datos del usuario
         res.render('account/cuenta/cliente/configuracion/editar', { usuario, user: req.session.user });
     } catch (error) {
-        console.error('Error al buscar el usuario:', error);
-        return res.status(500).json({ error: 'Error interno del servidor' });
+        console.error('Error al obtener la configuración del usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
 // Ruta para actualizar la configuración del usuario
 app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user ? req.session.user._id : null; // ID del usuario desde la sesión
-        const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
+        // Obtener el ID del usuario desde la sesión
+        const userId = req.session.user ? req.session.user._id : null;
 
+        if (!userId) {
+            return res.status(400).json({ error: 'Usuario no autenticado' });
+        }
+
+        const { nombre, apellido, usuario, correo, numero, cedula, password } = req.body;
+
+        // Crear objeto de actualización
         const updates = {
             nombre,
             apellido,
@@ -602,23 +605,34 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
             cedula
         };
 
+        // Solo actualizar la contraseña si se proporciona una nueva
         if (password) {
-            updates.password = password; // Solo actualizar si se proporciona una nueva contraseña
+            updates.password = password;
         }
 
-        const usuarioActualizado = await CUsuario.findByIdAndUpdate(userId, updates, { new: true });
+        // Actualizar el usuario en la base de datos
+        const usuarioActualizado = await CUsuario.findByIdAndUpdate(userId, updates, { new: true }).exec();
 
         if (!usuarioActualizado) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Actualizar la sesión con los nuevos datos
-        req.session.user = usuarioActualizado;
+        // Actualizar la sesión con los nuevos datos del usuario
+        req.session.user = {
+            _id: usuarioActualizado._id,
+            nombre: usuarioActualizado.nombre,
+            apellido: usuarioActualizado.apellido,
+            usuario: usuarioActualizado.usuario,
+            correo: usuarioActualizado.correo,
+            numero: usuarioActualizado.numero,
+            cedula: usuarioActualizado.cedula,
+            rol: usuarioActualizado.rol
+        };
 
-        res.redirect('account/cuenta/cliente/configuracion/editar');
+        res.redirect('/cuenta/configuracion/editar');
     } catch (error) {
-        console.error('Error al actualizar el usuario:', error);
-        return res.status(500).json({ error: 'Error interno del servidor' });
+        console.error('Error al actualizar la configuración del usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 

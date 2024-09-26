@@ -27,97 +27,136 @@
   <div>
     <section>
       <!--Sidebar-->
-
+    
       <div class="sidebar">
         <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
-
+    
         <a class="active sidebar_btn" href="/cuenta" id="client">Inicio</a>
         <a href="/" id="pagBtn">Ir a la Pág. Principal</a>
         <a href="/cuenta/carrito" id="carritoBtn">Carrito</a>
         <a href="/cuenta/contacto" id="contactoBtn">Servicio al Cliente</a>
         <a href="/cuenta/configuracion" id="configuracionBtn">Configuración</a>
-
+    
         <% if (CUsuario && CUsuario.rol === 'boss') { %>
-          <a href="/cuenta/notificacion">Notificacion</a>
+          <a href="/cuenta/notificacion">Notificación</a>
           <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
           <a href="/jefe/permisos" id="permisosBtn">Permisos</a>
         <% } else if (CUsuario && CUsuario.rol === 'admin') { %>
-          <a href="/cuenta/notificacion">Notificacion</a>
+          <a href="/admin/notificacion">Notificación</a>
           <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
         <% } %>
-
+    
         <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>
       </div>
-
+    
     </section>
-
+    
     <section class="interfaz">
       <div class="container">
-          <div class="content">
-  
-              <!-- INICIO -->
-              <div class="inicio">
-                  <div class="card bg-dark text-white" style="padding: 5rem;">
-                      <div class="card-img-overlay" style="background-color: #5e3b3b;
-                                      background: rgb(94,59,59);
-                                      background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
-                          <div class="welcomeMsg">
-                              <% if (CUsuario && CUsuario.rol === 'admin') { %>
-                                  <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
-                                  <p class="card-text-overlay">Administra productos, usuarios y más con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
-                              <% } else if (CUsuario && CUsuario.rol === 'boss') { %>
-                                  <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
-                                  <p class="card-text-overlay">Administra la página, usuarios y productos con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
-                              <% } else if (CUsuario) { %>
-                                  <h3 class="card-title text-light">¡Bienvenido <%= CUsuario.nombre %>!</h3>
-                                  <p class="card-text-overlay">Disfruta las funciones exclusivas de un cliente en ToolBox.</p>
-                              <% } else { %>
-                                  <h3 class="card-title text-light">¡Bienvenido Usuario!</h3>
-                                  <p class="card-text-overlay">Tu rol no está definido. Por favor, contacta al soporte.</p>
-                              <% } %>
-                          </div>
-                      </div>
-                  </div>
-  
-                  <div class="d-flex justify-content-center">
-                      <div class="card" style="width: 14rem; border-radius: .5rem;">
-                          <div class="card-body">
-                              <h5 class="card-subtitle mb-2 mt-2">
-                                  <img src="/img/icono/carrito de comprasN.png" alt="" width="50px">
-                                  Carrito
-                              </h5>
-                              <p class="card-text">Mira los productos que añadiste a tu carrito</p>
-                              <a href="/cuenta/carrito" class="card-link">Entrar al carrito</a>
-                          </div>
-                      </div>
-  
-                      <div class="card" style="width: 14rem; border-radius: .5rem;">
-                          <div class="card-body">
-                              <h5 class="card-subtitle mb-2 mt-2">
-                                  <img src="/img/icono/contactosN.png" alt="" width="50px">
-                                  Contáctos
-                              </h5>
-                              <p class="card-text">Contáctanos en nuestro servicio al cliente</p>
-                              <a href="/cuenta/contacto" class="card-link">Entrar a contactos</a>
-                          </div>
-                      </div>
-  
-                      <div class="card" style="width: 14rem; border-radius: .5rem;">
-                          <div class="card-body">
-                              <h5 class="card-subtitle mb-2 mt-2">
-                                  <img src="/img/icono/configuracionN.png" alt="" width="50px">
-                                  Configuración
-                              </h5>
-                              <p class="card-text">Configura tu cuenta, si quieres cambiar algo</p>
-                              <a href="/cuenta/configuracion" class="card-link">Entrar a configuración</a>
-                          </div>
-                      </div>
-                  </div>
+        <div class="content">
+    
+          <!-- INICIO -->
+          <div class="inicio">
+            <div class="card bg-dark text-white" style="padding: 5rem;">
+              <div class="card-img-overlay" style="background-color: #5e3b3b;
+                                                  background: rgb(94,59,59);
+                                                  background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
+                <div class="welcomeMsg">
+                  <% if (CUsuario && CUsuario.rol === 'admin') { %>
+                    <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
+                    <p class="card-text-overlay">Administra productos, usuarios y más con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
+                  <% } else if (CUsuario && CUsuario.rol === 'boss') { %>
+                    <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
+                    <p class="card-text-overlay">Administra la página, usuarios y productos con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
+                  <% } else if (CUsuario) { %>
+                    <h3 class="card-title text-light">¡Bienvenido <%= CUsuario.nombre %>!</h3>
+                    <p class="card-text-overlay">Disfruta las funciones exclusivas de un cliente en ToolBox.</p>
+                  <% } else { %>
+                    <h3 class="card-title text-light">¡Bienvenido Usuario!</h3>
+                    <p class="card-text-overlay">Tu rol no está definido. Por favor, contacta al soporte.</p>
+                  <% } %>
+                </div>
               </div>
-  
+            </div>
+    
+            <div class="d-flex justify-content-center">
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/carrito de comprasN.png" alt="" width="50px">
+                    Carrito
+                  </h5>
+                  <p class="card-text">Mira los productos que añadiste a tu carrito</p>
+                  <a href="/cuenta/carrito" class="card-link">Entrar al carrito</a>
+                </div>
+              </div>
+    
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/contactosN.png" alt="" width="50px">
+                    Contáctos
+                  </h5>
+                  <p class="card-text">Contáctanos en nuestro servicio al cliente</p>
+                  <a href="/cuenta/contacto" class="card-link">Entrar a contactos</a>
+                </div>
+              </div>
+    
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/configuracionN.png" alt="" width="50px">
+                    Configuración
+                  </h5>
+                  <p class="card-text">Configura tu cuenta, si quieres cambiar algo</p>
+                  <a href="/cuenta/configuracion" class="card-link">Entrar a configuración</a>
+                </div>
+              </div>
+    
+              <% if (CUsuario && CUsuario.rol === 'admin') { %>
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/inventario.png" alt="" width="50px">
+                    Inventario
+                  </h5>
+                  <p class="card-text">Administra los productos, puedes agregar, editar y eliminar productos.</p>
+                  <a href="/admin/inventario" class="card-link">Gestionar Inventario</a>
+                </div>
+              </div>
+              <% } %>
+    
+              <% if (CUsuario && CUsuario.rol === 'boss') { %>
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/inventario.png" alt="" width="50px">
+                    Inventario
+                  </h5>
+                  <p class="card-text">Administra los productos, puedes agregar, editar y eliminar productos.</p>
+                  <a href="/admin/inventario" class="card-link">Gestionar Inventario</a>
+                </div>
+              </div>
+    
+              <div class="card" style="width: 14rem; border-radius: .5rem;">
+                <div class="card-body">
+                  <h5 class="card-subtitle mb-2 mt-2">
+                    <img src="/img/icono/permisos.png" alt="" width="50px">
+                    Permisos
+                  </h5>
+                  <p class="card-text">Gestiona permisos de usuarios, puedes ascender, revocar o eliminar usuarios.</p>
+                  <a href="/jefe/permisos" class="card-link">Gestionar Permisos</a>
+                </div>
+              </div>
+              <% } %>
+    
+            </div>
           </div>
+    
+        </div>
       </div>
-  </section>
+    </section>
+    
 </body>  
 
   </div>
