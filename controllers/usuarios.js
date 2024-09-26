@@ -67,7 +67,7 @@ userRouter.post('/login', async (req, res) => {
     const { usuario, password } = req.body;
 
     try {
-        const user = await CUsuario.findOne({ usuario }); // Cambia a CUsuario si es necesario
+        const user = await User.findOne({ usuario });
 
         if (!user || !await bcrypt.compare(password, user.password)) {
             return res.status(400).json({ error: 'Usuario o contraseña incorrectos' });
