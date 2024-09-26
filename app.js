@@ -561,14 +561,15 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 // Ruta para obtener y editar la configuración del usuario
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user._id; // Obtiene la ID del usuario desde la sesión
-        console.log('ID del usuario de la sesión:', userId);
+        const userId = req.session.user._id; // ID desde la sesión
 
+        // Verifica que el ID sea válido
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             console.error('ID de usuario no válido:', userId);
             return res.status(400).json({ error: 'ID de usuario no válido' });
         }
 
+        // Busca el usuario por ID
         const usuario = await CUsuario.findById(userId).exec();
 
         if (!usuario) {

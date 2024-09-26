@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('editUserForm');
 
     if (form) {
-        const userId = form.action.split('/').pop(); // Obtener ID de la acción del formulario
-
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -19,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             try {
-                const response = await fetch(`/cuenta/configuracion/editar/${userId}`, {
+                const response = await fetch('/cuenta/configuracion/editar', { // Aquí ya no necesitas el ID en la URL
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
