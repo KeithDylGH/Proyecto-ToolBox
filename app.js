@@ -562,7 +562,7 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         // Obtener el ID del usuario desde la sesión
-        const userId = req.session.user ? req.session.user._id : null;
+        const userId = req.session.user ? req.session.user.id : null; // Cambiado a "id"
 
         // Verificar si el ID es nulo o no es un ObjectId válido
         if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
