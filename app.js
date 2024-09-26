@@ -590,7 +590,7 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
 // Ruta para actualizar la configuración del usuario
 app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const userId = req.session.user._id; // Usa _id si es MongoDB
+        const userId = req.session.user ? req.session.user._id : null; // ID del usuario desde la sesión
         const { nombre, apellido, usuario, correo, password, numero, cedula } = req.body;
 
         const updates = {
@@ -603,7 +603,7 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
         };
 
         if (password) {
-            updates.password = password; // Actualiza si hay nueva contraseña
+            updates.password = password; // Solo actualizar si se proporciona una nueva contraseña
         }
 
         const usuarioActualizado = await CUsuario.findByIdAndUpdate(userId, updates, { new: true });
@@ -612,10 +612,10 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Actualiza la sesión
+        // Actualizar la sesión con los nuevos datos
         req.session.user = usuarioActualizado;
 
-        res.json({ success: true });
+        res.redirect('account/cuenta/cliente/configuracion/editar');
     } catch (error) {
         console.error('Error al actualizar el usuario:', error);
         return res.status(500).json({ error: 'Error interno del servidor' });
@@ -626,15 +626,6 @@ app.get('/cuenta/atencion', authorize(['user', 'admin', 'boss']), async (req, re
     res.render('account/cuenta/cliente/atencion');
 });
 
-/* app.get('/admin/notificacion', async (req, res) => {
-    try {
-      const notificaciones = await Notificaciones.find();  // Suponiendo que usas MongoDB
-      res.render('notificacion', { notificaciones });
-    } catch (error) {
-      res.status(500).send({ message: 'Error al cargar las notificaciones' });
-    }
-  });  
- */
 app.get('/error', (req, res) => {
     const message = req.query.message || 'Se ha producido un error.';
     res.status(403).render('error/index', { message });
@@ -649,6 +640,10 @@ app.get('/admin', authorize(['admin', 'boss']), (req, res) => {
 app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
     const CUsuario = req.user;
     res.render('account/cuenta/admin/inventory', { CUsuario });
+});
+
+app.get('/admin/notificacion', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    res.render('account/cuenta/cliente/notification');
 });
 
 app.get('/jefe/permisos', authorize(['boss']), async (req, res) => {
