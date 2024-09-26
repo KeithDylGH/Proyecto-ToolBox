@@ -16,9 +16,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
     const transferenciaBtn = document.getElementById('transferenciaBtn');
     const zinliBtn = document.getElementById('zinliBtn');
+    const paypalBtn = document.getElementById('paypalBtn'); // Nuevo botón PayPal
     const cancelarPagoBtn = document.getElementById('cancelarPagoBtn');
 
-    if (pagoMovilBtn && transferenciaBtn && zinliBtn && cancelarPagoBtn) {
+    if (pagoMovilBtn && transferenciaBtn && zinliBtn && paypalBtn && cancelarPagoBtn) {
         pagoMovilBtn.addEventListener('click', function () {
             const pagoMovilModal = new bootstrap.Modal(document.getElementById('pagoMovilModal'));
             pagoMovilModal.show();
@@ -32,6 +33,12 @@ document.addEventListener('DOMContentLoaded', function () {
         zinliBtn.addEventListener('click', function () {
             const zinliModal = new bootstrap.Modal(document.getElementById('zinliModal'));
             zinliModal.show();
+        });
+
+        // Evento para mostrar el modal de PayPal
+        paypalBtn.addEventListener('click', function () {
+            const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
+            paypalModal.show();
         });
 
         cancelarPagoBtn.addEventListener('click', function () {

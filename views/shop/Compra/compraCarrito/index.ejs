@@ -76,7 +76,7 @@
                         <button id="pagoMovilBtn" class="btn btn-primary">Pago Móvil</button>
                         <button id="transferenciaBtn" class="btn btn-primary">Transferencia</button>
                         <button id="zinliBtn" class="btn btn-primary">Zinli</button>
-                        <button id="paypalBtn" class="btn btn-primary" data-bs-target="#paypalModal">PayPal</button>
+                        <button id="paypalBtn" class="btn btn-primary">PayPal</button>
                         <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
                       </div>
                     </div>
@@ -177,16 +177,25 @@
             </div>
           </div>
 
-        <!-- Modal de PayPal -->
+        <!-- Modal para PayPal -->
         <div class="modal fade" id="paypalModal" tabindex="-1" aria-labelledby="paypalModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="paypalModalLabel">Pago con PayPal</h5>
+                        <h5 class="modal-title" id="paypalModalLabel">Instrucciones para pagar con PayPal</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Instrucciones para el pago con PayPal.</p>
+                        <p>Aquí van las instrucciones para realizar el pago a través de PayPal:</p>
+                        <ul>
+                            <li>Inicie sesión en su cuenta de PayPal.</li>
+                            <li>Seleccione "Enviar dinero".</li>
+                            <li>Introduzca la dirección de correo electrónico de la tienda.</li>
+                            <li>Introduzca el monto total de la compra.</li>
+                            <li>Incluya una nota con su número de pedido.</li>
+                            <li>Confirme el pago.</li>
+                        </ul>
+
                         <div id="paypal-button-container"></div>
                     </div>
                     <div class="modal-footer">
