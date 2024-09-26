@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notificaciones de Pago</title>
-
   <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png">
   <link rel="stylesheet" href="/css/admin.css">
   <link rel="stylesheet" href="/css/cuenta.css">
@@ -62,13 +61,23 @@
                     <ul>
                       <% notificacion.productos.forEach(producto => { %>
                         <% if (producto && typeof producto.price === 'number') { %>
-                          <li><%= producto.name %> - $<%= producto.price.toFixed(2) %> x <%= producto.quantity %></li>
+                          <li>
+                            <%= producto.name %> - $<%= producto.price.toFixed(2) %> x <%= producto.quantity %>
+                            <img src="<%= producto.imagen ? producto.imagen.data : '/img/default-product.jpg' %>" alt="<%= producto.name %>" style="width: 50px; height: auto;">
+                          </li>
                         <% } else { %>
                           <li>Producto no disponible</li>
                         <% } %>
                       <% }) %>
                     </ul>
                     <p class="card-text"><small class="text-muted">Fecha: <%= notificacion.fecha.toLocaleString() %></small></p>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="atendido-<%= notificacion._id %>" onchange="updateNotificacion('<%= notificacion._id %>')" <%= notificacion.atendido ? 'checked' : '' %> >
+                      <label class="form-check-label" for="atendido-<%= notificacion._id %>">
+                        Marcado como atendido
+                      </label>
+                    </div>
+                    <button class="btn btn-danger mt-2" onclick="deleteNotificacion('<%= notificacion._id %>')">Eliminar Notificación</button>
                   </div>
                 </div>
               </div>
@@ -83,6 +92,6 @@
 
   <script src="/js/cuenta.js"></script>
   <script src="/js/logout.js"></script>
-
+  <script src="/js/notificacionAdmin.js"></script>
 </body>
 </html>

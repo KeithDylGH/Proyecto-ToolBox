@@ -26,6 +26,7 @@ const axios = require('axios');
 const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
 const Notificacion = require('./models/notificacion');
+const notificacionRouter = require('./controllers/notificaciones');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -660,7 +661,7 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
             rol: usuarioActualizado.rol
         };
 
-        res.redirect('/cuenta/account/configuracion/editar');
+        res.redirect('/cuenta/account/cliente/configuracion/editar');
     } catch (error) {
         console.error('Error al actualizar la configuración del usuario:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
@@ -888,3 +889,4 @@ app.use('/api/usuarios', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
 app.use('/api/carrito', carritoRouter);
+app.use('/api/notificaciones', notificacionRouter);
