@@ -121,14 +121,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Lógica para inicializar los botones de PayPal
     function initPaypalButtons() {
-        // Asumiendo que el monto total se obtiene directamente
-        const total = parseFloat(document.getElementById('totalMonto').innerText.replace('$', '')); // Obtener total del elemento
-
+        const total = parseFloat(document.getElementById('totalMonto').innerText.replace('$', ''));
+    
         if (isNaN(total) || total <= 0) {
-            console.warn('Total inválido:', total); // Log para depuración
-            return; // Salir si el total no es válido
+            console.warn('Total inválido:', total);
+            return;
         }
-
+    
         paypal.Buttons({
             createOrder: function(data, actions) {
                 return fetch('/paypal/create-order', {
@@ -137,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        amount: total
+                        cart: productos,  // Asegúrate de enviar el carrito
                     })
                 })
                 .then(response => {
@@ -147,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(data => {
-                    return data.orderID;  // Devolver el orderID de la respuesta
+                    return data.id;  // Devuelve el ID de la orden
                 });
             },
             onApprove: function(data, actions) {
@@ -157,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        orderID: data.orderID  // El ID de la orden de PayPal
+                        orderID: data.orderID
                     })
                 })
                 .then(response => {
@@ -167,17 +166,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(data => {
-                    // Mostrar el modal de éxito
                     const modal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
                     modal.show();
+                    // Opcionalmente, redirigir o mostrar más información
                 })
                 .catch(error => {
                     console.error('Error al completar el pago:', error);
                     alert('Ocurrió un error durante el pago con PayPal.');
                 });
             }
-        }).render(paypalBtn); // Renderizar el botón en el botón PayPal
-    }
+        }).render(paypalBtn);
+    }    
 
     function mostrarNotificacion(mensaje, tipo) {
         const notificacion = document.createElement('div');

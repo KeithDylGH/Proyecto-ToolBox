@@ -48,7 +48,6 @@ async function handleResponse(response) {
 router.post('/create-order', async (req, res) => {
     const { cart } = req.body; // Obtener el carrito desde el cuerpo de la solicitud
 
-    // Validar la entrada
     if (!cart || cart.length === 0) {
         return res.status(400).json({ error: 'El carrito es obligatorio y no puede estar vacío.' });
     }
@@ -65,7 +64,7 @@ router.post('/create-order', async (req, res) => {
                 {
                     amount: {
                         currency_code: "USD",
-                        value: totalValue, // Valor total basado en el carrito
+                        value: totalValue,
                     },
                 },
             ],

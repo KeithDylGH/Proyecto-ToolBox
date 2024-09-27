@@ -463,12 +463,18 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         }
 
         // Contar las cantidades de productos
-        const productosContados = productos.reduce((acc, producto) => {
+        const productosContados = {};
+
+        // Recorre el array de productos para contar las cantidades
+        productos.forEach(producto => {
             const id = producto.id;
-            const cantidad = producto.cantidad || 1;
-            acc[id] = (acc[id] || 0) + cantidad;
-            return acc;
-        }, {});
+            const cantidad = producto.cantidad; // Ahora tomamos la cantidad directamente
+            if (productosContados[id]) {
+                productosContados[id] += cantidad; // Sumar si ya existe
+            } else {
+                productosContados[id] = cantidad; // Inicializar
+            }
+        });        
 
         // Generar PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
