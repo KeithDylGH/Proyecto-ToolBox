@@ -1,126 +1,94 @@
-const fetch = require("node-fetch");
-require("dotenv").config();
-const express = require("express");
+const express = require('express');
 const router = express.Router();
+const Producto = require('../models/producto');
+const axios = require('axios'); // Importar axios
 
-// Variables de entorno
-const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
-const base = "https://api-m.sandbox.paypal.com";
+// Configuración de PayPal
+const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
+const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
 
-// Función para generar el token de acceso
-async function generateAccessToken() {
-    const BASE64_ENCODED_CLIENT_ID_AND_SECRET = Buffer.from(
-        `${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`
-    ).toString("base64");
+// Endpoint para crear una transacción de PayPal
+router.post('/create-payment', async (req, res) => {
+    const { productos } = req.body;
 
-    const request = await fetch(
-        "https://api-m.sandbox.paypal.com/v1/oauth2/token",
-        {
-            method: "POST",
-            headers: {
-                Authorization: `Basic ${BASE64_ENCODED_CLIENT_ID_AND_SECRET}`,
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-                grant_type: "client_credentials",
-            }),
-        }
-    );
-    const json = await request.json();
-    return json.access_token;
-}
-
-// Función para manejar la respuesta
-async function handleResponse(response) {
-    try {
-        const jsonResponse = await response.json();
-        return {
-            jsonResponse,
-            httpStatusCode: response.status,
-        };
-    } catch (err) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage);
-    }
-}
-
-// Ruta para crear una orden de PayPal
-router.post('/create-order', async (req, res) => {
-    const { cart } = req.body; // Obtener el carrito desde el cuerpo de la solicitud
-
-    if (!cart || cart.length === 0) {
-        return res.status(400).json({ error: 'El carrito es obligatorio y no puede estar vacío.' });
+    // Calcular el total a pagar
+    let total = 0;
+    for (const item of productos) {
+        const producto = await Producto.findById(item.id);
+        total += producto.precio * item.cantidad;
     }
 
-    const totalValue = cart.reduce((acc, product) => {
-        return acc + (parseFloat(product.precio) * (parseInt(product.quantity) || 1)); // Asegúrate de que cantidad sea un número
-    }, 0).toFixed(2);
-    
+    const paymentData = {
+        intent: 'CAPTURE',
+        purchase_units: [{
+            amount: {
+                currency_code: 'USD',
+                value: total.toFixed(2),
+            },
+            description: 'Compra de productos',
+        }],
+    };
 
     try {
-        const accessToken = await generateAccessToken();
-        const url = `${base}/v2/checkout/orders`;
-
-        const payload = {
-            intent: "CAPTURE",
-            purchase_units: [
-                {
-                    amount: {
-                        currency_code: "USD",
-                        value: totalValue,
-                    },
-                },
-            ],
-        };
-
-        const response = await fetch(url, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
+        // Llamada a la API de PayPal para crear el pago
+        const { data } = await axios.post('https://api.sandbox.paypal.com/v2/checkout/orders', paymentData, {
+            auth: {
+                username: PAYPAL_CLIENT_ID,
+                password: PAYPAL_SECRET
             },
-            method: "POST",
-            body: JSON.stringify(payload),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
 
-        const { jsonResponse, httpStatusCode } = await handleResponse(response);
-        res.status(httpStatusCode).json(jsonResponse);
+        // Devolver el ID de la orden
+        res.json({ orderID: data.id });
     } catch (error) {
-        console.error("Error al crear la orden:", error);
-        res.status(500).json({ error: "No se pudo crear la orden." });
+        console.error('Error al crear el pago:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Error al crear el pago' });
     }
 });
 
-// Ruta para capturar el pago
-router.post('/payment', async (req, res) => {
-    console.log('Recibiendo solicitud de pago');
-  
+// Endpoint para manejar la respuesta de PayPal después del pago
+router.post('/capture-payment', async (req, res) => {
     const { orderID } = req.body; // Obtener el ID de la orden del cuerpo de la solicitud
 
     // Validar la entrada
     if (!orderID) {
-        console.log('Faltan datos en la solicitud');
         return res.status(400).json({ error: 'El ID de la orden es obligatorio.' });
     }
 
     try {
-        const accessToken = await generateAccessToken();
-        const url = `${base}/v2/checkout/orders/${orderID}/capture`;
-
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
+        // Capturar el pago
+        const { data: detallesPago } = await axios.post(`https://api.sandbox.paypal.com/v2/checkout/orders/${orderID}/capture`, {}, {
+            auth: {
+                username: PAYPAL_CLIENT_ID,
+                password: PAYPAL_SECRET
             },
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
 
-        const { jsonResponse, httpStatusCode } = await handleResponse(response);
-        res.status(httpStatusCode).json(jsonResponse);
+        // Log para ver la respuesta completa
+        console.log('Pago capturado:', detallesPago);
+
+        // Aquí puedes realizar acciones adicionales como guardar el pedido en la base de datos
+
+        // Devolver la respuesta
+        res.status(200).json({
+            message: 'Pago completado con éxito',
+            id: detallesPago.id
+        });
     } catch (error) {
-        console.error("Error al capturar el pago:", error);
-        res.status(500).json({ error: "No se pudo capturar el pago." });
+        console.error('Error al capturar el pago:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Error al capturar el pago' });
     }
 });
 
-// Exportar el router
+// Endpoint para manejar cancelaciones
+router.get('/cancel', (req, res) => {
+    res.send('El pago ha sido cancelado.');
+});
+
 module.exports = router;
