@@ -472,14 +472,14 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             const productoEncontrado = productosArray.find(p => p._id.toString() === producto.id);
             return `<li>${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)} x ${producto.cantidad}</li>`;
         }).join('');
-
+        
         // Calcular total
         const total = productos.reduce((acc, producto) => {
             const productoEncontrado = productosArray.find(p => p._id.toString() === producto.id);
-            return acc + (productoEncontrado.precio * producto.cantidad); // Usar producto.cantidad en el cálculo del total
+            return acc + (productoEncontrado.precio * producto.cantidad);
         }, 0);
-
-        const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0);
+        
+        const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0);        
 
         // Guarda la notificación en la base de datos
         const notificacion = new Notificacion({

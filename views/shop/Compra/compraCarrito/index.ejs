@@ -14,9 +14,9 @@
 
     <!-- Initialize the JS-SDK -->
     <script
-    src="https://www.paypal.com/sdk/js?client-id=AVyWef-3lft7A9nPacSmsgAIGW2-dkstmWLCr-SVS8OUURCGux_PLZnDWxsVgxGJpZ33GDbmlP58vST-&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo"
-    data-sdk-integration-source="developer-studio"
-    ></script>
+            src="https://www.paypal.com/sdk/js?client-id=AVyWef-3lft7A9nPacSmsgAIGW2-dkstmWLCr-SVS8OUURCGux_PLZnDWxsVgxGJpZ33GDbmlP58vST-&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo"
+            data-sdk-integration-source="developer-studio"
+        ></script>
 
 </head>
 
@@ -76,7 +76,7 @@
                         <button id="pagoMovilBtn" class="btn btn-primary">Pago Móvil</button>
                         <button id="transferenciaBtn" class="btn btn-primary">Transferencia</button>
                         <button id="zinliBtn" class="btn btn-primary">Zinli</button>
-                        <div id="paypal-button-container"></div>
+                        <button id="paypalBtn" class="btn btn-primary">PayPal</button>
                         <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
                       </div>
                     </div>
@@ -187,6 +187,7 @@
                     </div>
                     <div class="modal-body">
                         <!-- Aquí va el contenedor del botón de PayPal -->
+                        <div id="paypal-button-container"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

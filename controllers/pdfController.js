@@ -50,12 +50,14 @@ exports.generarPdfCarrito = async (productosArray, cantidades, metodo) => {
         const nombre = producto.nombre || 'Producto desconocido';
         const precio = producto.precio || 0;
 
+        // Dibujar en el PDF
         page.drawText(`${nombre}: $${precio.toFixed(2)} x ${cantidad} = $${(precio * cantidad).toFixed(2)}`, {
             x: 50,
             y: yPosition,
             size: 12,
             color: rgb(0, 0, 0),
         });
+        
         total += precio * cantidad; // Acumula el total
         yPosition -= 20;
     }
