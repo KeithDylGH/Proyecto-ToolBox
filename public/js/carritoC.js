@@ -1,37 +1,33 @@
-document.addEventListener('DOMContentLoaded', function() {
-    cargarCarrito();
+// Agregar producto al carrito
+document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
+    btn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        const productoId = this.getAttribute('data-producto-id');
+        const cantidad = 1;
 
-    // Agregar producto al carrito
-    document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
-        btn.addEventListener('click', async function(e) {
-            e.preventDefault();
-            const productoId = this.getAttribute('data-producto-id');
-            const cantidad = 1;
+        try {
+            const response = await fetch('/api/carrito/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productoId, cantidad })
+            });
+            const data = await response.json();
 
-            try {
-                const response = await fetch('/api/carrito/add', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ productoId, cantidad })
-                });
-                const data = await response.json();
+            if (data.success) {
+                cargarCarrito();
+                mostrarNotificacion('Producto agregado al carrito', 'success');
 
-                if (data.success) {
-                    cargarCarrito();
-                    mostrarNotificacion('Producto agregado al carrito', 'success');
-
-                    // Redirigir a la página de compra
-                    window.location.href = '/compra';  // Redirige a la página de compra
-                } else {
-                    mostrarNotificacion('Error al agregar al carrito', 'error');
-                }
-            } catch (error) {
-                console.error('Error en la solicitud:', error);
+                // Redirigir a la página de compra
+                window.location.href = '/compra';  // Redirige a la página de compra
+            } else {
                 mostrarNotificacion('Error al agregar al carrito', 'error');
             }
-        });
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+            mostrarNotificacion('Error al agregar al carrito', 'error');
+        }
     });
 
     // Cargar el carrito

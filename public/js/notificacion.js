@@ -22,3 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
         history.replaceState({}, document.title, window.location.pathname); // Limpiar parámetros de la URL
     }
 });
+
+//mostrar notificacion
+const mostrarNotificacion = (mensaje, tipo = 'success') => {
+    const notification = document.querySelector('.notification');
+    notification.className = `notification ${tipo}`;
+    notification.textContent = mensaje;
+    notification.style.display = 'block';
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+};
