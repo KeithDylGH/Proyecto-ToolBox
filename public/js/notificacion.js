@@ -8,7 +8,6 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-
 // Mostrar notificación al cargar la página basado en parámetros de URL
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -23,14 +22,3 @@ document.addEventListener('DOMContentLoaded', () => {
         history.replaceState({}, document.title, window.location.pathname); // Limpiar parámetros de la URL
     }
 });
-
-//mostrar notificacion
-const mostrarNotificacion = (mensaje, tipo = 'success') => {
-    const notification = document.querySelector('.notification');
-    notification.className = `notification ${tipo}`;
-    notification.textContent = mensaje;
-    notification.style.display = 'block';
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 3000);
-};
