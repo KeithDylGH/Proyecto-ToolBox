@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    
+    initPaypalButtons(); // Inicializa los botones de PayPal
+
     // Mostrar métodos de pago
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
@@ -119,15 +122,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    initPaypalButtons(); // Inicializa los botones de PayPal
-
     function initPaypalButtons() {
         const totalElement = document.getElementById('totalMonto');
         if (!totalElement) {
             console.warn('Elemento totalMonto no encontrado');
             return;
         }
-
         const totalText = totalElement.innerText.replace('$', '').trim();
         const total = parseFloat(totalText);
 
