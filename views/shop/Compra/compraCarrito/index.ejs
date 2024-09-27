@@ -53,7 +53,7 @@
                                       <h6><%= producto.nombre %></h6>
                                       <p>Precio Unitario: $<%= producto.precio.toFixed(2) %></p>
                                       <p>Cantidad: <%= producto.cantidad || 1 %></p>
-                                      <p>Total: $<%= (producto.precio * (producto.cantidad || 1)).toFixed(2) %></p>
+                                      <p>Total: $<%= (parseFloat(producto.precio) * (parseInt(producto.cantidad) || 1)).toFixed(2) %></p>
                                   </div>
                               </li>
                           <% }); %>
@@ -155,16 +155,8 @@
                     <div class="modal-body">
                         <form id="zinliForm">
                             <input type="hidden" name="metodoPago" value="Zinli">
-                            <p>Por favor complete la información para continuar con el pago a través de Zinli.</p>
-                            <ul>
-                                <li>Selecciona la opción "Zinli".</li>
-                                <li>Ingresa los siguientes datos:</li>
-                                <ul>
-                                    <li>ID de Usuario: <strong>toolbox</strong></li>
-                                </ul>
-                                <li>Introduce el monto total de la compra y confirma el pago.</li>
-                            </ul>
-                            <p>Una vez realizado el pago, envía una captura del comprobante a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+                            <p>Por favor completa la información para continuar con el pago por Zinli.</p>
+                            <p>Ingresa el monto total y confirma el pago.</p>
                             <button type="submit" class="btn btn-primary" id="confirmarZinliBtn">Confirmar Pago</button>
                         </form>
                     </div>
@@ -180,10 +172,11 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="paypalLabel">Pago con PayPal</h5>
+                        <h5 class="modal-title" id="paypalLabel">PayPal</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <p>Haz clic en el botón de abajo para proceder con el pago por PayPal.</p>
                         <div id="paypal-button-container"></div>
                     </div>
                     <div class="modal-footer">
