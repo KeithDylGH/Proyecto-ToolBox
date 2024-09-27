@@ -15,7 +15,8 @@ router.post('/create-payment', async (req, res) => {
     let total = 0;
     for (const item of productos) {
         const producto = await Producto.findById(item.id);
-        total += producto.precio * item.cantidad;
+        const cantidad = parseInt(item.cantidad) || 1;
+        total += producto.precio * cantidad;
     }
 
     const paymentData = {
