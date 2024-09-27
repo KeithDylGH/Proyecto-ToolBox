@@ -453,7 +453,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        // Obtener el usuario completo con su carrito
+        // Obtener el usuario completo con su carrito embebido usando populate
         const usuarioCompleto = await CUsuario.findById(usuario._id).populate('carrito.producto');
 
         if (!usuarioCompleto || !usuarioCompleto.carrito || usuarioCompleto.carrito.length === 0) {
@@ -463,38 +463,39 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         // Contar las cantidades de productos del carrito
         const productosContados = {};
         const productosArray = usuarioCompleto.carrito.map(item => {
-            const id = item.producto._id.toString();
-            const cantidad = item.cantidad;
+            const productoId = item.producto._id.toString();  // ID del producto
+            const cantidad = item.cantidad;                  // Cantidad del producto
 
-            // Sumar al total de cantidades
-            if (productosContados[id]) {
-                productosContados[id] += cantidad; // Sumar si ya existe
+            // Sumar la cantidad al total
+            if (productosContados[productoId]) {
+                productosContados[productoId] += cantidad;
             } else {
-                productosContados[id] = cantidad; // Inicializar
+                productosContados[productoId] = cantidad;
             }
 
-            return item.producto; // Devuelve el producto
+            return item.producto; // Devolver el producto con sus detalles
         });
 
-        // Generar PDF
+        // Generar el PDF para la confirmación de la compra
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
 
         // Calcular el total de la compra
-        const total = Object.keys(productosContados).reduce((acc, id) => {
-            const productoEncontrado = productosArray.find(p => p._id.toString() === id);
-            return acc + (productoEncontrado.precio * productosContados[id]);
+        const total = Object.keys(productosContados).reduce((acc, productoId) => {
+            const producto = productosArray.find(p => p._id.toString() === productoId);
+            return acc + (producto.precio * productosContados[productoId]);
         }, 0);
 
+        // Calcular la cantidad total de productos
         const totalCantidad = Object.values(productosContados).reduce((total, cantidad) => total + cantidad, 0);
 
-        // Crear y guardar notificación
+        // Crear la notificación
         const notificacion = new Notificacion({
             usuarioNombre: usuario.nombre,
             usuarioCorreo: emailUsuario,
-            productos: Object.keys(productosContados).map(id => ({
-                name: productosArray.find(p => p._id.toString() === id).nombre,
-                price: productosArray.find(p => p._id.toString() === id).precio,
-                quantity: productosContados[id]
+            productos: Object.keys(productosContados).map(productoId => ({
+                name: productosArray.find(p => p._id.toString() === productoId).nombre,
+                price: productosArray.find(p => p._id.toString() === productoId).precio,
+                quantity: productosContados[productoId]
             })),
             total: total,
             metodoPago: metodo,
@@ -502,7 +503,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         await notificacion.save();
 
-        // Enviar correos
+        // Enviar el correo con la confirmación de compra
         await enviarCorreoCompra(usuario, emailUsuario, productosArray, productosContados, total, metodo, pdfPath);
 
         // Eliminar el archivo PDF temporal
@@ -514,6 +515,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
 });
+
 
 
 // Función para enviar el correo de compra

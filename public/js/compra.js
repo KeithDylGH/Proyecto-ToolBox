@@ -128,9 +128,11 @@ document.addEventListener('DOMContentLoaded', function () {
             console.warn('Elemento totalMonto no encontrado');
             return;
         }
+    
         const totalText = totalElement.innerText.replace('$', '').trim();
+        console.log('Valor capturado de totalText:', totalText); // Agrega esto para verificar el texto capturado
         const total = parseFloat(totalText);
-
+    
         if (isNaN(total) || total <= 0) {
             console.warn('Total inválido:', total);
             return;
