@@ -439,11 +439,8 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { metodo } = req.body;
-
-    // Asegurarse de que req.session.user._id sea un ObjectId
-    const usuarioId = mongoose.Types.ObjectId(req.session.user._id);
-    const usuario = await CUsuario.findById(usuarioId).populate('carrito.producto');
+    const { productos, metodo } = req.body; 
+    const usuario = req.session.user;
 
     if (!usuario) {
         return res.status(401).json({ error: 'Usuario no autenticado.' });
@@ -451,26 +448,39 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     const emailUsuario = usuario.correo;
 
-    if (!emailUsuario || !usuario.carrito || usuario.carrito.length === 0 || !metodo) {
+    if (!emailUsuario || !productos || !metodo) {
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        const productosContados = {};
-        usuario.carrito.forEach(item => {
-            const id = item.producto._id.toString();
-            productosContados[id] = item.cantidad;
-        });
+        const productoIds = productos.map(producto => producto.id);
+        const productosArray = await iProducto.find({ _id: { $in: productoIds } });
 
-        const productosArray = usuario.carrito.map(item => item.producto);
+        if (productosArray.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron productos.' });
+        }
+
+        // Contar las cantidades de productos
+        const productosContados = {};
+
+        // Recorre el array de productos para contar las cantidades
+        productos.forEach(producto => {
+            const id = producto.id;
+            const cantidad = producto.cantidad;
+            if (productosContados[id]) {
+                productosContados[id] += cantidad; // Sumar si ya existe
+            } else {
+                productosContados[id] = cantidad; // Inicializar
+            }
+        });
 
         // Generar PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
 
         // Calcular el total de la compra
         const total = Object.keys(productosContados).reduce((acc, id) => {
-            const producto = productosArray.find(p => p._id.toString() === id);
-            return acc + (producto.precio * productosContados[id]);
+            const productoEncontrado = productosArray.find(p => p._id.toString() === id);
+            return acc + (productoEncontrado.precio * productosContados[id]);
         }, 0);
 
         const totalCantidad = Object.values(productosContados).reduce((total, cantidad) => total + cantidad, 0);
