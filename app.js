@@ -439,7 +439,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos, metodo } = req.body; 
+    const { metodo } = req.body; 
     const usuario = req.session.user;
 
     if (!usuario) {
@@ -448,30 +448,32 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     const emailUsuario = usuario.correo;
 
-    if (!emailUsuario || !productos || !metodo) {
+    if (!emailUsuario || !metodo) {
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        const productoIds = productos.map(producto => producto.id);
-        const productosArray = await iProducto.find({ _id: { $in: productoIds } });
+        // Obtener el usuario completo con su carrito
+        const usuarioCompleto = await CUsuario.findById(usuario._id).populate('carrito.producto');
 
-        if (productosArray.length === 0) {
-            return res.status(404).json({ error: 'No se encontraron productos.' });
+        if (!usuarioCompleto || !usuarioCompleto.carrito || usuarioCompleto.carrito.length === 0) {
+            return res.status(400).json({ error: 'El carrito está vacío o no se encontró al usuario.' });
         }
 
-        // Contar las cantidades de productos
+        // Contar las cantidades de productos del carrito
         const productosContados = {};
+        const productosArray = usuarioCompleto.carrito.map(item => {
+            const id = item.producto._id.toString();
+            const cantidad = item.cantidad;
 
-        // Recorre el array de productos para contar las cantidades
-        productos.forEach(producto => {
-            const id = producto.id;
-            const cantidad = producto.cantidad;
+            // Sumar al total de cantidades
             if (productosContados[id]) {
                 productosContados[id] += cantidad; // Sumar si ya existe
             } else {
                 productosContados[id] = cantidad; // Inicializar
             }
+
+            return item.producto; // Devuelve el producto
         });
 
         // Generar PDF
@@ -512,6 +514,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
 });
+
 
 // Función para enviar el correo de compra
 async function enviarCorreoCompra(usuario, emailUsuario, productosArray, productosContados, total, metodo, pdfPath) {
