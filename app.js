@@ -440,7 +440,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { metodo } = req.body; 
-    const usuario = await CUsuario.findById(req.session.user._id).populate('carrito.producto'); // Popula los productos en el carrito del usuario
+    const usuario = await CUsuario.findById(req.session.user.id).populate('carrito.producto');
 
     if (!usuario) {
         return res.status(401).json({ error: 'Usuario no autenticado.' });
@@ -448,22 +448,20 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     const emailUsuario = usuario.correo;
 
-    // Verifica si hay datos faltantes antes de proceder
     if (!emailUsuario || !usuario.carrito || usuario.carrito.length === 0 || !metodo) {
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        // Crear un objeto para contar productos y sus cantidades
         const productosContados = {};
         usuario.carrito.forEach(item => {
             const id = item.producto._id.toString();
             productosContados[id] = item.cantidad;
         });
 
-        const productosArray = usuario.carrito.map(item => item.producto); // Array de productos
-
-        // Generar PDF usando el controlador de PDF
+        const productosArray = usuario.carrito.map(item => item.producto);
+        
+        // Generar PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
 
         // Calcular el total de la compra
@@ -474,7 +472,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         const totalCantidad = Object.values(productosContados).reduce((total, cantidad) => total + cantidad, 0);
 
-        // Crear y guardar notificación en la base de datos
+        // Crear y guardar notificación
         const notificacion = new Notificacion({
             usuarioNombre: usuario.nombre,
             usuarioCorreo: emailUsuario,
@@ -489,10 +487,10 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         await notificacion.save();
 
-        // Enviar correos de confirmación de compra
+        // Enviar correos
         await enviarCorreoCompra(usuario, emailUsuario, productosArray, productosContados, total, metodo, pdfPath);
 
-        // Eliminar el archivo PDF temporal tras el envío del correo
+        // Eliminar el archivo PDF temporal
         await fs.promises.unlink(pdfPath);
 
         res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.', total, totalCantidad });
