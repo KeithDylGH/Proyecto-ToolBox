@@ -439,8 +439,11 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { metodo } = req.body; 
-    const usuario = await CUsuario.findById(req.session.user.id).populate('carrito.producto');
+    const { metodo } = req.body;
+
+    // Asegurarse de que req.session.user._id sea un ObjectId
+    const usuarioId = mongoose.Types.ObjectId(req.session.user._id);
+    const usuario = await CUsuario.findById(usuarioId).populate('carrito.producto');
 
     if (!usuario) {
         return res.status(401).json({ error: 'Usuario no autenticado.' });
@@ -460,7 +463,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         });
 
         const productosArray = usuario.carrito.map(item => item.producto);
-        
+
         // Generar PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
 
