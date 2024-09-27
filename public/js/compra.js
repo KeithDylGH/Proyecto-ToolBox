@@ -119,15 +119,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Lógica para inicializar los botones de PayPal
+    initPaypalButtons(); // Inicializa los botones de PayPal
+
     function initPaypalButtons() {
-        const total = parseFloat(document.getElementById('totalMonto').innerText.replace('$', ''));
-    
+        const totalElement = document.getElementById('totalMonto');
+        if (!totalElement) {
+            console.warn('Elemento totalMonto no encontrado');
+            return;
+        }
+
+        const totalText = totalElement.innerText.replace('$', '').trim();
+        const total = parseFloat(totalText);
+
         if (isNaN(total) || total <= 0) {
             console.warn('Total inválido:', total);
             return;
         }
-    
+
+        // Captura los productos nuevamente aquí para que esté disponible
+        const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
+            const id = producto.dataset.id;
+            const nombre = producto.querySelector('h6').textContent;
+            const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
+            return { id, nombre, cantidad };
+        });
+
         paypal.Buttons({
             createOrder: function(data, actions) {
                 return fetch('/paypal/create-order', {
@@ -176,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         }).render('#paypal-button-container');
-    }    
+    }
 
     function mostrarNotificacion(mensaje, tipo) {
         const notificacion = document.createElement('div');
