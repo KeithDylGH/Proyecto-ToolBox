@@ -1,12 +1,12 @@
-import fetch from "node-fetch";
-import "dotenv/config";
+const fetch = require("node-fetch");
+require("dotenv").config();
 
 // Variables de entorno
 const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
 
 // Función para generar el token de acceso
-export async function generateAccessToken() {
+async function generateAccessToken() {
     const BASE64_ENCODED_CLIENT_ID_AND_SECRET = Buffer.from(
         `${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`
     ).toString("base64");
@@ -43,7 +43,7 @@ async function handleResponse(response) {
 }
 
 // Función para crear una orden
-export const createOrder = async (cart) => {
+async function createOrder(cart) {
     const totalValue = cart.reduce((acc, product) => acc + (product.precio * product.quantity), 0).toFixed(2);
     
     const accessToken = await generateAccessToken();
@@ -71,10 +71,10 @@ export const createOrder = async (cart) => {
     });
 
     return handleResponse(response);
-};
+}
 
 // Función para capturar una orden
-export const captureOrder = async (orderID) => {
+async function captureOrder(orderID) {
     const accessToken = await generateAccessToken();
     const url = `${base}/v2/checkout/orders/${orderID}/capture`;
 
@@ -87,10 +87,10 @@ export const captureOrder = async (orderID) => {
     });
 
     return handleResponse(response);
-};
+}
 
 // Controlador para crear una orden
-export const createOrderController = async (req, res) => {
+async function createOrderController(req, res) {
     try {
         const { cart } = req.body;
         const { jsonResponse, httpStatusCode } = await createOrder(cart);
@@ -99,10 +99,10 @@ export const createOrderController = async (req, res) => {
         console.error("Error al crear la orden:", error);
         res.status(500).json({ error: "No se pudo crear la orden." });
     }
-};
+}
 
 // Controlador para capturar una orden
-export const captureOrderController = async (req, res) => {
+async function captureOrderController(req, res) {
     try {
         const { orderID } = req.params;
         const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
@@ -111,4 +111,10 @@ export const captureOrderController = async (req, res) => {
         console.error("Error al capturar la orden:", error);
         res.status(500).json({ error: "No se pudo capturar la orden." });
     }
+}
+
+// Exportar las funciones
+module.exports = {
+    createOrderController,
+    captureOrderController,
 };

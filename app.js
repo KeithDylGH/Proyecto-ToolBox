@@ -27,16 +27,15 @@ const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
 const Notificacion = require('./models/notificacion');
 const notificacionRouter = require('./controllers/notificaciones');
-
-import { createOrderController, captureOrderController } from './controllers/paypal.js'
+const paypalController = require('./controllers/paypal');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
 
 // Rutas de PayPal
-app.post('/api/orders', createOrderController);
-app.post('/api/orders/:orderID/capture', captureOrderController);
+app.post('/api/orders', paypalController.createOrderController);
+app.post('/api/orders/:orderID/capture', paypalController.captureOrderController);
 
 // Configuración de multer para manejar archivos en memoria
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -467,11 +466,13 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             return res.status(404).json({ error: 'No se encontraron productos.' });
         }
 
+        // Contar las cantidades de productos
         const productosContados = productos.reduce((acc, producto) => {
             acc[producto.id] = (acc[producto.id] || 0) + producto.cantidad;
             return acc;
         }, {});
 
+        // Generar PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
 
         const listaProductosHtml = Object.keys(productosContados).map(id => {
@@ -490,77 +491,65 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         const notificacion = new Notificacion({
             usuarioNombre: usuario.nombre,
             usuarioCorreo: emailUsuario,
-            productos: productos.map(p => ({ name: p.nombre, price: p.precio, quantity: p.cantidad })),
+            productos: Object.keys(productosContados).map(id => ({
+                name: productosArray.find(p => p._id.toString() === id).nombre,
+                price: productosArray.find(p => p._id.toString() === id).precio,
+                quantity: productosContados[id]
+            })),
             total: total,
             metodoPago: metodo,
         });
 
         await notificacion.save();
 
+        // Enviar correo a administradores
         const admins = await CUsuario.find({ rol: { $in: ['admin', 'boss'] } });
         const adminEmails = admins.map(admin => admin.correo).join(', ');
 
-        // Enviar el correo a los administradores
-        try {
-            await transporter.sendMail({
-                from: process.env.EMAIL_USER,
-                to: adminEmails,
-                subject: 'Nueva Compra Realizada',
-                html: `
-                    <h1>Nueva Compra</h1>
-                    <p>Usuario: ${usuario.nombre}</p>
-                    <p>Correo: ${emailUsuario}</p>
-                    <p><strong>Productos Comprados:</strong></p>
-                    <ul>${listaProductosHtml}</ul>
-                    <p><strong>Método de Pago:</strong> ${metodo}</p>
-                    <p><strong>Total:</strong> $${total.toFixed(2)}</p>
-                `,
-                attachments: [{ filename: 'factura.pdf', path: pdfPath }]
-            });
-            console.log('Correo enviado a administradores.');
-        } catch (error) {
-            console.error('Error enviando correo a administradores:', error.message);
-        }
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: adminEmails,
+            subject: 'Nueva Compra Realizada',
+            html: `
+                <h1>Nueva Compra</h1>
+                <p>Usuario: ${usuario.nombre}</p>
+                <p>Correo: ${emailUsuario}</p>
+                <p><strong>Productos Comprados:</strong></p>
+                <ul>${listaProductosHtml}</ul>
+                <p><strong>Método de Pago:</strong> ${metodo}</p>
+                <p><strong>Total:</strong> $${total.toFixed(2)}</p>
+            `,
+            attachments: [{ filename: 'factura.pdf', path: pdfPath }]
+        });
 
-        // Enviar el correo al usuario
-        try {
-            await transporter.sendMail({
-                from: process.env.EMAIL_USER,
-                to: emailUsuario,
-                subject: 'Factura de Compra',
-                html: `
-                    <html>
-                    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
-                        <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
-                            <p>Hola ${usuario.nombre || emailUsuario},</p>
-                            <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
-                            <p><strong>Método de Pago:</strong> ${metodo}</p>
-                            <p><strong>Total de Productos:</strong> ${totalCantidad}</p>
-                            <p><strong>Productos:</strong></p>
-                            <ul>${listaProductosHtml}</ul>
-                            <p><strong>Total:</strong> $${total.toFixed(2)}</p>
-                            <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
-                            <p>Saludos,<br>El equipo de ToolBox</p>
-                        </div>
-                    </body>
-                    </html>
-                `,
-                attachments: [{ filename: 'factura.pdf', path: pdfPath }]
-            });
-            console.log('Correo enviado al usuario.');
-        } catch (error) {
-            console.error('Error enviando correo al usuario:', error.message);
-        }
+        // Enviar correo al usuario
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: emailUsuario,
+            subject: 'Factura de Compra',
+            html: `
+                <html>
+                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
+                    <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                        <h2 style="text-align: center; color: #007bff;">Factura de Compra</h2>
+                        <p>Hola ${usuario.nombre || emailUsuario},</p>
+                        <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
+                        <p><strong>Método de Pago:</strong> ${metodo}</p>
+                        <p><strong>Total de Productos:</strong> ${totalCantidad}</p>
+                        <p><strong>Productos:</strong></p>
+                        <ul>${listaProductosHtml}</ul>
+                        <p><strong>Total:</strong> $${total.toFixed(2)}</p>
+                        <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+                        <p>Saludos,<br>El equipo de ToolBox</p>
+                    </div>
+                </body>
+                </html>
+            `,
+            attachments: [{ filename: 'factura.pdf', path: pdfPath }]
+        });
 
         // Eliminar el archivo PDF temporal
-        try {
-            await fs.promises.unlink(pdfPath);
-            console.log('Archivo PDF eliminado.');
-        } catch (err) {
-            console.error('Error al eliminar el archivo PDF:', err);
-        }
-
+        await fs.promises.unlink(pdfPath);
         res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.', total, totalCantidad });
     } catch (error) {
         console.error('Error al confirmar el pago:', error.message);
