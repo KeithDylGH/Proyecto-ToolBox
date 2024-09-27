@@ -392,25 +392,27 @@ app.get('/tienda/producto/:id', async (req, res) => {
 app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
         const user = req.session.user;
-        if (!user || !user._id) {
+        if (!user) {
             return res.redirect('/');
         }
 
-        // Obtener los productos del carrito desde la base de datos usando el _id del usuario
-        const usuario = await CUsuario.findById(user._id).populate({
-            path: 'carrito.producto',
-            populate: {
-                path: 'categoria',
-                select: 'nombre'
-            }
-        });
+        // Obtener los productos del carrito desde la base de datos
+        const usuario = await CUsuario.findOne({ usuario: user.usuario })
+            .populate({
+                path: 'carrito.producto',
+                populate: {
+                    path: 'categoria',
+                    select: 'nombre'
+                }
+            });
 
         if (!usuario) {
             return res.status(404).send('Usuario no encontrado');
         }
 
+        // Obtener los productos del carrito y manejar el caso de productos nulos
         const carrito = usuario.carrito
-            .filter(item => item.producto)
+            .filter(item => item.producto) // Filtrar productos nulos
             .map(item => ({
                 _id: item.producto._id,
                 nombre: item.producto.nombre,
@@ -421,12 +423,12 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
         const totalCarrito = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
 
-        // Pasar datos necesarios a la vista
+        // Pasar usuarioCorreo y paypalClientId a la vista
         res.render('shop/Compra/compraCarrito', { 
             productos: carrito, 
             totalCarrito,
-            usuarioCorreo: user.correo,
-            paypalClientId: process.env.PAYPAL_CLIENT_ID 
+            usuarioCorreo: user.correo, // Asegúrate de que user.correo esté definido
+            paypalClientId: process.env.PAYPAL_CLIENT_ID // Agregando PAYPAL_CLIENT_ID
         });
     } catch (error) {
         console.error('Error al obtener los productos del carrito:', error);
@@ -437,10 +439,10 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { metodo } = req.body;
+    const { metodo } = req.body; 
     const usuario = req.session.user;
 
-    if (!usuario || !usuario._id) {
+    if (!usuario) {
         return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
@@ -451,7 +453,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        // Buscar el usuario usando el ID de la sesión
+        // Obtener el usuario con el carrito embebido, usando populate para obtener los detalles de los productos
         const usuarioCompleto = await CUsuario.findById(usuario._id).populate('carrito.producto');
 
         if (!usuarioCompleto || !usuarioCompleto.carrito || usuarioCompleto.carrito.length === 0) {
@@ -461,26 +463,26 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         // Contar las cantidades de productos del carrito
         const productosContados = {};
         const productosArray = usuarioCompleto.carrito.map(item => {
-            if (!item.producto) return null;
-
             const id = item.producto._id.toString();
-            const cantidad = item.cantidad || 1;
+            const cantidad = item.cantidad;
 
+            // Sumar al total de cantidades
             if (productosContados[id]) {
-                productosContados[id] += cantidad;
+                productosContados[id] += cantidad; // Sumar si ya existe
             } else {
-                productosContados[id] = cantidad;
+                productosContados[id] = cantidad; // Inicializar
             }
 
-            return item.producto;
-        }).filter(Boolean);
+            return item.producto; // Devuelve el producto
+        });
 
-        // Generar PDF y realizar cálculos
+        // Generar PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
 
+        // Calcular el total de la compra
         const total = Object.keys(productosContados).reduce((acc, id) => {
-            const producto = productosArray.find(p => p._id.toString() === id);
-            return acc + (producto.precio * productosContados[id]);
+            const productoEncontrado = productosArray.find(p => p._id.toString() === id);
+            return acc + (productoEncontrado.precio * productosContados[id]);
         }, 0);
 
         const totalCantidad = Object.values(productosContados).reduce((total, cantidad) => total + cantidad, 0);
@@ -500,8 +502,10 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         await notificacion.save();
 
-        // Enviar correos y eliminar el PDF temporal
+        // Enviar correos
         await enviarCorreoCompra(usuario, emailUsuario, productosArray, productosContados, total, metodo, pdfPath);
+
+        // Eliminar el archivo PDF temporal
         await fs.promises.unlink(pdfPath);
 
         res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.', total, totalCantidad });
@@ -510,6 +514,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
 });
+
 
 
 // Función para enviar el correo de compra
