@@ -466,7 +466,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         // Recorre el array de productos para contar las cantidades
         productos.forEach(producto => {
             const id = producto.id;
-            const cantidad = producto.cantidad; // Ahora tomamos la cantidad directamente
+            const cantidad = producto.cantidad;
             if (productosContados[id]) {
                 productosContados[id] += cantidad; // Sumar si ya existe
             } else {

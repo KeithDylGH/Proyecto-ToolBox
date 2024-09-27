@@ -52,7 +52,10 @@ router.post('/create-order', async (req, res) => {
         return res.status(400).json({ error: 'El carrito es obligatorio y no puede estar vacío.' });
     }
 
-    const totalValue = cart.reduce((acc, product) => acc + (product.precio * product.quantity), 0).toFixed(2);
+    const totalValue = cart.reduce((acc, product) => {
+        return acc + (parseFloat(product.precio) * (parseInt(product.quantity) || 1)); // Asegúrate de que cantidad sea un número
+    }, 0).toFixed(2);
+    
 
     try {
         const accessToken = await generateAccessToken();
