@@ -35,54 +35,9 @@ document.addEventListener('DOMContentLoaded', function () {
             zinliModal.show();
         });
 
-        paypalBtn.addEventListener('click', async () => {
-            // Muestra el modal de PayPal
+        paypalBtn.addEventListener('click', function () {
             const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
             paypalModal.show();
-
-            // Llama a la función para crear la orden
-            const totalCarrito = document.getElementById('totalMonto').innerText.replace('Total: $', '');
-            
-            const response = await fetch('/crear-orden', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ totalCarrito }),
-            });
-
-            const orderData = await response.json();
-
-            if (response.ok) {
-                paypal.Buttons({
-                    createOrder: function(data, actions) {
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: totalCarrito
-                                }
-                            }]
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(details) {
-                            // Aquí puedes manejar el éxito de la transacción
-                            alert('Transacción completada por ' + details.payer.name.given_name);
-                            
-                            // Captura la orden en tu backend
-                            return fetch(`/capturar-orden/${data.orderID}`, {
-                                method: 'POST'
-                            });
-                        });
-                    },
-                    onError: function (err) {
-                        console.error(err);
-                        alert('Ocurrió un error al procesar el pago. Intenta nuevamente.');
-                    }
-                }).render('#paypal-button-container');
-            } else {
-                alert('Error al crear la orden: ' + orderData.error);
-            }
         });
     }
 
@@ -97,4 +52,31 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     totalMonto.textContent = `Total: $${total.toFixed(2)}`;
+
+    // Inicializar botones de PayPal
+    if (typeof paypal !== 'undefined') {
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: total.toFixed(2) // Total a pagar
+                        }
+                    }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    alert('Pago realizado con éxito: ' + details.id);
+                    // Aquí puedes realizar una llamada a tu backend para confirmar el pago
+                });
+            },
+            onError: function (err) {
+                console.error(err);
+                alert('Ocurrió un error al procesar el pago. Intenta nuevamente.');
+            }
+        }).render('#paypal-button-container'); // Dónde se renderiza el botón de PayPal
+    } else {
+        console.error('El objeto paypal no está definido.');
+    }
 });
