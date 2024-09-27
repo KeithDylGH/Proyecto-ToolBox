@@ -1,5 +1,3 @@
-// compra.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
