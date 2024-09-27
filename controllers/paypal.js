@@ -1,107 +1,114 @@
-window.paypal
-    .Buttons({
-        style: {
-            shape: "rect",
-            layout: "vertical",
-            color: "gold",
-            label: "paypal",
+import fetch from "node-fetch";
+import "dotenv/config";
+
+// Variables de entorno
+const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
+const base = "https://api-m.sandbox.paypal.com";
+
+// Función para generar el token de acceso
+export async function generateAccessToken() {
+    const BASE64_ENCODED_CLIENT_ID_AND_SECRET = Buffer.from(
+        `${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`
+    ).toString("base64");
+
+    const request = await fetch(
+        "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Basic ${BASE64_ENCODED_CLIENT_ID_AND_SECRET}`,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+                grant_type: "client_credentials",
+            }),
+        }
+    );
+    const json = await request.json();
+    return json.access_token;
+}
+
+// Función para manejar la respuesta
+async function handleResponse(response) {
+    try {
+        const jsonResponse = await response.json();
+        return {
+            jsonResponse,
+            httpStatusCode: response.status,
+        };
+    } catch (err) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage);
+    }
+}
+
+// Función para crear una orden
+export const createOrder = async (cart) => {
+    const totalValue = cart.reduce((acc, product) => acc + (product.precio * product.quantity), 0).toFixed(2);
+    
+    const accessToken = await generateAccessToken();
+    const url = `${base}/v2/checkout/orders`;
+
+    const payload = {
+        intent: "CAPTURE",
+        purchase_units: [
+            {
+                amount: {
+                    currency_code: "USD",
+                    value: totalValue, // Valor total basado en el carrito
+                },
+            },
+        ],
+    };
+
+    const response = await fetch(url, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
         },
-        message: {
-            amount: 100,
-        } ,
+        method: "POST",
+        body: JSON.stringify(payload),
+    });
 
-        async createOrder() {
-            try {
-                const response = await fetch("/api/orders", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    // use the "body" param to optionally pass additional order information
-                    // like product ids and quantities
-                    body: JSON.stringify({
-                        cart: [
-                            {
-                                id: "YOUR_PRODUCT_ID",
-                                quantity: "YOUR_PRODUCT_QUANTITY",
-                            },
-                        ],
-                    }),
-                });
+    return handleResponse(response);
+};
 
-                const orderData = await response.json();
+// Función para capturar una orden
+export const captureOrder = async (orderID) => {
+    const accessToken = await generateAccessToken();
+    const url = `${base}/v2/checkout/orders/${orderID}/capture`;
 
-                if (orderData.id) {
-                    return orderData.id;
-                }
-                const errorDetail = orderData?.details?.[0];
-                const errorMessage = errorDetail
-                    ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
-                    : JSON.stringify(orderData);
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
 
-                throw new Error(errorMessage);
-            } catch (error) {
-                console.error(error);
-                // resultMessage(`Could not initiate PayPal Checkout...<br><br>${error}`);
-            }
-        } ,
+    return handleResponse(response);
+};
 
-        async onApprove(data, actions) {
-            try {
-                const response = await fetch(
-                    `/api/orders/${data.orderID}/capture`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
+// Controlador para crear una orden
+export const createOrderController = async (req, res) => {
+    try {
+        const { cart } = req.body;
+        const { jsonResponse, httpStatusCode } = await createOrder(cart);
+        res.status(httpStatusCode).json(jsonResponse);
+    } catch (error) {
+        console.error("Error al crear la orden:", error);
+        res.status(500).json({ error: "No se pudo crear la orden." });
+    }
+};
 
-                const orderData = await response.json();
-                // Three cases to handle:
-                //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                //   (2) Other non-recoverable errors -> Show a failure message
-                //   (3) Successful transaction -> Show confirmation or thank you message
-
-                const errorDetail = orderData?.details?.[0];
-
-                if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
-                    // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                    // recoverable state, per
-                    // https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
-                    return actions.restart();
-                } else if (errorDetail) {
-                    // (2) Other non-recoverable errors -> Show a failure message
-                    throw new Error(
-                        `${errorDetail.description} (${orderData.debug_id})`
-                    );
-                } else if (!orderData.purchase_units) {
-                    throw new Error(JSON.stringify(orderData));
-                } else {
-                    // (3) Successful transaction -> Show confirmation or thank you message
-                    // Or go to another URL:  actions.redirect('thank_you.html');
-                    const transaction =
-                        orderData?.purchase_units?.[0]?.payments
-                            ?.captures?.[0] ||
-                        orderData?.purchase_units?.[0]?.payments
-                            ?.authorizations?.[0];
-                    resultMessage(
-                        `Transaction ${transaction.status}: ${transaction.id}<br>
-          <br>See console for all available details`
-                    );
-                    console.log(
-                        "Capture result",
-                        orderData,
-                        JSON.stringify(orderData, null, 2)
-                    );
-                }
-            } catch (error) {
-                console.error(error);
-                resultMessage(
-                    `Sorry, your transaction could not be processed...<br><br>${error}`
-                );
-            }
-        } ,
-    })
-    .render("#paypal-button-container"); 
+// Controlador para capturar una orden
+export const captureOrderController = async (req, res) => {
+    try {
+        const { orderID } = req.params;
+        const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
+        res.status(httpStatusCode).json(jsonResponse);
+    } catch (error) {
+        console.error("Error al capturar la orden:", error);
+        res.status(500).json({ error: "No se pudo capturar la orden." });
+    }
+};

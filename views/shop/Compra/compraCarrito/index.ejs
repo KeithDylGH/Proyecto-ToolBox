@@ -13,10 +13,7 @@
     <meta name="usuario-correo" content="<%= usuarioCorreo %>">
 
     <!-- Initialize the JS-SDK -->
-    <script
-            src="https://www.paypal.com/sdk/js?client-id=AVyWef-3lft7A9nPacSmsgAIGW2-dkstmWLCr-SVS8OUURCGux_PLZnDWxsVgxGJpZ33GDbmlP58vST-&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo"
-            data-sdk-integration-source="developer-studio"
-    ></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=<%= process.env.PAYPAL_CLIENT_ID %>&currency=USD&components=buttons"></script>
 
 </head>
 
@@ -177,7 +174,7 @@
             </div>
           </div>
 
-        <!-- Modal de PayPal -->
+        <!-- Modal de PayPal --> 
         <div class="modal fade" id="paypalModal" tabindex="-1" aria-labelledby="paypalModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -195,13 +192,9 @@
                 </div>
             </div>
         </div>
-    <% } else { %>
-      <p>No hay productos en el carrito.</p>
-    <% } %>
-</main>
 
-    <script src="/js/compra.js"></script>  
-    <script src="/controllers/paypal.js"></script>
+<script src="/js/compra.js"></script>
+<script src="/js/paypalIntegracion.js"></script>
 
 </body>
 </html>
