@@ -437,6 +437,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 });
 
 
+// Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
     const { productos, metodo } = req.body; 
     const usuario = req.session.user;
@@ -461,13 +462,15 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         // Contar las cantidades de productos
         const productosContados = {};
+
+        // Recorre el array de productos para contar las cantidades
         productos.forEach(producto => {
             const id = producto.id;
-            const cantidad = producto.cantidad;
+            const cantidad = producto.cantidad; // Ahora tomamos la cantidad directamente
             if (productosContados[id]) {
-                productosContados[id] += cantidad; 
+                productosContados[id] += cantidad; // Sumar si ya existe
             } else {
-                productosContados[id] = cantidad; 
+                productosContados[id] = cantidad; // Inicializar
             }
         });
 
@@ -479,6 +482,8 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             const productoEncontrado = productosArray.find(p => p._id.toString() === id);
             return acc + (productoEncontrado.precio * productosContados[id]);
         }, 0);
+
+        const totalCantidad = Object.values(productosContados).reduce((total, cantidad) => total + cantidad, 0);
 
         // Crear y guardar notificación
         const notificacion = new Notificacion({
@@ -496,15 +501,12 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         await notificacion.save();
 
         // Enviar correos
-        const correoExitoso = await enviarCorreoCompra(usuario, emailUsuario, productosArray, productosContados, total, metodo, pdfPath);
-        if (!correoExitoso) {
-            return res.status(500).json({ error: 'Error al enviar el correo de compra.' });
-        }
+        await enviarCorreoCompra(usuario, emailUsuario, productosArray, productosContados, total, metodo, pdfPath);
 
         // Eliminar el archivo PDF temporal
         await fs.promises.unlink(pdfPath);
 
-        res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.', total });
+        res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.', total, totalCantidad });
     } catch (error) {
         console.error('Error al confirmar el pago:', error.message);
         res.status(500).json({ error: 'Error al confirmar el pago.' });

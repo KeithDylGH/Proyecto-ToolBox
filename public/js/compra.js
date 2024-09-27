@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-    
-    initPaypalButtons(); // Inicializa los botones de PayPal
-
     // Mostrar métodos de pago
+
+    initPaypalButtons(); // Inicializa los botones de PayPal
+    
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
     const metodosPago = document.getElementById('metodosPago');
@@ -128,16 +128,15 @@ document.addEventListener('DOMContentLoaded', function () {
             console.warn('Elemento totalMonto no encontrado');
             return;
         }
-    
+
         const totalText = totalElement.innerText.replace('$', '').trim();
-        console.log('Valor capturado de totalText:', totalText); // Agrega esto para verificar el texto capturado
         const total = parseFloat(totalText);
-    
+
         if (isNaN(total) || total <= 0) {
             console.warn('Total inválido:', total);
             return;
         }
-        
+
         // Captura los productos nuevamente aquí para que esté disponible
         const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
             const id = producto.dataset.id;
