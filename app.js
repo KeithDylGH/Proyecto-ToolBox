@@ -439,8 +439,8 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos, metodo } = req.body; 
-    const usuario = req.session.user;
+    const { metodo } = req.body; 
+    const usuario = await CUsuario.findById(req.session.user._id).populate('carrito.producto');
 
     if (!usuario) {
         return res.status(401).json({ error: 'Usuario no autenticado.' });
@@ -448,39 +448,26 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     const emailUsuario = usuario.correo;
 
-    if (!emailUsuario || !productos || !metodo) {
+    if (!emailUsuario || !usuario.carrito || usuario.carrito.length === 0 || !metodo) {
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        const productoIds = productos.map(producto => producto.id);
-        const productosArray = await iProducto.find({ _id: { $in: productoIds } });
-
-        if (productosArray.length === 0) {
-            return res.status(404).json({ error: 'No se encontraron productos.' });
-        }
-
-        // Contar las cantidades de productos
         const productosContados = {};
-
-        // Recorre el array de productos para contar las cantidades
-        productos.forEach(producto => {
-            const id = producto.id;
-            const cantidad = producto.cantidad;
-            if (productosContados[id]) {
-                productosContados[id] += cantidad; // Sumar si ya existe
-            } else {
-                productosContados[id] = cantidad; // Inicializar
-            }
+        usuario.carrito.forEach(item => {
+            const id = item.producto._id.toString();
+            productosContados[id] = item.cantidad;
         });
 
+        const productosArray = usuario.carrito.map(item => item.producto);
+        
         // Generar PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
 
         // Calcular el total de la compra
         const total = Object.keys(productosContados).reduce((acc, id) => {
-            const productoEncontrado = productosArray.find(p => p._id.toString() === id);
-            return acc + (productoEncontrado.precio * productosContados[id]);
+            const producto = productosArray.find(p => p._id.toString() === id);
+            return acc + (producto.precio * productosContados[id]);
         }, 0);
 
         const totalCantidad = Object.values(productosContados).reduce((total, cantidad) => total + cantidad, 0);
