@@ -479,7 +479,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             return acc + (productoEncontrado.precio * producto.cantidad);
         }, 0);
         
-        const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0);        
+        const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0); 
 
         // Guarda la notificación en la base de datos
         const notificacion = new Notificacion({

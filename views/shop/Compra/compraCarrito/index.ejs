@@ -14,7 +14,7 @@
 
     <!-- Initialize the JS-SDK -->
     <script
-            src="https://www.paypal.com/sdk/js?client-id=AVyWef-3lft7A9nPacSmsgAIGW2-dkstmWLCr-SVS8OUURCGux_PLZnDWxsVgxGJpZ33GDbmlP58vST-"
+            src="https://www.paypal.com/sdk/js?client-id=AVyWef-3lft7A9nPacSmsgAIGW2-dkstmWLCr-SVS8OUURCGux_PLZnDWxsVgxGJpZ33GDbmlP58vST-&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo"
             data-sdk-integration-source="developer-studio"
         ></script>
 
@@ -203,15 +203,7 @@
     <script src="/js/compra.js"></script>
     <script>
 
-window.paypal
-    .Buttons({
-        style: {
-            shape: "rect",
-            layout: "vertical",
-            color: "gold",
-            label: "paypal",
-        },
-
+    paypal.Buttons({
             async createOrder() {
                 try {
                     const response = await fetch("/api/orders", {
