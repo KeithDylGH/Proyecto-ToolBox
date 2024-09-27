@@ -453,17 +453,17 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        // Obtener el usuario completo con su carrito
-        const usuarioCompleto = await CUsuario.findById(usuario._id).populate('carrito.producto');
+        // Obtener el carrito del usuario usando el esquema Carrito
+        const carritoUsuario = await Carrito.findOne({ usuarioId: usuario._id }).populate('productos.productoId');
 
-        if (!usuarioCompleto || !usuarioCompleto.carrito || usuarioCompleto.carrito.length === 0) {
-            return res.status(400).json({ error: 'El carrito está vacío o no se encontró al usuario.' });
+        if (!carritoUsuario || carritoUsuario.productos.length === 0) {
+            return res.status(400).json({ error: 'El carrito está vacío o no se encontró el carrito del usuario.' });
         }
 
         // Contar las cantidades de productos del carrito
         const productosContados = {};
-        const productosArray = usuarioCompleto.carrito.map(item => {
-            const id = item.producto._id.toString();
+        const productosArray = carritoUsuario.productos.map(item => {
+            const id = item.productoId._id.toString();
             const cantidad = item.cantidad;
 
             // Sumar al total de cantidades
@@ -473,7 +473,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                 productosContados[id] = cantidad; // Inicializar
             }
 
-            return item.producto; // Devuelve el producto
+            return item.productoId; // Devuelve el producto
         });
 
         // Generar PDF
@@ -514,7 +514,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
 });
-
 
 
 // Función para enviar el correo de compra
