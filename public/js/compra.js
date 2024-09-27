@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
     const transferenciaBtn = document.getElementById('transferenciaBtn');
     const zinliBtn = document.getElementById('zinliBtn');
-    const paypalBtn = document.getElementById('paypalBtn'); // Botón PayPal
+    const paypalBtn = document.getElementById('paypalBtn');
     const cancelarPagoBtn = document.getElementById('cancelarPagoBtn');
 
     if (pagoMovilBtn && transferenciaBtn && zinliBtn && paypalBtn && cancelarPagoBtn) {
@@ -35,159 +35,46 @@ document.addEventListener('DOMContentLoaded', function () {
             zinliModal.show();
         });
 
-        // Evento para mostrar el modal de PayPal
         paypalBtn.addEventListener('click', function () {
             const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
             paypalModal.show();
-            initPaypalButtons(); // Inicializar botones de PayPal
-        });
-
-        cancelarPagoBtn.addEventListener('click', function () {
-            window.location.href = '/';
         });
     }
 
-    // Confirmar pago
-    const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
-
-    confirmarPagoBtns.forEach(form => {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            // Cerrar el modal antes de mostrar el loader
-            const modalElement = bootstrap.Modal.getInstance(form.closest('.modal'));
-            if (modalElement) {
-                modalElement.hide();
-            }
-
-            // Mostrar el loader
-            const loader = document.getElementById('loader');
-            loader.classList.remove('d-none');
-
-            // Capturar el método de pago desde el input oculto del formulario
-            const metodoPagoInput = form.querySelector('input[name="metodoPago"]');
-            if (!metodoPagoInput || !metodoPagoInput.value) {
-                mostrarNotificacion('Método de pago no especificado.', 'danger');
-                loader.classList.add('d-none'); // Ocultar el loader
-                return;
-            }
-            const metodoPago = metodoPagoInput.value;
-
-            // Capturar los productos
-            const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
-                const id = producto.dataset.id;
-                const nombre = producto.querySelector('h6').textContent;
-                const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
-                return { id, nombre, cantidad };
-            });
-
-            if (!productos.length) {
-                mostrarNotificacion('No hay productos en el carrito.', 'danger');
-                loader.classList.add('d-none'); // Ocultar el loader
-                return;
-            }
-
-            // Enviar la confirmación de pago al servidor
-            fetch('/confirmar-pago', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    productos,
-                    metodo: metodoPago // Enviar el método de pago
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Ocultar el loader
-                loader.classList.add('d-none');
-                if (data.error) {
-                    mostrarNotificacion(data.error, 'danger');
-                } else {
-                    mostrarNotificacion('Pago confirmado correctamente.', 'success');
-                    console.log('Respuesta del servidor:', data);
-                    // Redirigir o realizar otra acción aquí si es necesario
-                }
-            })
-            .catch(error => {
-                // Ocultar el loader
-                loader.classList.add('d-none');
-                mostrarNotificacion('Error al confirmar el pago.', 'danger');
-                console.error('Error al confirmar el pago:', error);
-            });
-        });
+    // Cálculo del total
+    const totalMonto = document.getElementById('totalMonto');
+    let total = 0;
+    
+    document.querySelectorAll('.producto').forEach(producto => {
+        const precio = parseFloat(producto.querySelector('p').textContent.replace('Precio Unitario: $', ''));
+        const cantidad = parseInt(producto.querySelector('p:nth-child(3)').textContent.replace('Cantidad: ', ''));
+        total += precio * cantidad;
     });
+    
+    totalMonto.textContent = `Total: $${total.toFixed(2)}`;
 
-    // Lógica para inicializar los botones de PayPal
-    function initPaypalButtons() {
-        // Asumiendo que el monto total se obtiene directamente
-        const total = parseFloat(document.getElementById('totalMonto').innerText.replace('$', '')); // Obtener total del elemento
-
-        if (isNaN(total) || total <= 0) {
-            console.warn('Total inválido:', total); // Log para depuración
-            return; // Salir si el total no es válido
-        }
-
+    // Inicializar botones de PayPal
+    if (typeof paypal !== 'undefined') {
         paypal.Buttons({
-            createOrder: function(data, actions) {
-                return fetch('/paypal/create-order', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        amount: total
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al crear la orden');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    return data.orderID;  // Devolver el orderID de la respuesta
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: total.toFixed(2) // Total a pagar
+                        }
+                    }]
                 });
             },
-            onApprove: function(data, actions) {
-                return fetch(`/paypal/payment`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        orderID: data.orderID  // El ID de la orden de PayPal
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error en la respuesta del servidor');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Mostrar el modal de éxito
-                    const modal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
-                    modal.show();
-                })
-                .catch(error => {
-                    console.error('Error al completar el pago:', error);
-                    alert('Ocurrió un error durante el pago con PayPal.');
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    alert('Pago realizado con éxito: ' + details.id);
+                    // Aquí puedes realizar una llamada a tu backend para confirmar el pago
                 });
+            },
+            onError: function (err) {
+                console.error(err);
+                alert('Ocurrió un error al procesar el pago. Intenta nuevamente.');
             }
-        }).render(paypalBtn); // Renderizar el botón en el botón PayPal
-    }
-
-    function mostrarNotificacion(mensaje, tipo) {
-        const notificacion = document.createElement('div');
-        notificacion.className = `alert alert-${tipo}`;
-        notificacion.textContent = mensaje;
-
-        document.body.prepend(notificacion);
-
-        setTimeout(() => {
-            notificacion.remove();
-        }, 3000);
+        }).render('#paypal-button-container'); // Dónde se renderiza el botón de PayPal
     }
 });
