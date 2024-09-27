@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-
+        
             const formData = new FormData(form);
             const data = {
                 nombre: formData.get('nombre'),
@@ -15,28 +15,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 numero: formData.get('numero'),
                 cedula: formData.get('cedula')
             };
-
+        
             try {
-                const response = await fetch('/cuenta/configuracion/editar', {
+                const response = await fetch(window.location.origin + '/cuenta/configuracion/editar', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data)
                 });
-            
-                const result = await response.json();
-            
+        
                 if (!response.ok) {
-                    throw new Error(result.error || 'Error al actualizar datos');
+                    const errorMessage = await response.text();
+                    throw new Error(errorMessage || 'Error al actualizar datos');
                 }
-            
-                alert('Datos actualizados correctamente');
-                window.location.href = '/cuenta'; // Redirige al finalizar
+        
+                const result = await response.json();
+                if (result.success) {
+                    alert(result.message);
+                    window.location.href = '/cuenta/configuracion/Ver-usuario'; // Redirigir manualmente
+                } else {
+                    alert('Error al actualizar los datos');
+                }
             } catch (error) {
                 console.error('Error al enviar datos:', error);
                 alert('Error en el servidor: ' + error.message);
-            }            
-        });
+            }
+        });                
     }
 });

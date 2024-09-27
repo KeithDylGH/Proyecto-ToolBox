@@ -597,6 +597,30 @@ app.get('/cuenta/configuracion', authorize(['user', 'admin', 'boss']), async (re
     res.render('account/cuenta/cliente/configuracion');
 });
 
+app.get('/cuenta/configuracion/Ver-usuario', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    try {
+        // Obtener el ID del usuario desde la sesión
+        const userId = req.session.user ? req.session.user.id : null;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'Usuario no autenticado' });
+        }
+
+        // Buscar el usuario en la base de datos por su ID
+        const usuario = await CUsuario.findById(userId).exec();
+
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        // Renderizar la vista con los datos del usuario
+        res.render('account/cuenta/cliente/configuracion/datos', { usuario, CUsuario: req.session.user });
+    } catch (error) {
+        console.error('Error al obtener los detalles del usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
 // Ruta para obtener y editar la configuración del usuario
 app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
@@ -622,11 +646,10 @@ app.get('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), as
     }
 });
 
-// Ruta para actualizar la configuración del usuario
+//post para actualizar el usuario
 app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        // Obtener el ID del usuario desde la sesión
-        const userId = req.session.user ? req.session.user.id : null; // Cambia id a _id
+        const userId = req.session.user ? req.session.user.id : null;
 
         if (!userId) {
             return res.status(400).json({ error: 'Usuario no autenticado' });
@@ -634,7 +657,6 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
 
         const { nombre, apellido, usuario, correo, numero, cedula, password } = req.body;
 
-        // Crear objeto de actualización
         const updates = {
             nombre,
             apellido,
@@ -644,21 +666,19 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
             cedula
         };
 
-        // Solo actualizar la contraseña si se proporciona una nueva
         if (password) {
             updates.password = password;
         }
 
-        // Actualizar el usuario en la base de datos
         const usuarioActualizado = await CUsuario.findByIdAndUpdate(userId, updates, { new: true }).exec();
 
         if (!usuarioActualizado) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Actualizar la sesión con los nuevos datos del usuario
+        // Actualizar la sesión
         req.session.user = {
-            id: usuarioActualizado.id,
+            id: usuarioActualizado._id,
             nombre: usuarioActualizado.nombre,
             apellido: usuarioActualizado.apellido,
             usuario: usuarioActualizado.usuario,
@@ -668,7 +688,8 @@ app.post('/cuenta/configuracion/editar', authorize(['user', 'admin', 'boss']), a
             rol: usuarioActualizado.rol
         };
 
-        res.redirect('/cuenta/account/cliente/configuracion/editar');
+        // Enviar una respuesta JSON en lugar de redirigir
+        res.json({ success: true, message: 'Datos actualizados correctamente' });
     } catch (error) {
         console.error('Error al actualizar la configuración del usuario:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
