@@ -200,26 +200,30 @@
 
     <script src="/js/compra.js"></script>
     <script>
-    paypal.Buttons({
-       createOrder: function(data, actions) {
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: document.getElementById('totalMonto').value
-                    }}]
-                    });
-                    },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(orderData) {
-                            // Finalmente, redirige al usuario a la página de agradecimiento
-                            alert("Pago realizado, gracias");
-                            });
-                            },
-                            onError: function(err) {
-                                console.error(err);
-                                }
-                                }).render('#paypal-button-container');
-</script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: document.getElementById('totalMonto').textContent.replace('$', '').trim()
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Mostrar mensaje de éxito y redirigir
+                    alert("Pago realizado, gracias");
+                    // Aquí podrías redirigir a otra página
+                    window.location.href = "/cuenta"; // Cambia la URL según sea necesario
+                });
+            },
+            onError: function(err) {
+                console.error(err);
+                alert("Ocurrió un error en el proceso de pago.");
+            }
+        }).render('#paypal-button-container');
+        </script>        
 
 </body>
 </html>
