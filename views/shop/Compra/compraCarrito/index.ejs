@@ -13,7 +13,7 @@
     <meta name="usuario-correo" content="<%= usuarioCorreo %>">
 
     <!-- Initialize the JS-SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AU8Xeo79prOXpTR4ubnSYnKSU5JHYs8hMFUMXmbjz56hgyOZlEoRW0lM-ZmSm124IcBk2AiuWbE6OnFA&buyer-country=US&currency=USD&components=buttons"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID"></script>
 </head>
 
 <!-- Loader -->
@@ -169,7 +169,7 @@
           </div>
     
           <!-- Modal PayPal -->
-          <div class="modal fade" id="paypalModal" tabindex="-1" aria-labelledby="paypalModalLabel" aria-hidden="true">
+        <div class="modal fade" id="paypalModal" tabindex="-1" aria-labelledby="paypalModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -177,7 +177,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="paypal-button-container<%= index %>" data-cotizacion-id="<%= cotizacion._id %>"></div>
+                        <div id="paypal-button-container"></div>
                     </div>
                 </div>
             </div>
