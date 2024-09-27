@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
     const transferenciaBtn = document.getElementById('transferenciaBtn');
     const zinliBtn = document.getElementById('zinliBtn');
-    const paypalBtn = document.getElementById('paypalBtn'); // Nuevo botón PayPal
+    const paypalBtn = document.getElementById('paypalBtn'); // Botón PayPal
     const cancelarPagoBtn = document.getElementById('cancelarPagoBtn');
 
     if (pagoMovilBtn && transferenciaBtn && zinliBtn && paypalBtn && cancelarPagoBtn) {
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         paypalBtn.addEventListener('click', function () {
             const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
             paypalModal.show();
-            initPaypalButtons(); // Llama a la función para inicializar botones de PayPal
+            initPaypalButtons(); // Inicializar botones de PayPal
         });
 
         cancelarPagoBtn.addEventListener('click', function () {
@@ -121,91 +121,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Lógica para inicializar los botones de PayPal
     function initPaypalButtons() {
-        document.querySelectorAll('[id^="paypal-button-container"]').forEach((container) => {
-            const cotizacionId = container.getAttribute('data-cotizacion-id'); // Obtener el ID de la cotización
+        // Asumiendo que el monto total se obtiene directamente
+        const total = parseFloat(document.getElementById('totalMonto').innerText.replace('$', '')); // Obtener total del elemento
 
-            // Fetch la cotización para obtener el monto total
-            fetch(`/vercotizaciones/${cotizacionId}`)
+        if (isNaN(total) || total <= 0) {
+            console.warn('Total inválido:', total); // Log para depuración
+            return; // Salir si el total no es válido
+        }
+
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return fetch('/paypal/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: total
+                    })
+                })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Error al obtener la cotización');
+                        throw new Error('Error al crear la orden');
                     }
                     return response.json();
                 })
-                .then(cotizacion => {
-                    const total = cotizacion.total; // Obtener el total calculado de la cotización y convertirlo a número
-
-                    // Verifica si el total está disponible y es válido
-                    if (isNaN(total) || total <= 0) {
-                        console.warn('Total inválido:', cotizacion.total); // Log para depuración
-                        // Deshabilitar el botón de PayPal y agregar el tooltip
-                        const buttonContainer = document.getElementById(`paypal-button-container${container.getAttribute('id').match(/\d+/)[0]}`);
-                        buttonContainer.innerHTML = ''; // Limpiar el contenedor
-                        const disabledButton = document.createElement('button');
-                        disabledButton.textContent = 'Pagar con PayPal';
-                        disabledButton.className = 'btn btn-secondary'; // Cambia esto al estilo deseado
-                        disabledButton.disabled = true;
-                        disabledButton.title = 'Esperando monto de cotización';
-                        disabledButton.style.cursor = 'not-allowed'; // Cambia el cursor para indicar que está deshabilitado
-                        buttonContainer.appendChild(disabledButton);
-                    } else {
-                        // Configurar PayPal
-                        paypal.Buttons({
-                            createOrder: function(data, actions) {
-                                return fetch('/paypal/create-order', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        amount: total
-                                    })
-                                })
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Error al crear la orden');
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    return data.orderID;  // Devolver el orderID de la respuesta
-                                });
-                            },
-                            onApprove: function(data, actions) {
-                                return fetch(`/paypal/payment`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        orderID: data.orderID,  // El ID de la orden de PayPal
-                                        cotizacionId: cotizacionId  // Incluir el ID de la cotización
-                                    })
-                                })
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Error en la respuesta del servidor');
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    // Mostrar el modal de éxito
-                                    const modal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
-                                    modal.show();
-                                })
-                                .catch(error => {
-                                    console.error('Error al completar el pago:', error);
-                                    alert('Ocurrió un error durante el pago con PayPal.');
-                                });
-                            }
-                        }).render(container); // Renderizar el botón en el contenedor correcto
+                .then(data => {
+                    return data.orderID;  // Devolver el orderID de la respuesta
+                });
+            },
+            onApprove: function(data, actions) {
+                return fetch(`/paypal/payment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        orderID: data.orderID  // El ID de la orden de PayPal
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
                     }
+                    return response.json();
+                })
+                .then(data => {
+                    // Mostrar el modal de éxito
+                    const modal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
+                    modal.show();
                 })
                 .catch(error => {
-                    console.error('Error al obtener los datos de la cotización:', error);
-                    alert('Ocurrió un error al obtener el monto de la cotización.');
+                    console.error('Error al completar el pago:', error);
+                    alert('Ocurrió un error durante el pago con PayPal.');
                 });
-        });
+            }
+        }).render(paypalBtn); // Renderizar el botón en el botón PayPal
     }
 
     function mostrarNotificacion(mensaje, tipo) {
