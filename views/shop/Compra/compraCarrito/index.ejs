@@ -14,7 +14,9 @@
 
     <!-- Initialize the JS-SDK -->
     <script
-    src="https://www.paypal.com/sdk/js?client-id=<%= paypalClientId %>&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo"></script>
+            src="https://www.paypal.com/sdk/js?client-id=AVyWef-3lft7A9nPacSmsgAIGW2-dkstmWLCr-SVS8OUURCGux_PLZnDWxsVgxGJpZ33GDbmlP58vST-&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo"
+            data-sdk-integration-source="developer-studio"
+    ></script>
 
 </head>
 
@@ -198,32 +200,8 @@
     <% } %>
 </main>
 
-    <script src="/js/compra.js"></script>
-    <script>
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: document.getElementById('totalMonto').textContent.replace('$', '').trim()
-                        }
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(orderData) {
-                    // Mostrar mensaje de éxito y redirigir
-                    alert("Pago realizado, gracias");
-                    // Aquí podrías redirigir a otra página
-                    window.location.href = "/cuenta"; // Cambia la URL según sea necesario
-                });
-            },
-            onError: function(err) {
-                console.error(err);
-                alert("Ocurrió un error en el proceso de pago.");
-            }
-        }).render('#paypal-button-container');
-        </script>        
+    <script src="/js/compra.js"></script>  
+    <script src="/controllers/paypal.js"></script>
 
 </body>
 </html>
