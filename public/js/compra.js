@@ -23,10 +23,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     Object.keys(modalButtons).forEach(key => {
         const button = document.getElementById(key);
-        if (button && modalButtons[key]) {
-            button.addEventListener('click', () => mostrarModal(modalButtons[key]));
-        } else if (button) {
-            button.addEventListener('click', () => window.location.href = '/');
+        if (button) {
+            button.addEventListener('click', () => {
+                if (modalButtons[key]) {
+                    mostrarModal(modalButtons[key]);
+                } else {
+                    window.location.href = '/';
+                }
+            });
         }
     });
 
@@ -93,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(() => window.location.href = '/', 3000);
             })
             .catch(error => {
-                mostrarNotificacion('Error al confirmar el pago.', 'danger');
+                mostrarNotificacion('Error al confirmar el pago: ' + error.message, 'danger');
                 console.error('Error al confirmar el pago:', error);
             })
             .finally(() => {

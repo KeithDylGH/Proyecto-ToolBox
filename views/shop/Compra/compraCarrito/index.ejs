@@ -14,7 +14,6 @@
 
     <!-- Initialize the JS-SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=AU8Xeo79prOXpTR4ubnSYnKSU5JHYs8hMFUMXmbjz56hgyOZlEoRW0lM-ZmSm124IcBk2AiuWbE6OnFA&buyer-country=US&currency=USD&components=buttons"></script>
-
 </head>
 
 <!-- Loader -->
@@ -157,8 +156,16 @@
                         <form id="zinliForm">
                             <input type="hidden" name="metodoPago" value="Zinli">
                             <p>Por favor complete la información para continuar con el pago a través de Zinli.</p>
-                            <p>Envía el monto total de la compra a <strong> @ToolBox</strong> a través de la aplicación Zinli.</p>
-                            <button type="submit" class="btn btn-primary" id="confirmarZinliBtn">Confirmar Pago Zinli</button>
+                            <ul>
+                                <li>Selecciona la opción "Zinli".</li>
+                                <li>Ingresa los siguientes datos:</li>
+                                <ul>
+                                    <li>ID de Usuario: <strong>toolbox</strong></li>
+                                </ul>
+                                <li>Introduce el monto total de la compra y confirma el pago.</li>
+                            </ul>
+                            <p>Una vez realizado el pago, envía una captura del comprobante a través de <a href="https://wa.me/+4126378817" target="_blank" class="btn btn-success">WhatsApp</a>.</p>
+                            <button type="submit" class="btn btn-primary" id="confirmarZinliBtn">Confirmar Pago</button>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -173,7 +180,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="paypalLabel">PayPal</h5>
+                        <h5 class="modal-title" id="paypalLabel">Pago con PayPal</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -187,7 +194,7 @@
           </div>
       </div>
     <% } else { %>
-      <h3>No hay productos en el carrito.</h3>
+      <p>No hay productos en el carrito.</p>
     <% } %>
   </main>
 
