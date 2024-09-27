@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     alert('Ocurrió un error durante el pago con PayPal.');
                 });
             }
-        }).render(paypalBtn);
+        }).render('#paypal-button-container');
     }    
 
     function mostrarNotificacion(mensaje, tipo) {
