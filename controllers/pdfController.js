@@ -1,4 +1,3 @@
-// PDFCONTROLLER.js
 const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');

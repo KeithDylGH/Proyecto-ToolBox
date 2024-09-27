@@ -76,7 +76,7 @@
                         <button id="pagoMovilBtn" class="btn btn-primary">Pago Móvil</button>
                         <button id="transferenciaBtn" class="btn btn-primary">Transferencia</button>
                         <button id="zinliBtn" class="btn btn-primary">Zinli</button>
-                        <button id="paypalBtn" class="btn btn-primary">PayPal</button>
+                        <div id="paypal-button-container"></div>
                         <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
                       </div>
                     </div>
@@ -186,7 +186,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="paypal-button-container"></div>
+                        <!-- Aquí va el contenedor del botón de PayPal -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -202,8 +202,14 @@
     <script src="/js/compra.js"></script>
     <script>
 
-    window.paypal
-        .Buttons({
+window.paypal
+    .Buttons({
+        style: {
+            shape: "rect",
+            layout: "vertical",
+            color: "gold",
+            label: "paypal",
+        },
 
             async createOrder() {
                 try {
