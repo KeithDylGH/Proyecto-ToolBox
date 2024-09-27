@@ -44,13 +44,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Cálculo del total
     const totalMonto = document.getElementById('totalMonto');
     let total = 0;
-    
+
     document.querySelectorAll('.producto').forEach(producto => {
         const precio = parseFloat(producto.querySelector('p').textContent.replace('Precio Unitario: $', ''));
         const cantidad = parseInt(producto.querySelector('p:nth-child(3)').textContent.replace('Cantidad: ', ''));
         total += precio * cantidad;
     });
-    
+
     totalMonto.textContent = `Total: $${total.toFixed(2)}`;
 
     // Inicializar botones de PayPal
@@ -76,5 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Ocurrió un error al procesar el pago. Intenta nuevamente.');
             }
         }).render('#paypal-button-container'); // Dónde se renderiza el botón de PayPal
+    } else {
+        console.error('El objeto paypal no está definido.');
     }
 });

@@ -464,7 +464,9 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         // Contar las cantidades de productos
         const productosContados = productos.reduce((acc, producto) => {
-            acc[producto.id] = (acc[producto.id] || 0) + producto.cantidad;
+            const id = producto.id;
+            const cantidad = producto.cantidad || 1;
+            acc[id] = (acc[id] || 0) + cantidad;
             return acc;
         }, {});
 
@@ -484,6 +486,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         const totalCantidad = Object.values(productosContados).reduce((total, cantidad) => total + cantidad, 0);
 
+        // Crear notificación
         const notificacion = new Notificacion({
             usuarioNombre: usuario.nombre,
             usuarioCorreo: emailUsuario,
