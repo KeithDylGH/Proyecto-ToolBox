@@ -453,7 +453,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        // Obtener el usuario con el carrito embebido, usando populate para obtener los detalles de los productos
+        // Obtener el usuario completo con su carrito
         const usuarioCompleto = await CUsuario.findById(usuario._id).populate('carrito.producto');
 
         if (!usuarioCompleto || !usuarioCompleto.carrito || usuarioCompleto.carrito.length === 0) {
