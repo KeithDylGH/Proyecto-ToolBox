@@ -422,11 +422,12 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
         const totalCarrito = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
 
-        // Pasar usuarioCorreo a la vista
+        // Pasar usuarioCorreo y paypalClientId a la vista
         res.render('shop/Compra/compraCarrito', { 
             productos: carrito, 
             totalCarrito,
-            usuarioCorreo: user.correo // Asegúrate de que user.correo esté definido
+            usuarioCorreo: user.correo, // Asegúrate de que user.correo esté definido
+            paypalClientId: process.env.PAYPAL_CLIENT_ID // Agregando PAYPAL_CLIENT_ID
         });
     } catch (error) {
         console.error('Error al obtener los productos del carrito:', error);
@@ -437,11 +438,8 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos, metodo } = req.body; // Asegúrate de que 'productos' contenga la cantidad
+    const { productos, metodo } = req.body; 
     const usuario = req.session.user;
-
-    console.log('Datos recibidos:', { productos, metodo });
-    console.log('Usuario desde la sesión:', usuario);
 
     if (!usuario) {
         console.log('Usuario no autenticado.');
@@ -456,7 +454,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        // Procesar productos y obtener sus detalles de la base de datos
         const productoIds = productos.map(producto => producto.id);
         const productosArray = await iProducto.find({ _id: { $in: productoIds } });
 
@@ -464,40 +461,40 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             return res.status(404).json({ error: 'No se encontraron productos.' });
         }
 
-        // Crear el PDF
-        const pdfPath = await pdfController.generarPdfCarrito(productosArray, productos, metodo);
+        const productosContados = productos.reduce((acc, producto) => {
+            acc[producto.id] = (acc[producto.id] || 0) + producto.cantidad;
+            return acc;
+        }, {});
 
-        // Preparar lista de productos para el cuerpo del correo
-        const listaProductosHtml = productos.map(producto => {
-            const productoEncontrado = productosArray.find(p => p._id.toString() === producto.id);
-            return `<li>${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)} x ${producto.cantidad}</li>`;
+        const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
+
+        const listaProductosHtml = Object.keys(productosContados).map(id => {
+            const productoEncontrado = productosArray.find(p => p._id.toString() === id);
+            const cantidad = productosContados[id];
+            return `<li>${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)} x ${cantidad}</li>`;
         }).join('');
-        
-        // Calcular total
-        const total = productos.reduce((acc, producto) => {
-            const productoEncontrado = productosArray.find(p => p._id.toString() === producto.id);
-            return acc + (productoEncontrado.precio * producto.cantidad);
-        }, 0);
-        
-        const totalCantidad = productos.reduce((total, producto) => total + producto.cantidad, 0); 
 
-        // Guarda la notificación en la base de datos
+        const total = Object.keys(productosContados).reduce((acc, id) => {
+            const productoEncontrado = productosArray.find(p => p._id.toString() === id);
+            return acc + (productoEncontrado.precio * productosContados[id]);
+        }, 0);
+
+        const totalCantidad = Object.values(productosContados).reduce((total, cantidad) => total + cantidad, 0);
+
         const notificacion = new Notificacion({
             usuarioNombre: usuario.nombre,
             usuarioCorreo: emailUsuario,
-            productos: productos.map(p => ({ name: p.nombre, price: p.precio, quantity: p.cantidad })), // Cambié a producto.cantidad
+            productos: productos.map(p => ({ name: p.nombre, price: p.precio, quantity: p.cantidad })),
             total: total,
             metodoPago: metodo,
         });
 
         await notificacion.save();
 
-        // Obtener todos los usuarios con rol de admin y boss
         const admins = await CUsuario.find({ rol: { $in: ['admin', 'boss'] } });
-
-        // Enviar el correo a cada admin/boss
         const adminEmails = admins.map(admin => admin.correo).join(', ');
 
+        // Enviar el correo a los administradores
         try {
             await transporter.sendMail({
                 from: process.env.EMAIL_USER,
@@ -508,22 +505,15 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                     <p>Usuario: ${usuario.nombre}</p>
                     <p>Correo: ${emailUsuario}</p>
                     <p><strong>Productos Comprados:</strong></p>
-                    <ul>
-                        ${listaProductosHtml}
-                    </ul>
+                    <ul>${listaProductosHtml}</ul>
                     <p><strong>Método de Pago:</strong> ${metodo}</p>
                     <p><strong>Total:</strong> $${total.toFixed(2)}</p>
                 `,
-                attachments: [
-                    {
-                        filename: 'factura.pdf',
-                        path: pdfPath
-                    }
-                ]
+                attachments: [{ filename: 'factura.pdf', path: pdfPath }]
             });
             console.log('Correo enviado a administradores.');
         } catch (error) {
-            console.error('Error enviando correo a administradores:', error);
+            console.error('Error enviando correo a administradores:', error.message);
         }
 
         // Enviar el correo al usuario
@@ -542,9 +532,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                             <p><strong>Método de Pago:</strong> ${metodo}</p>
                             <p><strong>Total de Productos:</strong> ${totalCantidad}</p>
                             <p><strong>Productos:</strong></p>
-                            <ul>
-                                ${listaProductosHtml}
-                            </ul>
+                            <ul>${listaProductosHtml}</ul>
                             <p><strong>Total:</strong> $${total.toFixed(2)}</p>
                             <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
                             <p>Saludos,<br>El equipo de ToolBox</p>
@@ -552,20 +540,24 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
                     </body>
                     </html>
                 `,
+                attachments: [{ filename: 'factura.pdf', path: pdfPath }]
             });
             console.log('Correo enviado al usuario.');
         } catch (error) {
-            console.error('Error enviando correo al usuario:', error);
+            console.error('Error enviando correo al usuario:', error.message);
         }
 
         // Eliminar el archivo PDF temporal
-        fs.unlink(pdfPath, (err) => {
-            if (err) console.error('Error al eliminar el archivo PDF:', err);
-        });
+        try {
+            await fs.promises.unlink(pdfPath);
+            console.log('Archivo PDF eliminado.');
+        } catch (err) {
+            console.error('Error al eliminar el archivo PDF:', err);
+        }
 
-        res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.' });
+        res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.', total, totalCantidad });
     } catch (error) {
-        console.error('Error al confirmar el pago:', error);
+        console.error('Error al confirmar el pago:', error.message);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
     }
 });

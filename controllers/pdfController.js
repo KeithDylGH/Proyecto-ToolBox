@@ -2,7 +2,7 @@ const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 
-exports.generarPdfCarrito = async (productosArray, cantidades, metodo) => {
+exports.generarPdfCarrito = async (productosArray, cantidadesContadas, metodo) => {
     const tmpDir = path.join(__dirname, '../tmp');
     if (!fs.existsSync(tmpDir)) {
         fs.mkdirSync(tmpDir);
@@ -44,9 +44,9 @@ exports.generarPdfCarrito = async (productosArray, cantidades, metodo) => {
 
     let yPosition = titleYPosition - 60;
     let total = 0;
-    for (let i = 0; i < productosArray.length; i++) {
-        const producto = productosArray[i];
-        const cantidad = cantidades[i].cantidad; // Asegúrate de acceder a la cantidad correctamente
+    for (let id in cantidadesContadas) {
+        const producto = productosArray.find(p => p._id.toString() === id);
+        const cantidad = cantidadesContadas[id];
         const nombre = producto.nombre || 'Producto desconocido';
         const precio = producto.precio || 0;
 
@@ -57,7 +57,7 @@ exports.generarPdfCarrito = async (productosArray, cantidades, metodo) => {
             size: 12,
             color: rgb(0, 0, 0),
         });
-        
+
         total += precio * cantidad; // Acumula el total
         yPosition -= 20;
     }
@@ -72,6 +72,5 @@ exports.generarPdfCarrito = async (productosArray, cantidades, metodo) => {
     const pdfBytes = await pdfDoc.save();
     const pdfPath = path.join(tmpDir, `factura-${Date.now()}.pdf`);
     fs.writeFileSync(pdfPath, pdfBytes);
-
-    return pdfPath; // Devuelve la ruta del PDF
+    return pdfPath;
 };
