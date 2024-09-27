@@ -427,8 +427,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
         res.render('shop/Compra/compraCarrito', { 
             productos: carrito, 
             totalCarrito,
-            usuarioCorreo: user.correo, // Asegúrate de que user.correo esté definido
-            paypalClientId: process.env.PAYPAL_CLIENT_ID // Agregando PAYPAL_CLIENT_ID
+            usuarioCorreo: user.correo
         });
     } catch (error) {
         console.error('Error al obtener los productos del carrito:', error);
