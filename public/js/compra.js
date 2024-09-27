@@ -80,9 +80,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
                 const id = producto.dataset.id;
                 const nombre = producto.querySelector('h6').textContent;
-                const cantidad = parseInt(producto.querySelector('.cantidad').textContent.trim()) || 1;
+                const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
                 return { id, nombre, cantidad };
-            });            
+            });
 
             if (!productos.length) {
                 mostrarNotificacion('No hay productos en el carrito.', 'danger');
@@ -129,18 +129,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
     
-        // Captura el texto del total y elimina cualquier carácter no numérico
-        const totalText = totalElement.innerText.replace(/[^0-9.]/g, '').trim();
-        console.log('Valor capturado de totalText:', totalText); // Verificar el valor capturado
-    
-        // Convertir el texto a un número flotante
+        const totalText = totalElement.innerText.replace('$', '').trim();
+        console.log('Valor capturado de totalText:', totalText); // Agrega esto para verificar el texto capturado
         const total = parseFloat(totalText);
     
         if (isNaN(total) || total <= 0) {
             console.warn('Total inválido:', total);
             return;
         }
-
+        
         // Captura los productos nuevamente aquí para que esté disponible
         const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
             const id = producto.dataset.id;
