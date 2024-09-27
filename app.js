@@ -27,15 +27,11 @@ const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
 const Notificacion = require('./models/notificacion');
 const notificacionRouter = require('./controllers/notificaciones');
-const paypalController = require('./controllers/paypal');
+const paypalPaymentRoute = require('./controllers/paypal');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 const mongoUri = process.env.mongoURL;
-
-// Rutas de PayPal
-app.post('/api/orders', paypalController.createOrderController);
-app.post('/api/orders/:orderID/capture', paypalController.captureOrderController);
 
 // Configuración de multer para manejar archivos en memoria
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -911,3 +907,4 @@ app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
 app.use('/api/carrito', carritoRouter);
 app.use('/api/notificaciones', notificacionRouter);
+app.use('/paypal', paypalPaymentRoute);

@@ -13,38 +13,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Mostrar modales
-    const pagoMovilBtn = document.getElementById('pagoMovilBtn');
-    const transferenciaBtn = document.getElementById('transferenciaBtn');
-    const zinliBtn = document.getElementById('zinliBtn');
-    const paypalBtn = document.getElementById('paypalBtn'); // Nuevo botón PayPal
-    const cancelarPagoBtn = document.getElementById('cancelarPagoBtn');
+    const modalButtons = {
+        pagoMovilBtn: 'pagoMovilModal',
+        transferenciaBtn: 'transferenciaModal',
+        zinliBtn: 'zinliModal',
+        paypalBtn: 'paypalModal',
+        cancelarPagoBtn: null // Manejo especial
+    };
 
-    if (pagoMovilBtn && transferenciaBtn && zinliBtn && paypalBtn && cancelarPagoBtn) {
-        pagoMovilBtn.addEventListener('click', function () {
-            const pagoMovilModal = new bootstrap.Modal(document.getElementById('pagoMovilModal'));
-            pagoMovilModal.show();
-        });
-
-        transferenciaBtn.addEventListener('click', function () {
-            const transferenciaModal = new bootstrap.Modal(document.getElementById('transferenciaModal'));
-            transferenciaModal.show();
-        });
-
-        zinliBtn.addEventListener('click', function () {
-            const zinliModal = new bootstrap.Modal(document.getElementById('zinliModal'));
-            zinliModal.show();
-        });
-
-        // Evento para mostrar el modal de PayPal
-        paypalBtn.addEventListener('click', function () {
-            const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
-            paypalModal.show();
-        });
-
-        cancelarPagoBtn.addEventListener('click', function () {
-            window.location.href = '/';
-        });
-    }
+    Object.keys(modalButtons).forEach(key => {
+        const button = document.getElementById(key);
+        if (button && modalButtons[key]) {
+            button.addEventListener('click', () => mostrarModal(modalButtons[key]));
+        } else if (button) {
+            button.addEventListener('click', () => window.location.href = '/');
+        }
+    });
 
     // Confirmar pago
     const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
@@ -52,6 +36,8 @@ document.addEventListener('DOMContentLoaded', function () {
     confirmarPagoBtns.forEach(form => {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true; // Deshabilitar el botón de envío
 
             // Cerrar el modal antes de mostrar el loader
             const modalElement = bootstrap.Modal.getInstance(form.closest('.modal'));
@@ -63,14 +49,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const loader = document.getElementById('loader');
             loader.classList.remove('d-none');
 
-            // Capturar el método de pago desde el input oculto del formulario
+            // Capturar el método de pago
             const metodoPagoInput = form.querySelector('input[name="metodoPago"]');
-            if (!metodoPagoInput || !metodoPagoInput.value) {
-                mostrarNotificacion('Método de pago no especificado.', 'danger');
-                loader.classList.add('d-none'); // Ocultar el loader
-                return;
-            }
-            const metodoPago = metodoPagoInput.value;
+            const metodoPago = metodoPagoInput ? metodoPagoInput.value : null;
 
             // Capturar los productos
             const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
@@ -83,37 +64,40 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!productos.length) {
                 mostrarNotificacion('No hay productos en el carrito.', 'danger');
                 loader.classList.add('d-none'); // Ocultar el loader
+                submitButton.disabled = false; // Habilitar el botón nuevamente
                 return;
             }
 
-            // Enviar la confirmación de pago al servidor
+            // Enviar la confirmación de pago
             fetch('/confirmar-pago', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    productos,
-                    metodo: metodoPago // Enviar el método de pago
-                }),
+                body: JSON.stringify({ productos, metodo: metodoPago }),
             })
-            .then(response => response.json())
-            .then(data => {
-                // Ocultar el loader
-                loader.classList.add('d-none');
-                if (data.error) {
-                    mostrarNotificacion(data.error, 'danger');
-                } else {
-                    mostrarNotificacion('Pago confirmado correctamente.', 'success');
-                    console.log('Respuesta del servidor:', data);
-                    // Redirigir o realizar otra acción aquí si es necesario
+            .then(response => {
+                loader.classList.add('d-none'); // Ocultar el loader
+                if (!response.ok) {
+                    return response.json().then(errData => {
+                        throw new Error(errData.error || 'Error en el servidor');
+                    });
                 }
+                return response.json();
+            })
+            .then(data => {
+                mostrarNotificacion('Pago confirmado correctamente.', 'success');
+                const modal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
+                modal.show();
+                // Redirigir después de 3 segundos
+                setTimeout(() => window.location.href = '/', 3000);
             })
             .catch(error => {
-                // Ocultar el loader
-                loader.classList.add('d-none');
                 mostrarNotificacion('Error al confirmar el pago.', 'danger');
                 console.error('Error al confirmar el pago:', error);
+            })
+            .finally(() => {
+                submitButton.disabled = false; // Asegúrate de habilitar el botón nuevamente
             });
         });
     });
@@ -124,9 +108,69 @@ document.addEventListener('DOMContentLoaded', function () {
         notificacion.textContent = mensaje;
 
         document.body.prepend(notificacion);
-
-        setTimeout(() => {
-            notificacion.remove();
-        }, 3000);
+        setTimeout(() => notificacion.remove(), 3000);
     }
+
+    // Inicializar botones de PayPal
+    initPaypalButtons();
 });
+
+function initPaypalButtons() {
+    const totalElement = document.getElementById('totalMonto');
+    const total = parseFloat(totalElement.textContent.replace('$', '').replace(',', '').trim());
+
+    if (isNaN(total) || total <= 0) {
+        console.warn('Total inválido:', total);
+        const buttonContainer = document.getElementById('paypal-button-container');
+        buttonContainer.innerHTML = ''; 
+        const disabledButton = document.createElement('button');
+        disabledButton.textContent = 'Pagar con PayPal';
+        disabledButton.className = 'btn btn-secondary'; 
+        disabledButton.disabled = true;
+        disabledButton.title = 'Esperando monto de cotización';
+        disabledButton.style.cursor = 'not-allowed'; 
+        buttonContainer.appendChild(disabledButton);
+    } else {
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return fetch('/paypal/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount: total.toFixed(2) })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al crear la orden');
+                    }
+                    return response.json();
+                })
+                .then(data => data.orderID);
+            },
+            onApprove: function(data, actions) {
+                return fetch(`/paypal/payment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ orderID: data.orderID })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const modal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error('Error al completar el pago:', error);
+                    alert('Ocurrió un error durante el pago con PayPal.');
+                });
+            }
+        }).render('#paypal-button-container');
+    }
+}
