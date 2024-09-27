@@ -8,6 +8,7 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
+
 // Mostrar notificación al cargar la página basado en parámetros de URL
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
