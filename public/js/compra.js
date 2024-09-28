@@ -99,8 +99,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.error) {
                     showNotification(data.error, 'error');
                 } else {
-                    showNotification('Pago confirmado correctamente.', 'success');
+                    showNotification('Pago confirmado correctamente. Redirigiendo al carrito...', 'success');
                     console.log('Respuesta del servidor:', data);
+
+                    // Redirigir después de 2 segundos
+                    setTimeout(() => {
+                        window.location.href = '/cuenta/carrito';
+                    }, 2000);
                 }
             })
             .catch(error => {
