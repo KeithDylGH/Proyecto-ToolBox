@@ -56,9 +56,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+// Funciones para manejar el loader
+function showLoader() {
+    document.getElementById('loader').classList.remove('d-none');
+}
+
+function hideLoader() {
+    document.getElementById('loader').classList.add('d-none');
+}
+
 //PERMISOS
 // Función para cambiar el rol de un usuario
 function changeRole(userId, newRole) {
+    showLoader(); // Mostrar el loader al inicio
     fetch(`/api/usuarios/permisos/rol/${userId}`, {
         method: 'PUT',
         headers: {
@@ -68,6 +78,7 @@ function changeRole(userId, newRole) {
     })
     .then(response => response.json())
     .then(data => {
+        hideLoader(); // Ocultar el loader después de la respuesta
         if (data.success) {
             showNotification(data.message, 'success'); // Mostrar notificación de éxito
             location.reload(); // Recargar la página para ver los cambios
@@ -76,6 +87,7 @@ function changeRole(userId, newRole) {
         }
     })
     .catch(error => {
+        hideLoader(); // Ocultar el loader en caso de error
         console.error('Error al cambiar el rol:', error);
         showNotification('Error al cambiar el rol. Intenta de nuevo.', 'error');
     });
@@ -84,11 +96,13 @@ function changeRole(userId, newRole) {
 // Función para banear a un usuario
 function banUser(userId) {
     if (confirm('¿Estás seguro de que quieres banear a este usuario?')) {
+        showLoader(); // Mostrar el loader al inicio
         fetch(`/api/usuarios/permisos/banear/${userId}`, {
             method: 'DELETE',
         })
         .then(response => response.json())
         .then(data => {
+            hideLoader(); // Ocultar el loader después de la respuesta
             if (data.success) {
                 showNotification(data.message, 'success'); // Mostrar notificación de éxito
                 location.reload(); // Recargar la página para ver los cambios
@@ -97,6 +111,7 @@ function banUser(userId) {
             }
         })
         .catch(error => {
+            hideLoader(); // Ocultar el loader en caso de error
             console.error('Error al banear al usuario:', error);
             showNotification('Error al banear al usuario. Intenta de nuevo.', 'error');
         });

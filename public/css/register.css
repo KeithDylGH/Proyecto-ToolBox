@@ -1,5 +1,13 @@
-.vh-100 {
-  background-color: #f3f3f3; /* Color de fondo */
+.gradient-custom {
+  background: linear-gradient(to bottom right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1));
+}
+
+.card-registration .form-outline {
+  margin-bottom: 1.5rem; /* Espaciado entre campos */
+}
+
+body {
+  font-family: 'Arimo', sans-serif; /* Fuente general */
 }
 
 .text-body {
@@ -10,11 +18,6 @@
   transition: ease-in-out 0.2s;
 }
 
-.form-check {
-  display: flex;
-  flex-direction: column;
-}
-
 .logo img {
   width: 50%; /* Ancho de la imagen del logo */
   margin: 0 auto;
@@ -23,7 +26,6 @@
   justify-content: center;
 }
 
-/* Footer */
 footer {
   background-color: #2d1c1c; /* Color de fondo del pie de página */
   color: #fff; /* Color del texto */
@@ -37,29 +39,4 @@ footer a {
 footer a:hover {
   color: #e57368; /* Color de los enlaces al pasar el mouse */
   transition: 0.2s ease-in; /* Transición suave */
-}
-
-/* Ajustes generales */
-body {
-  font-family: 'Arimo', sans-serif; /* Fuente general */
-}
-
-.bg-white {
-  background-color: #ffffff; /* Fondo blanco */
-}
-
-/* Enlaces del formulario al pasar el mouse */
-.text-light a {
-  color: #ffffff; /* Color de los enlaces */
-}
-.text-light a:hover {
-  color: #e57368; /* Color de hover */
-  transition: 0.2s ease-in-out; /* Transición suave */
-}
-
-/* Logo */
-.logo img {
-  max-width: 50%; /* Ancho máximo del logo */
-  display: block;
-  margin: 0 auto; /* Centrar el logo */
 }

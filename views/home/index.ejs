@@ -15,7 +15,7 @@
     
 
     <link rel="stylesheet" href="/css/home.css">
-    <link rel="stylesheet" href="/css/header.css">
+    <!-- <link rel="stylesheet" href="/css/header.css"> -->
     <link rel="stylesheet" href="/css/buscador.css">
     <link rel="stylesheet" href="/css/notificacion.css">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,90 +31,85 @@
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-expand-lg navbar-light">
-          <div class="container-fluid">
-              <a href="/"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
-                  aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarScroll">
-                  <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
-                      <li class="nav-item">
-                          <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
-                      </li>
-  
-                      <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle link-light" href="#" role="button"
-                             data-bs-toggle="dropdown" aria-expanded="false">
-                              Categoría
-                          </a>
-                          <ul class="dropdown-menu">
-                              <% if (categorias && categorias.length > 0) { %>
-                                  <% categorias.forEach(categoria => { %>
-                                      <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
-                                  <% }) %>
-                              <% } else { %>
-                                  <li><a class="dropdown-item" href="#">No hay categorías disponibles</a></li>
-                              <% } %>
-                          </ul>
-                      </li>
-  
-                      <li class="nav-item">
-                          <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">
-                              <img src="/img/icono/carrito de compras.png" alt="carrito" />
-                          </a>
-  
-                          <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
-                              <div class="modal-dialog">
-                                  <div class="modal-content">
-                                      <div class="modal-header">
-                                          <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
-                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                      </div>
-                                      <div class="modal-body">
-                                          <ul id="carritoList" class="list-group">
-                                              <!-- Aquí se cargarán dinámicamente los productos del carrito -->
-                                          </ul>
-                                      </div>
-                                      <div class="modal-footer">
-                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                          <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
-                                          <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-  
-                      <% if (CUsuario) { %>
-                          <li class="nav-item">
-                              <a class="nav-link link-light" href="/cuenta">
-                                  <%= CUsuario.nombre %>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
-                          </li>
-                      <% } else { %>
-                          <li class="nav-item">
-                              <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
-                          </li>
-                      <% } %>
-  
-                  </ul>
-                  <form class="d-flex flex-column position-relative" id="productSearchForm">
-                      <div class="d-flex">
-                          <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
-                      </div>
-                      <div id="suggestions" class="list-group mt-2 position-absolute w-100"></div>
-                  </form>
-              </div>
-          </div>
-      </nav>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">
+                    <img src="/img/logo/Logo Letra trazo.png" alt="Logo" class="w-25">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Categoría
+                            </a>
+                            <ul class="dropdown-menu">
+                                <% if (categorias && categorias.length > 0) { %>
+                                    <% categorias.forEach(categoria => { %>
+                                        <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
+                                    <% }) %>
+                                <% } else { %>
+                                    <li><a class="dropdown-item" href="#">No hay categorías disponibles</a></li>
+                                <% } %>
+                            </ul>
+                        </li>
+                        <% if (CUsuario) { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/cuenta">
+                                    <%= CUsuario.nombre %>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">Cerrar sesión</a>
+                            </li>
+                        <% } else { %>
+                            <li class="nav-item">
+                                <a class="nav-link" id="login" href="/login">Iniciar sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="register" href="/registrar">Registrarse</a>
+                            </li>
+                        <% } %>
+                    </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#carritoModal">
+                            <img src="/img/icono/carrito de compras.png" alt="carrito" />
+                        </a>
+        
+                        <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul id="carritoList" class="list-group">
+                                            <!-- Aquí se cargarán dinámicamente los productos del carrito -->
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
+                                        <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+        
+                    <form class="d-flex" role="search" id="productSearchForm">
+                        <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
+                        <button class="btn btn-outline-success" type="submit">Buscar</button>
+                    </form>
+                </div>
+            </div>
+        </nav>        
   </header>         
 
   <!--NOTIFICACION-->
@@ -163,7 +158,7 @@
                             <div class="card-body">
                                 <h5 class="card-title"><%= producto.nombre %></h5>
                                 <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                                <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
+                                <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px; text-decoration: none;">Ver más</a>
                                 <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">
                                     Agregar al Carrito
                                 </button>
@@ -193,7 +188,8 @@
                       <div class="card-body">
                           <h5 class="card-title"><%= producto.nombre %></h5>
                           <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                          <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
+                          <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px; text-decoration: none;">Ver más</a>
+                          <br>
                           <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">Agregar al Carrito</button>
                       </div>
                   </div>
@@ -238,37 +234,36 @@
       </section>
 
       <section class="sobre">
-        <div class="card" style="max-width: 600px; margin: auto;">
+        <div class="card mb-3" style="max-width: 540px; margin: auto;">
             <div class="row g-0">
               <div class="col-md-4">
                 <img
-                  class="img-fluid rounded-start"
-                  src="/img/logo/LogoLetra.png"
-                  alt="Logo de ToolBox"
-                  style="max-width: 80%; height: auto; margin: 10px;"
-                />
+                  src="/img/logo/LogoLetra.png" 
+                  class="img-fluid rounded-start" 
+                  alt="Logo de ToolBox" 
+                  style="max-width: 80%; height: auto; margin: 10px;" <!-- Ajusta el tamaño de la imagen -->
+                >
               </div>
               <div class="col-md-8">
                 <div class="card-body">
-                  <h1>Sobre ToolBox</h1>
-                  <p>
+                  <h5 class="card-title">Sobre ToolBox</h5>
+                  <p class="card-text">
                     En <strong>ToolBox</strong>, nos enorgullecemos de ser tu aliado confiable en 
                     la compra de productos de ferretería y artículos esenciales para el hogar. 
                     Nuestra amplia gama de productos está diseñada para satisfacer todas tus necesidades, 
                     ya sea que estés llevando a cabo un proyecto grande o simplemente buscando mejorar tu espacio en casa.
                   </p>
-                  <p>
+                  <p class="card-text">
                     Nos comprometemos a proporcionar un entorno seguro para nuestras transacciones, garantizando la 
                     protección de tus datos personales y ofreciendo múltiples opciones de pago seguras. 
                   </p>
-                  <a href="/acerca-de" style="color: rgb(199, 86, 0); text-decoration: none;">
+                  <a href="/acerca-de" class="card-title text-white p-2" style="border-radius: 5px; color: rgb(157, 43, 15); text-decoration: none;">
                     <strong>Haz clic para ver más sobre nosotros</strong>
                   </a>
                 </div>
               </div>
             </div>
-          </div>                    
-        </div>
+          </div>          
       
       </section>
     </div>
