@@ -1,45 +1,71 @@
+/* loader.css */
+
 .loader-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1050; /* Asegúrate de que esté por encima de todo */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050; /* Asegúrate de que esté por encima de todo */
 }
 
 .loader {
-    width: 40px;
-    aspect-ratio: 1;
-    --c: linear-gradient(#000 0 0);
-    --m: radial-gradient(farthest-side, #000 92%, #0000);
-    background: 
-      var(--m) center / 12px 12px,
-      var(--c) left 50% top -20px / 8px 16px,
-      var(--c) left 50% bottom -20px / 8px 16px,
-      var(--c) top 50% left -20px / 16px 8px,
-      var(--c) top 50% right -20px / 16px 8px;
-    background-repeat: no-repeat;
-    animation: 
-      l18-1 1.5s infinite,
-      l18-2 1.5s infinite;
-  }
-  
-  @keyframes l18-1 {
-    30%, 70% {
+  width: 40px;
+  aspect-ratio: 1;
+  --c: linear-gradient(#000 0 0);
+  --m: radial-gradient(farthest-side, #000 92%, #0000);
+  background: 
+    var(--m) center / 12px 12px,
+    var(--c) left 50% top -20px / 8px 16px,
+    var(--c) left 50% bottom -20px / 8px 16px,
+    var(--c) top 50% left -20px / 16px 8px,
+    var(--c) top 50% right -20px / 16px 8px;
+  background-repeat: no-repeat;
+  animation: 
+    l18-1 1.5s infinite,
+    l18-2 1.5s infinite;
+}
+
+/* Mini loader en la esquina superior derecha */
+.mini-loader-overlay {
+  position: fixed;
+  top: 10px; /* Posición en la esquina superior derecha */
+  right: 10px;
+  background-color: transparent; /* Fondo transparente */
+  z-index: 1060; /* Asegúrate de que esté por encima del loader */
+  display: none; /* Inicialmente oculto */
+}
+
+.mini-loader {
+  width: 30px; /* Tamaño del mini loader */
+  height: 30px; /* Tamaño del mini loader */
+  border: 4px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 4px solid #3498db; /* Color del borde superior */
+  animation: mini-spin 1s linear infinite; /* Animación de giro */
+}
+
+@keyframes mini-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes l18-1 {
+  30%, 70% {
       background-position: 
-        center,
-        left 50% top calc(50% - 8px),
-        left 50% bottom calc(50% - 8px),
-        top 50% left calc(50% - 8px),
-        top 50% right calc(50% - 8px);
-    }
+          center,
+          left 50% top calc(50% - 8px),
+          left 50% bottom calc(50% - 8px),
+          top 50% left calc(50% - 8px),
+          top 50% right calc(50% - 8px);
   }
-  
-  @keyframes l18-2 {
-    0%, 40% { transform: rotate(0); }
-    60%, 100% { transform: rotate(90deg); }
-  }  
+}
+
+@keyframes l18-2 {
+  0%, 40% { transform: rotate(0); }
+  60%, 100% { transform: rotate(90deg); }
+}

@@ -30,10 +30,11 @@
   </head>
   <body>
     <header style="background-color: #5e3b3b; padding: 15px 0;"> <!-- Incrementé el padding -->
-        <nav class="navbar navbar-expand-lg" style="padding: 0 2.5rem; text-transform: uppercase; font-size: 0.9rem;">
+        <nav class="navbar navbar-expand-lg" style="padding: 0 2.5rem; font-size: 1rem;">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/" style="display: inline-block; margin-right: 15px;">
-                    <img src="/img/logo/Logo Letra trazo.png" alt="Logo" class="w-25">
+                    <img src="/img/logo/Logo trazo 180.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                    ToolBox
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -41,47 +42,47 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-white active" aria-current="page" href="/">INICIO</a>
+                            <a class="nav-link text-white active" aria-current="page" href="/">Inicio</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                CATEGORÍA
+                                Categoría
                             </a>
                             <ul class="dropdown-menu">
                                 <% if (categorias && categorias.length > 0) { %>
                                     <% categorias.forEach(categoria => { %>
-                                        <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre.toUpperCase() %></a></li>
+                                        <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
                                     <% }) %>
                                 <% } else { %>
-                                    <li><a class="dropdown-item" href="#">NO HAY CATEGORÍAS DISPONIBLES</a></li>
+                                    <li><a class="dropdown-item" href="#">No hay categorías disponibles</a></li>
                                 <% } %>
                             </ul>
                         </li>
                         <% if (CUsuario) { %>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="/cuenta"><%= CUsuario.nombre.toUpperCase() %></a>
+                                <a class="nav-link text-white" href="/cuenta"><%= CUsuario.nombre %></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="/logout">CERRAR SESIÓN</a>
+                                <a class="nav-link text-white" href="/logout">Cerrar sesión</a>
                             </li>
                         <% } else { %>
                             <li class="nav-item">
-                                <a class="nav-link text-white" id="login" href="/login">INICIAR SESIÓN</a>
+                                <a class="nav-link text-white" id="login" href="/login">Iniciar sesión</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" id="register" href="/registrar">REGISTRARSE</a>
+                                <a class="nav-link text-white" id="register" href="/registrar">Registrarse</a>
                             </li>
                         <% } %>
                         <li class="nav-item me-3">
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#carritoModal">
-                                <img src="/img/icono/carrito de compras.png" alt="carrito" class="img-fluid" style="height: 30px;" />
+                                <img src="/img/icono/carrito de compras.png" alt="carrito" style="height: 30px;" />
                             </a>
     
                             <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title text-black" id="carritoModalLabel">TU CARRITO DE COMPRAS</h5>
+                                            <h5 class="modal-title text-black" id="carritoModalLabel">Tu carrito de compras</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
@@ -90,9 +91,9 @@
                                             </ul>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CERRAR</button>
-                                            <a type="button" href="/cuenta/carrito" class="btn btn-primary">MÁS DETALLES</a>
-                                            <button type="button" id="vaciarCarrito" class="btn btn-warning">VACÍAR CARRITO</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más detalles</a>
+                                            <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar carrito</button>
                                         </div>
                                     </div>
                                 </div>
@@ -109,7 +110,7 @@
                 </div>
             </div>
         </nav>
-    </header>                                     
+    </header>                                         
 
   <!--NOTIFICACION-->
   <div class="notification d-none"></div>
