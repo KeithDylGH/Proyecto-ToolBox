@@ -328,7 +328,13 @@ app.get('/terminos-y-condicion', (req, res) => {
 });
 
 app.get('/acerca-de', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    res.render('acercaDe');
+    try {
+        const categorias = await Categoria.obtenerCategorias(); // Ajusta este método según tu controlador
+        res.render('acercaDe', { categorias }); // Pasa las categorias a la vista
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener las categorías');
+    }
 });
 
 app.get('/logout', (req, res) => {
