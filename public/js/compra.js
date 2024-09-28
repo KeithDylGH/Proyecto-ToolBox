@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Mostrar métodos de pago
+    // Mostrar métodos de pago (no cambia)
     const siguienteBtn = document.getElementById('siguienteBtn');
     const cancelarBtn = document.getElementById('cancelarBtn');
     const metodosPago = document.getElementById('metodosPago');
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Mostrar modales
+    // Mostrar modales (no cambia)
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
     const transferenciaBtn = document.getElementById('transferenciaBtn');
     const zinliBtn = document.getElementById('zinliBtn');
@@ -41,39 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Manejo de formularios
-    const pagoMovilForm = document.getElementById('pagoMovilForm');
-    const transferenciaForm = document.getElementById('transferenciaForm');
-    const zinliForm = document.getElementById('zinliForm');
-
-    if (pagoMovilForm) {
-        pagoMovilForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            // Aquí podrías agregar lógica para procesar el pago móvil
-            alert('Pago Móvil procesado');
-            // Redireccionar o mostrar confirmación
-        });
-    }
-
-    if (transferenciaForm) {
-        transferenciaForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            // Aquí podrías agregar lógica para procesar la transferencia
-            alert('Transferencia procesada');
-            // Redireccionar o mostrar confirmación
-        });
-    }
-
-    if (zinliForm) {
-        zinliForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            // Aquí podrías agregar lógica para procesar el pago por Zinli
-            alert('Pago por Zinli procesado');
-            // Redireccionar o mostrar confirmación
-        });
-    }
-
-    // Confirmar pago
+    // Confirmar pago (modificado para usar showNotification)
     const confirmarPagoBtns = document.querySelectorAll('#pagoMovilForm, #transferenciaForm, #zinliForm');
 
     confirmarPagoBtns.forEach(form => {
@@ -90,10 +58,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const loader = document.getElementById('loader');
             loader.classList.remove('d-none');
 
-            // Capturar el método de pago desde el input oculto del formulario
+            // Capturar el método de pago
             const metodoPagoInput = form.querySelector('input[name="metodoPago"]');
             if (!metodoPagoInput || !metodoPagoInput.value) {
-                mostrarNotificacion('Método de pago no especificado.', 'danger');
+                showNotification('Método de pago no especificado.', 'error');
                 loader.classList.add('d-none'); // Ocultar el loader
                 return;
             }
@@ -108,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             if (!productos.length) {
-                mostrarNotificacion('No hay productos en el carrito.', 'danger');
+                showNotification('No hay productos en el carrito.', 'error');
                 loader.classList.add('d-none'); // Ocultar el loader
                 return;
             }
@@ -129,25 +97,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Ocultar el loader
                 loader.classList.add('d-none');
                 if (data.error) {
-                    mostrarNotificacion(data.error, 'danger');
+                    showNotification(data.error, 'error');
                 } else {
-                    mostrarNotificacion('Pago confirmado correctamente.', 'success');
+                    showNotification('Pago confirmado correctamente.', 'success');
                     console.log('Respuesta del servidor:', data);
-                    // Redirigir o realizar otra acción aquí si es necesario
                 }
             })
             .catch(error => {
                 // Ocultar el loader
                 loader.classList.add('d-none');
-                mostrarNotificacion('Error al confirmar el pago.', 'danger');
+                showNotification('Error al confirmar el pago.', 'error');
                 console.error('Error al confirmar el pago:', error);
             });
         });
     });
 
-    initPaypalButtons(); // Inicializa los botones de PayPal
+    // initPaypalButtons(); // Inicializa los botones de PayPal
 
-    function initPaypalButtons() {
+    /*function initPaypalButtons() {
         const totalElement = document.getElementById('totalMonto');
         if (!totalElement) {
             console.warn('Elemento totalMonto no encontrado');
@@ -218,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         }).render('#paypal-button-container');
-    }
+    }*/
 
     function mostrarNotificacion(mensaje, tipo) {
         const notificacion = document.createElement('div');

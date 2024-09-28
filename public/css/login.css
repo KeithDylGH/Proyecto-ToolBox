@@ -1,51 +1,48 @@
-.vh-100 {
-  background-color: #f3f3f3;
+/* General adjustments */
+body {
+  font-family: 'Arimo', sans-serif;
 }
 
-.claveOlvidada a {
-  color: #bababa;
-}
-.claveOlvidada a:hover {
-  color: #e57368;
-  transition: ease-in-out 0.2s;
+.bg-white {
+  background-color: #ffffff; /* Fondo blanco */
 }
 
+/* Form links hover */
+.claveOlvidada a, 
 .cuenta a {
-  color: #bababa;
+  color: #6c757d; /* Color gris para los enlaces */
 }
+
+.claveOlvidada a:hover, 
 .cuenta a:hover {
-  color: #e57368;
-  transition: ease-in-out 0.2s;
+  color: #e57368; /* Color de hover */
+  transition: 0.2s ease-in-out;
 }
 
-.logo img {
-  width: 50%;
-  margin: 0 auto;
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: center;
-}
-
-/*FOOTER*/
+/* Footer styling */
 footer {
   background-color: #2d1c1c;
-  color: #fff;
+  color: #ffffff;
 }
-footer li a {
-  color: #fff;
+
+footer p {
+  margin: 0;
+  font-size: 0.875rem; /* Tamaño más pequeño */
+}
+
+footer a {
+  color: #ffffff;
   text-decoration: none;
 }
+
 footer a:hover {
   color: #e57368;
-  text-decoration: none;
   transition: 0.2s ease-in;
 }
 
-footer p a {
-  color: #fff;
-  text-decoration: none;
-}
-
-.row {
-  justify-content: center;
+/* Logo adjustments */
+.logo img {
+  max-width: 50%;
+  display: block;
+  margin: 0 auto;
 }
