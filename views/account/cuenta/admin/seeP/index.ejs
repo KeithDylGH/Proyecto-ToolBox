@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToolBox Admin - Ver inventario</title>
 
-    <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png">
+    <link rel="icon" type="image/x-icon" href="/img/logo/LogoPagina.png">
     <link rel="stylesheet" href="/css/admin.css">
     <link rel="stylesheet" href="/css/cuenta.css">
     
@@ -19,7 +19,7 @@
 </head>
 <body>
     <header style="background-color: #666F88; padding: 10px 0;">
-        <nav class="navbar navbar-expand-lg" style="padding: 0 2.5rem; font-size: 1.1rem;">
+        <nav class="navbar navbar-expand-lg justify-content-between" style="padding: 0 2.5rem; font-size: 1.1rem;">
             <div class="container-fluid d-flex justify-content-between">
                 <a class="text-light navbar-brand" href="/" style="display: inline-block; margin-right: 25px;">
                     <img src="/img/logo/Logo trazo 180.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
@@ -114,7 +114,7 @@
                         %>
                             <tr>
                                 <td style="font-size: 1.1rem;"><%= producto.nombre %></td>
-                                <td style="font-size: 1.1rem;"><strong><%= producto.precio %></strong> $</td>
+                                <td style="font-size: 1.1rem;"><%= producto.precio %><strong> $</strong></td>
                                 <td style="font-size: 1.1rem;">
                                     <% if (categoria) { %>
                                         <%= categoria.nombre %> (ID: <%= categoriaIndex %>)
