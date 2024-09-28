@@ -135,20 +135,19 @@
     </div>
   </div>
 
-  <!-- Sección de productos aleatorios -->
   <section class="mb-5">
     <div>
         <h2>Los mejores productos</h2>
         <div class="row">
             <% productosDestacados.forEach(producto => { %>
-                <div class="col-md-2 mb-4">
-                    <div class="card" style="width: 100%;"> <!-- Ajustar el ancho -->
+                <div class="col-md-3 mb-4">
+                    <div class="card custom-card">
                         <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" />
                         <div class="card-body">
-                            <h5 class="card-title" style="font-size: 0.9rem;"><%= producto.nombre %></h5>
-                            <p class="card-text" style="font-size: 0.8rem;">$<%= producto.precio.toFixed(2) %></p> 
-                            <a href="/tienda/producto/<%= producto._id %>" class="btn btn-link btn-sm">Ver más</a>
-                            <button class="btn btn-primary btn-agregar-carrito btn-sm" data-producto-id="<%= producto._id %>">
+                            <h5 class="card-title"><%= producto.nombre %></h5>
+                            <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                            <a href="/tienda/producto/<%= producto._id %>" class="btn btn-link">Ver más</a>
+                            <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">
                                 Agregar al Carrito
                             </button>
                         </div>
