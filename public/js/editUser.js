@@ -44,3 +44,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });                
     }
 });
+
+// Función para banear a un usuario
+function banUser(userId) {
+    if (confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+        if (confirm('¿Estás absolutamente seguro?')) { // Segunda confirmación
+            fetch(`/api/usuarios/permisos/banear/${userId}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload(); // Recargar la página para ver los cambios
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar al usuario:', error);
+            });
+        } else {
+            alert('Eliminación cancelada.'); // Mensaje de cancelación
+        }
+    }
+}
+// Aquí puedes agregar un evento para llamar a la función banUser cuando sea necesario
+document.querySelectorAll('.banUserBtn').forEach(button => {
+    button.addEventListener('click', function() {
+        const userId = this.getAttribute('data-user-id'); // Asegúrate de que el ID del usuario esté en el botón
+        banUser(userId);
+    });
+});
