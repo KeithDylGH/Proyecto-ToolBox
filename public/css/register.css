@@ -1,12 +1,12 @@
 .vh-100 {
-  background-color: #f3f3f3;
+  background-color: #f3f3f3; /* Color de fondo */
 }
 
 .text-body {
-  color: #bababa;
+  color: #bababa; /* Color del texto */
 }
 .text-body:hover {
-  color: #e57368;
+  color: #e57368; /* Color al pasar el mouse */
   transition: ease-in-out 0.2s;
 }
 
@@ -15,12 +15,8 @@
   flex-direction: column;
 }
 
-.mask {
-  padding: 2rem;
-}
-
 .logo img {
-  width: 50%;
+  width: 50%; /* Ancho de la imagen del logo */
   margin: 0 auto;
   margin-bottom: 1rem;
   display: block;
@@ -29,32 +25,41 @@
 
 /* Footer */
 footer {
-  background-color: #2d1c1c;
-  color: #fff;
+  background-color: #2d1c1c; /* Color de fondo del pie de página */
+  color: #fff; /* Color del texto */
 }
 
 footer a {
-  color: #fff;
-  text-decoration: none;
+  color: #fff; /* Color de los enlaces */
+  text-decoration: none; /* Sin subrayado */
 }
 
 footer a:hover {
-  color: #e57368;
-  transition: 0.2s ease-in;
+  color: #e57368; /* Color de los enlaces al pasar el mouse */
+  transition: 0.2s ease-in; /* Transición suave */
 }
 
-.social-media {
-  list-style-type: none;
-  padding: 0;
-  text-align: center;
+/* Ajustes generales */
+body {
+  font-family: 'Arimo', sans-serif; /* Fuente general */
 }
 
-.social-media a {
-  text-decoration: none;
-  color: #bababa;
+.bg-white {
+  background-color: #ffffff; /* Fondo blanco */
 }
 
-.social-media a:hover {
-  color: #e57368;
-  transition: ease-in-out 0.2s;
+/* Enlaces del formulario al pasar el mouse */
+.text-light a {
+  color: #ffffff; /* Color de los enlaces */
+}
+.text-light a:hover {
+  color: #e57368; /* Color de hover */
+  transition: 0.2s ease-in-out; /* Transición suave */
+}
+
+/* Logo */
+.logo img {
+  max-width: 50%; /* Ancho máximo del logo */
+  display: block;
+  margin: 0 auto; /* Centrar el logo */
 }

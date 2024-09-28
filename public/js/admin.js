@@ -56,15 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).json({ success: false, message: 'Error al cerrar sesión' });
-        }
-        res.redirect('/');
-    });
-});
-
 //PERMISOS
 // Función para cambiar el rol de un usuario
 function changeRole(userId, newRole) {
@@ -78,14 +69,15 @@ function changeRole(userId, newRole) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(data.message);
+            showNotification(data.message, 'success'); // Mostrar notificación de éxito
             location.reload(); // Recargar la página para ver los cambios
         } else {
-            alert(data.message);
+            showNotification(data.message, 'error'); // Mostrar notificación de error
         }
     })
     .catch(error => {
         console.error('Error al cambiar el rol:', error);
+        showNotification('Error al cambiar el rol. Intenta de nuevo.', 'error');
     });
 }
 
@@ -98,14 +90,15 @@ function banUser(userId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert(data.message);
+                showNotification(data.message, 'success'); // Mostrar notificación de éxito
                 location.reload(); // Recargar la página para ver los cambios
             } else {
-                alert(data.message);
+                showNotification(data.message, 'error'); // Mostrar notificación de error
             }
         })
         .catch(error => {
             console.error('Error al banear al usuario:', error);
+            showNotification('Error al banear al usuario. Intenta de nuevo.', 'error');
         });
     }
 }
