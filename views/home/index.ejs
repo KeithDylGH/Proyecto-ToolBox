@@ -30,11 +30,11 @@
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   </head>
   <body>
-    <header style="background-color: #5e3b3b; color: #fff; padding: 0 2rem;">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <header style="background-color: #5e3b3b;">
+        <nav class="navbar navbar-expand-lg" style="padding: 0 2rem;">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/" style="display: inline-block; margin-right: 15px;">
-                    <img src="/img/logo/Logo Letra trazo.png" alt="Logo" class="w-50">
+                    <img src="/img/logo/Logo Letra trazo.png" alt="Logo" class="w-25">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -42,10 +42,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+                            <a class="nav-link text-white active" aria-current="page" href="/">Inicio</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Categoría
                             </a>
                             <ul class="dropdown-menu">
@@ -60,23 +60,21 @@
                         </li>
                         <% if (CUsuario) { %>
                             <li class="nav-item">
-                                <a class="nav-link" href="/cuenta">
-                                    <%= CUsuario.nombre %>
-                                </a>
+                                <a class="nav-link text-white" href="/cuenta"><%= CUsuario.nombre %></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/logout">Cerrar sesión</a>
+                                <a class="nav-link text-white" href="/logout">Cerrar sesión</a>
                             </li>
                         <% } else { %>
                             <li class="nav-item">
-                                <a class="nav-link" id="login" href="/login">Iniciar sesión</a>
+                                <a class="nav-link text-white" id="login" href="/login">Iniciar sesión</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="register" href="/registrar">Registrarse</a>
+                                <a class="nav-link text-white" id="register" href="/registrar">Registrarse</a>
                             </li>
                         <% } %>
                     </ul>
-                    <li class="nav-item">
+                    <div class="nav-item"> <!-- Cambiado de <li> a <div> -->
                         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#carritoModal">
                             <img src="/img/icono/carrito de compras.png" alt="carrito" class="img-fluid" style="width: 30px; height: 30px;" />
                         </a>
@@ -101,7 +99,7 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </div>
     
                     <form class="d-flex flex-column position-relative" id="productSearchForm">
                         <div class="d-flex">
@@ -112,7 +110,7 @@
                 </div>
             </div>
         </nav>
-    </header>             
+    </header>                     
 
   <!--NOTIFICACION-->
   <div class="notification d-none"></div>
@@ -236,7 +234,7 @@
       </section>
 
       <section class="sobre">
-        
+
         <div class="card mb-3" style="max-width: 540px; margin: auto;">
             <div class="row g-0">
               <div class="col-md-4">
