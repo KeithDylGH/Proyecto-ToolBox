@@ -1,0 +1,18 @@
+.social-media {
+    list-style-type: none;
+    padding: 0;
+}
+
+.social-media li {
+    display: inline;
+    margin-right: 15px;
+}
+
+.social-media a {
+    text-decoration: none;
+    color: #5e3b3b; /* Ajusta al color deseado */
+}
+
+.social-media a:hover {
+    text-decoration: underline;
+}

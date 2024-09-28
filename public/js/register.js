@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.querySelector('#formulario');
     const loader = document.querySelector('#loader');
-    const notification = document.querySelector('#notification');
 
     formulario.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -15,13 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const phoneNumber = document.getElementById('phoneNumber').value;
         const cedula = document.getElementById('cedula').value;
 
-        // Validar si las contraseñas coinciden
         if (password !== confirmPassword) {
             showNotification('Las contraseñas no coinciden', 'error');
-            return; // Detiene la ejecución si las contraseñas no coinciden
+            return;
         }
 
-        // Mostrar el loader
         loader.classList.remove('d-none');
 
         try {
@@ -29,43 +26,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    nombre: nombre,
-                    apellido: apellido,
+                    nombre,
+                    apellido,
                     usuario: username,
                     correo: email,
-                    password: password,
+                    password,
                     numero: phoneNumber,
-                    cedula: cedula
+                    cedula
                 }),
             });
 
-            // Ocultar el loader
             loader.classList.add('d-none');
 
             if (!response.ok) {
-                const errorText = await response.text(); // Obtener el texto del error
-                console.error('Error en la respuesta:', errorText);
+                const errorText = await response.text();
                 showNotification('Error: ' + errorText, 'error');
                 return;
             }
 
             const result = await response.json();
 
-            // Mostrar mensaje de éxito o error basado en la respuesta
-            if (result.success) { // Cambia 'success' por la clave correcta de tu respuesta
+            if (result.mensaje) { // Ajustado a la respuesta del backend
                 showNotification(result.mensaje, 'success');
                 setTimeout(() => {
-                    window.location.href = '/login/'; // Redirige al inicio de sesión
-                }, 3000); // Espera 3 segundos antes de redirigir
+                    window.location.href = '/login/';
+                }, 3000);
             } else {
                 showNotification(result.error || 'Error desconocido', 'error');
             }
 
         } catch (error) {
-            // Manejo de errores de la solicitud
             console.error('Error al enviar la solicitud:', error);
             showNotification('Error al enviar la solicitud', 'error');
-            loader.classList.add('d-none'); // Oculta el loader en caso de error
+            loader.classList.add('d-none');
         }
     });
 });
