@@ -38,9 +38,12 @@
 
 
   .card {
-    margin: 0.6rem 0;
-    text-align: center;
-  }
+    border: 1px solid #dee2e6; /* Borde de la tarjeta */
+    transition: transform 0.2s; /* Animación al pasar el mouse */
+}
+.card:hover {
+  transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
+}
   .card a {
     background-color: #f44336;
     border: none;

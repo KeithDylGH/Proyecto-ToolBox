@@ -384,21 +384,35 @@ app.get('/tienda/producto/:id', async (req, res) => {
         const producto = await iProducto.findById(productoId);
         const categorias = await Categoria.find(); // Obtener todas las categorías
 
-        // Obtener productos destacados (puedes definir cómo seleccionarlos)
-        const productosDestacados = await iProducto.find({ destacado: true }).limit(8); // Cambia la condición según tu lógica
-
         if (producto) {
+            // Obtener 6 productos destacados
+            const productosDestacados = await iProducto.aggregate([{ $sample: { size: 6 } }]);
+
+            // Construir la URL completa de la imagen para los productos destacados
+            productosDestacados.forEach(producto => {
+                if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                    const fileName = producto.imagen.data.split('/').pop();
+                    producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+                }
+            });
+
+            // Construir la URL completa de la imagen para el producto que se está viendo
+            if (producto.imagen && typeof producto.imagen === 'object' && producto.imagen.data) {
+                const fileName = producto.imagen.data.split('/').pop();
+                producto.imagen.data = `https://${process.env.bunnyNetPullZone}/${fileName}`;
+            }
+
             res.render('shop/Productos/index', {
                 producto,
+                productosDestacados,
                 categorias,
-                productosDestacados, // Pasar productosDestacados a la vista
-                CUsuario: req.session.user // Suponiendo que estás utilizando una sesión para el usuario
+                CUsuario: req.session.user
             });
         } else {
             res.status(404).send('Producto no encontrado');
         }
     } catch (error) {
-        console.error(error);
+        console.error(error); // Agrega un log para el error
         res.status(500).send('Error en el servidor');
     }
 });

@@ -138,44 +138,31 @@
   <!-- Sección de productos aleatorios -->
   <section class="mb-5">
 
-    <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false" data-bs-interval="false">
-        <div class="carousel-inner">
-          <% for (let i = 0; i < productosDestacados.length; i += 4) { %> <!-- Agrupamos cada 4 productos en un slide -->
-            <div class="carousel-item <%= i === 0 ? 'active' : '' %>"> <!-- Marcamos el primer slide como activo -->
-              <div class="row">
-                <% productosDestacados.slice(i, i + 4).forEach(producto => { %> <!-- Obtenemos un conjunto de 4 productos -->
-                  <div class="col-md-3 mb-4">
+    <div>
+        <h2>Los mejores productos</h2>
+        <div class="row">
+            <% productosDestacados.forEach(producto => { %>
+                <div class="col-md-3 mb-4">
                     <div class="card">
-                      <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" />
-                      <div class="card-body">
-                        <h5 class="card-title"><%= producto.nombre %></h5>
-                        <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
-                        <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px; text-decoration: none;">Ver más</a>
-                        <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">
-                          Agregar al Carrito
-                        </button>
-                      </div>
+                        <img src="<%= producto.imagen.data %>" class="card-img-top" alt="<%= producto.nombre %>" />
+                        <div class="card-body">
+                            <h5 class="card-title"><%= producto.nombre %></h5>
+                            <p class="card-text">$<%= producto.precio.toFixed(2) %></p>
+                            <a href="/tienda/producto/<%= producto._id %>" class="btn btn-link">Ver más</a>
+                            <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">
+                                Agregar al Carrito
+                            </button>
+                        </div>
                     </div>
-                  </div>
-                <% }); %>
-              </div>
-            </div>
-          <% } %>
+                </div>
+            <% }); %>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
+    </div>    
       
   </section>
   
-  <footer class="mt-auto py-3 bg-dark text-light">
-    <div class="container text-center">
+  <footer>
+    <div class="container text-center py-3">
       <div class="d-flex justify-content-center">
         <% if (CUsuario) { %>
           <a href="/cuenta" class="text-light me-3">Tu cuenta</a>
@@ -187,10 +174,29 @@
         <a href="/acerca-de" class="text-light">Sobre nosotros</a>
       </div>
       <div class="social-media mt-2">
-        <a href="https://www.facebook.com" class="text-light me-2">Facebook</a>
-        <a href="https://www.instagram.com" class="text-light me-2">Instagram</a>
+        <a href="https://www.facebook.com" class="text-light me-3" target="_blank">Facebook
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-facebook" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
+          </svg>
+        </a>
+        <a href="https://www.X.com" class="text-light me-3" target="_blank">X 
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-x" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+            <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+          </svg>
+        </a>
+        <a href="https://www.instagram.com" class="text-light" target="_blank">Instagram
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-instagram" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M4 4m0 4a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z" />
+            <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+            <path d="M16.5 7.5l0 .01" />
+          </svg>
+        </a>
       </div>
-      <p class="mt-2">&copy; 2024 ToolBox. Todos los derechos reservados.</p>
+      <p>© 2024 ToolBox. Todos los derechos reservados.</p>
     </div>
   </footer>  
 
