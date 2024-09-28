@@ -1,9 +1,25 @@
 const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate de que la URL sea correcta
 
+// Función para mostrar el loader normal
+const mostrarLoader = () => {
+    document.getElementById('loader').style.display = 'flex';
+};
+
+// Función para mostrar el mini loader
+const mostrarMiniLoader = () => {
+    document.getElementById('mini-loader').style.display = 'flex';
+};
+
+// Función para ocultar el loader
+const ocultarLoader = () => {
+    document.getElementById('loader').style.display = 'none';
+};
+
 // Función para eliminar un producto
 const eliminarProducto = async (id) => {
     try {
-        console.log('Eliminando producto con ID:', id);
+        mostrarLoader(); // Mostrar el loader normal
+
         const response = await fetch(`${url}/admin/inventario/${id}`, {
             method: 'DELETE',
             headers: {
@@ -22,6 +38,8 @@ const eliminarProducto = async (id) => {
     } catch (error) {
         console.error('Error al eliminar el producto:', error.message);
         alert('Hubo un error al eliminar el producto');
+    } finally {
+        ocultarLoader(); // Ocultar el loader al final
     }
 };
 
@@ -34,6 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirm('¿Estás seguro de eliminar este producto?')) {
                 eliminarProducto(id);
             }
+        });
+    });
+
+    // Event listener para la página de edición
+    const botonesEditar = document.querySelectorAll('.btn-editar');
+    botonesEditar.forEach(boton => {
+        boton.addEventListener('click', (e) => {
+            mostrarMiniLoader(); // Mostrar el mini loader
         });
     });
 });

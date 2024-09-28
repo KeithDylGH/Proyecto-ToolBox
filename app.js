@@ -385,8 +385,8 @@ app.get('/tienda/producto/:id', async (req, res) => {
         const categorias = await Categoria.find(); // Obtener todas las categorías
 
         if (producto) {
-            // Obtener 6 productos destacados
-            const productosDestacados = await iProducto.aggregate([{ $sample: { size: 8 } }]);
+            // Obtener 9 productos destacados
+            const productosDestacados = await iProducto.aggregate([{ $sample: { size: 9 } }]);
 
             // Construir la URL completa de la imagen para los productos destacados
             productosDestacados.forEach(producto => {

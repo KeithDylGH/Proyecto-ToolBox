@@ -35,31 +35,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     cedula
                 }),
             });
-
+        
             loader.classList.add('d-none');
-
+        
             if (!response.ok) {
-                const errorText = await response.text();
-                showNotification('Error: ' + errorText, 'error');
+                const result = await response.json(); //
+                showNotification(result.error || 'Error desconocido', 'error');
                 return;
             }
-
+        
             const result = await response.json();
-
-            if (result.mensaje) { // Ajustado a la respuesta del backend
+        
+            if (result.mensaje) {
                 showNotification(result.mensaje, 'success');
                 setTimeout(() => {
                     window.location.href = '/login/';
                 }, 3000);
             } else {
-                showNotification(result.error || 'Error desconocido', 'error');
+                showNotification('Error desconocido', 'error');
             }
-
+        
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
             showNotification('Error al enviar la solicitud', 'error');
             loader.classList.add('d-none');
-        }
+        }        
     });
 });
 
