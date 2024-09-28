@@ -38,9 +38,11 @@
 
 
   .card {
-    border: 1px solid #dee2e6; /* Borde de la tarjeta */
-    transition: transform 0.2s; /* Animación al pasar el mouse */
+    padding: 10px; /* Reduce el padding de la tarjeta */
+    margin: 0; /* Asegúrate de que no haya margen extra */
+    border: 1px solid #ddd; /* Ajusta el borde si lo deseas */
 }
+
 .card:hover {
   transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
 }

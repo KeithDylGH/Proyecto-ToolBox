@@ -23,12 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// login.js
 const loginForm = document.querySelector('#loginForm');
 
-// login.js
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        // Mostrar loader
+        document.getElementById('loader').classList.remove('d-none');
 
         const usuario = document.querySelector('#usuario').value.trim();
         const contraseña = document.querySelector('#password').value.trim();
@@ -45,6 +48,8 @@ if (loginForm) {
                     notification.classList.remove('alert', 'alert-danger');
                 }, 3000);
             }
+            // Ocultar loader antes de salir
+            document.getElementById('loader').classList.add('d-none');
             return;
         }
 
@@ -77,6 +82,8 @@ if (loginForm) {
                         notification.classList.remove('alert', 'alert-danger');
                     }, 3000);
                 }
+                // Ocultar loader si hay error
+                document.getElementById('loader').classList.add('d-none');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -89,6 +96,8 @@ if (loginForm) {
                     notification.classList.remove('alert', 'alert-danger');
                 }, 3000);
             }
+            // Ocultar loader en caso de error
+            document.getElementById('loader').classList.add('d-none');
         }
     });
 }

@@ -152,8 +152,8 @@ app.get('/', async (req, res) => {
 
         // Seleccionar cuatro categorías aleatorias
         const categoriasSeleccionadas = categorias
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 5);
+            .sort(() => 0.4 - Math.random())
+            .slice(0, 4);
 
         // Obtener un producto destacado para cada categoría
         const categoriasRecomendadas = [];
@@ -386,7 +386,7 @@ app.get('/tienda/producto/:id', async (req, res) => {
 
         if (producto) {
             // Obtener 6 productos destacados
-            const productosDestacados = await iProducto.aggregate([{ $sample: { size: 6 } }]);
+            const productosDestacados = await iProducto.aggregate([{ $sample: { size: 8 } }]);
 
             // Construir la URL completa de la imagen para los productos destacados
             productosDestacados.forEach(producto => {
