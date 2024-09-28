@@ -43,18 +43,20 @@
     border: 1px solid #ddd; /* Ajusta el borde si lo deseas */
 }
 
-  .card a {
+.card a {
     background-color: #f44336;
     border: none;
     text-decoration: none;
     color: #fff;
-  }
-  .card a:hover {
+}
+
+.card a:hover {
     background-color: #d32f2f;
     border: none;
-  }
+}
 
-  .custom-card {
-    width: 80%;
-    margin: auto;
+.custom-card {
+    width: 80%; /* Ajusta el tamaño al 80% del ancho de su contenedor */
+    margin: auto; /* Centra la card en su columna */
+    margin-bottom: 0.5rem; /* Opcional: reduce el margen inferior de las tarjetas */
 }
