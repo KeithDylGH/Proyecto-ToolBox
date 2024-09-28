@@ -15,7 +15,6 @@ const bcrypt = require('bcryptjs');
 const Categoria = require('./models/categoria');
 const categoriaRouter = require('./controllers/categorias');
 const carritoRouter = require('./controllers/carritos');
-const KCarrito = require('./models/carrito');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
 const cookieParser = require('cookie-parser');
@@ -440,7 +439,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 
 // Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { metodo } = req.body; 
+    const { productos, metodo } = req.body; 
     const usuario = req.session.user;
 
     if (!usuario) {
@@ -449,24 +448,25 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     const emailUsuario = usuario.correo;
 
-    if (!emailUsuario || !metodo) {
+    if (!emailUsuario || !productos || !metodo) {
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        // Obtener el carrito del usuario
-        const carrito = await KCarrito.findOne({ usuarioId: usuario._id }).populate('productos.productoId');
+        const productoIds = productos.map(producto => producto.id);
+        const productosArray = await iProducto.find({ _id: { $in: productoIds } });
 
-        if (!carrito || carrito.productos.length === 0) {
-            return res.status(404).json({ error: 'No se encontraron productos en el carrito.' });
+        if (productosArray.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron productos.' });
         }
 
         // Contar las cantidades de productos
         const productosContados = {};
 
-        carrito.productos.forEach(item => {
-            const id = item.productoId._id.toString();
-            const cantidad = item.cantidad; // Obtener la cantidad del carrito
+        // Recorre el array de productos para contar las cantidades
+        productos.forEach(producto => {
+            const id = producto.id;
+            const cantidad = producto.cantidad; // Ahora tomamos la cantidad directamente
             if (productosContados[id]) {
                 productosContados[id] += cantidad; // Sumar si ya existe
             } else {
@@ -474,8 +474,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             }
         });
 
-        // Obtener detalles de los productos
-        const productosArray = carrito.productos.map(item => item.productoId);
         // Generar PDF
         const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
 

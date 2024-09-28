@@ -13,7 +13,7 @@
     <meta name="usuario-correo" content="<%= usuarioCorreo %>">
 
     <!-- Initialize the JS-SDK -->
-    <script src="https://sandbox.paypal.com/sdk/js?client-id=AekIqsAkZLP2E7x9w90Mmz19XB1XSyAGeSwJeHimjrmIGbdKbQPu-PsFgY9qMQdqltYUMF_dDDkqxqJ-&currency=USD&components=buttons"></script>
+    <script src="https://sandbox.paypal.com/sdk/js?client-id=AU8Xeo79prOXpTR4ubnSYnKSU5JHYs8hMFUMXmbjz56hgyOZlEoRW0lM-ZmSm124IcBk2AiuWbE6OnFA&components=buttons"></script>
 </head>
 
 <!-- Loader -->
@@ -58,7 +58,7 @@
                               </li>
                           <% }); %>
                       </ul>
-                      <h4>Total: <span id="totalMonto">$<%= totalCarrito.toFixed(2) %></span></h4>
+                      <h4 id="totalMonto" class="mt-3">Total: $<%= (totalCarrito && !isNaN(totalCarrito) ? totalCarrito.toFixed(2) : 0) %></h4>
                   </div>
 
               </div>
@@ -70,10 +70,10 @@
                       <a class="btn btn-secondary btn-lg btn-block mt-2" href="/" id="cancelarBtn">Cancelar</a>
                       <div id="metodosPago" class="d-none mt-3">
                         <h3>Selecciona el Método de Pago</h3>
-                        <button id="pagoMovilBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pagoMovilModal">Pago Móvil</button>
-                        <button id="transferenciaBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transferenciaModal">Transferencia</button>
-                        <button id="zinliBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#zinliModal">Zinli</button>
-                        <button id="paypalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paypalModal">PayPal</button>
+                        <button id="pagoMovilBtn" class="btn btn-primary">Pago Móvil</button>
+                        <button id="transferenciaBtn" class="btn btn-primary">Transferencia</button>
+                        <button id="zinliBtn" class="btn btn-primary">Zinli</button>
+                        <button id="paypalBtn" class="btn btn-primary">PayPal</button>
                         <a class="btn btn-secondary btn-lg mt-2" href="/" id="cancelarPagoBtn">Cancelar</a>
                       </div>
                     </div>
