@@ -483,7 +483,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         const idsProductosEnCarrito = usuarioEncontrado.carrito.map(item => item.producto ? item.producto._id : null);
         
         // Verificar que todos los productos existan en la base de datos
-        const productosValidos = await Producto.find({ _id: { $in: idsProductosEnCarrito } });
+        const productosValidos = await iProducto.find({ _id: { $in: idsProductosEnCarrito } });
         const idsProductosValidos = productosValidos.map(producto => producto._id.toString());
 
         // Filtrar el carrito para solo incluir productos válidos
