@@ -30,11 +30,11 @@
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   </head>
   <body>
-    <header>
+    <header style="background-color: #5e3b3b; color: #fff; padding: 0 2rem;">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">
-                    <img src="/img/logo/Logo Letra trazo.png" alt="Logo" class="w-25">
+                <a class="navbar-brand" href="/" style="display: inline-block; margin-right: 15px;">
+                    <img src="/img/logo/Logo Letra trazo.png" alt="Logo" class="w-50">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -78,9 +78,9 @@
                     </ul>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#carritoModal">
-                            <img src="/img/icono/carrito de compras.png" alt="carrito" />
+                            <img src="/img/icono/carrito de compras.png" alt="carrito" class="img-fluid" style="width: 30px; height: 30px;" />
                         </a>
-        
+    
                         <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -102,15 +102,17 @@
                             </div>
                         </div>
                     </li>
-        
-                    <form class="d-flex" role="search" id="productSearchForm">
-                        <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
-                        <button class="btn btn-outline-success" type="submit">Buscar</button>
+    
+                    <form class="d-flex flex-column position-relative" id="productSearchForm">
+                        <div class="d-flex">
+                            <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
+                        </div>
+                        <div id="suggestions" class="list-group mt-2 position-absolute w-100"></div>
                     </form>
                 </div>
             </div>
-        </nav>        
-  </header>         
+        </nav>
+    </header>             
 
   <!--NOTIFICACION-->
   <div class="notification d-none"></div>
@@ -234,6 +236,7 @@
       </section>
 
       <section class="sobre">
+        
         <div class="card mb-3" style="max-width: 540px; margin: auto;">
             <div class="row g-0">
               <div class="col-md-4">
@@ -257,13 +260,13 @@
                     Nos comprometemos a proporcionar un entorno seguro para nuestras transacciones, garantizando la 
                     protección de tus datos personales y ofreciendo múltiples opciones de pago seguras. 
                   </p>
-                  <a href="/acerca-de" class="card-title text-white p-2" style="border-radius: 5px; color: rgb(157, 43, 15); text-decoration: none;">
+                  <a href="/acerca-de" style="color: blue; text-decoration: none;">
                     <strong>Haz clic para ver más sobre nosotros</strong>
                   </a>
                 </div>
               </div>
             </div>
-          </div>          
+          </div>                            
       
       </section>
     </div>
