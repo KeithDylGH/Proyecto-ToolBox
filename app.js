@@ -328,7 +328,7 @@ app.get('/terminos-y-condicion', (req, res) => {
     res.render('terminos', { user });
 });
 
-app.get('/acerca-de', authorize(['user', 'admin', 'boss']), async (req, res) => {
+app.get('/acerca-de', async (req, res) => {
     try {
         const categorias = await Categoria.find(); // Asegúrate de que este método esté correcto
         res.render('acercaDe', { categorias }); // Pasa las categorías a la vista
