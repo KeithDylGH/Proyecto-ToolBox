@@ -58,22 +58,8 @@
                                 <% } %>
                             </ul>
                         </li>
-                        <% if (CUsuario) { %>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="/cuenta"><%= CUsuario.nombre %></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="/logout">Cerrar sesión</a>
-                            </li>
-                        <% } else { %>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" id="login" href="/login">Iniciar sesión</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" id="register" href="/registrar">Registrarse</a>
-                            </li>
-                        <% } %>
-                        <li class="nav-item me-3">
+
+                        <li class="nav-item me-3"></li>
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#carritoModal">
                                 <img src="/img/icono/carrito de compras.png" alt="carrito" style="height: 30px;" />
                             </a>
@@ -98,6 +84,22 @@
                                 </div>
                             </div>
                         </li>
+                        
+                        <% if (CUsuario) { %>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/cuenta"><%= CUsuario.nombre %></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/logout">Cerrar sesión</a>
+                            </li>
+                        <% } else { %>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" id="login" href="/login">Iniciar sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" id="register" href="/registrar">Registrarse</a>
+                            </li>
+                        <% } %>
                     </ul>
                     <form class="d-flex flex-column position-relative" id="productSearchForm">
                         <div class="d-flex">
