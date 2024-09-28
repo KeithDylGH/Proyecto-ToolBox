@@ -146,28 +146,34 @@
           </div>
     
           <!-- Modal Zinli -->
-          <div class="modal fade" id="zinliModal" tabindex="-1" aria-labelledby="zinliLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="zinliLabel">Zinli</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="zinliForm">
-                            <input type="hidden" name="metodoPago" value="Zinli">
-                            <p>Por favor completa la información para continuar con el pago por Zinli.</p>
-                            <p>Ingresa el monto total y confirma el pago.</p>
-                            <button type="submit" class="btn btn-primary" id="confirmarZinliBtn">Confirmar Pago</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <div class="modal fade" id="zinliModal" tabindex="-1" aria-labelledby="zinliLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="zinliLabel">Zinli</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="zinliForm">
+                                <input type="hidden" name="metodoPago" value="Zinli">
+                                <p>Por favor complete la información para continuar con el pago por Zinli.</p>
+                                <ul>
+                                    <li>Abre la aplicación Zinli en tu dispositivo.</li>
+                                    <li>Selecciona la opción "Enviar Dinero".</li>
+                                    <li>Ingresa el monto total de la compra y confirma el pago.</li>
+                                    <li>Escanea el código QR proporcionado o ingresa la dirección de pago.</li>
+                                </ul>
+                                <p>Una vez realizado el pago, por favor confirma aquí haciendo clic en el botón de abajo.</p>
+                                <button type="submit" class="btn btn-primary" id="confirmarZinliBtn">Confirmar Pago</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
                     </div>
                 </div>
             </div>
-          </div>
-    
+
           <!-- Modal PayPal -->
         <!-- <div class="modal fade" id="paypalModal" tabindex="-1" aria-labelledby="paypalModalLabel" aria-hidden="true">
             <div class="modal-dialog">
