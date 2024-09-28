@@ -81,7 +81,7 @@ if (loginForm) {
         } catch (error) {
             console.error('Error:', error);
             if (notification) {
-                notification.textContent = 'Error de conexión o autenticación.';
+                notification.textContent = 'Contraseña o Usuario incorrecto.';
                 notification.classList.add('alert', 'alert-danger');
 
                 setTimeout(() => {
