@@ -20,9 +20,9 @@
 
     <div class="container py-5 flex-grow-1">
         <div class="row justify-content-center align-items-center h-100">
-            <div class="col-12 col-lg-9 col-xl-7">
+            <div class="col-12 col-lg-9 col-xl-7 text-center"> <!-- Agregado text-center para centrar -->
                 <a href="/" id="homeBtn"><img src="/img/logo/LogoLetra.png" alt="Logo" style="max-width: 50%;"></a>
-                <div class="card shadow-2-strong card-registration" style="border-radius: 15px; background-color: #5e3b3b;"> <!-- Color del card igual al del login -->
+                <div class="card shadow-2-strong card-registration" style="border-radius: 15px; background-color: #5e3b3b;"> 
                     <div class="card-body p-4 p-md-5 text-white">
                         <h2 class="fw-bold mb-4 text-uppercase">Crea una cuenta</h2>
 
@@ -89,12 +89,12 @@
 
                             <div class="form-check d-flex justify-content-center mb-5">
                                 <input class="form-check-input me-2" type="checkbox" value="" id="terms" required />
-                                <label class="form-check-label" for="terms">
-                                    Acepto todos los <a href="/terminos-y-condicion" class="text-body"><u>Términos de servicio</u></a>
+                                <label class="form-check-label text-muted" for="terms"> <!-- Cambiado a text-muted -->
+                                    Acepto todos los <a href="/terminos-y-condicion" class="text-muted"><u>Términos de servicio</u></a> <!-- Cambiado a text-muted -->
                                 </label>
                             </div>
 
-                            <button class="btn btn-outline-light btn-lg px-5" type="submit">Registrar</button>
+                            <button class="btn btn-outline-light btn-lg px-5 mb-4" type="submit">Registrar</button> <!-- Agregado mb-4 para margen inferior -->
 
                             <p class="small mt-4">¿Ya tienes una cuenta? <a href="/login" class="text-light fw-bold"><u>Iniciar sesión</u></a></p>
                         </form>

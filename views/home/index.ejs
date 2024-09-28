@@ -73,33 +73,33 @@
                                 <a class="nav-link text-white" id="register" href="/registrar">Registrarse</a>
                             </li>
                         <% } %>
-                    </ul>
-                    <div class="nav-item"> <!-- Cambiado de <li> a <div> -->
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#carritoModal">
-                            <img src="/img/icono/carrito de compras.png" alt="carrito" class="img-fluid" style="width: 30px; height: 30px;" />
-                        </a>
+                        <li class="nav-item me-3"> <!-- Ajuste aquí -->
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#carritoModal">
+                                <img src="/img/icono/carrito de compras.png" alt="carrito" class="img-fluid" style="width: 30px; height: 30px;" />
+                            </a>
     
-                        <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <ul id="carritoList" class="list-group">
-                                            <!-- Aquí se cargarán dinámicamente los productos del carrito -->
-                                        </ul>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                        <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
-                                        <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
+                            <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <ul id="carritoList" class="list-group">
+                                                <!-- Aquí se cargarán dinámicamente los productos del carrito -->
+                                            </ul>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
+                                            <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
     
                     <form class="d-flex flex-column position-relative" id="productSearchForm">
                         <div class="d-flex">
@@ -110,7 +110,7 @@
                 </div>
             </div>
         </nav>
-    </header>                     
+    </header>                         
 
   <!--NOTIFICACION-->
   <div class="notification d-none"></div>
@@ -234,39 +234,38 @@
       </section>
 
       <section class="sobre">
-
         <div class="card mb-3" style="max-width: 540px; margin: auto;">
             <div class="row g-0">
-              <div class="col-md-4">
-                <img
-                  src="/img/logo/LogoLetra.png" 
-                  class="img-fluid rounded-start" 
-                  alt="Logo de ToolBox" 
-                  style="max-width: 80%; height: auto; margin: 10px;" <!-- Ajusta el tamaño de la imagen -->
-                >
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">Sobre ToolBox</h5>
-                  <p class="card-text">
-                    En <strong>ToolBox</strong>, nos enorgullecemos de ser tu aliado confiable en 
-                    la compra de productos de ferretería y artículos esenciales para el hogar. 
-                    Nuestra amplia gama de productos está diseñada para satisfacer todas tus necesidades, 
-                    ya sea que estés llevando a cabo un proyecto grande o simplemente buscando mejorar tu espacio en casa.
-                  </p>
-                  <p class="card-text">
-                    Nos comprometemos a proporcionar un entorno seguro para nuestras transacciones, garantizando la 
-                    protección de tus datos personales y ofreciendo múltiples opciones de pago seguras. 
-                  </p>
-                  <a href="/acerca-de" style="color: blue; text-decoration: none;">
-                    <strong>Haz clic para ver más sobre nosotros</strong>
-                  </a>
+                <div class="col-md-4">
+                    <img
+                        src="/img/logo/LogoLetra.png" 
+                        class="img-fluid rounded-start" 
+                        alt="Logo de ToolBox" 
+                        style="max-width: 70%; height: auto; margin: 5px;"
+                    >
                 </div>
-              </div>
+                <div class="col-md-8">
+                    <div class="card-body" style="padding-bottom: 10px;">
+                        <h5 class="card-title">Sobre ToolBox</h5>
+                        <p class="card-text">
+                            En <strong>ToolBox</strong>, nos enorgullecemos de ser tu aliado confiable en 
+                            la compra de productos de ferretería y artículos esenciales para el hogar. 
+                            Nuestra amplia gama de productos está diseñada para satisfacer todas tus necesidades, 
+                            ya sea que estés llevando a cabo un proyecto grande o simplemente buscando mejorar tu espacio en casa.
+                        </p>
+                        <p class="card-text">
+                            Nos comprometemos a proporcionar un entorno seguro para nuestras transacciones, garantizando la 
+                            protección de tus datos personales y ofreciendo múltiples opciones de pago seguras. 
+                        </p>
+                        <a href="/acerca-de" style="color: rgb(187, 75, 10); text-decoration: none;">
+                            <strong>Haz clic para ver más sobre nosotros</strong>
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>                            
-      
-      </section>
+        </div>                            
+    </section>
+    
     </div>
     
     <footer>
