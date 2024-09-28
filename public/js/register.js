@@ -1,12 +1,10 @@
-//const { response } = require("../../../app");
-
-document.addEventListener('DOMContentLoaded', function(){
-    
+document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.querySelector('#formulario');
-    
+    const loader = document.querySelector('.loader'); // Asegúrate de tener un elemento con clase .loader para el loader
+
     formulario.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const nombre = document.getElementById('name').value;
         const apellido = document.getElementById('lName').value;
         const username = document.getElementById('username').value;
@@ -15,13 +13,15 @@ document.addEventListener('DOMContentLoaded', function(){
         const confirmPassword = document.getElementById('confirmPassword').value;
         const phoneNumber = document.getElementById('phoneNumber').value;
         const cedula = document.getElementById('cedula').value;
-        
-    
+
         if (password !== confirmPassword) {
-            alert('Las contraseñas no coinciden');
+            showNotification('Las contraseñas no coinciden', 'error');
             return;
         }
-    
+
+        // Mostrar el loader
+        loader.style.display = 'block';
+
         const response = await fetch('/api/usuarios/registrar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -36,57 +36,27 @@ document.addEventListener('DOMContentLoaded', function(){
             }),
         });
 
+        // Ocultar el loader
+        loader.style.display = 'none';
+
         if (!response.ok) {
             // Muestra el cuerpo de la respuesta en caso de error
             const errorText = await response.text();
             console.error('Error en la respuesta:', errorText);
-            alert('Error: ' + errorText);
+            showNotification('Error: ' + errorText, 'error');
             return;
         }
-    
+
         const result = await response.json();
-    
+
         if (response.ok) {
-            alert(result.mensaje);
-            window.location.href = '/login/'; // Redirige al inicio de sesión
+            showNotification(result.mensaje, 'success');
+            setTimeout(() => {
+                window.location.href = '/login/'; // Redirige al inicio de sesión
+            }, 3000); // Espera 3 segundos antes de redirigir
         } else {
-            alert(result.error);
+            showNotification(result.error, 'error');
         }
-        console.log('La respuesta del servidor: ', response)
-    });
-})
-
-
-
-
-
-//Entrar a la pagina Home
-document.addEventListener('DOMContentLoaded', function() {
-
-    const homeBtn = document.getElementById('homeBtn');
-
-    homeBtn.addEventListener('click', function() {
-        window.location.href = '/';
+        console.log('La respuesta del servidor: ', response);
     });
 });
-
-//Entrar a la pagina Log-in
-document.addEventListener('DOMContentLoaded', function() {
-
-    const botonIniciarSesion = document.getElementById('login');
-
-    botonIniciarSesion.addEventListener('click', function() {
-        window.location.href = '/login/';
-    });
-});
-
-// Redireccionar a la página de términos de servicio si se requiere lógica adicional
-/* document.addEventListener('DOMContentLoaded', function() {
-    const termsLink = document.getElementById('terminos');
-
-    if (termsLink) {
-        termsLink.addEventListener('click', function() {
-            window.location.href = '/terminos-y-condicion';
-        });
-    }
-}); */

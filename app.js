@@ -15,6 +15,7 @@ const bcrypt = require('bcryptjs');
 const Categoria = require('./models/categoria');
 const categoriaRouter = require('./controllers/categorias');
 const carritoRouter = require('./controllers/carritos');
+const UCarrito = require('./models/carrito');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
 const cookieParser = require('cookie-parser');
@@ -437,9 +438,8 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
 });
 
 
-// Ruta para confirmar el pago
 app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, res) => {
-    const { productos, metodo } = req.body; 
+    const { metodo } = req.body; 
     const usuario = req.session.user;
 
     if (!usuario) {
@@ -448,25 +448,25 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     const emailUsuario = usuario.correo;
 
-    if (!emailUsuario || !productos || !metodo) {
+    if (!emailUsuario || !metodo) {
         return res.status(400).json({ error: 'Faltan datos necesarios para el correo.' });
     }
 
     try {
-        const productoIds = productos.map(producto => producto.id);
-        const productosArray = await iProducto.find({ _id: { $in: productoIds } });
-
-        if (productosArray.length === 0) {
-            return res.status(404).json({ error: 'No se encontraron productos.' });
+        // Obtener el carrito del usuario
+        const carrito = await UCarrito.findOne({ usuarioId: usuario._id }).populate('productos.productoId');
+        
+        if (!carrito || carrito.productos.length === 0) {
+            return res.status(404).json({ error: 'Carrito vacío o no encontrado.' });
         }
 
         // Contar las cantidades de productos
         const productosContados = {};
 
         // Recorre el array de productos para contar las cantidades
-        productos.forEach(producto => {
-            const id = producto.id;
-            const cantidad = producto.cantidad; // Ahora tomamos la cantidad directamente
+        carrito.productos.forEach(item => {
+            const id = item.productoId._id.toString(); // Obtenemos el id del producto
+            const cantidad = item.cantidad; // Tomamos la cantidad del carrito
             if (productosContados[id]) {
                 productosContados[id] += cantidad; // Sumar si ya existe
             } else {
@@ -475,23 +475,21 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         });
 
         // Generar PDF
-        const pdfPath = await pdfController.generarPdfCarrito(productosArray, productosContados, metodo);
+        const pdfPath = await pdfController.generarPdfCarrito(carrito.productos.map(p => p.productoId), productosContados, metodo);
 
         // Calcular el total de la compra
         const total = Object.keys(productosContados).reduce((acc, id) => {
-            const productoEncontrado = productosArray.find(p => p._id.toString() === id);
+            const productoEncontrado = carrito.productos.find(p => p.productoId._id.toString() === id).productoId;
             return acc + (productoEncontrado.precio * productosContados[id]);
         }, 0);
-
-        const totalCantidad = Object.values(productosContados).reduce((total, cantidad) => total + cantidad, 0);
 
         // Crear y guardar notificación
         const notificacion = new Notificacion({
             usuarioNombre: usuario.nombre,
             usuarioCorreo: emailUsuario,
             productos: Object.keys(productosContados).map(id => ({
-                name: productosArray.find(p => p._id.toString() === id).nombre,
-                price: productosArray.find(p => p._id.toString() === id).precio,
+                name: carrito.productos.find(p => p.productoId._id.toString() === id).productoId.nombre,
+                price: carrito.productos.find(p => p.productoId._id.toString() === id).productoId.precio,
                 quantity: productosContados[id]
             })),
             total: total,
@@ -501,12 +499,12 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         await notificacion.save();
 
         // Enviar correos
-        await enviarCorreoCompra(usuario, emailUsuario, productosArray, productosContados, total, metodo, pdfPath);
+        await enviarCorreoCompra(usuario, emailUsuario, carrito.productos.map(p => p.productoId), productosContados, total, metodo, pdfPath);
 
         // Eliminar el archivo PDF temporal
         await fs.promises.unlink(pdfPath);
 
-        res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.', total, totalCantidad });
+        res.status(200).json({ message: 'Compra procesada y correos enviados correctamente.', total });
     } catch (error) {
         console.error('Error al confirmar el pago:', error.message);
         res.status(500).json({ error: 'Error al confirmar el pago.' });
