@@ -132,7 +132,8 @@ const rutasPublicas = [
     '/logout',
     '/tienda/:categoriaId?',
     '/tienda/producto/:id',
-    '/terminos-y-condicion'
+    '/terminos-y-condicion',
+    '/acerca-de'
 ];
 
 // Middleware de autorización
