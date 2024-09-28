@@ -16,13 +16,19 @@ userRouter.post('/registrar', async (req, res) => {
             return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
-        // Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
-        const existingUser = await User.findOne({ $or: [{ usuario }, { correo }] });
+        // Verificar si ya existe un usuario con el mismo nombre de usuario, correo electrónico o cédula
+        const existingUser = await User.findOne({
+            $or: [
+                { usuario },
+                { correo: correo.toLowerCase() }, // Asegúrate de que el correo se compara en minúsculas
+                { cedula }
+            ]
+        });
         console.log('Intentando registrar usuario con correo:', correo);
         console.log('Usuario existente:', existingUser);
 
         if (existingUser) {
-            return res.status(400).json({ error: 'Usuario o correo electrónico ya registrado.' });
+            return res.status(400).json({ error: 'Cédula, usuario o correo electrónico ya registrado.' });
         }
 
         // Hash de la contraseña antes de guardar el usuario

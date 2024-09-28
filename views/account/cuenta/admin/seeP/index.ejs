@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToolBox - Ver inventario</title>
+    <title>ToolBox Admin - Ver inventario</title>
 
     <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png">
     <link rel="stylesheet" href="/css/admin.css">
@@ -20,14 +20,11 @@
 <body>
     <header style="background-color: #666F88; padding: 10px 0;">
         <nav class="navbar navbar-expand-lg" style="padding: 0 2.5rem; font-size: 1.1rem;">
-            <div class="container-fluid">
+            <div class="container-fluid d-flex justify-content-between">
                 <a class="text-light navbar-brand" href="/" style="display: inline-block; margin-right: 25px;">
                     <img src="/img/logo/Logo trazo 180.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
                     ToolBox Admin
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon" style="color: #fff;"></span>
-                </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
@@ -76,7 +73,7 @@
     
                         <% if (CUsuario) { %>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="/cuenta"><%= CUsuario.nombre %></a>
+                                <a class="nav-link text-white" href="/cuenta"><%= CUsuario.usuario %></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="/logout">Cerrar sesión</a>
@@ -102,12 +99,12 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Categoría</th>
-                            <th>Descripción</th>
-                            <th>Imagen</th>
-                            <th>Acciones</th>
+                            <th style="font-size: 1.2rem;">Nombre</th>
+                            <th style="font-size: 1.2rem;">Precio</th>
+                            <th style="font-size: 1.2rem;">Categoría</th>
+                            <th style="font-size: 1.2rem;">Descripción</th>
+                            <th style="font-size: 1.2rem;">Imagen</th>
+                            <th style="font-size: 1.2rem;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,16 +113,16 @@
                             const categoriaIndex = categoria ? categorias.indexOf(categoria) + 1 : 'No asignada';
                         %>
                             <tr>
-                                <td><%= producto.nombre %></td>
-                                <td><%= producto.precio %> $</td>
-                                <td>
+                                <td style="font-size: 1.1rem;"><%= producto.nombre %></td>
+                                <td style="font-size: 1.1rem;"><strong><%= producto.precio %></strong> $</td>
+                                <td style="font-size: 1.1rem;">
                                     <% if (categoria) { %>
                                         <%= categoria.nombre %> (ID: <%= categoriaIndex %>)
                                     <% } else { %>
                                         Categoría no asignada
                                     <% } %>
                                 </td>
-                                <td><%= producto.descripcion %></td>
+                                <td style="font-size: 1.1rem;"><%= producto.descripcion %></td>
                                 <td>
                                     <% if (producto.imagen && producto.imagen.data !== '') { %>
                                         <img src="<%= producto.imagen.data %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 100px;">
@@ -134,12 +131,14 @@
                                     <% } %>                                    
                                 </td>
                                 <td>
-                                    <a href="/inventario/editar/<%= producto._id %>" class="btn btn-warning btn-sm">Editar</a>
-                                    <button class="btn btn-danger btn-sm btn-eliminar" data-id="<%= producto._id %>">Eliminar</button>
+                                    <div class="d-flex flex-column">
+                                        <a href="/inventario/editar/<%= producto._id %>" class="btn btn-warning btn-sm mb-1">Editar</a>
+                                        <button class="btn btn-danger btn-sm btn-eliminar">Eliminar</button>
+                                    </div>
                                 </td>
                             </tr>
                         <% }); %>
-                    </tbody>                                        
+                    </tbody>                                      
                 </table>
             </div>
         </div>
@@ -156,9 +155,9 @@
 
     <footer class="mt-auto py-3 bg-dark text-light">
         <div class="container text-center">
-            <a href="/cuenta" class="text-light">Sobre nosotros</a>
-            <p class="mb-0">© 2024 ToolBox. Todos los derechos reservados.</p>
+            <a href="/cuenta" class="text-light">Tu cuenta</a>
             <p class="mb-0">ToolBox Admin</p>
+            <p class="mb-0">© 2024 ToolBox. Todos los derechos reservados.</p>
         </div>
     </footer>
     

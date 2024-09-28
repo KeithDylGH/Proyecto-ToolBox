@@ -39,7 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
             loader.classList.add('d-none');
         
             if (!response.ok) {
-                const result = await response.json(); //
+                const result = await response.json();
+                console.log(result); // Verificar qué se devuelve
                 showNotification(result.error || 'Error desconocido', 'error');
                 return;
             }
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Función para mostrar la notificación
 function showNotification(message, type) {
-    const notification = document.querySelector('#notification');
+    const notification = document.querySelector('.notification'); // Asegúrate de seleccionar el elemento correcto
     notification.textContent = message;
     notification.className = `notification ${type}`; // Asigna la clase de tipo (success o error)
     notification.classList.remove('d-none'); // Muestra la notificación
