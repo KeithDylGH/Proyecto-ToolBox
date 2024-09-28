@@ -22,8 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     cargarCarrito();
                     showNotification('Producto agregado al carrito', 'success'); // Cambiar aquí
 
-                    // Redirigir a la página de compra
-                    window.location.href = '/compra';  // Redirige a la página de compra
                 } else {
                     showNotification('Error al agregar al carrito', 'error'); // Cambiar aquí
                 }

@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Función para banear a un usuario
 function banUser(userId) {
-    if (confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+    if (confirm('¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.')) {
         if (confirm('¿Estás absolutamente seguro?')) { // Segunda confirmación
             fetch(`/api/usuarios/permisos/banear/${userId}`, {
                 method: 'DELETE',
@@ -56,7 +56,7 @@ function banUser(userId) {
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    location.reload(); // Recargar la página para ver los cambios
+                    window.location.href = '/';
                 } else {
                     alert(data.message);
                 }

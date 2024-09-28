@@ -29,77 +29,77 @@
             <div class="collapse navbar-collapse" id="navbarScroll">
                 <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                     <li class="nav-item">
-                        <a class="nav-link active link-light" aria-current="page" href="/">Inicio</a>
+                        <a class="nav-link active link-light" aria-current="page" href="#">Inicio</a>
                     </li>
+
                     <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle link-light" href="#" role="button"
-                          data-bs-toggle="dropdown" aria-expanded="false">
-                          Categoría
-                      </a>
-                      <ul class="dropdown-menu">
-                          <% categorias.forEach(categoria => { %>
-                              <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
-                          <% }) %>
-                      </ul>
+                        <a class="nav-link dropdown-toggle link-light" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Categoría
+                        </a>
+                        <ul class="dropdown-menu">
+                            <% if (categorias && categorias.length > 0) { %>
+                                <% categorias.forEach(categoria => { %>
+                                    <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
+                                <% }) %>
+                            <% } else { %>
+                                <li><a class="dropdown-item" href="#">No hay categorías disponibles</a></li>
+                            <% } %>
+                        </ul>
                     </li>
+
                     <li class="nav-item">
-                      <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">
-                        <img src="/img/icono/carrito de compras.png" alt="carrito" />
-                      </a>
-      
-                      <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">
+                            <img src="/img/icono/carrito de compras.png" alt="carrito" />
+                        </a>
+
+                        <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul id="carritoList" class="list-group">
+                                            <!-- Aquí se cargarán dinámicamente los productos del carrito -->
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
+                                        <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                              <ul id="carritoList" class="list-group">
-                                <!-- Aquí se cargarán dinámicamente los productos del carrito -->
-                              </ul>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                              <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
-                              <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
-                            </div>
-                          </div>
                         </div>
-                      </div>
-                    </li>                                                            
+                    </li>
 
                     <% if (CUsuario) { %>
-                      <li class="nav-item">
-                          <% if (CUsuario.rol === 'admin') { %>
-                              <a class="nav-link link-light" href="/admin">
-                                  <%= CUsuario.nombre %>
-                              </a>
-                          <% } else { %>
-                              <a class="nav-link link-light" href="/cliente">
-                                  <%= CUsuario.nombre %>
-                              </a>
-                          <% } %>
-                      </li>
-                      <li class="nav-item">
-                          <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
-                      </li>
-                  <% } else { %>
-                      <li class="nav-item">
-                          <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
-                      </li>
-                      <li class="nav-item">
-                          <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
-                      </li>
-                  <% } %>                    
-                                                                                                    
+                        <li class="nav-item">
+                            <a class="nav-link link-light" href="/cuenta">
+                                <%= CUsuario.nombre %>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-light" href="/logout">Cerrar sesión</a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link link-light" id="login" href="/login">Iniciar sesión</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-light" id="register" href="/registrar">Registrarse</a>
+                        </li>
+                    <% } %>
+
                 </ul>
                 <form class="d-flex flex-column position-relative" id="productSearchForm">
-                  <div class="d-flex">
-                      <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
-                  </div>
-                  <div id="suggestions" class="list-group mt-2 position-absolute w-100"></div>
-              </form>
+                    <div class="d-flex">
+                        <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
+                    </div>
+                    <div id="suggestions" class="list-group mt-2 position-absolute w-100"></div>
+                </form>
             </div>
         </div>
     </nav>

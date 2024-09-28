@@ -470,7 +470,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     try {
         // Obtener el usuario y su carrito
-        const usuarioEncontrado = await CUsuario.findById(usuario._id).populate('carrito.producto');
+        const usuarioEncontrado = await CUsuario.findById(usuario.id).populate('carrito.producto');
         console.log('Usuario encontrado:', usuarioEncontrado);
 
         // Verifica si el carrito existe y tiene productos
@@ -479,15 +479,32 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
             return res.status(404).json({ error: 'Carrito vacío o no encontrado.' });
         }
 
+        // Obtener todos los IDs de los productos en el carrito
+        const idsProductosEnCarrito = usuarioEncontrado.carrito.map(item => item.producto ? item.producto._id : null);
+        
+        // Verificar que todos los productos existan en la base de datos
+        const productosValidos = await Producto.find({ _id: { $in: idsProductosEnCarrito } });
+        const idsProductosValidos = productosValidos.map(producto => producto._id.toString());
+
+        // Filtrar el carrito para solo incluir productos válidos
+        usuarioEncontrado.carrito = usuarioEncontrado.carrito.filter(item => 
+            item.producto && idsProductosValidos.includes(item.producto._id.toString())
+        );
+
+        if (usuarioEncontrado.carrito.length === 0) {
+            console.log('Error: No hay productos válidos en el carrito.');
+            return res.status(404).json({ error: 'Carrito vacío o sin productos válidos.' });
+        }
+
         // Contar las cantidades de productos
         const productosContados = {};
         usuarioEncontrado.carrito.forEach(item => {
             const producto = item.producto;
 
-            // Verifica si el producto existe
+            // Verifica si el producto existe antes de proceder
             if (!producto) {
                 console.error('Error: Producto es null', item);
-                return; // O maneja el error como prefieras
+                return; // Manejo de error
             }
 
             const id = producto._id.toString(); // Obtenemos el id del producto
@@ -502,13 +519,13 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         console.log('Productos contados en el carrito:', productosContados);
 
+        // Generar PDF
+        const pdfPath = await pdfController.generarPdfCarrito(usuarioEncontrado.carrito.map(p => p.producto), productosContados, metodo);
+        console.log('Ruta del PDF generado:', pdfPath);
+
         // Calcular el total de la compra
         const total = Object.keys(productosContados).reduce((acc, id) => {
-            const productoEncontrado = usuarioEncontrado.carrito.find(p => p.producto && p.producto._id.toString() === id)?.producto;
-            if (!productoEncontrado) {
-                console.error('Error: Producto no encontrado para ID:', id);
-                return acc; // Manejar el error de acuerdo a tu lógica
-            }
+            const productoEncontrado = usuarioEncontrado.carrito.find(p => p.producto._id.toString() === id).producto;
             return acc + (productoEncontrado.precio * productosContados[id]);
         }, 0);
         console.log('Total de la compra:', total);
@@ -517,14 +534,11 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         const notificacion = new Notificacion({
             usuarioNombre: usuarioEncontrado.nombre,
             usuarioCorreo: emailUsuario,
-            productos: Object.keys(productosContados).map(id => {
-                const productoEncontrado = usuarioEncontrado.carrito.find(p => p.producto && p.producto._id.toString() === id)?.producto;
-                return {
-                    name: productoEncontrado ? productoEncontrado.nombre : 'Producto no encontrado',
-                    price: productoEncontrado ? productoEncontrado.precio : 0,
-                    quantity: productosContados[id]
-                };
-            }),
+            productos: Object.keys(productosContados).map(id => ({
+                name: usuarioEncontrado.carrito.find(p => p.producto._id.toString() === id).producto.nombre,
+                price: usuarioEncontrado.carrito.find(p => p.producto._id.toString() === id).producto.precio,
+                quantity: productosContados[id]
+            })),
             total: total,
             metodoPago: metodo,
         });
