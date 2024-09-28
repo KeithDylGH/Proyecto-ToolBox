@@ -15,7 +15,7 @@ const bcrypt = require('bcryptjs');
 const Categoria = require('./models/categoria');
 const categoriaRouter = require('./controllers/categorias');
 const carritoRouter = require('./controllers/carritos');
-const UCarrito = require('./models/carrito');
+//const UCarrito = require('./models/carrito');
 const CUsuario = require('./models/usuario');
 const iProducto = require('./models/producto');
 const cookieParser = require('cookie-parser');
@@ -453,10 +453,11 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 
     try {
-        // Obtener el carrito del usuario
-        const carrito = await UCarrito.findOne({ usuarioId: usuario._id }).populate('productos.productoId');
-        
-        if (!carrito || carrito.productos.length === 0) {
+        // Obtener el usuario y su carrito
+        const usuarioEncontrado = await CUsuario.findById(usuario.id).populate('carrito.producto');
+
+        // Verifica si el carrito existe y tiene productos
+        if (!usuarioEncontrado || usuarioEncontrado.carrito.length === 0) {
             return res.status(404).json({ error: 'Carrito vacío o no encontrado.' });
         }
 
@@ -464,8 +465,8 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         const productosContados = {};
 
         // Recorre el array de productos para contar las cantidades
-        carrito.productos.forEach(item => {
-            const id = item.productoId._id.toString(); // Obtenemos el id del producto
+        usuarioEncontrado.carrito.forEach(item => {
+            const id = item.producto._id.toString(); // Obtenemos el id del producto
             const cantidad = item.cantidad; // Tomamos la cantidad del carrito
             if (productosContados[id]) {
                 productosContados[id] += cantidad; // Sumar si ya existe
@@ -475,21 +476,21 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         });
 
         // Generar PDF
-        const pdfPath = await pdfController.generarPdfCarrito(carrito.productos.map(p => p.productoId), productosContados, metodo);
+        const pdfPath = await pdfController.generarPdfCarrito(usuarioEncontrado.carrito.map(p => p.producto), productosContados, metodo);
 
         // Calcular el total de la compra
         const total = Object.keys(productosContados).reduce((acc, id) => {
-            const productoEncontrado = carrito.productos.find(p => p.productoId._id.toString() === id).productoId;
+            const productoEncontrado = usuarioEncontrado.carrito.find(p => p.producto._id.toString() === id).producto;
             return acc + (productoEncontrado.precio * productosContados[id]);
         }, 0);
 
         // Crear y guardar notificación
         const notificacion = new Notificacion({
-            usuarioNombre: usuario.nombre,
+            usuarioNombre: usuarioEncontrado.nombre,
             usuarioCorreo: emailUsuario,
             productos: Object.keys(productosContados).map(id => ({
-                name: carrito.productos.find(p => p.productoId._id.toString() === id).productoId.nombre,
-                price: carrito.productos.find(p => p.productoId._id.toString() === id).productoId.precio,
+                name: usuarioEncontrado.carrito.find(p => p.producto._id.toString() === id).producto.nombre,
+                price: usuarioEncontrado.carrito.find(p => p.producto._id.toString() === id).producto.precio,
                 quantity: productosContados[id]
             })),
             total: total,
@@ -499,7 +500,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         await notificacion.save();
 
         // Enviar correos
-        await enviarCorreoCompra(usuario, emailUsuario, carrito.productos.map(p => p.productoId), productosContados, total, metodo, pdfPath);
+        await enviarCorreoCompra(usuario, emailUsuario, usuarioEncontrado.carrito.map(p => p.producto), productosContados, total, metodo, pdfPath);
 
         // Eliminar el archivo PDF temporal
         await fs.promises.unlink(pdfPath);

@@ -17,10 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
                 if (response.ok) {
                     showNotification('Producto añadido al carrito', 'success'); // Mostrar notificación
-                    // Esperar 4 segundos y redirigir
-                    setTimeout(() => {
-                        window.location.href = "/cuenta/carrito"; // Redirigir a la página de carrito
-                    }, 4000);
                 } else {
                     showNotification('Error al añadir el producto al carrito', 'error'); // Notificación de error
                 }
@@ -31,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Manejar la acción de compra
+    // Manejar la acción de compra (este botón sí redirige)
     const comprarBtn = document.getElementById("comprarBtn");
     if (comprarBtn) {
         comprarBtn.addEventListener("click", async function(event) {
@@ -40,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const productoId = this.getAttribute("data-producto-id");
             const cantidad = 1; // Cantidad que deseas añadir
 
-            // Intentar añadir el producto al carrito
+            // Intentar añadir el producto al carrito y luego redirigir
             try {
                 const response = await fetch("/api/carrito/add", {
                     method: "POST",
@@ -52,10 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     showNotification('Producto añadido al carrito', 'success'); // Mostrar notificación
-                    // Esperar 4 segundos y redirigir
                     setTimeout(() => {
-                        window.location.href = "/cuenta/carrito"; // Redirigir a la página de carrito
-                    }, 4000);
+                        window.location.href = "/cuenta/carrito";
+                    }, 2000);
                 } else {
                     showNotification("Error al añadir el producto al carrito.", "error"); // Notificación de error
                 }
