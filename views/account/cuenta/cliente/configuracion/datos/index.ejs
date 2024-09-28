@@ -76,7 +76,7 @@
           <div class="mb-3">
             <a href="/cuenta/configuracion/editar" class="btn btn-secondary">Editar Datos</a>
             <form action="/cuenta/configuracion/eliminar" method="POST" style="display: inline;">
-              <button class="btn btn-danger btn-sm" onclick="banUser('<%= user._id %>')">Eliminar Cuenta</button>
+              <button class="btn btn-danger banUserBtn" data-user-id="<%= usuario._id %>">Eliminar</button>
             </form>
           </div>
         </div>

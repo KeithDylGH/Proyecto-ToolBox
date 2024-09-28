@@ -20,16 +20,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (data.success) {
                     cargarCarrito();
-                    mostrarNotificacion('Producto agregado al carrito', 'success');
+                    showNotification('Producto agregado al carrito', 'success'); // Cambiar aquí
 
                     // Redirigir a la página de compra
                     window.location.href = '/compra';  // Redirige a la página de compra
                 } else {
-                    mostrarNotificacion('Error al agregar al carrito', 'error');
+                    showNotification('Error al agregar al carrito', 'error'); // Cambiar aquí
                 }
             } catch (error) {
                 console.error('Error en la solicitud:', error);
-                mostrarNotificacion('Error al agregar al carrito', 'error');
+                showNotification('Error al agregar al carrito', 'error'); // Cambiar aquí
             }
         });
     });
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.carrito.length > 0) {
                     data.carrito.forEach(item => {
                         console.log('Elemento del carrito:', item); // Depuración
-                
+
                         const li = document.createElement('li');
                         li.className = 'list-group-item d-flex justify-content-between align-items-center';
                         li.innerHTML = `
@@ -70,10 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button class="btn btn-danger btn-sm btn-eliminar" data-producto-id="${item._id}">Eliminar</button>
                         `;
                         carritoList.appendChild(li);
-                
+
                         // Acumulando el monto total
                         montoTotal += item.precio * item.cantidad;
-                    });                
+                    });
 
                     // Mostrar monto total
                     const montoTotalElement = document.getElementById('totalMonto');
@@ -94,17 +94,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                     },
                                     credentials: 'same-origin'
                                 });
-                                
+
                                 const result = await response.json();
                                 if (result.success) {
-                                    mostrarNotificacion('Producto eliminado del carrito', 'success');
+                                    showNotification('Producto eliminado del carrito', 'success'); // Cambiar aquí
                                     cargarCarrito(); // Actualiza el carrito en la interfaz
                                 } else {
-                                    mostrarNotificacion(result.message || 'Error al eliminar producto del carrito', 'error');
+                                    showNotification(result.message || 'Error al eliminar producto del carrito', 'error'); // Cambiar aquí
                                 }
                             } catch (error) {
                                 console.error('Error al eliminar producto del carrito:', error);
-                                mostrarNotificacion('Error al eliminar producto del carrito', 'error');
+                                showNotification('Error al eliminar producto del carrito', 'error'); // Cambiar aquí
                             }
                         });
                     });
@@ -120,17 +120,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                         'Content-Type': 'application/json',
                                     }
                                 });
-                                
+
                                 const result = await response.json();
                                 if (result.success) {
-                                    mostrarNotificacion('Carrito vaciado', 'success');
+                                    showNotification('Carrito vaciado', 'success'); // Cambiar aquí
                                     cargarCarrito(); // Actualiza el carrito en la interfaz
                                 } else {
-                                    mostrarNotificacion(result.message || 'Error al vaciar el carrito', 'error');
+                                    showNotification(result.message || 'Error al vaciar el carrito', 'error'); // Cambiar aquí
                                 }
                             } catch (error) {
                                 console.error('Error al vaciar el carrito:', error);
-                                mostrarNotificacion('Error al vaciar el carrito', 'error');
+                                showNotification('Error al vaciar el carrito', 'error'); // Cambiar aquí
                             }
                         });
                     }
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error al cargar el carrito:', error);
-            mostrarNotificacion('Error al cargar el carrito', 'error');
+            showNotification('Error al cargar el carrito', 'error'); // Cambiar aquí
         }
     }
 });

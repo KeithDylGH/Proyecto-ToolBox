@@ -470,7 +470,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
     try {
         // Obtener el usuario y su carrito
-        const usuarioEncontrado = await CUsuario.findById(usuario.id).populate('carrito.producto');
+        const usuarioEncontrado = await CUsuario.findById(usuario._id).populate('carrito.producto');
         console.log('Usuario encontrado:', usuarioEncontrado);
 
         // Verifica si el carrito existe y tiene productos
@@ -482,7 +482,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         // Contar las cantidades de productos
         const productosContados = {};
         usuarioEncontrado.carrito.forEach(item => {
-            console.log('Item en carrito:', item);
             const producto = item.producto;
 
             // Verifica si el producto existe
@@ -502,10 +501,6 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         });
 
         console.log('Productos contados en el carrito:', productosContados);
-
-        // Generar PDF
-        const pdfPath = await pdfController.generarPdfCarrito(usuarioEncontrado.carrito.map(p => p.producto), productosContados, metodo);
-        console.log('Ruta del PDF generado:', pdfPath);
 
         // Calcular el total de la compra
         const total = Object.keys(productosContados).reduce((acc, id) => {
