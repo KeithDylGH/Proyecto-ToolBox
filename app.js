@@ -329,10 +329,10 @@ app.get('/terminos-y-condicion', (req, res) => {
 
 app.get('/acerca-de', authorize(['user', 'admin', 'boss']), async (req, res) => {
     try {
-        const categorias = await Categoria.obtenerCategorias(); // Ajusta este método según tu controlador
-        res.render('acercaDe', { categorias }); // Pasa las categorias a la vista
+        const categorias = await Categoria.find(); // Asegúrate de que este método esté correcto
+        res.render('acercaDe', { categorias }); // Pasa las categorías a la vista
     } catch (error) {
-        console.error(error);
+        console.error('Error al obtener categorías:', error);
         res.status(500).send('Error al obtener las categorías');
     }
 });
@@ -482,8 +482,18 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         // Contar las cantidades de productos
         const productosContados = {};
         usuarioEncontrado.carrito.forEach(item => {
-            const id = item.producto._id.toString(); // Obtenemos el id del producto
+            console.log('Item en carrito:', item);
+            const producto = item.producto;
+
+            // Verifica si el producto existe
+            if (!producto) {
+                console.error('Error: Producto es null', item);
+                return; // O maneja el error como prefieras
+            }
+
+            const id = producto._id.toString(); // Obtenemos el id del producto
             const cantidad = item.cantidad; // Tomamos la cantidad del carrito
+
             if (productosContados[id]) {
                 productosContados[id] += cantidad; // Sumar si ya existe
             } else {
@@ -499,7 +509,11 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
 
         // Calcular el total de la compra
         const total = Object.keys(productosContados).reduce((acc, id) => {
-            const productoEncontrado = usuarioEncontrado.carrito.find(p => p.producto._id.toString() === id).producto;
+            const productoEncontrado = usuarioEncontrado.carrito.find(p => p.producto && p.producto._id.toString() === id)?.producto;
+            if (!productoEncontrado) {
+                console.error('Error: Producto no encontrado para ID:', id);
+                return acc; // Manejar el error de acuerdo a tu lógica
+            }
             return acc + (productoEncontrado.precio * productosContados[id]);
         }, 0);
         console.log('Total de la compra:', total);
@@ -508,11 +522,14 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
         const notificacion = new Notificacion({
             usuarioNombre: usuarioEncontrado.nombre,
             usuarioCorreo: emailUsuario,
-            productos: Object.keys(productosContados).map(id => ({
-                name: usuarioEncontrado.carrito.find(p => p.producto._id.toString() === id).producto.nombre,
-                price: usuarioEncontrado.carrito.find(p => p.producto._id.toString() === id).producto.precio,
-                quantity: productosContados[id]
-            })),
+            productos: Object.keys(productosContados).map(id => {
+                const productoEncontrado = usuarioEncontrado.carrito.find(p => p.producto && p.producto._id.toString() === id)?.producto;
+                return {
+                    name: productoEncontrado ? productoEncontrado.nombre : 'Producto no encontrado',
+                    price: productoEncontrado ? productoEncontrado.precio : 0,
+                    quantity: productosContados[id]
+                };
+            }),
             total: total,
             metodoPago: metodo,
         });
