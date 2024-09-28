@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const productos = Array.from(document.querySelectorAll('.list-group-item.producto')).map(producto => {
                 const id = producto.dataset.id;
                 const nombre = producto.querySelector('h6').textContent;
-                const cantidad = producto.querySelector('.cantidad') ? producto.querySelector('.cantidad').textContent : 1;
+                const cantidad = producto.querySelector('.cantidad') ? parseInt(producto.querySelector('.cantidad').textContent) : 1;
                 return { id, nombre, cantidad };
             });
 

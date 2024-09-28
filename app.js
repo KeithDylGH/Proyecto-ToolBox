@@ -518,7 +518,7 @@ async function enviarCorreoCompra(usuario, emailUsuario, productosArray, product
     const listaProductosHtml = Object.keys(productosContados).map(id => {
         const productoEncontrado = productosArray.find(p => p._id.toString() === id);
         const cantidad = productosContados[id];
-        return `<li>${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)} x ${cantidad}</li>`;
+        return `<li>${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)} x ${cantidad} = $${(productoEncontrado.precio * cantidad).toFixed(2)}</li>`;
     }).join('');
 
     // Enviar correo al usuario

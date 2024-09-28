@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogo - ToolBox</title>
     <link rel="stylesheet" href="/css/catalogo.css">
+    <link rel="stylesheet" href="/css/buscador.css">
     <link rel="icon" type="image/x-icon" href="/img/logo/logo Saturn.png">
     
     <!--BOOTSTRAP-->
@@ -17,9 +18,6 @@
 </head>
 <body>
   <header>
-
-    <div class="notification d-none"></div>
-
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             <a href="/"><img src="/img/logo/Logo Letra trazo.png" alt="" class="w-25"></a>
@@ -42,8 +40,7 @@
                               <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
                           <% }) %>
                       </ul>
-                  </li>
-
+                    </li>
                     <li class="nav-item">
                       <a href="#" class="carrito" data-bs-toggle="modal" data-bs-target="#carritoModal">
                         <img src="/img/icono/carrito de compras.png" alt="carrito" />
@@ -96,6 +93,12 @@
                   <% } %>                    
                                                                                                     
                 </ul>
+                <form class="d-flex flex-column position-relative" id="productSearchForm">
+                  <div class="d-flex">
+                      <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
+                  </div>
+                  <div id="suggestions" class="list-group mt-2 position-absolute w-100"></div>
+              </form>
             </div>
         </div>
     </nav>
@@ -225,5 +228,6 @@
   </div>
 </footer>
   <script src="/js/carritoC.js"></script>
+  <script src="/js/buscador.js"></script>
 </body>
 </html>

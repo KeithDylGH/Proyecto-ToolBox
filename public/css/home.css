@@ -110,25 +110,6 @@ nav ul li {
   width: 200px;
 }
 
-.buscador {
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding-right: 5%;
-}
-.buscador input {
-  width: 80%;
-  height: 2.4rem;
-  border-radius: 5px;
-  border: #1f2833 solid 1px;
-  padding-left: 20px;
-  background-image: url(/img/icono/lupa.png);
-  background-size: 30px;
-  background-repeat: no-repeat;
-  background-position: right;
-}
-
 .carrito img {
   width: 34px;
   margin: auto 0;

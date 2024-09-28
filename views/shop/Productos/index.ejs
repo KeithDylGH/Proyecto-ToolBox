@@ -6,6 +6,8 @@
     <title><%= producto.nombre %> - ToolBox</title>
 
     <link rel="icon" type="image/x-icon" href="/img/logo/Logo 180.png" />
+
+    <link rel="stylesheet" href="/css/buscador.css">
     <link rel="stylesheet" href="/css/producto.css" />
     <link rel="stylesheet" href="/css/notificacion.css">
     
@@ -104,10 +106,12 @@
                   <% } %>                    
                                                                                                     
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Busca aquí" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Buscar</button>
-                </form>
+                <form class="d-flex flex-column position-relative" id="productSearchForm">
+                  <div class="d-flex">
+                      <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
+                  </div>
+                  <div id="suggestions" class="list-group mt-2 position-absolute w-100"></div>
+              </form>
             </div>
         </div>
     </nav>
@@ -167,5 +171,6 @@
 <script src="/js/carrusel.js"></script>
 <script src="/js/notificacion.js"></script>
 <script src="/js/carritoC.js"></script>
+<script src="/js/buscador.js"></script>
 </body>
 </html>
