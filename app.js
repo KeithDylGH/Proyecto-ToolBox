@@ -152,8 +152,8 @@ app.get('/', async (req, res) => {
 
         // Seleccionar cuatro categorías aleatorias
         const categoriasSeleccionadas = categorias
-            .sort(() => 0.5 - Math.random()) // Mezclar categorías
-            .slice(0, 4); // Seleccionar las primeras 4 categorías
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 5);
 
         // Obtener un producto destacado para cada categoría
         const categoriasRecomendadas = [];

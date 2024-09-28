@@ -15,7 +15,6 @@
     
 
     <link rel="stylesheet" href="/css/home.css">
-    <!-- <link rel="stylesheet" href="/css/header.css"> -->
     <link rel="stylesheet" href="/css/buscador.css">
     <link rel="stylesheet" href="/css/notificacion.css">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,7 +30,7 @@
   </head>
   <body>
     <header style="background-color: #5e3b3b; padding: 10px 0;">
-        <nav class="navbar navbar-expand-lg" style="padding: 0 2rem;">
+        <nav class="navbar navbar-expand-lg" style="padding: 0 2rem; text-transform: uppercase;">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/" style="display: inline-block; margin-right: 15px;">
                     <img src="/img/logo/Logo Letra trazo.png" alt="Logo" class="w-25">
@@ -42,35 +41,35 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-white active" aria-current="page" href="/">Inicio</a>
+                            <a class="nav-link text-white active" aria-current="page" href="/">INICIO</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Categoría
+                                CATEGORÍA
                             </a>
                             <ul class="dropdown-menu">
                                 <% if (categorias && categorias.length > 0) { %>
                                     <% categorias.forEach(categoria => { %>
-                                        <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
+                                        <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre.toUpperCase() %></a></li>
                                     <% }) %>
                                 <% } else { %>
-                                    <li><a class="dropdown-item" href="#">No hay categorías disponibles</a></li>
+                                    <li><a class="dropdown-item" href="#">NO HAY CATEGORÍAS DISPONIBLES</a></li>
                                 <% } %>
                             </ul>
                         </li>
                         <% if (CUsuario) { %>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="/cuenta"><%= CUsuario.nombre %></a>
+                                <a class="nav-link text-white" href="/cuenta"><%= CUsuario.nombre.toUpperCase() %></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="/logout">Cerrar sesión</a>
+                                <a class="nav-link text-white" href="/logout">CERRAR SESIÓN</a>
                             </li>
                         <% } else { %>
                             <li class="nav-item">
-                                <a class="nav-link text-white" id="login" href="/login">Iniciar sesión</a>
+                                <a class="nav-link text-white" id="login" href="/login">INICIAR SESIÓN</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" id="register" href="/registrar">Registrarse</a>
+                                <a class="nav-link text-white" id="register" href="/registrar">REGISTRARSE</a>
                             </li>
                         <% } %>
                         <li class="nav-item me-3"> <!-- Ajuste aquí -->
@@ -82,7 +81,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title text-black" id="carritoModalLabel">Tu Carrito de Compras</h5>
+                                            <h5 class="modal-title text-black" id="carritoModalLabel">TU CARRITO DE COMPRAS</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
@@ -91,9 +90,9 @@
                                             </ul>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                            <a type="button" href="/cuenta/carrito" class="btn btn-primary">Más Detalles</a>
-                                            <button type="button" id="vaciarCarrito" class="btn btn-warning">Vaciar Carrito</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CERRAR</button>
+                                            <a type="button" href="/cuenta/carrito" class="btn btn-primary">MÁS DETALLES</a>
+                                            <button type="button" id="vaciarCarrito" class="btn btn-warning">VACÍAR CARRITO</button>
                                         </div>
                                     </div>
                                 </div>
@@ -103,14 +102,14 @@
     
                     <form class="d-flex flex-column position-relative" id="productSearchForm">
                         <div class="d-flex">
-                            <input class="form-control me-2" id="searchInput" type="search" placeholder="Busca aquí" aria-label="Search" autocomplete="off">
+                            <input class="form-control me-2" id="searchInput" type="search" placeholder="BUSCA AQUÍ" aria-label="Search" autocomplete="off">
                         </div>
                         <div id="suggestions" class="list-group mt-2 position-absolute w-100"></div>
                     </form>
                 </div>
             </div>
         </nav>
-    </header>                             
+    </header>                                 
 
   <!--NOTIFICACION-->
   <div class="notification d-none"></div>
@@ -241,11 +240,11 @@
                         src="/img/logo/LogoLetra.png" 
                         class="img-fluid rounded-start" 
                         alt="Logo de ToolBox" 
-                        style="max-width: 70%; height: auto; margin: 5px;"
+                        style="margin: 40% auto; max-width: 70%; height: auto; display: block;"
                     >
                 </div>
                 <div class="col-md-8">
-                    <div class="card-body" style="padding-bottom: 10px;">
+                    <div class="card-body" style="padding-bottom: 10px;"> <!-- Reduce el padding en la parte inferior -->
                         <h5 class="card-title">Sobre ToolBox</h5>
                         <p class="card-text">
                             En <strong>ToolBox</strong>, nos enorgullecemos de ser tu aliado confiable en 
@@ -257,14 +256,14 @@
                             Nos comprometemos a proporcionar un entorno seguro para nuestras transacciones, garantizando la 
                             protección de tus datos personales y ofreciendo múltiples opciones de pago seguras. 
                         </p>
-                        <a href="/acerca-de" style="color: rgb(187, 75, 10); text-decoration: none;">
+                        <a href="/acerca-de" style="text-decoration: none; border-radius: 5px;">
                             <strong>Haz clic para ver más sobre nosotros</strong>
                         </a>
                     </div>
                 </div>
             </div>
         </div>                            
-    </section>
+    </section>    
     
     </div>
     
