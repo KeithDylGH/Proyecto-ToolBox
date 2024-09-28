@@ -384,19 +384,22 @@ app.get('/tienda/producto/:id', async (req, res) => {
         const producto = await iProducto.findById(productoId);
         const categorias = await Categoria.find(); // Obtener todas las categorías
 
-        if (producto) {
-            // Obtener productos aleatorios excluyendo el producto actual
-            const randomProducts = await iProducto.aggregate([
-                { $match: { _id: { $ne: productoId } } },
-                { $sample: { size: 10 } } // Cambia el tamaño según tus necesidades
-            ]);
+        // Obtener productos destacados (puedes definir cómo seleccionarlos)
+        const productosDestacados = await iProducto.find({ destacado: true }).limit(8); // Cambia la condición según tu lógica
 
-            res.render('shop/Productos', { producto, randomProducts, categorias });
+        if (producto) {
+            res.render('shop/Productos/index', {
+                producto,
+                categorias,
+                productosDestacados, // Pasar productosDestacados a la vista
+                CUsuario: req.session.user // Suponiendo que estás utilizando una sesión para el usuario
+            });
         } else {
             res.status(404).send('Producto no encontrado');
         }
     } catch (error) {
-        res.status(500).send('Error al obtener el producto');
+        console.error(error);
+        res.status(500).send('Error en el servidor');
     }
 });
 
