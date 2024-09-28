@@ -16,10 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const pagoMovilBtn = document.getElementById('pagoMovilBtn');
     const transferenciaBtn = document.getElementById('transferenciaBtn');
     const zinliBtn = document.getElementById('zinliBtn');
-    const paypalBtn = document.getElementById('paypalBtn'); // Botón PayPal
     const cancelarPagoBtn = document.getElementById('cancelarPagoBtn');
 
-    if (pagoMovilBtn && transferenciaBtn && zinliBtn && paypalBtn && cancelarPagoBtn) {
+    if (pagoMovilBtn && transferenciaBtn && zinliBtn && cancelarPagoBtn) {
         pagoMovilBtn.addEventListener('click', function () {
             const pagoMovilModal = new bootstrap.Modal(document.getElementById('pagoMovilModal'));
             pagoMovilModal.show();
@@ -35,15 +34,42 @@ document.addEventListener('DOMContentLoaded', function () {
             zinliModal.show();
         });
 
-        // Evento para mostrar el modal de PayPal
-        paypalBtn.addEventListener('click', function () {
-            const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
-            paypalModal.show();
-            initPaypalButtons(); // Inicializar botones de PayPal
-        });
-
         cancelarPagoBtn.addEventListener('click', function () {
-            window.location.href = '/';
+            metodosPago.classList.add('d-none');
+            siguienteBtn.style.display = 'block';
+            cancelarBtn.style.display = 'block';
+        });
+    }
+
+    // Manejo de formularios
+    const pagoMovilForm = document.getElementById('pagoMovilForm');
+    const transferenciaForm = document.getElementById('transferenciaForm');
+    const zinliForm = document.getElementById('zinliForm');
+
+    if (pagoMovilForm) {
+        pagoMovilForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // Aquí podrías agregar lógica para procesar el pago móvil
+            alert('Pago Móvil procesado');
+            // Redireccionar o mostrar confirmación
+        });
+    }
+
+    if (transferenciaForm) {
+        transferenciaForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // Aquí podrías agregar lógica para procesar la transferencia
+            alert('Transferencia procesada');
+            // Redireccionar o mostrar confirmación
+        });
+    }
+
+    if (zinliForm) {
+        zinliForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // Aquí podrías agregar lógica para procesar el pago por Zinli
+            alert('Pago por Zinli procesado');
+            // Redireccionar o mostrar confirmación
         });
     }
 

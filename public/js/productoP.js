@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', async function() {
             const productoId = this.getAttribute('data-producto-id');
             const cantidad = 1;
-  
+
             try {
                 const response = await fetch('/api/carrito/add', {
                     method: 'POST',
@@ -13,29 +13,33 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     body: JSON.stringify({ productoId, cantidad })
                 });
-  
+
                 const result = await response.json();
                 if (response.ok) {
-                    alert('Producto añadido al carrito');
+                    showNotification('Producto añadido al carrito', 'success'); // Mostrar notificación
+                    // Esperar 4 segundos y redirigir
+                    setTimeout(() => {
+                        window.location.href = "/cuenta/carrito"; // Redirigir a la página de carrito
+                    }, 4000);
                 } else {
-                    alert('Error al añadir el producto al carrito');
+                    showNotification('Error al añadir el producto al carrito', 'error'); // Notificación de error
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error al añadir el producto al carrito');
+                showNotification('Error al añadir el producto al carrito', 'error'); // Notificación de error
             }
         });
     });
-  
+
     // Manejar la acción de compra
     const comprarBtn = document.getElementById("comprarBtn");
     if (comprarBtn) {
         comprarBtn.addEventListener("click", async function(event) {
             event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
-  
+
             const productoId = this.getAttribute("data-producto-id");
             const cantidad = 1; // Cantidad que deseas añadir
-  
+
             // Intentar añadir el producto al carrito
             try {
                 const response = await fetch("/api/carrito/add", {
@@ -45,18 +49,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     body: JSON.stringify({ productoId, cantidad }),
                 });
-  
+
                 if (response.ok) {
-                    // Redirigir a la página del carrito si el producto se agrega correctamente
-                    window.location.href = "/cuenta/carrito";
+                    showNotification('Producto añadido al carrito', 'success'); // Mostrar notificación
+                    // Esperar 4 segundos y redirigir
+                    setTimeout(() => {
+                        window.location.href = "/cuenta/carrito"; // Redirigir a la página de carrito
+                    }, 4000);
                 } else {
-                    // Manejar error al agregar el producto
-                    alert("Error al añadir el producto al carrito.");
+                    showNotification("Error al añadir el producto al carrito.", "error"); // Notificación de error
                 }
             } catch (error) {
                 console.error("Error:", error);
-                alert("Ocurrió un error al añadir el producto al carrito.");
+                showNotification("Ocurrió un error al añadir el producto al carrito.", "error"); // Notificación de error
             }
         });
     }
-  });  
+});
