@@ -1,20 +1,3 @@
-// Entrar a la página Log-in
-document.addEventListener('DOMContentLoaded', function() {
-    const botonIniciarSesion = document.getElementById('login');
-    if (botonIniciarSesion) {
-        botonIniciarSesion.addEventListener('click', function() {
-            window.location.href = '/login/';
-        });
-    }
-
-    const tienda = document.getElementById('categoria1');
-    if (tienda) {
-        tienda.addEventListener('click', function() {
-            window.location.href = '/tienda/';
-        });
-    }
-});
-
 // Escuchar el clic en los botones de agregar al carrito
 document.addEventListener('DOMContentLoaded', function() {
     const botonesAgregarCarrito = document.querySelectorAll('.btn-agregar-carrito');

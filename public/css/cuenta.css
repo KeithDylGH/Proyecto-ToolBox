@@ -1,12 +1,4 @@
-body {
-    background: #bababa;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-}
-
-/*HEADER*/
+/*HEADER
 header {
     background-color: #1f1616;
     color: #fff;
@@ -67,13 +59,13 @@ nav ul li{
     padding: 10px 0 10px 0 ;
     gap: 1rem;
     flex-wrap: wrap;
-}
+} */
 
 /*MAIN*/
 
 
 /* On screens that are less than 700px wide, make the sidebar into a topbar */
-@media screen and (max-width: 700px) {
+/* @media screen and (max-width: 700px) {
 
   .imgCarousel{
     width: 50%;
@@ -84,10 +76,10 @@ nav ul li{
   }
 
   
-}
+} */
 
 /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
-@media screen and (max-width: 400px) {
+/* @media screen and (max-width: 400px) {
 
   .imgCarousel{
     width: 50%;
@@ -96,4 +88,4 @@ nav ul li{
   .interfaz .content{
     margin: 0;
   }
-}
+} */
