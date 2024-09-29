@@ -4,7 +4,7 @@ const notificacionSchema = new mongoose.Schema({
     usuarioNombre: { type: String, required: true },
     usuarioCorreo: { type: String, required: true },
     productos: [{ 
-        productoId: { type: mongoose.Schema.Types.ObjectId, ref: 'iProducto' },
+        productoId: { type: mongoose.Schema.Types.ObjectId, ref: 'Producto' },
         quantity: Number 
     }],
     total: { type: Number, required: true },

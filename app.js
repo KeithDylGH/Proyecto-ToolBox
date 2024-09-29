@@ -820,16 +820,14 @@ app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
 
 app.get('/admin/notificacion', authorize(['admin', 'boss']), async (req, res) => {
     try {
-        // Obtener todas las notificaciones y cargar la información de los productos
         const notificaciones = await Notificacion.find()
-            .populate('productos.productoId') // Esto busca la información de los productos relacionados
+            .populate('productos.productoId') // Asegúrate de que esto esté correcto
             .sort({ fecha: -1 })
             .lean();
         
-        // Renderizar la vista de notificaciones y pasar las notificaciones al archivo EJS
         res.render('account/cuenta/admin/notification', { 
             notificaciones, 
-            CUsuario: req.session.user  // Pasar los datos del usuario a la vista para el sidebar
+            CUsuario: req.session.user 
         });
     } catch (error) {
         console.error('Error al obtener notificaciones:', error);
