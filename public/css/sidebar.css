@@ -1,0 +1,104 @@
+/* Sidebar */
+.logo {
+    width: 100%;
+}
+
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px; /* Ajusta el ancho según sea necesario */
+    background-color: #5e3b3b; /* Color de fondo del sidebar */
+    position: fixed; /* Mantiene el sidebar fijo */
+    height: 100%; /* Altura completa */
+    overflow: auto; /* Permite el desplazamiento si es necesario */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+/* Sidebar links */
+.sidebar a {
+    display: block;
+    color: #fff;
+    padding: 16px;
+    text-decoration: none;
+}
+
+/* Active/current link */
+.sidebar a.active {
+    background-color: #f44336;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Links on mouse-over */
+.sidebar a:hover:not(.active) {
+    background-color: #E57368;
+    color: white;
+    transition: .2s ease-in-out;
+    text-decoration: none;
+}
+
+.Log-Out {
+    background-color: #FF6347;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 400;
+    outline: none;
+    width: 100%;
+    text-align: left;
+}
+
+.Log-Out:hover {
+    background-color: #E57368;
+    transition: .2s ease-in-out;
+}
+
+.Log-Out a:hover {
+    text-decoration: none;
+}
+
+div.content {
+    margin-left: 200px; /* Espacio para el sidebar */
+    padding: 1px 16px;
+    height: 1000px; /* Ajusta según el contenido */
+}
+
+/* Responsivo: en pantallas menores a 700px, convierte el sidebar en un topbar */
+@media screen and (max-width: 700px) {
+    .logo {
+        width: 5rem;
+    }
+
+    .sidebar {
+        width: 100%; /* Ancho completo en pantallas pequeñas */
+        height: auto; /* Altura automática */
+        position: relative; /* Cambia la posición a relativa */
+        display: flex; /* Cambia a flex para alinear items */
+        flex-direction: column; /* Alinea los links verticalmente */
+        overflow-x: hidden; /* Evita el desbordamiento horizontal */
+    }
+
+    .content {
+        margin-left: 0; /* Elimina el margen izquierdo */
+        padding: 20px; /* Mantiene el padding */
+    }
+
+    .Log-Out {
+        margin: 0 auto;
+        margin-right: 5px;
+        font-size: 13px;
+    }
+}
+
+/* En pantallas menores a 400px, muestra la barra verticalmente */
+@media screen and (max-width: 400px) {
+    .sidebar a {
+        text-align: center; /* Centra el texto de los links */
+        float: none; /* Elimina el float */
+    }
+
+    .Log-Out {
+        margin: 0; /* Elimina el margen */
+    }
+}

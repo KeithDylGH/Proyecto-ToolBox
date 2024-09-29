@@ -26,15 +26,10 @@ router.get('/home', async (req, res) => {
 // Agregar una categoría
 router.post('/agregar', async (req, res) => {
     try {
-        const { nombre } = req.body;
-        const ultimaCategoria = await Categoria.findOne().sort({ numero: -1 });
-        const nuevoNumero = ultimaCategoria ? ultimaCategoria.numero + 1 : 1;
+        const { nombre } = req.body;  // Verifica que esto esté capturando el 'nombre' correctamente
+        console.log('Nombre recibido:', nombre);  // Agrega esta línea para depuración
 
-        const nuevaCategoria = new Categoria({ nombre, numero: nuevoNumero });
-        await nuevaCategoria.save();
-
-        // Responder con un objeto JSON para el manejo del frontend
-        res.json({ success: true });
+        // Resto del código...
     } catch (error) {
         console.error('Error al agregar categoría:', error);
         res.status(500).json({ success: false, error: 'Error al agregar categoría' });
