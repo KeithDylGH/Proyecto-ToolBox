@@ -864,9 +864,6 @@ app.get('/inventario/descargarInv', authorize(['admin', 'boss']), async (req, re
     }
 });
 
-const PDFDocument = require('pdfkit');
-const path = require('path');
-
 app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, res) => {
     const format = req.query.format;
 
