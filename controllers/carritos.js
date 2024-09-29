@@ -146,35 +146,50 @@ carritoRouter.delete('/remove/:productoId', authorize(['user', 'admin', 'boss'])
 
 // Vaciar el carrito
 carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), async (req, res) => {
+    const vaciarCarrito = async (user) => {
+        try {
+            console.log('Vaciando el carrito para:', user.usuario);
+            const usuario = await CUsuario.findOne({ usuario: user.usuario });
+            
+            if (!usuario) {
+                console.error('Usuario no encontrado');
+                return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+            }
+
+            // Verificar si el carrito ya está vacío
+            if (usuario.carrito.length === 0) {
+                console.warn('El carrito ya está vacío para el usuario:', user.usuario);
+                return res.status(400).json({ success: false, message: 'El carrito ya está vacío' });
+            }
+
+            // Vaciar el carrito
+            usuario.carrito = [];
+            await usuario.save();
+            console.log('Carrito vaciado correctamente');
+            res.json({ success: true, message: 'Carrito vaciado exitosamente' });
+        } catch (error) {
+            if (error.name === 'VersionError') {
+                console.warn('Error de versión. Intentando nuevamente para:', user.usuario);
+                return vaciarCarrito(user); // Reintentar la operación
+            }
+            console.error('Error al vaciar el carrito:', error);
+            res.status(500).json({ success: false, message: 'Error del servidor' });
+        }
+    };
+
     try {
         const user = req.session.user;
 
         if (!user) {
-            console.error('No hay usuario en la sesión'); // Log adicional
+            console.error('No hay usuario en la sesión');
             return res.status(401).json({ success: false, message: 'No estás autenticado' });
         }
 
-        console.log('Vaciando el carrito para:', user.usuario);
-        const usuario = await CUsuario.findOne({ usuario: user.usuario });
-        if (!usuario) {
-            console.error('Usuario no encontrado'); // Log adicional
-            return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
-        }
+        // Intentar vaciar el carrito
+        await vaciarCarrito(user);
 
-        // Verificar si el carrito ya está vacío
-        if (usuario.carrito.length === 0) {
-            console.warn('El carrito ya está vacío para el usuario:', user.usuario);
-            return res.status(400).json({ success: false, message: 'El carrito ya está vacío' });
-        }
-
-        // Vaciar el carrito
-        usuario.carrito = [];
-        await usuario.save();
-        console.log('Carrito vaciado correctamente');
-
-        res.json({ success: true, message: 'Carrito vaciado exitosamente' });
     } catch (error) {
-        console.error('Error al vaciar el carrito:', error);
+        console.error('Error en el proceso de vaciar el carrito:', error);
         res.status(500).json({ success: false, message: 'Error del servidor' });
     }
 });
