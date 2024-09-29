@@ -1,10 +1,9 @@
-document.addEventListener('DOMContentLoaded', function() {
-    cargarCarrito();
+document.addEventListener('DOMContentLoaded', () => {
+    cargarCarrito(); // Cargar el carrito al iniciar
 
-    // Agregar producto al carrito
-    document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
-        btn.addEventListener('click', async function(e) {
-            e.preventDefault();
+    // Manejar la acción de agregar al carrito
+    document.querySelectorAll('.btn-agregar-carrito').forEach(button => {
+        button.addEventListener('click', async function() {
             const productoId = this.getAttribute('data-producto-id');
             const cantidad = 1;
 
@@ -16,21 +15,54 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: JSON.stringify({ productoId, cantidad })
                 });
-                const data = await response.json();
 
-                if (data.success) {
-                    cargarCarrito();
-                    showNotification('Producto agregado al carrito', 'success'); // Cambiar aquí
-
+                const result = await response.json();
+                if (response.ok) {
+                    showNotification('Producto añadido al carrito', 'success'); // Mostrar notificación
+                    cargarCarrito(); // Actualiza el carrito en la interfaz
                 } else {
-                    showNotification('Error al agregar al carrito', 'error'); // Cambiar aquí
+                    showNotification('Error al añadir el producto al carrito', 'error'); // Notificación de error
                 }
             } catch (error) {
-                console.error('Error en la solicitud:', error);
-                showNotification('Error al agregar al carrito', 'error'); // Cambiar aquí
+                console.error('Error:', error);
+                showNotification('Error al añadir el producto al carrito', 'error'); // Notificación de error
             }
         });
     });
+
+    // Manejar la acción de compra (este botón sí redirige)
+    const comprarBtn = document.getElementById("comprarBtn");
+    if (comprarBtn) {
+        comprarBtn.addEventListener("click", async function(event) {
+            event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+
+            const productoId = this.getAttribute("data-producto-id");
+            const cantidad = 1; // Cantidad que deseas añadir
+
+            // Intentar añadir el producto al carrito y luego redirigir
+            try {
+                const response = await fetch("/api/carrito/add", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ productoId, cantidad }),
+                });
+
+                if (response.ok) {
+                    showNotification('Producto añadido al carrito', 'success'); // Mostrar notificación
+                    setTimeout(() => {
+                        window.location.href = "/cuenta/carrito";
+                    }, 2000);
+                } else {
+                    showNotification("Error al añadir el producto al carrito.", "error"); // Notificación de error
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                showNotification("Ocurrió un error al añadir el producto al carrito.", "error"); // Notificación de error
+            }
+        });
+    }
 
     // Cargar el carrito
     async function cargarCarrito() {
