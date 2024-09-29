@@ -23,13 +23,18 @@ router.get('/home', async (req, res) => {
     }
 });
 
-router.post('/agregar', async (req, res) => {
+router.post('/agregar', async (req, res) => { 
     try {
         const { nombre } = req.body;
+        console.log('Nombre recibido:', nombre); // Verifica el valor
+
+        if (!nombre) {
+            return res.status(400).json({ success: false, error: 'El nombre es obligatorio.' });
+        }
 
         // Obtener la última categoría
         const ultimaCategoria = await Categoria.findOne({}, {}, { sort: { numero: -1 } });
-        const numero = ultimaCategoria ? ultimaCategoria.numero + 1 : 1; // Si no existe, comienza en 1
+        const numero = ultimaCategoria ? ultimaCategoria.numero + 1 : 1;
 
         const nuevaCategoria = new Categoria({ nombre, numero });
         await nuevaCategoria.save();

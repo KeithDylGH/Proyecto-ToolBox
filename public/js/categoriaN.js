@@ -9,35 +9,35 @@ function hideLoader() {
 }
 
 // Manejar envío del formulario para agregar categoría
-document.getElementById('formularioCategoria').addEventListener('submit', function (e) {
-  e.preventDefault();
-  showLoader();
+document.getElementById('formularioCategoria').addEventListener('submit', function(e) {
+  e.preventDefault(); // Prevenir el envío normal del formulario
+  showLoader(); // Mostrar loader mientras se envía el formulario
 
-  const formData = new FormData(this);
+  const formData = new FormData(this); // Obtener los datos del formulario
 
-  fetch('/api/categorias/agregar', {  // Cambiado a la nueva ruta
+  fetch('/api/categorias/agregar', {
       method: 'POST',
       body: formData,
   })
   .then(response => {
-      hideLoader();
-      if (response.ok) {  // Verificar si la respuesta es exitosa
-          showNotification('Categoría agregada con éxito', 'success');
-          return response.json(); // Retorna la respuesta en formato JSON si es exitosa
+      hideLoader(); // Ocultar loader después de la respuesta
+      if (response.ok) {
+          return response.json(); // Retornar JSON si la respuesta es exitosa
       } else {
-          showNotification('Error al agregar categoría', 'error');
-          return response.json(); // Para manejar el error y mostrarlo si es necesario
+          return response.json().then(data => {
+              throw new Error(data.error || 'Error desconocido'); // Lanzar error con el mensaje del servidor
+          });
       }
   })
   .then(data => {
-      if (data && data.error) {
-          showNotification(data.error, 'error'); // Mostrar mensaje de error específico si existe
+      if (data.success) {
+          showNotification('Categoría agregada con éxito', 'success'); // Notificación de éxito
+          this.reset(); // Opcional: Reiniciar el formulario
       }
   })
   .catch(err => {
-      hideLoader();
-      console.error('Error:', err); // Imprimir el error en la consola para depuración
-      showNotification('Ocurrió un error', 'error');
+      console.error('Error:', err); // Imprimir el error en la consola
+      showNotification(err.message, 'error'); // Notificación de error
   });
 });
 
