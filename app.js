@@ -253,7 +253,7 @@ app.post('/api/claveOlvidada', async (req, res) => {
         // Usa el enlace de restablecimiento de contraseña con el dominio de Render
         const resetLink = `https://proyecto-toolbox.onrender.com/nuevaClave?token=${resetToken}&correo=${encodeURIComponent(normalizedCorreo)}`;
 
-        // Enviar el correo
+        // Enviar el correo con el logo y la línea separadora
         await transporter.sendMail({
             from: 'toolboxproyecto@gmail.com',
             to: normalizedCorreo,
@@ -262,14 +262,28 @@ app.post('/api/claveOlvidada', async (req, res) => {
                 <html>
                 <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
                     <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                        
+                        <!-- Logo de la página -->
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <img src="https://proyecto-toolbox.onrender.com/public/images/logo.png" alt="Logo de Toolbox" style="width: 150px;">
+                        </div>
+                        
+                        <!-- Línea separadora -->
+                        <hr style="border: 0; border-top: 1px solid #007bff; margin-bottom: 20px;">
+
+                        <!-- Contenido del correo -->
                         <h2 style="text-align: center; color: #007bff;">Restablecimiento de Contraseña</h2>
                         <p>Hola,</p>
                         <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta. Para restablecer tu contraseña, por favor, haz clic en el siguiente enlace:</p>
                         <p style="text-align: center;">
-                            <a href="https://proyecto-toolbox.onrender.com/nuevaClave?token=${resetToken}&correo=${encodeURIComponent(normalizedCorreo)}">Restablecer Contraseña</a>
+                            <a href="${resetLink}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Restablecer Contraseña</a>
                         </p>
                         <p>Si no solicitaste este cambio, por favor ignora este correo.</p>
                         <p>Saludos,<br>El equipo de Toolbox</p>
+
+                        <!-- Línea separadora inferior -->
+                        <hr style="border: 0; border-top: 1px solid #007bff; margin-top: 20px;">
+                        
                     </div>
                 </body>
                 </html>
@@ -579,7 +593,7 @@ app.post('/confirmar-pago', authorize(['user', 'admin', 'boss']), async (req, re
     }
 });
 
-// Función para enviar el correo de compra
+// Función para enviar el correo de compra con imagenes embebidas (CID)
 async function enviarCorreoCompra(usuario, emailUsuario, productosArray, productosContados, total, metodo, pdfPath) {
     const listaProductosHtml = Object.keys(productosContados).map(id => {
         const productoEncontrado = productosArray.find(p => p._id.toString() === id);
@@ -587,43 +601,73 @@ async function enviarCorreoCompra(usuario, emailUsuario, productosArray, product
         return `<li>${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)} x ${cantidad} = $${(productoEncontrado.precio * cantidad).toFixed(2)}</li>`;
     }).join('');
 
-    // Enviar correo al usuario
+    // Enviar correo al usuario con el logo embebido
     await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: emailUsuario,
         subject: 'Factura de Compra',
         html: `
             <html>
-            <body>
-                <h2>Factura de Compra</h2>
-                <p>Hola ${usuario.nombre || emailUsuario},</p>
-                <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
-                <ul>${listaProductosHtml}</ul>
-                <p>Total: $${total.toFixed(2)}</p>
-                <p>Método de Pago: ${metodo}</p>
+            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
+                <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                    <div style="text-align: center;">
+                        <img src="cid:logoToolbox" alt="Logo Toolbox" style="max-width: 150px; margin-bottom: 20px;">
+                    </div>
+                    <hr style="border: 0; height: 1px; background: #ddd; margin-bottom: 20px;">
+                    <h2>Factura de Compra</h2>
+                    <p>Hola ${usuario.nombre || emailUsuario},</p>
+                    <p>Gracias por tu compra. Adjuntamos la factura de tu compra a este correo.</p>
+                    <ul>${listaProductosHtml}</ul>
+                    <p>Total: $${total.toFixed(2)}</p>
+                    <p>Método de Pago: ${metodo}</p>
+                </div>
             </body>
             </html>
         `,
-        attachments: [{ filename: 'factura.pdf', path: pdfPath }]
+        attachments: [
+            { filename: 'factura.pdf', path: pdfPath },
+            {
+                filename: 'LogoLetra.png',
+                path: 'public/img/logo/LogoLetra.png', // Ruta local al logo
+                cid: 'logoToolbox' // Referencia del CID usado en el HTML
+            }
+        ]
     });
 
-    // Enviar correos a administradores
     const admins = await CUsuario.find({ rol: { $in: ['admin', 'boss'] } });
     const adminEmails = admins.map(admin => admin.correo).join(', ');
 
+    // Enviar correo a administradores con el logo embebido
     await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: adminEmails,
         subject: 'Nueva Compra Realizada',
         html: `
-            <h1>Nueva Compra</h1>
-            <p>Usuario: ${usuario.nombre}</p>
-            <p>Correo: ${emailUsuario}</p>
-            <ul>${listaProductosHtml}</ul>
-            <p>Total: $${total.toFixed(2)}</p>
-            <p>Método de Pago: ${metodo}</p>
+            <html>
+            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;">
+                <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                    <div style="text-align: center;">
+                        <img src="cid:logoToolbox" alt="Logo Toolbox" style="max-width: 150px; margin-bottom: 20px;">
+                    </div>
+                    <hr style="border: 0; height: 1px; background: #ddd; margin-bottom: 20px;">
+                    <h2>Nueva Compra</h2>
+                    <p>Usuario: ${usuario.nombre}</p>
+                    <p>Correo: ${emailUsuario}</p>
+                    <ul>${listaProductosHtml}</ul>
+                    <p>Total: $${total.toFixed(2)}</p>
+                    <p>Método de Pago: ${metodo}</p>
+                </div>
+            </body>
+            </html>
         `,
-        attachments: [{ filename: 'factura.pdf', path: pdfPath }]
+        attachments: [
+            { filename: 'factura.pdf', path: pdfPath },
+            {
+                filename: 'LogoLetra.png',
+                path: 'public/img/logo/LogoLetra.png', // Ruta local al logo
+                cid: 'logoToolbox' // Referencia del CID usado en el HTML
+            }
+        ]
     });
 }
 

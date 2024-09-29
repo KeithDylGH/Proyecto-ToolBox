@@ -46,52 +46,52 @@
         </section>
 
         <!--Contenido-->
-          <section class="interfaz" style="margin-left: 200px;">
+        <section class="interfaz">
             <div class="container">
-              <h1 class="text-center mt-4">Notificaciones de Compras</h1>
-              <div class="row mt-4">
-                <% if (notificaciones.length > 0) { %>
-                  <% notificaciones.forEach(notificacion => { %>
+                <h1 class="text-center mt-4">Notificaciones de Compras</h1>
+                <div class="row mt-4">
+                    <% if (notificaciones.length > 0) { %>
+                    <% notificaciones.forEach(notificacion => { %>
                     <div class="col-md-4 mb-4">
-                      <div class="card shadow-sm border-0">
-                        <div class="card-header bg-primary text-white">
-                          <h5 class="card-title mb-0">Compra por: <%= notificacion.usuarioNombre %></h5>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">Compra por: <%= notificacion.usuarioNombre %></h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"><strong>Correo:</strong> <%= notificacion.usuarioCorreo %></p>
+                                <p class="card-text"><strong>Método de Pago:</strong> <%= notificacion.metodoPago %></p>
+                                <p class="card-text"><strong>Total:</strong> $<%= notificacion.total.toFixed(2) %></p>
+                                <p class="card-text"><strong>Productos:</strong></p>
+                                <ul class="list-unstyled">
+                                    <% notificacion.productos.forEach(producto => { %>
+                                    <% if (producto && typeof producto.price === 'number') { %>
+                                    <li class="d-flex align-items-center">
+                                        <img src="<%= producto.imagen ? producto.imagen.data : '/img/default-product.jpg' %>" alt="<%= producto.name %>" class="img-fluid me-2" style="width: 50px; height: auto;">
+                                        <div>
+                                            <%= producto.name %> - $<%= producto.price.toFixed(2) %> x <%= producto.quantity %>
+                                        </div>
+                                    </li>
+                                    <% } else { %>
+                                    <li>Producto no disponible</li>
+                                    <% } %>
+                                    <% }) %>
+                                </ul>
+                                <p class="card-text"><small class="text-muted">Fecha: <%= notificacion.fecha.toLocaleString() %></small></p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="atendido-<%= notificacion._id %>" onchange="updateNotificacion('<%= notificacion._id %>')" <%= notificacion.atendido ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="atendido-<%= notificacion._id %>">Marcado como atendido</label>
+                                </div>
+                                <button class="btn btn-danger mt-2" onclick="deleteNotificacion('<%= notificacion._id %>')">Eliminar Notificación</button>
+                            </div>
                         </div>
-                        <div class="card-body">
-                          <p class="card-text"><strong>Correo:</strong> <%= notificacion.usuarioCorreo %></p>
-                          <p class="card-text"><strong>Método de Pago:</strong> <%= notificacion.metodoPago %></p>
-                          <p class="card-text"><strong>Total:</strong> $<%= notificacion.total.toFixed(2) %></p>
-                          <p class="card-text"><strong>Productos:</strong></p>
-                          <ul class="list-unstyled">
-                            <% notificacion.productos.forEach(producto => { %>
-                              <% if (producto && typeof producto.price === 'number') { %>
-                                <li class="d-flex align-items-center">
-                                  <img src="<%= producto.imagen ? producto.imagen.data : '/img/default-product.jpg' %>" alt="<%= producto.name %>" class="img-fluid me-2" style="width: 50px; height: auto;">
-                                  <div>
-                                    <%= producto.name %> - $<%= producto.price.toFixed(2) %> x <%= producto.quantity %>
-                                  </div>
-                                </li>
-                              <% } else { %>
-                                <li>Producto no disponible</li>
-                              <% } %>
-                            <% }) %>
-                          </ul>
-                          <p class="card-text"><small class="text-muted">Fecha: <%= notificacion.fecha.toLocaleString() %></small></p>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="atendido-<%= notificacion._id %>" onchange="updateNotificacion('<%= notificacion._id %>')" <%= notificacion.atendido ? 'checked' : '' %>>
-                            <label class="form-check-label" for="atendido-<%= notificacion._id %>">Marcado como atendido</label>
-                          </div>
-                          <button class="btn btn-danger mt-2" onclick="deleteNotificacion('<%= notificacion._id %>')">Eliminar Notificación</button>
-                        </div>
-                      </div>
                     </div>
-                  <% }) %>
-                <% } else { %>
-                  <p class="text-center">No hay notificaciones de compras.</p>
-                <% } %>
-              </div>
+                    <% }) %>
+                    <% } else { %>
+                    <p class="text-center">No hay notificaciones de compras.</p>
+                    <% } %>
+                </div>
             </div>
-          </section>
+        </section>
 
         <footer class="mt-auto py-3 bg-dark text-light">
             <div class="container text-center">

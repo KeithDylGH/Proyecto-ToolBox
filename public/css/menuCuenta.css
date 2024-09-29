@@ -6,6 +6,7 @@ body {
 .interfaz {
   background-color: #e5e5e5;
   padding: 2rem;
+  margin-left: 200px; /* Este margen se aplicará en pantallas más grandes */
 }
 
 .card-title {
