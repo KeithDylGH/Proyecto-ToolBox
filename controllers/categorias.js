@@ -23,13 +23,18 @@ router.get('/home', async (req, res) => {
     }
 });
 
-// Agregar una categoría
 router.post('/agregar', async (req, res) => {
     try {
-        const { nombre } = req.body;  // Verifica que esto esté capturando el 'nombre' correctamente
-        console.log('Nombre recibido:', nombre);  // Agrega esta línea para depuración
+        const { nombre } = req.body;
 
-        // Resto del código...
+        // Obtener la última categoría
+        const ultimaCategoria = await Categoria.findOne({}, {}, { sort: { numero: -1 } });
+        const numero = ultimaCategoria ? ultimaCategoria.numero + 1 : 1; // Si no existe, comienza en 1
+
+        const nuevaCategoria = new Categoria({ nombre, numero });
+        await nuevaCategoria.save();
+
+        res.status(201).json({ success: true, categoria: nuevaCategoria });
     } catch (error) {
         console.error('Error al agregar categoría:', error);
         res.status(500).json({ success: false, error: 'Error al agregar categoría' });
