@@ -166,7 +166,7 @@ carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), async (req
             usuario.carrito = [];
             await usuario.save();
             console.log('Carrito vaciado correctamente');
-            res.json({ success: true, message: 'Carrito vaciado exitosamente' });
+            return res.json({ success: true, message: 'Carrito vaciado exitosamente' });
         } catch (error) {
             if (error.name === 'VersionError') {
                 // Verificar de nuevo si el carrito ya está vacío antes de reintentar
@@ -180,7 +180,7 @@ carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), async (req
                 return vaciarCarrito(user); // Reintentar la operación
             }
             console.error('Error al vaciar el carrito:', error);
-            res.status(500).json({ success: false, message: 'Error del servidor' });
+            return res.status(500).json({ success: false, message: 'Error del servidor' });
         }
     };
 
@@ -197,7 +197,7 @@ carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), async (req
 
     } catch (error) {
         console.error('Error en el proceso de vaciar el carrito:', error);
-        res.status(500).json({ success: false, message: 'Error del servidor' });
+        return res.status(500).json({ success: false, message: 'Error del servidor' });
     }
 });
 
