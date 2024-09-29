@@ -152,15 +152,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 });
 
                                 const result = await response.json();
-                                if (result.success) {
-                                    showNotification('Carrito vaciado', 'success'); // Cambiar aquí
-                                    cargarCarrito(); // Actualiza el carrito en la interfaz
+                                if (response.ok) { // Cambiado para verificar el estado de la respuesta
+                                    showNotification('Carrito vaciado', 'success');
+                                    cargarCarrito();
                                 } else {
-                                    showNotification(result.message || 'Error al vaciar el carrito', 'error'); // Cambiar aquí
+                                    showNotification(result.message || 'Error al vaciar el carrito', 'error');
                                 }
                             } catch (error) {
                                 console.error('Error al vaciar el carrito:', error);
-                                showNotification('Error al vaciar el carrito', 'error'); // Cambiar aquí
+                                showNotification('Error al vaciar el carrito', 'error');
                             }
                         });
                     }
