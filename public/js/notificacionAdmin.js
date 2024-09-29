@@ -1,3 +1,5 @@
+const url = 'https://proyecto-toolbox.onrender.com/api/products';
+
 // Función para actualizar el estado de "atendido"
 async function updateNotificacion(notificacionId) {
     const atendido = document.getElementById(`atendido-${notificacionId}`).checked;
