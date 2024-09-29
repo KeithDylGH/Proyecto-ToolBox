@@ -89,20 +89,42 @@
                     </thead>
                     <tbody>
                         <% if (productos && productos.length > 0) { %>
-                            <% productos.forEach(producto => { %>
+                            <% productos.forEach(producto => { 
+                                const categoria = categorias.find(c => c._id && producto.categoria && c._id.toString() === producto.categoria.toString());
+                                const categoriaIndex = categoria ? categorias.indexOf(categoria) + 1 : 'No asignada';
+                            %>
                                 <tr>
                                     <td style="font-size: 1.1rem;"><%= producto.nombre %></td>
                                     <td style="font-size: 1.1rem;"><%= producto.precio %><strong> $</strong></td>
-                                    <td style="font-size: 1.1rem;"><%= producto.categoria %></td>
+                                    <td style="font-size: 1.1rem;">
+                                        <% if (categoria) { %>
+                                            <%= categoria.nombre %> (ID: <%= categoriaIndex %>)
+                                        <% } else { %>
+                                            Categoría no asignada
+                                        <% } %>
+                                    </td>
                                     <td style="font-size: 1.1rem;"><%= producto.descripcion %></td>
+                                    <td>
+                                        <% if (producto.imagen && producto.imagen.data !== '') { %>
+                                            <img src="<%= producto.imagen.data %>" alt="Imagen del producto" class="img-thumbnail mb-3" style="max-width: 100px;">
+                                        <% } else { %>
+                                            Sin imagen
+                                        <% } %>                                    
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <a href="/inventario/editar/<%= producto._id %>" class="btn btn-warning btn-sm mb-1">Editar</a>
+                                            <button class="btn btn-danger btn-sm btn-eliminar" data-id="<%= producto._id %>">Eliminar</button>
+                                        </div>
+                                    </td>                                
                                 </tr>
                             <% }); %>
                         <% } else { %>
                             <tr>
-                                <td colspan="4">No hay productos disponibles</td>
+                                <td colspan="5">No hay productos disponibles</td>
                             </tr>
                         <% } %>
-                    </tbody>
+                    </tbody>                    
                 </table>
             </div>
         </div>
