@@ -8,6 +8,16 @@ function hideLoader() {
   document.getElementById('loader').style.display = 'none';
 }
 
+// Mostrar mini loader
+function showMiniLoader() {
+  document.getElementById('miniLoader').style.display = 'flex'; // Cambiar 'miniLoader' según el ID que uses
+}
+
+// Ocultar mini loader
+function hideMiniLoader() {
+  document.getElementById('miniLoader').style.display = 'none'; // Cambiar 'miniLoader' según el ID que uses
+}
+
 // Manejar envío del formulario para agregar categoría
 document.getElementById('formularioCategoria').addEventListener('submit', function (e) {
   e.preventDefault();
@@ -25,8 +35,6 @@ document.getElementById('formularioCategoria').addEventListener('submit', functi
           if (data.success) {
               showNotification('Categoría agregada con éxito', 'success');
               document.getElementById('formularioCategoria').reset();
-              // Aquí puedes actualizar la lista de categorías si es necesario
-              // window.location.reload(); // Opcional: recargar la página para obtener categorías actualizadas
           } else {
               showNotification('Error al agregar categoría', 'error');
           }
@@ -42,7 +50,7 @@ const formActualizar = document.querySelectorAll('.formActualizar');
 formActualizar.forEach(form => {
   form.addEventListener('submit', function (e) {
       e.preventDefault();
-      showLoader(); // Mostrar mini loader
+      showMiniLoader(); // Mostrar mini loader
       const formData = new FormData(this);
 
       fetch(this.action, {
@@ -51,17 +59,15 @@ formActualizar.forEach(form => {
       })
           .then(response => response.json())
           .then(data => {
-              hideLoader();
+              hideMiniLoader();
               if (data.success) {
                   showNotification('Categoría actualizada con éxito', 'success');
-                  // Aquí puedes actualizar la lista de categorías si es necesario
-                  // window.location.reload(); // Opcional: recargar la página para obtener categorías actualizadas
               } else {
                   showNotification('Error al actualizar categoría', 'error');
               }
           })
           .catch(err => {
-              hideLoader();
+              hideMiniLoader();
               showNotification('Ocurrió un error', 'error');
           });
   });
@@ -85,8 +91,6 @@ formEliminar.forEach(form => {
                   hideLoader();
                   if (data.success) {
                       showNotification('Categoría eliminada con éxito', 'success');
-                      // Aquí puedes actualizar la lista de categorías si es necesario
-                      // window.location.reload(); // Opcional: recargar la página para obtener categorías actualizadas
                   } else {
                       showNotification('Error al eliminar categoría', 'error');
                   }

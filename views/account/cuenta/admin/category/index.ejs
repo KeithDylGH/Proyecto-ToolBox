@@ -75,58 +75,61 @@
     <main class="px-5 py-2">
       <h1 class="text-center">Gestión de Categorías</h1>
 
-<!-- Notificaciones -->
-<div class="notification" style="display: none;"></div>
+      <!-- Mensaje de notificación -->
+      <div id="notification" class="alert alert-success d-none" role="alert"></div>
 
-<!-- Formulario para agregar categoría -->
-<div class="d-flex justify-content-center mt-4">
-    <div class="w-75">
-        <div class="card shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+      <!-- Formulario para agregar categoría -->
+      <div class="d-flex justify-content-center mt-4">
+        <div class="w-75">
+          <div class="card shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
             <div class="bg-white p-3">
-                <form id="formularioCategoria" method="POST" action="/api/categorias">
-                    <div class="mb-4">
-                        <label class="form-label" for="nombreCategoria">Nombre de la Categoría</label>
-                        <input class="form-control" id="nombreCategoria" name="nombre" type="text" placeholder="Nombre de la Categoría" required />
-                    </div>
-                    <button type="submit" class="btn btn-primary">Agregar Categoría</button>
-                </form>
-                <!-- Loader -->
-                <div id="loader" style="display: none;">Cargando...</div>
+              <form id="formularioCategoria" method="POST" action="/api/categorias">
+                <div class="mb-4">
+                  <label class="form-label" for="nombreCategoria">Nombre de la Categoría</label>
+                  <input class="form-control" id="nombreCategoria" name="nombre" type="text" placeholder="Nombre de la Categoría" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Agregar Categoría</button>
+              </form>
+              <!-- Loader -->
+              <div id="loader" style="display: none;">Cargando...</div>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<!-- Lista de Categorías -->
-<div class="mt-5">
-    <h3>Lista de Categorías</h3>
-    <ul class="list-group" style="font-size: 0.85rem;"> <!-- Lista más pequeña -->
-        <% if (categorias && categorias.length > 0) { %>
+      <!-- Lista de Categorías -->
+      <div class="mt-5">
+        <h3>Lista de Categorías</h3>
+        <ul class="list-group">
+          <% if (categorias && categorias.length > 0) { %>
             <% categorias.forEach(function(categoria) { %>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div class="d-flex justify-content-center flex-fill">
-                        <!-- Input centrado -->
-                        <input type="text" name="nombre" class="form-control w-75 text-center" value="<%= categoria.nombre %>" readonly>
-                    </div>
-                    <!-- Botones a la derecha -->
-                    <div class="d-flex flex-column align-items-end ms-3">
-                        <form action="/api/categorias/<%= categoria._id %>" method="POST" class="mb-2 formActualizar">
-                            <input type="hidden" name="_method" value="PUT">
-                            <input type="text" name="nombre" class="form-control" value="<%= categoria.nombre %>" required>
-                            <button type="submit" class="btn btn-secondary mt-2">Actualizar</button>
-                        </form>
-                        <form action="/api/categorias/<%= categoria._id %>" method="POST" class="formEliminar">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="btn btn-danger mt-2">Eliminar</button>
-                        </form>
-                    </div>
-                </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span><%= categoria.numero %>. <%= categoria.nombre %></span>
+                <div class="d-flex">
+                  <form action="/api/categorias/<%= categoria._id %>" method="POST" class="d-flex me-2">
+                    <input type="hidden" name="_method" value="PUT">
+                    <input type="text" name="nombre" class="form-control" value="<%= categoria.nombre %>" required>
+                    <button type="submit" class="btn btn-secondary ms-2">Actualizar</button>
+                  </form>
+                  <form action="/api/categorias/<%= categoria._id %>" method="POST" style="display:inline;">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                  </form>
+                </div>
+              </li>
             <% }); %>
-        <% } else { %>
+          <% } else { %>
             <li class="list-group-item">No hay categorías disponibles.</li>
-        <% } %>
-    </ul>
-</div>
+          <% } %>
+        </ul>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mini Loader en la esquina superior derecha -->
+  <div class="mini-loader-overlay" id="miniLoaderOverlay" style="display: none;">
+    <div class="mini-loader"></div>
+  </div>
 
   <!-- Footer -->
   <footer class="mt-auto py-3 bg-dark text-light">
