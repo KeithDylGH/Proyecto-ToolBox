@@ -28,7 +28,7 @@ const authorize = require('./middleware/authorize');
 const nodemailer = require('nodemailer');
 const Notificacion = require('./models/notificacion');
 const notificacionRouter = require('./controllers/notificaciones');
-const paypalPaymentRoute = require('./controllers/paypal');
+//const paypalPaymentRoute = require('./controllers/paypal');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -471,7 +471,7 @@ app.get('/compra', authorize(['user', 'admin', 'boss']), async (req, res) => {
             productos: carrito, 
             totalCarrito,
             usuarioCorreo: user.correo, // Asegúrate de que user.correo esté definido
-            paypalClientId: process.env.PAYPAL_CLIENT_ID // Agregando PAYPAL_CLIENT_ID
+            //paypalClientId: process.env.PAYPAL_CLIENT_ID
         });
     } catch (error) {
         console.error('Error al obtener los productos del carrito:', error);
@@ -820,14 +820,12 @@ app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
 
 app.get('/admin/notificacion', authorize(['admin', 'boss']), async (req, res) => {
     try {
-        const notificaciones = await Notificacion.find()
-            .populate('productos.productoId') // Asegúrate de que esto esté correcto
-            .sort({ fecha: -1 })
-            .lean();
-        
+        // Obtener todas las notificaciones de la base de datos
+        const notificaciones = await Notificacion.find().sort({ fecha: -1 }).lean();
+        // Renderizar la vista de notificaciones y pasar las notificaciones al archivo EJS
         res.render('account/cuenta/admin/notification', { 
             notificaciones, 
-            CUsuario: req.session.user 
+            CUsuario: req.session.user  // Pasar los datos del usuario a la vista para el sidebar
         });
     } catch (error) {
         console.error('Error al obtener notificaciones:', error);
@@ -1061,4 +1059,4 @@ app.use('/api/login', loginRouter);
 app.use('/api/categorias', categoriaRouter);
 app.use('/api/carrito', carritoRouter);
 app.use('/api/notificaciones', notificacionRouter);
-app.use('/paypal', paypalPaymentRoute);
+//app.use('/paypal', paypalPaymentRoute);
