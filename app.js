@@ -872,7 +872,8 @@ app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, r
     }
 
     try {
-        const productos = await iProducto.find();
+        // Populamos el campo 'categoria' para obtener el nombre de la categoría en lugar del ID
+        const productos = await iProducto.find().populate('categoria', 'nombre');
 
         if (format === 'excel') {
             const workbook = new Excel.Workbook();
@@ -886,7 +887,12 @@ app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, r
             ];
 
             productos.forEach(producto => {
-                worksheet.addRow(producto);
+                worksheet.addRow({
+                    nombre: producto.nombre,
+                    precio: producto.precio,
+                    categoria: producto.categoria.nombre, // Nombre de la categoría
+                    descripcion: producto.descripcion
+                });
             });
 
             res.setHeader(
@@ -907,7 +913,7 @@ app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, r
             const logoPath = path.join(__dirname, 'public', 'img', 'logo', 'LogoLetra.png');
             doc.image(logoPath, 50, 30, { width: 100 }); // Logo en la parte superior
 
-            // Título
+            // Título del PDF
             doc.font('Helvetica-Bold').fontSize(24).text('Lista de Productos', {
                 align: 'center',
                 underline: true,
@@ -922,7 +928,7 @@ app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, r
             productos.forEach(producto => {
                 // Información del producto
                 doc.text(`Nombre: ${producto.nombre}`, { continued: true });
-                doc.text(`    Categoría: ${producto.categoria}`, { continued: true });
+                doc.text(`    Categoría: ${producto.categoria.nombre}`, { continued: true }); // Nombre de la categoría
                 doc.text(`    Precio: $${producto.precio.toFixed(2)}`);
 
                 // Línea de separación
