@@ -10,7 +10,7 @@ function hideLoader() {
 
 // Manejar envío del formulario para agregar categoría
 document.getElementById('formularioCategoria').addEventListener('submit', function(e) {
-  e.preventDefault(); // Prevenir el envío normal del formulario
+  e.preventDefault();
   showLoader(); // Mostrar loader mientras se envía el formulario
 
   const formData = new FormData(this); // Obtener los datos del formulario
@@ -18,7 +18,7 @@ document.getElementById('formularioCategoria').addEventListener('submit', functi
   // Para depuración: verificar los datos que se envían
   console.log('Datos enviados:', Object.fromEntries(formData.entries()));
 
-  fetch('/api/categorias', { // Cambiado a la ruta original
+  fetch('/api/categorias', { // Asegúrate de que esta ruta sea correcta
       method: 'POST',
       body: formData,
   })
