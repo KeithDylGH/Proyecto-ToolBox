@@ -63,18 +63,14 @@
                                 <p class="card-text"><strong>Total:</strong> $<%= notificacion.total.toFixed(2) %></p>
                                 <p class="card-text"><strong>Productos:</strong></p>
                                 <ul class="list-unstyled">
-                                    <% notificacion.productos.forEach(producto => { %>
-                                        <% if (producto && producto.productoId) { %>
-                                            <li>
-                                                <%= producto.productoId.nombre || 'Producto desconocido' %> - 
-                                                <%= producto.quantity %> unidades - 
-                                                $<%= (producto.productoId.precio * producto.quantity).toFixed(2) %>
-                                            </li>
-                                        <% } else { %>
-                                            <li>Producto no disponible</li>
-                                        <% } %>
-                                    <% }) %>
-                                </ul>
+                                  <% notificacion.productos.forEach(producto => { %>
+                                      <li>
+                                          <%= producto.name || 'Producto desconocido' %> - 
+                                          <%= producto.quantity %> unidades - 
+                                          $<%= (producto.price * producto.quantity).toFixed(2) %>
+                                      </li>
+                                  <% }) %>
+                              </ul>                              
                                 <p class="card-text"><small class="text-muted">Fecha: <%= notificacion.fecha.toLocaleString() %></small></p>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="atendido-<%= notificacion._id %>" onchange="updateNotificacion('<%= notificacion._id %>')" <%= notificacion.atendido ? 'checked' : '' %>>
@@ -92,9 +88,6 @@
             </div>
         </section>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3oAiT1pF2K5Hj69O5ABt3oRAA1G8m2ekqER0g5A3MgbOMPPuEGhZCxgL3F3Jj" crossorigin="anonymous"></script>
 
     <script src="/js/notificacionAdmin.js"></script>
 </body>
