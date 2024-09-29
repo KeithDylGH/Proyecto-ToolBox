@@ -72,103 +72,8 @@ nav ul li{
 /*MAIN*/
 
 
-/*SIDEBAR*/
-.logo{
-  width: 100%;
-}
-
-.sidebar {
-  margin: 0;
-  padding: 0;
-  width: 200px;
-  background-color: #5e3b3b;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-}
-
-/* Sidebar links */
-.sidebar a {
-  display: block;
-  color: #fff;
-  padding: 16px;
-  text-decoration: none;
-}
-
-/* Active/current link */
-.sidebar a.active {
-  background-color: #f44336;
-  color: #fff;
-  text-decoration: none;
-}
-
-/* Links on mouse-over */
-.sidebar a:hover:not(.active) {
-  background-color: #E57368;
-  color: white;
-  transition: .2s ease-in-out;
-  text-decoration: none;
-}
-
-.Log-Out{
-  background-color: #FF6347;
-  border: none;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 16px;
-  font-weight: 400;
-  outline: none;
-  width: 100%;
-  text-align: left;
-}
-.Log-Out:hover{
-  background-color: #E57368;
-  transition: .2s ease-in-out;
-}
-.Log-Out a:hover{
-  text-decoration: none;
-}
-
-div.content {
-  margin-left: 200px;
-  padding: 1px 16px;
-  min-height: calc(100vh - 56px);
-  box-sizing: border-box;
-}
-
-footer a{
-  color: #FF6347;
-}
-.link:hover{
-  color: #E57368;
-  transition: .2s ease-in-out;
-  text-decoration: none;
-}
-
-
-
 /* On screens that are less than 700px wide, make the sidebar into a topbar */
 @media screen and (max-width: 700px) {
-
-  .logo{
-    width: 5rem;
-  }
-  .siderbar button{
-    width: 10%;
-  }
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    display: flex;
-    overflow-x: hidden;
-  }
-
-  .Log-Out{
-    margin: 0 auto;
-    margin-right: 5px;
-    font-size: 13px;
-  }
 
   .imgCarousel{
     width: 50%;
@@ -183,14 +88,6 @@ footer a{
 
 /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
 @media screen and (max-width: 400px) {
-  .sidebar a {
-    text-align: center;
-    float: none;
-  }
-
-  .Log-Out{
-    margin: 0;
-  }
 
   .imgCarousel{
     width: 50%;

@@ -23,26 +23,19 @@ router.get('/home', async (req, res) => {
     }
 });
 
-router.post('/agregar', async (req, res) => { 
+// Agregar una categoría
+router.post('/', async (req, res) => {
     try {
         const { nombre } = req.body;
-        console.log('Nombre recibido:', nombre); // Verifica el valor
+        const ultimaCategoria = await Categoria.findOne().sort({ numero: -1 });
+        const nuevoNumero = ultimaCategoria ? ultimaCategoria.numero + 1 : 1;
 
-        if (!nombre) {
-            return res.status(400).json({ success: false, error: 'El nombre es obligatorio.' });
-        }
-
-        // Obtener la última categoría
-        const ultimaCategoria = await Categoria.findOne({}, {}, { sort: { numero: -1 } });
-        const numero = ultimaCategoria ? ultimaCategoria.numero + 1 : 1;
-
-        const nuevaCategoria = new Categoria({ nombre, numero });
+        const nuevaCategoria = new Categoria({ nombre, numero: nuevoNumero });
         await nuevaCategoria.save();
 
-        res.status(201).json({ success: true, categoria: nuevaCategoria });
+        res.redirect('/inventario/categoria?success=Categoría agregada con éxito');
     } catch (error) {
-        console.error('Error al agregar categoría:', error);
-        res.status(500).json({ success: false, error: 'Error al agregar categoría' });
+        res.status(500).json({ error: 'Error al agregar categoría' });
     }
 });
 

@@ -15,7 +15,10 @@ document.getElementById('formularioCategoria').addEventListener('submit', functi
 
   const formData = new FormData(this); // Obtener los datos del formulario
 
-  fetch('/api/categorias/agregar', {
+  // Para depuración: verificar los datos que se envían
+  console.log('Datos enviados:', Object.fromEntries(formData.entries()));
+
+  fetch('/api/categorias', { // Cambiado a la ruta original
       method: 'POST',
       body: formData,
   })
@@ -32,7 +35,9 @@ document.getElementById('formularioCategoria').addEventListener('submit', functi
   .then(data => {
       if (data.success) {
           showNotification('Categoría agregada con éxito', 'success'); // Notificación de éxito
-          this.reset(); // Opcional: Reiniciar el formulario
+          this.reset(); // Reiniciar el formulario
+          // Opcional: puedes actualizar la lista de categorías aquí sin necesidad de recargar
+          // location.reload(); // Descomentar si deseas recargar la página para mostrar la nueva categoría
       }
   })
   .catch(err => {
@@ -56,22 +61,22 @@ formActualizar.forEach(form => {
       .then(response => {
           hideLoader();
           if (response.ok) {
-              showNotification('Categoría actualizada con éxito', 'success');
               return response.json(); // Retorna la respuesta en formato JSON
           } else {
-              showNotification('Error al actualizar categoría', 'error');
-              return response.json(); // Para manejar el error y mostrarlo si es necesario
+              throw new Error('Error al actualizar categoría'); // Lanzar error en caso de fallo
           }
       })
       .then(data => {
-          if (data && data.error) {
-              showNotification(data.error, 'error'); // Mostrar mensaje de error específico si existe
+          if (data.success) {
+              showNotification('Categoría actualizada con éxito', 'success');
+              // Opcional: actualizar la categoría en la lista sin recargar
+              // location.reload(); // Descomentar si deseas recargar la página para ver los cambios
           }
       })
       .catch(err => {
           hideLoader();
           console.error('Error:', err); // Imprimir el error en la consola para depuración
-          showNotification('Ocurrió un error', 'error');
+          showNotification(err.message, 'error');
       });
   });
 });
@@ -92,22 +97,22 @@ formEliminar.forEach(form => {
           .then(response => {
               hideLoader();
               if (response.ok) {
-                  showNotification('Categoría eliminada con éxito', 'success');
                   return response.json(); // Retorna la respuesta en formato JSON
               } else {
-                  showNotification('Error al eliminar categoría', 'error');
-                  return response.json(); // Para manejar el error y mostrarlo si es necesario
+                  throw new Error('Error al eliminar categoría'); // Lanzar error en caso de fallo
               }
           })
           .then(data => {
-              if (data && data.error) {
-                  showNotification(data.error, 'error'); // Mostrar mensaje de error específico si existe
+              if (data.success) {
+                  showNotification('Categoría eliminada con éxito', 'success');
+                  // Opcional: eliminar la categoría de la lista sin recargar
+                  // location.reload(); // Descomentar si deseas recargar la página
               }
           })
           .catch(err => {
               hideLoader();
               console.error('Error:', err); // Imprimir el error en la consola para depuración
-              showNotification('Ocurrió un error', 'error');
+              showNotification(err.message, 'error');
           });
       }
   });
