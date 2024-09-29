@@ -150,13 +150,13 @@ carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), async (req
         try {
             console.log('Vaciando el carrito para:', user.usuario);
             const usuario = await CUsuario.findOne({ usuario: user.usuario });
-            
+
             if (!usuario) {
                 console.error('Usuario no encontrado');
                 return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
             }
 
-            // Verificar si el carrito ya está vacío
+            // Verificar si el carrito ya está vacío antes de intentar vaciar
             if (usuario.carrito.length === 0) {
                 console.warn('El carrito ya está vacío para el usuario:', user.usuario);
                 return res.status(400).json({ success: false, message: 'El carrito ya está vacío' });
@@ -169,6 +169,13 @@ carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), async (req
             res.json({ success: true, message: 'Carrito vaciado exitosamente' });
         } catch (error) {
             if (error.name === 'VersionError') {
+                // Verificar de nuevo si el carrito ya está vacío antes de reintentar
+                const usuario = await CUsuario.findOne({ usuario: user.usuario });
+                if (usuario.carrito.length === 0) {
+                    console.warn('El carrito ya está vacío para el usuario (tras el error de versión). No se reintenta.');
+                    return res.status(400).json({ success: false, message: 'El carrito ya está vacío' });
+                }
+                
                 console.warn('Error de versión. Intentando nuevamente para:', user.usuario);
                 return vaciarCarrito(user); // Reintentar la operación
             }
