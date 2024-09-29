@@ -3,13 +3,16 @@
     margin: auto; /* Centra la tarjeta dentro de la columna */
 }
 
-.btn-orange {
-    background-color: orange; /* Color de fondo anaranjado */
-    border: none; /* Sin borde */
+.card a {
+    background-color: #f44336;
+    border: none;
+    text-decoration: none;
+    color: #fff;
 }
 
-.btn-orange:hover {
-    background-color: darkorange; /* Color de fondo más oscuro al pasar el mouse */
+.card a:hover {
+    background-color: #d32f2f;
+    border: none;
 }
 
 /* Eliminar el subrayado del enlace */
