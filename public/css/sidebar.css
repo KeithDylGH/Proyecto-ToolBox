@@ -58,12 +58,6 @@
   text-decoration: none;
 }
 
-div.content {
-  margin-left: 200px; /* Espacio para el sidebar en pantallas grandes */
-  padding: 1px 16px;
-  height: auto; /* Ajusta según el contenido */
-}
-
 /* Responsivo: en pantallas menores a 700px */
 @media screen and (max-width: 700px) {
   .interfaz {
@@ -84,11 +78,6 @@ div.content {
     overflow-x: hidden; /* Evita el desbordamiento horizontal */
   }
 
-  .content {
-    margin-left: 0; /* Elimina el margen izquierdo para pantallas pequeñas */
-    padding: 20px; /* Mantiene el padding */
-  }
-
   .Log-Out {
     margin: 0 auto;
     margin-right: 5px;
@@ -101,10 +90,6 @@ div.content {
   .sidebar a {
     text-align: center; /* Centra el texto de los links */
     float: none; /* Elimina el float */
-  }
-
-  .content {
-    padding: 10px; /* Reduce el padding aún más en pantallas pequeñas */
   }
 
   .Log-Out {
