@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 router.get('/home', async (req, res) => {
     try {
         const categorias = await Categoria.find();
-        res.render('HOME', { categorias }); // Renderiza la vista HOME.ejs con las categorías
+        res.render('home', { categorias }); // Renderiza la vista HOME.ejs con las categorías
     } catch (error) {
         console.error('Error al obtener categorías para el inicio:', error);
         res.status(500).json({ error: 'Error al obtener categorías' });
