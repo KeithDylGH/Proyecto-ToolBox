@@ -1,50 +1,72 @@
 /*INICIO*/
-body{
+body {
   background-color: #bababa;
 }
 
-.interfaz{
-    background-color: #e5e5e5;
-    padding: 2rem;
-  }
+.interfaz {
+  background-color: #e5e5e5;
+  padding: 2rem;
+}
 
-.card-title{
-    font-weight: 600;
-  }
-  
-  .card-text-overlay{
-    font-size: 20px;
-    font-weight: 100;
-  }
-  .card-subtitle{
-    font-weight: 500;
-    text-transform: uppercase;
-  }
-  
-  .card-body{
-    text-align: center;
-  }
-  
-  .card-link{
-    color: #5e3b3b;
-  }
-  .card-link:hover{
-    color: #E57368;
-    transition: .2s ease-in-out;
-  }
-      
-  .card-general img{
-    width: 50%;
-    margin: 0 auto;
-  }
-  .card-general p{
-    font-size: .9rem;
-  }
+.card-title {
+  font-weight: 600;
+}
 
-  /* Responsivo: en pantallas menores a 700px */
+.card-text-overlay {
+  font-size: 20px;
+  font-weight: 100;
+}
+
+.card-subtitle {
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.card-body {
+  text-align: center;
+}
+
+.card-link {
+  color: #5e3b3b;
+}
+
+.card-link:hover {
+  color: #E57368;
+  transition: .2s ease-in-out;
+}
+
+.card-general img {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.card-general p {
+  font-size: .9rem;
+}
+
+/* Responsivo: en pantallas menores a 700px */
 @media screen and (max-width: 700px) {
   .interfaz {
     margin-left: 0; /* Elimina el margen izquierdo */
-    padding: 20px; /* Mantiene el padding */
+    padding: 10px; /* Reduce el padding */
+  }
+
+  .card-body {
+    padding: 1rem; /* Aumenta el padding para mejor visualización */
+  }
+
+  .card-title, .card-text-overlay, .card-subtitle {
+    font-size: 18px; /* Reduce el tamaño de la fuente */
+  }
+}
+
+/* Responsivo: en pantallas menores a 400px */
+@media screen and (max-width: 400px) {
+  .interfaz {
+    padding: 5px; /* Reduce aún más el padding */
+  }
+
+  .card-title {
+    font-size: 16px; /* Tamaño de fuente más pequeño */
   }
 }

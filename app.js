@@ -769,7 +769,7 @@ app.get('/admin', authorize(['admin', 'boss']), (req, res) => {
 });
 
 app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
-    const CUsuario = req.user;
+    const CUsuario = req.session.user; // Cambiar a req.session.user
     console.log('CUsuario:', CUsuario); // Verifica que CUsuario contiene los datos correctos
     res.render('account/cuenta/admin/inventory', { CUsuario });
 });

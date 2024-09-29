@@ -58,7 +58,7 @@
                 <!-- INICIO -->
                 <div class="inicio">
                     <div class="card bg-dark text-white shadow-lg" style="padding: 5rem;">
-                        <div class="card-img-overlay" style="background-color: #4a4a4a;"> <!-- Cambié el color a gris oscuro -->
+                        <div class="card-img-overlay" style="background-color: #4a4a4a;">
                             <div class="welcomeMsg">
                                 <h3 class="card-title text-light">Permisos</h3>
                                 <p class="card-text-overlay">Administra usuarios, baneando, quitando y agregando Administradores</p>
@@ -68,45 +68,47 @@
 
                     <div class="container mt-4">
                         <h2>Gestión de Usuarios</h2>
-                        <table class="table table-striped mt-3"> <!-- Añadido un margen superior -->
-                            <thead>
-                                <tr>
-                                    <th>Nombre de Usuario</th>
-                                    <th>Nombres</th>
-                                    <th>Apellidos</th>
-                                    <th>Cédula</th>
-                                    <th>Teléfono</th>
-                                    <th>Correo</th> <!-- Nueva columna para el correo -->
-                                    <th>Rol</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% users.forEach(user => { %>
+                        <div class="table-responsive"> <!-- Contenedor responsivo -->
+                            <table class="table table-striped mt-3"> <!-- Añadido un margen superior -->
+                                <thead>
                                     <tr>
-                                        <td><%= user.usuario %></td>
-                                        <td><%= user.nombre %></td>
-                                        <td><%= user.apellido %></td>
-                                        <td><%= user.cedula %></td>
-                                        <td><%= user.numero %></td>
-                                        <td><%= user.correo %></td> <!-- Mostrar correo del usuario -->
-                                        <td><%= user.rol %></td>
-                                        <td>
-                                            <% if (user.rol === 'boss') { %>
-                                                <button class="btn btn-secondary btn-sm" disabled>Protegido</button>
-                                            <% } else { %>
-                                                <% if (user.rol === 'admin') { %>
-                                                    <button class="btn btn-warning btn-sm" onclick="changeRole('<%= user._id %>', 'user')">Revocar Admin</button>
-                                                <% } else { %>
-                                                    <button class="btn btn-success btn-sm" onclick="changeRole('<%= user._id %>', 'admin')">Promover a Admin</button>
-                                                <% } %>
-                                                <button class="btn btn-danger btn-sm" onclick="banUser('<%= user._id %>')">Banear</button>
-                                            <% } %>
-                                        </td>
+                                        <th>Nombre de Usuario</th>
+                                        <th>Nombres</th>
+                                        <th>Apellidos</th>
+                                        <th>Cédula</th>
+                                        <th>Teléfono</th>
+                                        <th>Correo</th>
+                                        <th>Rol</th>
+                                        <th>Acciones</th>
                                     </tr>
-                                <% }); %>
-                            </tbody>
-                        </table>                            
+                                </thead>
+                                <tbody>
+                                    <% users.forEach(user => { %>
+                                        <tr>
+                                            <td><%= user.usuario %></td>
+                                            <td><%= user.nombre %></td>
+                                            <td><%= user.apellido %></td>
+                                            <td><%= user.cedula %></td>
+                                            <td><%= user.numero %></td>
+                                            <td><%= user.correo %></td>
+                                            <td><%= user.rol %></td>
+                                            <td>
+                                                <% if (user.rol === 'boss') { %>
+                                                    <button class="btn btn-secondary btn-sm" disabled>Protegido</button>
+                                                <% } else { %>
+                                                    <% if (user.rol === 'admin') { %>
+                                                        <button class="btn btn-warning btn-sm" onclick="changeRole('<%= user._id %>', 'user')">Revocar Admin</button>
+                                                    <% } else { %>
+                                                        <button class="btn btn-success btn-sm" onclick="changeRole('<%= user._id %>', 'admin')">Promover a Admin</button>
+                                                    <% } %>
+                                                    <button class="btn btn-danger btn-sm" onclick="banUser('<%= user._id %>')">Banear</button>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
