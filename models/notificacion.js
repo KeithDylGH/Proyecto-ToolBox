@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const notificacionSchema = new mongoose.Schema({
     usuarioNombre: { type: String, required: true },
     usuarioCorreo: { type: String, required: true },
-    producto: [{ name: String, price: Number, quantity: Number, imagen: String }],
+    productos: [{ 
+        productoId: { type: mongoose.Schema.Types.ObjectId, ref: 'Producto' },
+        quantity: { type: Number, required: true } 
+    }],
     total: { type: Number, required: true },
     metodoPago: { type: String, required: true },
     fecha: { type: Date, default: Date.now },
