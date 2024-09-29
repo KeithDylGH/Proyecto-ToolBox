@@ -48,7 +48,16 @@
         <!--Contenido-->
         <section class="interfaz">
             <div class="container">
-                <h1 class="text-center mt-4">Notificaciones de Compras</h1>
+                <!-- Encabezado de Notificaciones -->
+        <div class="card bg-dark text-white mb-4">
+          <div class="card-img-overlay"
+              style="background-color: #0f5652;
+                      background: rgb(6, 129, 148);
+                      background: linear-gradient(153deg, rgb(9, 136, 141) 25%, rgb(5, 94, 94) 100%);">
+              <h3 class="card-title text-light">Notificaciones de Compras</h3>
+              <p class="card-text">Aquí puedes ver todas las notificaciones de compras realizadas por los usuarios. Cada notificación contiene información sobre el usuario, el método de pago y los productos comprados.</p>
+          </div>
+      </div>
                 <div class="row mt-4">
                     <% if (notificaciones.length > 0) { %>
                     <% notificaciones.forEach(notificacion => { %>
