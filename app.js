@@ -820,8 +820,12 @@ app.get('/admin/inventario', authorize(['admin', 'boss']), (req, res) => {
 
 app.get('/admin/notificacion', authorize(['admin', 'boss']), async (req, res) => {
     try {
-        // Obtener todas las notificaciones de la base de datos
-        const notificaciones = await Notificacion.find().sort({ fecha: -1 }).lean();
+        // Obtener todas las notificaciones y cargar la información de los productos
+        const notificaciones = await Notificacion.find()
+            .populate('productos.productoId') // Esto busca la información de los productos relacionados
+            .sort({ fecha: -1 })
+            .lean();
+        
         // Renderizar la vista de notificaciones y pasar las notificaciones al archivo EJS
         res.render('account/cuenta/admin/notification', { 
             notificaciones, 

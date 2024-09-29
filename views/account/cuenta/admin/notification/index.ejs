@@ -48,16 +48,7 @@
         <!--Contenido-->
         <section class="interfaz">
             <div class="container">
-                <!-- Encabezado de Notificaciones -->
-        <div class="card bg-dark text-white mb-4">
-          <div class="card-img-overlay"
-              style="background-color: #0f5652;
-                      background: rgb(6, 129, 148);
-                      background: linear-gradient(153deg, rgb(9, 136, 141) 25%, rgb(5, 94, 94) 100%);">
-              <h3 class="card-title text-light">Notificaciones de Compras</h3>
-              <p class="card-text">Aquí puedes ver todas las notificaciones de compras realizadas por los usuarios. Cada notificación contiene información sobre el usuario, el método de pago y los productos comprados.</p>
-          </div>
-      </div>
+                <h1 class="text-center mt-4">Notificaciones de Compras</h1>
                 <div class="row mt-4">
                     <% if (notificaciones.length > 0) { %>
                     <% notificaciones.forEach(notificacion => { %>
@@ -75,7 +66,7 @@
                                     <% notificacion.productos.forEach(producto => { %>
                                     <% if (producto && typeof producto.price === 'number') { %>
                                     <li class="d-flex align-items-center">
-                                        <img src="<%= producto.imagen ? producto.imagen.data : '/img/default-product.jpg' %>" alt="<%= producto.name %>" class="img-fluid me-2" style="width: 50px; height: auto;">
+                                      <img src="<%= producto.productoId.imagen ? producto.productoId.imagen : '/img/default-product.jpg' %>" alt="<%= producto.productoId.name %>" class="img-fluid me-2" style="width: 50px; height: auto;">
                                         <div>
                                             <%= producto.name %> - $<%= producto.price.toFixed(2) %> x <%= producto.quantity %>
                                         </div>
