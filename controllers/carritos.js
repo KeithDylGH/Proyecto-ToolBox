@@ -161,6 +161,12 @@ carritoRouter.delete('/vaciar', authorize(['user', 'admin', 'boss']), async (req
             return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
 
+        // Verificar si el carrito ya está vacío
+        if (usuario.carrito.length === 0) {
+            console.warn('El carrito ya está vacío para el usuario:', user.usuario);
+            return res.status(400).json({ success: false, message: 'El carrito ya está vacío' });
+        }
+
         // Vaciar el carrito
         usuario.carrito = [];
         await usuario.save();
