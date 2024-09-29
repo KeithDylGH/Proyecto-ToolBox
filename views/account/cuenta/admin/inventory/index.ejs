@@ -6,8 +6,6 @@
     <title>ToolBox - Inventario</title>
 
     <link rel="icon" type="image/x-icon" href="/img/logo/LogoPagina.png">
-<!--     <link rel="stylesheet" href="/css/cuenta.css">
-    <link rel="stylesheet" href="/css/admin.css"> -->
     <link rel="stylesheet" href="/css/menuCuenta.css">
     <link rel="stylesheet" href="/css/sidebar.css">
     
@@ -23,26 +21,28 @@
     <div>
       <section>
         <!--Sidebar-->
+      
         <div class="sidebar">
-          <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
-  
+          <a href="/"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
+      
           <a href="/cuenta" id="client">Inicio</a>
           <a href="/" id="pagBtn">Ir a la Pág. Principal</a>
           <a href="/cuenta/carrito" id="carritoBtn">Carrito</a>
           <a href="/cuenta/atencion" id="contactoBtn">Servicio al Cliente</a>
           <a href="/cuenta/configuracion" id="configuracionBtn">Configuración</a>
-  
-          <% if (typeof CUsuario !== 'undefined' && CUsuario.rol === 'boss') { %>
+      
+          <% if (CUsuario && CUsuario.rol === 'boss') { %>
             <a href="/admin/notificacion">Notificación</a>
             <a class="active sidebar_btn" href="/admin/inventario" id="inventarioBtn">Inventario</a>
             <a href="/jefe/permisos" id="permisosBtn">Permisos</a>
-        <% } else if (typeof CUsuario !== 'undefined' && CUsuario.rol === 'admin') { %>
+          <% } else if (CUsuario && CUsuario.rol === 'admin') { %>
             <a href="/admin/notificacion">Notificación</a>
-            <a class="active sidebar_btn" href="/admin/inventario" id="inventarioBtn">Inventario</a>
-        <% } %>        
-  
-          <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>
+            <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
+          <% } %>
+      
+          <button class="Log-Out"><a href="/logout">Cerrar sesión</a></button>
         </div>
+      
       </section>
 
         <section>
@@ -100,6 +100,5 @@
 
     <script src="/js/admin.js"></script>
     <script src="/js/cuenta.js"></script>
-    <script src="/js/logout.js"></script>
 </body>
 </html>

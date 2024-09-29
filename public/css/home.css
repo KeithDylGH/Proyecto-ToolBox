@@ -9,29 +9,8 @@ body {
   margin: 0;
   padding: 0;
 }
-
 /*MAIN*/
-.contenedor {
-  background-color: #fff;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-}
-.contenedor img {
-  background-size: cover;
-  width: 500px;
-}
 
-.product img {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-.product img:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  transition: 0.1s ease-in-out;
-}
 .hero {
   padding-bottom: 10px;
 }
@@ -47,42 +26,11 @@ body {
   color: #2d1c1c;
 }
 
-/* .carrusel{
-    margin: 0;
-    display: flex;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    border-radius: 5px;
-    border: solid #f9f9f9 2px;
-}
-.carruselItem{
-    width: 260px;
-    height: 260px;
-}
-.carruselItem img{
-    height: 100%;
-    object-fit: cover;
-}
-.carruselItem:hover{
-    transform: scale(1.1);
-} */
-
-.recomendados {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
 h2 {
   background-color: #fff;
   padding: 1rem;
   border-radius: 4px;
 }
-
-/* .bestProducts {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-} */
 
 .card {
   margin: 0.6rem 0;
@@ -136,30 +84,6 @@ h2 {
 
 .FeaturedProduct {
   margin-bottom: 4rem;
-}
-
-/*FOOTER*/
-footer {
-  background-color: #2d1c1c;
-  color: #fff;
-}
-footer li a {
-  color: #fff;
-  text-decoration: none;
-}
-footer a:hover {
-  color: #e57368;
-  text-decoration: none;
-  transition: 0.2s ease-in;
-}
-
-footer p a{
-  color: #fff;
-  text-decoration: none;
-}
-
-.row {
-  justify-content: center;
 }
 
 /*CAROUSEL*/

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ToolBox - Atencion al cliente</title>
+  <title>ToolBox - Atención al cliente</title>
 
   <link rel="stylesheet" href="/css/menuCuenta.css">
   <link rel="stylesheet" href="/css/sidebar.css">
@@ -25,7 +25,7 @@
     <section>
       <!--Sidebar-->
       <div class="sidebar">
-        <a href="#" id="homeBtn"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
+        <a href="/"><img src="/img/logo/Logo Letra trazo.png" alt="logo" class="logo"></a>
 
         <a href="/cuenta" id="client">Inicio</a>
         <a href="/" id="pagBtn">Ir a la Pág. Principal</a>
@@ -42,7 +42,7 @@
           <a href="/admin/inventario" id="inventarioBtn">Inventario</a>
         <% } %>
 
-        <button class="Log-Out" id="logout"><a href="#">Cerrar sesión</a></button>
+        <button class="Log-Out"><a href="/logout">Cerrar sesión</a></button>
       </div>
     </section>
 
@@ -52,19 +52,15 @@
           <!-- INICIO -->
           <div class="inicio">
             <div class="card bg-dark text-white" style="padding: 5rem;">
-              <div class="card-img-overlay" style="background-color: #5e3b3b;
-                              background: rgb(94,59,59);
-                              background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
+              <div class="card-img-overlay" style="background-color: #5e3b3b; background: rgb(94,59,59); background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
                 <div class="welcomeMsg">
-                  <% if (CUsuario && CUsuario.rol === 'admin') { %>
-                    <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
-                    <p class="card-text-overlay">Administra productos, usuarios y más con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
-                  <% } else if (CUsuario && CUsuario.rol === 'boss') { %>
+                  <% if (CUsuario && (CUsuario.rol === 'admin' || CUsuario.rol === 'boss')) { %>
                     <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
                     <p class="card-text-overlay">Administra la página, usuarios y productos con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
+                    <p class="card-text-overlay">Si necesitas asistencia, contacta al desarrollador: <a href="mailto:desarrollador@tuempresa.com" class="text-light">desarrollador@tuempresa.com</a></p>
                   <% } else if (CUsuario) { %>
                     <h3 class="card-title text-light">¡Bienvenido <%= CUsuario.nombre %>!</h3>
-                    <p class="card-text-overlay">Disfruta las funciones exclusivas de un cliente en ToolBox.</p>
+                    <p class="card-text-overlay">Disfruta las funciones exclusivas de un cliente en ToolBox. Para consultas, contáctanos a través de nuestras redes sociales.</p>
                   <% } else { %>
                     <h3 class="card-title text-light">¡Bienvenido Usuario!</h3>
                     <p class="card-text-overlay">Tu rol no está definido. Por favor, contacta al soporte.</p>
@@ -98,6 +94,28 @@
                   </div>
                 </div>
 
+                <div class="card" style="width: 14rem; border-radius: .5rem;">
+                  <div class="card-body">
+                    <h5 class="card-subtitle mb-2 mt-2">
+                      <img src="/img/icono/facebook.png" alt="Facebook" width="50px">
+                      Facebook
+                    </h5>
+                    <p class="card-text">Síguenos en Facebook para nuestras actualizaciones.</p>
+                    <a href="https://facebook.com" target="_blank" class="btn btn-primary">Facebook</a>
+                  </div>
+                </div>
+
+                <div class="card" style="width: 14rem; border-radius: .5rem;">
+                  <div class="card-body">
+                    <h5 class="card-subtitle mb-2 mt-2">
+                      <img src="/img/icono/X.png" alt="X" width="50px">
+                      Twitter
+                    </h5>
+                    <p class="card-text">Síguenos en X para estar al día.</p>
+                    <a href="https://X.com" target="_blank" class="btn btn-info">X</a>
+                  </div>
+                </div>
+
                 <% if (CUsuario && (CUsuario.rol === 'admin' || CUsuario.rol === 'boss')) { %>
                   <div class="card" style="width: 14rem; border-radius: .5rem; background-color: #007bff;">
                     <div class="card-body">
@@ -110,69 +128,60 @@
                     </div>
                   </div>
 
-                  <div class="card" style="width: 14rem; border-radius: .5rem;"></div>
+                  <!-- Tarjeta de Gmail -->
+                  <div class="card" style="width: 14rem; border-radius: .5rem;">
                     <div class="card-body">
                       <h5 class="card-subtitle mb-2 mt-2">
                         <img src="/img/icono/gmail.png" alt="Gmail" width="50px">
                         Gmail
                       </h5>
-                      <p class="card-text">Gmail del proyecto.</p>
-                      <a href="mailto:toolboxproyecto@gmail.com" target="_blank" class="text-black btn btn-light">Gmail</a>
+                      <p class="card-text">Contáctanos por correo electrónico.</p>
+                      <a href="mailto:toolboxproyecto@gmail.com" class="btn btn-danger">Enviar Correo</a>
                     </div>
                   </div>
                 <% } %>
               </div>
 
-              <h3 class="mt-4">Métodos de Pago Disponibles</h3>
-              <div class="d-flex justify-content-center">
-                <div class="card" style="width: 14rem; border-radius: .5rem;">
-                  <div class="card-body">
-                    <h5 class="card-subtitle mb-2 mt-2">
-                      <img src="/img/icono/bdv.png" alt="Pago Móvil" width="50px">
-                      Pago Móvil
-                    </h5>
-                    <p class="card-text">Realiza tus pagos fácilmente con BDV.</p>
+              <div class="mt-4 text-center">
+                <h3 class="text-light">Métodos de Pago Disponibles</h3>
+                <div class="d-flex justify-content-center">
+                  <div class="card" style="width: 14rem; border-radius: .5rem; background-color: #e0e0e0;">
+                    <div class="card-body">
+                      <h5 class="card-subtitle mb-2 mt-2">
+                        <img src="/img/icono/bdv.png" alt="Pago Móvil" width="50px">
+                        Pago Móvil
+                      </h5>
+                      <p class="card-text">Realiza pagos fáciles y rápidos con Pago Móvil.</p>
+                    </div>
+                  </div>
+            
+                  <div class="card" style="width: 14rem; border-radius: .5rem; background-color: #e0e0e0;">
+                    <div class="card-body">
+                      <h5 class="card-subtitle mb-2 mt-2">
+                        <img src="/img/icono/zelle.png" alt="Zelle" width="50px">
+                        Zelle
+                      </h5>
+                      <p class="card-text">Usa Zelle para transacciones seguras.</p>
+                    </div>
+                  </div>
+            
+                  <div class="card" style="width: 14rem; border-radius: .5rem; background-color: #e0e0e0;">
+                    <div class="card-body">
+                      <h5 class="card-subtitle mb-2 mt-2">
+                        <img src="/img/icono/visa.png" alt="Tarjetas" width="50px">
+                        Tarjetas
+                      </h5>
+                      <p class="card-text">Aceptamos todas las tarjetas de crédito y débito.</p>
+                    </div>
                   </div>
                 </div>
-
-                <div class="card" style="width: 14rem; border-radius: .5rem;">
-                  <div class="card-body">
-                    <h5 class="card-subtitle mb-2 mt-2">
-                      <img src="/img/icono/zinli.png" alt="Zinli" width="50px">
-                      Zinli
-                    </h5>
-                    <p class="card-text">Usa Zinli para tus transacciones rápidas.</p>
-                  </div>
-                </div>
-
-                <div class="card" style="width: 14rem; border-radius: .5rem;">
-                  <div class="card-body">
-                    <h5 class="card-subtitle mb-2 mt-2">
-                      <img src="/img/icono/transferencia-bancaria.png" alt="Transferencia" width="50px">
-                      Transferencia
-                    </h5>
-                    <p class="card-text">Transfiere fondos con tarjeta de crédito.</p>
-                  </div>
-                </div>
-
-                <!-- <div class="card" style="width: 14rem; border-radius: .5rem;">
-                  <div class="card-body">
-                    <h5 class="card-subtitle mb-2 mt-2">
-                      <img src="/img/icono/paypal.webp" alt="PayPal" width="50px">
-                      PayPal
-                    </h5>
-                    <p class="card-text">Realiza tus pagos de manera segura con PayPal.</p>
-                  </div>
-                </div> -->
               </div>
+              
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
+            </div>
+        </section>
   </div>
 
-  <script src="/js/servicio.js"></script>
 </body>
 
 </html>
