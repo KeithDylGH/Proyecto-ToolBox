@@ -47,22 +47,21 @@
     </section>
 
     <section class="interfaz">
-      <div class="container">
-        <div class="content">
+      <div class="content">
+        <div class="container">
           <!-- INICIO -->
           <div class="inicio">
             <div class="card bg-dark text-white" style="padding: 5rem;">
-              <div class="card-img-overlay" style="background-color: #5e3b3b; background: rgb(94,59,59); background: linear-gradient(153deg, rgba(94,59,59,1) 25%, rgba(52,44,44,1) 100%);">
+              <div class="card-img-overlay" style="background-color: #205567; background: rgb(11, 53, 62); background: linear-gradient(153deg, rgb(24, 79, 92) 25%, rgb(14, 62, 66) 100%);">
                 <div class="welcomeMsg">
                   <% if (CUsuario && (CUsuario.rol === 'admin' || CUsuario.rol === 'boss')) { %>
-                    <h3 class="card-title text-light">Bienvenido <%= CUsuario.nombre %>!</h3>
-                    <p class="card-text-overlay">Administra la página, usuarios y productos con el modo <%= CUsuario.rol.charAt(0).toUpperCase() + CUsuario.rol.slice(1) %></p>
-                    <p class="card-text-overlay">Si necesitas asistencia, contacta al desarrollador: <a href="mailto:desarrollador@tuempresa.com" class="text-light">desarrollador@tuempresa.com</a></p>
+                    <h3 class="card-title text-light">Servicio al Cliente</h3>
+                    <p class="card-text-overlay">Si necesitas asistencia, contacta al desarrollador de la pagina, o contacta con el correo de la pagina</p>
                   <% } else if (CUsuario) { %>
-                    <h3 class="card-title text-light">¡Bienvenido <%= CUsuario.nombre %>!</h3>
-                    <p class="card-text-overlay">Disfruta las funciones exclusivas de un cliente en ToolBox. Para consultas, contáctanos a través de nuestras redes sociales.</p>
+                    <h3 class="card-title text-light">Servicio al Cliente</h3>
+                    <p class="card-text-overlay">Contáctanos a través de nuestras redes sociales.</p>
                   <% } else { %>
-                    <h3 class="card-title text-light">¡Bienvenido Usuario!</h3>
+                    <h3 class="card-title text-light">Servicio al Cliente</h3>
                     <p class="card-text-overlay">Tu rol no está definido. Por favor, contacta al soporte.</p>
                   <% } %>
                 </div>
@@ -142,8 +141,8 @@
                 <% } %>
               </div>
 
-              <div class="mt-4 text-center">
-                <h3 class="text-light">Métodos de Pago Disponibles</h3>
+              <div class="d-flex flex-column align-items-center">
+                <h3 class="mt-4">Metodos de Pago</h3>
                 <div class="d-flex justify-content-center">
                   <div class="card" style="width: 14rem; border-radius: .5rem; background-color: #e0e0e0;">
                     <div class="card-body">
@@ -158,28 +157,29 @@
                   <div class="card" style="width: 14rem; border-radius: .5rem; background-color: #e0e0e0;">
                     <div class="card-body">
                       <h5 class="card-subtitle mb-2 mt-2">
-                        <img src="/img/icono/zelle.png" alt="Zelle" width="50px">
-                        Zelle
+                        <img src="/img/icono/transferencia.png" alt="Transferencia" width="50px">
+                        Transferencia
                       </h5>
-                      <p class="card-text">Usa Zelle para transacciones seguras.</p>
+                      <p class="card-text">Opciones de transferencia bancaria para tu comodidad.</p>
                     </div>
                   </div>
-            
+
                   <div class="card" style="width: 14rem; border-radius: .5rem; background-color: #e0e0e0;">
                     <div class="card-body">
                       <h5 class="card-subtitle mb-2 mt-2">
-                        <img src="/img/icono/visa.png" alt="Tarjetas" width="50px">
-                        Tarjetas
+                        <img src="/img/icono/credit_card.png" alt="Tarjeta de Crédito" width="50px">
+                        Tarjeta de Crédito
                       </h5>
-                      <p class="card-text">Aceptamos todas las tarjetas de crédito y débito.</p>
+                      <p class="card-text">Aceptamos tarjetas de crédito para tus compras.</p>
                     </div>
                   </div>
                 </div>
               </div>
-              
             </div>
-            </div>
-        </section>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
 </body>
