@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const formulario = document.querySelector('#formulario');
     const loader = document.querySelector('#loader');
+    const notification = document.getElementById('notification'); // Seleccionar la notificación
 
     formulario.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -64,14 +65,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para mostrar la notificación
     function showNotification(message, type) {
-        const notification = document.getElementById('notification');
         notification.textContent = message;
         notification.className = `notification ${type}`; // Asigna la clase de tipo (success o error)
         notification.classList.remove('d-none'); // Muestra la notificación
 
+        // Muestra la notificación
+        notification.style.display = 'block';
+
         // Oculta la notificación después de 3 segundos
         setTimeout(() => {
-            notification.classList.add('d-none');
+            notification.style.display = 'none';
         }, 3000);
     }
 });
