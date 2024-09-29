@@ -16,6 +16,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Asegurando que el sidebar no sea traspasado */
+        .sidebar {
+            position: fixed; /* Fija el sidebar */
+            width: 200px; /* Ancho del sidebar */
+            height: 100vh; /* Altura completa */
+            background-color: #f8f9fa; /* Fondo blanco o el color deseado */
+            overflow-y: auto; /* Habilita scroll si es necesario */
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+        }
+
+        .content {
+            margin-left: 220px; /* Deja espacio para el sidebar */
+            padding: 20px; /* Espaciado interior */
+        }
+
+        .card {
+            margin: 0 10px; /* Espacio entre los cards */
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -48,9 +69,8 @@
                 <h1>Inventario de ToolBox!</h1>
                 <p>Agrega, edita y elimina los productos de ToolBox</p>
 
-                <div class="bg-secondary rounded-2 px-3">
-                    <h2 class="p-3 text-bg-secondary h1">Inventario</h2>
-
+                <div class="rounded-2 px-3">
+                    <h2 class="p-3 h1">Inventario</h2>
 
                     <div class="d-flex">
 
