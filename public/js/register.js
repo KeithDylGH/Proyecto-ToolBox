@@ -35,44 +35,43 @@ document.addEventListener('DOMContentLoaded', function() {
                     cedula
                 }),
             });
-        
+
             loader.classList.add('d-none');
-        
+
             if (!response.ok) {
                 const result = await response.json();
-                console.log(result); // Verificar qué se devuelve
                 showNotification(result.error || 'Error desconocido', 'error');
                 return;
             }
-        
+
             const result = await response.json();
-        
+
             if (result.mensaje) {
                 showNotification(result.mensaje, 'success');
                 setTimeout(() => {
-                    window.location.href = '/login/';
+                    window.location.href = '/login/'; // Redirige después de 3 segundos
                 }, 3000);
             } else {
                 showNotification('Error desconocido', 'error');
             }
-        
+
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
             showNotification('Error al enviar la solicitud', 'error');
             loader.classList.add('d-none');
-        }        
+        }
     });
+
+    // Función para mostrar la notificación
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = `notification ${type}`; // Asigna la clase de tipo (success o error)
+        notification.classList.remove('d-none'); // Muestra la notificación
+
+        // Oculta la notificación después de 3 segundos
+        setTimeout(() => {
+            notification.classList.add('d-none');
+        }, 3000);
+    }
 });
-
-// Función para mostrar la notificación
-function showNotification(message, type) {
-    const notification = document.querySelector('.notification'); // Asegúrate de seleccionar el elemento correcto
-    notification.textContent = message;
-    notification.className = `notification ${type}`; // Asigna la clase de tipo (success o error)
-    notification.classList.remove('d-none'); // Muestra la notificación
-
-    // Oculta la notificación después de 3 segundos
-    setTimeout(() => {
-        notification.classList.add('d-none');
-    }, 3000);
-}

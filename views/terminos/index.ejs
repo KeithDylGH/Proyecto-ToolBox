@@ -12,22 +12,23 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <nav class="navbar navbar-expand-lg" style="padding: 0 2.5rem; font-size: 1.1rem;">
-            <div class="container-fluid d-flex">
-                <a class="text-light navbar-brand" href="/" style="display: inline-block; margin-right: 25px;">
-                    <img src="/img/logo/Logo trazo 180.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-                    ToolBox
+    <header class="bg-light py-3 mb-4">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/" class="header-logo">
+                    <img src="/img/logo/Logo 180.png" alt="ToolBox Logo">
                 </a>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/">Inicio</a>
-                        </li>
-                    </ul>
+                <div>
+                    <% if (typeof user !== 'undefined' && user && user.isAuthenticated) { %>
+                        <a href="/" class="btn btn-primary me-2">Inicio</a>
+                        <a href="/cuenta" class="btn btn-secondary">Cuenta</a>
+                    <% } else { %>
+                        <a href="/login" class="btn btn-primary me-2">Login</a>
+                        <a href="/register" class="btn btn-secondary">Registro</a>
+                    <% } %>                    
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
 
     <!-- Main Content -->
