@@ -1,4 +1,4 @@
-const url = 'https://proyecto-toolbox.onrender.com/api/products'; // Asegúrate de que la URL sea correcta
+const url = 'https://proyecto-toolbox.onrender.com/api/products';
 
 // Función para mostrar el loader normal
 const mostrarLoader = () => {
@@ -20,7 +20,7 @@ const eliminarProducto = async (id) => {
     try {
         mostrarLoader(); // Mostrar el loader normal
 
-        const response = await fetch(`${url}/admin/inventario/${id}`, {
+        const response = await fetch(`${url}/eliminar/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

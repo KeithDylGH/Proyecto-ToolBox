@@ -81,7 +81,7 @@
 
     <section class="container mt-4">
         <h2 class="text-center mb-4">Editar Producto</h2>
-        <form action="/inventario/editar/<%= producto._id %>" method="POST" enctype="multipart/form-data" class="p-4 border rounded shadow">
+        <form id="formulario" action="/inventario/editar/<%= producto._id %>" method="POST" enctype="multipart/form-data" class="p-4 border rounded shadow">
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombre" name="nombre" value="<%= producto.nombre %>" required>

@@ -22,14 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 // Mostrar notificación de éxito
-                showNotification('Producto añadido correctamente.', 'success');
-                // Redirigir a la página después de un pequeño delay para mostrar la notificación
+                showNotification('Producto actualizado correctamente.', 'success');
                 setTimeout(() => {
                     window.location.href = '/inventario/verproducto';
                 }, 2000);
             } else {
-                console.error('Error al actualizar el producto', await response.text());
-                showNotification('Error al actualizar el producto.', 'error');
+                const errorMessage = await response.text();
+                console.error('Error al actualizar el producto:', errorMessage);
+                showNotification(`Error al actualizar el producto: ${errorMessage}`, 'error');
             }
         } catch (error) {
             // Ocultar el loader
@@ -44,6 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.loader-overlay').style.display = 'flex';
         setTimeout(() => {
             window.location.href = '/inventario/verproducto';
-        }, 500); // Puedes ajustar el tiempo de espera si es necesario
+        }, 500);
     });
 });

@@ -974,29 +974,17 @@ app.put('/inventario/editar/:id', upload.single('inputImagen'), async (req, res)
 });
 
 // Ruta para eliminar un producto
-app.delete('/api/productos/eliminar/:id', async (req, res) => {
+app.delete('/api/products/eliminar/:id', async (req, res) => {
     try {
-        const producto = await iProducto.findById(req.params.id);
-        if (!producto) {
-            return res.status(404).json({ message: 'Producto no encontrado' });
-        }
-
-        // Eliminar la imagen del sistema de archivos, si existe
-        const rutaImagen = path.join(__dirname, 'uploads', producto.imagen);
-        if (fs.existsSync(rutaImagen)) {
-            fs.unlinkSync(rutaImagen);
-        }
-
-        // Eliminar el producto de la base de datos
-        await iProducto.findByIdAndDelete(req.params.id);
-
-        res.status(200).json({ message: 'Producto eliminado correctamente' });
+        const { id } = req.params;
+        // Lógica para eliminar el producto de la base de datos
+        await iProducto.findByIdAndDelete(id);
+        res.status(200).send({ message: 'Producto eliminado correctamente' });
     } catch (error) {
-        console.error('Error al eliminar el producto:', error.message);
-        res.status(500).json({ message: 'Hubo un error al eliminar el producto' });
+        console.error('Error al eliminar el producto:', error);
+        res.status(500).send('Error al eliminar el producto');
     }
 });
-
 
 app.use('/api/products', productoRouter); // Rutas para productos
 app.use('/api/upload', subirProducto);   // Rutas para subir productos

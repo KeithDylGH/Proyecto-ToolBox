@@ -111,9 +111,9 @@
                                 <td>
                                     <div class="d-flex flex-column">
                                         <a href="/inventario/editar/<%= producto._id %>" class="btn btn-warning btn-sm mb-1">Editar</a>
-                                        <button class="btn btn-danger btn-sm btn-eliminar">Eliminar</button>
+                                        <button class="btn btn-danger btn-sm btn-eliminar" data-id="<%= producto._id %>">Eliminar</button>
                                     </div>
-                                </td>
+                                </td>                                
                             </tr>
                         <% }); %>
                     </tbody>                                      
