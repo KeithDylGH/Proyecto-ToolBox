@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 router.get('/home', async (req, res) => {
     try {
         const categorias = await Categoria.find();
-        res.render('home', { categorias }); // Renderiza la vista HOME.ejs con las categorías
+        res.render('HOME', { categorias }); // Renderiza la vista HOME.ejs con las categorías
     } catch (error) {
         console.error('Error al obtener categorías para el inicio:', error);
         res.status(500).json({ error: 'Error al obtener categorías' });
@@ -33,9 +33,10 @@ router.post('/', async (req, res) => {
         const nuevaCategoria = new Categoria({ nombre, numero: nuevoNumero });
         await nuevaCategoria.save();
 
-        res.redirect('/inventario/categoria?success=Categoría agregada con éxito');
+        // Responder con un objeto JSON para el manejo del frontend
+        res.json({ success: true });
     } catch (error) {
-        res.status(500).json({ error: 'Error al agregar categoría' });
+        res.status(500).json({ success: false, error: 'Error al agregar categoría' });
     }
 });
 

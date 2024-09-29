@@ -8,16 +8,6 @@ function hideLoader() {
   document.getElementById('loader').style.display = 'none';
 }
 
-// Mostrar mini loader
-function showMiniLoader() {
-  document.getElementById('miniLoader').style.display = 'flex'; // Cambiar 'miniLoader' según el ID que uses
-}
-
-// Ocultar mini loader
-function hideMiniLoader() {
-  document.getElementById('miniLoader').style.display = 'none'; // Cambiar 'miniLoader' según el ID que uses
-}
-
 // Manejar envío del formulario para agregar categoría
 document.getElementById('formularioCategoria').addEventListener('submit', function (e) {
   e.preventDefault();
@@ -29,20 +19,18 @@ document.getElementById('formularioCategoria').addEventListener('submit', functi
       method: 'POST',
       body: formData,
   })
-      .then(response => response.json())
-      .then(data => {
-          hideLoader();
-          if (data.success) {
-              showNotification('Categoría agregada con éxito', 'success');
-              document.getElementById('formularioCategoria').reset();
-          } else {
-              showNotification('Error al agregar categoría', 'error');
-          }
-      })
-      .catch(err => {
-          hideLoader();
-          showNotification('Ocurrió un error', 'error');
-      });
+  .then(response => {
+      hideLoader();
+      if (response.redirected) {
+          window.location.href = response.url;
+      } else {
+          showNotification('Error al agregar categoría', 'error');
+      }
+  })
+  .catch(err => {
+      hideLoader();
+      showNotification('Ocurrió un error', 'error');
+  });
 });
 
 // Manejar actualización de categorías
@@ -50,26 +38,25 @@ const formActualizar = document.querySelectorAll('.formActualizar');
 formActualizar.forEach(form => {
   form.addEventListener('submit', function (e) {
       e.preventDefault();
-      showMiniLoader(); // Mostrar mini loader
+      showLoader(); // Mostrar loader
       const formData = new FormData(this);
 
       fetch(this.action, {
           method: 'POST',
           body: formData,
       })
-          .then(response => response.json())
-          .then(data => {
-              hideMiniLoader();
-              if (data.success) {
-                  showNotification('Categoría actualizada con éxito', 'success');
-              } else {
-                  showNotification('Error al actualizar categoría', 'error');
-              }
-          })
-          .catch(err => {
-              hideMiniLoader();
-              showNotification('Ocurrió un error', 'error');
-          });
+      .then(response => {
+          hideLoader();
+          if (response.redirected) {
+              window.location.href = response.url;
+          } else {
+              showNotification('Error al actualizar categoría', 'error');
+          }
+      })
+      .catch(err => {
+          hideLoader();
+          showNotification('Ocurrió un error', 'error');
+      });
   });
 });
 
@@ -86,27 +73,26 @@ formEliminar.forEach(form => {
               method: 'POST',
               body: formData,
           })
-              .then(response => response.json())
-              .then(data => {
-                  hideLoader();
-                  if (data.success) {
-                      showNotification('Categoría eliminada con éxito', 'success');
-                  } else {
-                      showNotification('Error al eliminar categoría', 'error');
-                  }
-              })
-              .catch(err => {
-                  hideLoader();
-                  showNotification('Ocurrió un error', 'error');
-              });
+          .then(response => {
+              hideLoader();
+              if (response.redirected) {
+                  window.location.href = response.url;
+              } else {
+                  showNotification('Error al eliminar categoría', 'error');
+              }
+          })
+          .catch(err => {
+              hideLoader();
+              showNotification('Ocurrió un error', 'error');
+          });
       }
   });
 });
 
 // Mostrar notificación
 function showNotification(message, type = 'success') {
-  const notification = document.querySelector('.notification');
-  notification.className = `notification ${type}`;
+  const notification = document.getElementById('notification');
+  notification.className = `alert alert-${type}`;
   notification.textContent = message;
   notification.style.display = 'block';
   setTimeout(() => {
