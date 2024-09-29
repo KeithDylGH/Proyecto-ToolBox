@@ -39,14 +39,14 @@
                                 Categoría
                             </a>
                             <ul class="dropdown-menu">
-                                <% if (categorias && categorias.length > 0) { %>
+                                <% if (categorias && Array.isArray(categorias) && categorias.length > 0) { %>
                                     <% categorias.forEach(categoria => { %>
                                         <li><a class="dropdown-item" href="/tienda/<%= categoria._id %>"><%= categoria.nombre %></a></li>
-                                    <% }) %>
+                                    <% }); %>
                                 <% } else { %>
                                     <li><a class="dropdown-item" href="#">No hay categorías disponibles</a></li>
                                 <% } %>
-                            </ul>
+                            </ul>                            
                         </li>
 
                         <% if (CUsuario) { %>

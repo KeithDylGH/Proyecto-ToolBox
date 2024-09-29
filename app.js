@@ -850,13 +850,22 @@ app.get('/inventario/editar/:id', authorize(['admin', 'boss']), async (req, res)
 
 app.get('/inventario/descargarInv', authorize(['admin', 'boss']), async (req, res) => {
     try {
-        const productos = await iProducto.find();
-        res.render('account/cuenta/admin/pdfYExcel', { productos });
+        const productos = await iProducto.find(); // Suponiendo que estás obteniendo productos
+        const categorias = await Categoria.find(); // Asegúrate de obtener las categorías
+
+        res.render('account/cuenta/admin/pdfYExcel/index', {
+            productos,
+            categorias, // Asegúrate de pasar esta variable
+            CUsuario: req.session.user // o como tengas configurado tu usuario
+        });
     } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).send('Error al obtener los productos');
+        console.error(error);
+        res.status(500).send('Error interno del servidor');
     }
 });
+
+const PDFDocument = require('pdfkit');
+const path = require('path');
 
 app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, res) => {
     const format = req.query.format;
@@ -897,28 +906,38 @@ app.get('/api/descargar-inventario', authorize(['admin', 'boss']), async (req, r
         } else if (format === 'pdf') {
             const doc = new PDFDocument();
 
+            // Ruta del logo
             const logoPath = path.join(__dirname, 'public', 'img', 'logo', 'LogoLetra.png');
-            doc.image(logoPath, 50, 50, { width: 100 });
+            doc.image(logoPath, 50, 30, { width: 100 }); // Logo en la parte superior
 
-            doc.font('Helvetica-Bold').fontSize(18).text('Lista de Productos', {
-                align: 'right',
+            // Título
+            doc.font('Helvetica-Bold').fontSize(24).text('Lista de Productos', {
+                align: 'center',
                 underline: true,
-                margin: 50
+                margin: 20
             });
 
-            doc.moveDown();
+            doc.moveDown(); // Espacio entre el título y los productos
 
+            // Configuración del estilo del texto
             doc.font('Helvetica').fontSize(12).fillColor('#333');
+
             productos.forEach(producto => {
-                doc.text(`Nombre: ${producto.nombre}`);
-                doc.text(`Precio: ${producto.precio}`);
-                doc.text(`Categoría: ${producto.categoria}`);
-                doc.text(`Descripción: ${producto.descripcion}`);
-                doc.moveDown();
+                // Información del producto
+                doc.text(`Nombre: ${producto.nombre}`, { continued: true });
+                doc.text(`    Categoría: ${producto.categoria}`, { continued: true });
+                doc.text(`    Precio: $${producto.precio.toFixed(2)}`);
+
+                // Línea de separación
+                doc.moveTo(50, doc.y + 5).lineTo(550, doc.y + 5).stroke(); // Línea horizontal
+                doc.moveDown(); // Espacio entre productos
             });
 
+            // Configuración de los encabezados de respuesta
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', 'attachment; filename=productos.pdf');
+
+            // Finaliza el documento
             doc.pipe(res);
             doc.end();
         }
