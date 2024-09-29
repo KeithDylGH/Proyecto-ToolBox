@@ -15,20 +15,28 @@ document.getElementById('formularioCategoria').addEventListener('submit', functi
 
   const formData = new FormData(this);
 
-  fetch('/api/categorias', {
+  fetch('/api/categorias/agregar', {  // Cambiado a la nueva ruta
       method: 'POST',
       body: formData,
   })
   .then(response => {
       hideLoader();
-      if (response.redirected) {
-          window.location.href = response.url;
+      if (response.ok) {  // Verificar si la respuesta es exitosa
+          showNotification('Categoría agregada con éxito', 'success');
+          return response.json(); // Retorna la respuesta en formato JSON si es exitosa
       } else {
           showNotification('Error al agregar categoría', 'error');
+          return response.json(); // Para manejar el error y mostrarlo si es necesario
+      }
+  })
+  .then(data => {
+      if (data && data.error) {
+          showNotification(data.error, 'error'); // Mostrar mensaje de error específico si existe
       }
   })
   .catch(err => {
       hideLoader();
+      console.error('Error:', err); // Imprimir el error en la consola para depuración
       showNotification('Ocurrió un error', 'error');
   });
 });
@@ -47,14 +55,22 @@ formActualizar.forEach(form => {
       })
       .then(response => {
           hideLoader();
-          if (response.redirected) {
-              window.location.href = response.url;
+          if (response.ok) {
+              showNotification('Categoría actualizada con éxito', 'success');
+              return response.json(); // Retorna la respuesta en formato JSON
           } else {
               showNotification('Error al actualizar categoría', 'error');
+              return response.json(); // Para manejar el error y mostrarlo si es necesario
+          }
+      })
+      .then(data => {
+          if (data && data.error) {
+              showNotification(data.error, 'error'); // Mostrar mensaje de error específico si existe
           }
       })
       .catch(err => {
           hideLoader();
+          console.error('Error:', err); // Imprimir el error en la consola para depuración
           showNotification('Ocurrió un error', 'error');
       });
   });
@@ -66,7 +82,7 @@ formEliminar.forEach(form => {
   form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
-          showLoader(); // Mostrar loader normal
+          showLoader(); // Mostrar loader
           const formData = new FormData(this);
 
           fetch(this.action, {
@@ -75,14 +91,22 @@ formEliminar.forEach(form => {
           })
           .then(response => {
               hideLoader();
-              if (response.redirected) {
-                  window.location.href = response.url;
+              if (response.ok) {
+                  showNotification('Categoría eliminada con éxito', 'success');
+                  return response.json(); // Retorna la respuesta en formato JSON
               } else {
                   showNotification('Error al eliminar categoría', 'error');
+                  return response.json(); // Para manejar el error y mostrarlo si es necesario
+              }
+          })
+          .then(data => {
+              if (data && data.error) {
+                  showNotification(data.error, 'error'); // Mostrar mensaje de error específico si existe
               }
           })
           .catch(err => {
               hideLoader();
+              console.error('Error:', err); // Imprimir el error en la consola para depuración
               showNotification('Ocurrió un error', 'error');
           });
       }
