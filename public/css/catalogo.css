@@ -1,60 +1,23 @@
-/*MAIN*/
-.mainContainer{
-    display: flex;
+.smaller-card {
+    max-width: 250px; /* Cambia el ancho máximo de la tarjeta */
+    margin: auto; /* Centra la tarjeta dentro de la columna */
 }
 
-.card-body{
-    display: grid;
-    justify-items: center;
+.btn-orange {
+    background-color: orange; /* Color de fondo anaranjado */
+    border: none; /* Sin borde */
 }
 
-.sidebar{
-    background-color: #f9f9f9;
-    padding: 2rem 0;
-    padding-left: 1.3rem;
-    position: relative;
-    left: -1%;
+.btn-orange:hover {
+    background-color: darkorange; /* Color de fondo más oscuro al pasar el mouse */
 }
 
-ul{
-    list-style: none;
-    padding: 0 3rem;
-}
-.sidebar-Li{
-    font-size: 15px;
-    font-weight: 400;
+/* Eliminar el subrayado del enlace */
+.text-decoration-none {
+    text-decoration: none !important; /* Asegúrate de que no haya subrayado */
 }
 
-.sidebarspace{
-    display: flex;
-    padding-bottom: .2rem;
-}
-
-h3{
-    padding: 1rem .5rem;
-    text-align: center;
-    background-color: #f9f9f9;
-    margin: 0 auto;
-}
-
-.contenedor {
-    background-color: #f9f9f9;
-    width: 100%;
-    margin: 0 auto;
-    display: flex;
-    padding: 0 .5rem;
-}
-
-
-.card {
-  margin: 0.6rem 0;
-  text-align: center;
-}
-.card a {
-  background-color: #f44336;
-  border: none;
-}
-.card a:hover {
-  background-color: #d32f2f;
-  border: none;
+/* Agrega un margen superior al botón "Agregar al Carrito" */
+.btn-agregar-carrito {
+    margin-top: 10px; /* Espaciado superior para el botón */
 }

@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogo - ToolBox</title>
-    <!-- <link rel="stylesheet" href="/css/catalogo.css"> -->
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/buscador.css">
     <link rel="stylesheet" href="/css/notificacion.css">
+    <link rel="stylesheet" href="/css/catalogo.css">
     <link rel="icon" type="image/x-icon" href="/img/logo/LogoPagina.png">
     
     <!--BOOTSTRAP-->
@@ -105,32 +105,34 @@
   <!--NOTIFICACION-->
   <div class="notification d-none"></div>
 
-<div class="mainContainer">
-  <div class="container">
-    <section class="product-listing">
-        <div class="contenedor">
-            <div class="row pb-5 mb-4">
-                <% productos.forEach(function(producto) { %>
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <!-- Card -->
-                    <div class="card rounded shadow-sm border-0">
-                        <div class="card-body p-4">
-                            <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-fluid d-block mx-auto mb-3">
-                            <h5><p class="text-dark"><%= producto.nombre %></p></h5>
-                            <p class="small">Precio: <%= producto.precio %> $</p>
-                            <a href="/tienda/producto/<%= producto._id %>" class="card-title text-white p-2" style="border-radius: 5px">Ver más</a>
-                            <button class="btn btn-primary btn-agregar-carrito" data-producto-id="<%= producto._id %>">
-                              Agregar al Carrito
-                            </button> 
-                        </div>
-                    </div>
-                </div>
-                <% }); %>
-            </div>
-        </div>
-    </section>
+  <div class="mainContainer">
+    <div class="container">
+      <section class="product-listing">
+          <div class="contenedor">
+              <div class="row pb-5 mb-4">
+                  <% productos.forEach(function(producto) { %>
+                  <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                      <!-- Card -->
+                      <div class="card rounded shadow-sm border-0 smaller-card">
+                          <div class="card-body p-4">
+                              <img src="<%= producto.imagen.data %>" alt="<%= producto.nombre %>" class="img-fluid d-block mx-auto mb-3">
+                              <h5><p class="text-dark"><%= producto.nombre %></p></h5>
+                              <p class="small">Precio: <%= producto.precio %> $</p>
+                              <a href="/tienda/producto/<%= producto._id %>" class="btn btn-orange text-white text-decoration-none p-2">
+                                Ver más
+                              </a>
+                              <button class="btn btn-primary btn-agregar-carrito mt-2" data-producto-id="<%= producto._id %>">
+                                Agregar al Carrito
+                              </button> 
+                          </div>
+                      </div>
+                  </div>
+                  <% }); %>
+              </div>
+          </div>
+      </section>
+    </div>  
   </div>  
-</div>
 
  
 <footer>

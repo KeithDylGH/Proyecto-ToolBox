@@ -61,25 +61,8 @@ h2 {
 }
 
 .sobre {
-  margin-bottom: 2rem;
-  display: flex;
-}
-.sobre h1 {
-  text-align: left;
-  padding-bottom: 1.5rem;
-  padding-right: 4rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 30px;
-}
-.sobre p {
-  text-align: left;
-  font-size: 18px;
-  font-weight: 400;
-}
-.sobre .card img {
-  width: 100%;
-  margin: auto 0;
+  background-color: #f8f9fa; /* Color de fondo suave */
+  padding: 2rem 0; /* Espaciado adicional arriba y abajo */
 }
 
 .FeaturedProduct {
