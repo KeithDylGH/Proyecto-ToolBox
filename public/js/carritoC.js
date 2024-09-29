@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     mostrarNotificacion('Producto añadido al carrito', 'success'); // Mostrar notificación
                     setTimeout(() => {
-                        window.location.href = "/cuenta/carrito";
+                        window.location.href = "/cuenta/carrito"; // Redirigir después de 2 segundos
                     }, 2000);
                 } else {
                     mostrarNotificacion("Error al añadir el producto al carrito.", "error"); // Notificación de error
@@ -113,62 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // Añadir event listener para eliminar producto
-                    document.querySelectorAll('.btn-eliminar').forEach(btn => {
-                        btn.addEventListener('click', async function() {
-                            const productoId = this.getAttribute('data-producto-id');
-
-                            console.log('Eliminando producto ID:', productoId); // Log del producto que se eliminará
-                            try {
-                                const response = await fetch(`/api/carrito/remove/${productoId}`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    credentials: 'same-origin'
-                                });
-
-                                const result = await response.json();
-                                if (result.success) {
-                                    mostrarNotificacion('Producto eliminado del carrito', 'success'); // Mostrar notificación
-                                    cargarCarrito(); // Actualiza el carrito en la interfaz
-                                } else {
-                                    mostrarNotificacion(result.message || 'Error al eliminar producto del carrito', 'error'); // Notificación de error
-                                }
-                            } catch (error) {
-                                console.error('Error al eliminar producto del carrito:', error);
-                                mostrarNotificacion('Error al eliminar producto del carrito', 'error'); // Notificación de error
-                            }
-                        });
-                    });
-
-                    // Escuchar el clic en el botón de vaciar carrito
-                    const botonVaciarCarrito = document.getElementById('vaciarCarrito');
-                    if (botonVaciarCarrito) {
-                        botonVaciarCarrito.addEventListener('click', async function() {
-                            try {
-                                const response = await fetch('/api/carrito/vaciar', {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    credentials: 'same-origin'
-                                });
-
-                                const result = await response.json();
-                                if (result.success) {
-                                    mostrarNotificacion('Carrito vaciado exitosamente', 'success'); // Mostrar notificación
-                                    cargarCarrito(); // Actualiza el carrito en la interfaz
-                                } else {
-                                    mostrarNotificacion(result.message || 'Error al vaciar el carrito', 'error'); // Notificación de error
-                                }
-                            } catch (error) {
-                                console.error('Error al vaciar el carrito:', error);
-                                mostrarNotificacion('Error al vaciar el carrito', 'error'); // Notificación de error
-                            }
-                        });
-                    }
+                    agregarListenersEliminar();
                 } else {
-                    const carritoList = document.getElementById('carritoList');
                     carritoList.innerHTML = '<li class="list-group-item">El carrito está vacío.</li>'; // Mensaje si el carrito está vacío
                 }
             } else {
@@ -177,6 +123,64 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error al intentar cargar el carrito:', error); // Log de errores
+        }
+    }
+
+    // Función para agregar listeners a los botones de eliminar
+    function agregarListenersEliminar() {
+        document.querySelectorAll('.btn-eliminar').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const productoId = this.getAttribute('data-producto-id');
+
+                console.log('Eliminando producto ID:', productoId); // Log del producto que se eliminará
+                try {
+                    const response = await fetch(`/api/carrito/remove/${productoId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'same-origin'
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        mostrarNotificacion('Producto eliminado del carrito', 'success'); // Mostrar notificación
+                        cargarCarrito(); // Actualiza el carrito en la interfaz
+                    } else {
+                        mostrarNotificacion(result.message || 'Error al eliminar producto del carrito', 'error'); // Notificación de error
+                    }
+                } catch (error) {
+                    console.error('Error al eliminar producto del carrito:', error);
+                    mostrarNotificacion('Error al eliminar producto del carrito', 'error'); // Notificación de error
+                }
+            });
+        });
+
+        // Escuchar el clic en el botón de vaciar carrito
+        const botonVaciarCarrito = document.getElementById('vaciarCarrito');
+        if (botonVaciarCarrito) {
+            botonVaciarCarrito.addEventListener('click', async function() {
+                try {
+                    const response = await fetch('/api/carrito/vaciar', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'same-origin'
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        mostrarNotificacion('Carrito vaciado exitosamente', 'success'); // Mostrar notificación
+                        cargarCarrito(); // Actualiza el carrito en la interfaz
+                    } else {
+                        mostrarNotificacion(result.message || 'Error al vaciar el carrito', 'error'); // Notificación de error
+                    }
+                } catch (error) {
+                    console.error('Error al vaciar el carrito:', error);
+                    mostrarNotificacion('Error al vaciar el carrito', 'error'); // Notificación de error
+                }
+            });
         }
     }
 
